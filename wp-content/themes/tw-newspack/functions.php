@@ -1143,3 +1143,224 @@ function cptui_register_my_taxes() {
 	register_taxonomy( "program", [ "post" ], $args );
 }
 add_action( 'init', 'cptui_register_my_taxes' );
+
+/**
+ * ACF config.
+ */
+
+if( function_exists('acf_add_local_field_group') ):
+
+	acf_add_local_field_group(array(
+		'key' => 'group_61f8398955ef0',
+		'title' => 'Additional Dates',
+		'fields' => array(
+			array(
+				'key' => 'field_61f833b3c6768',
+				'label' => 'Broadcast Date',
+				'name' => 'broadcast_date',
+				'type' => 'date_picker',
+				'instructions' => '',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'display_format' => 'm/d/Y',
+				'return_format' => 'm/d/Y',
+				'first_day' => 1,
+			),
+			array(
+				'key' => 'field_61f834bb810d7',
+				'label' => 'Updated Date',
+				'name' => 'updated_date',
+				'type' => 'date_time_picker',
+				'instructions' => '',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'display_format' => 'm/d/Y g:i a',
+				'return_format' => 'm/d/Y g:i a',
+				'first_day' => 1,
+			),
+		),
+		'location' => array(
+			array(
+				array(
+					'param' => 'post_type',
+					'operator' => '==',
+					'value' => 'post',
+				),
+			),
+		),
+		'menu_order' => 0,
+		'position' => 'side',
+		'style' => 'seamless',
+		'label_placement' => 'top',
+		'instruction_placement' => 'label',
+		'hide_on_screen' => array(
+			0 => 'discussion',
+			1 => 'comments',
+			2 => 'format',
+			3 => 'send-trackbacks',
+		),
+		'active' => true,
+		'description' => '',
+	));
+
+	acf_add_local_field_group(array(
+		'key' => 'group_61f84dd59b25b',
+		'title' => 'Media',
+		'fields' => array(
+			array(
+				'key' => 'field_61f8500077263',
+				'label' => 'Video',
+				'name' => 'video',
+				'type' => 'oembed',
+				'instructions' => '',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'width' => '',
+				'height' => '',
+			),
+			array(
+				'key' => 'field_61f84e113504f',
+				'label' => 'Slideshow',
+				'name' => 'slideshow',
+				'type' => 'photo_gallery',
+				'instructions' => '',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'fields[slideshow' => array(
+					'edit_modal' => 'Default',
+					'images_limit' => '',
+					'remove_edit_button' => 'No',
+					'remove_delete_button' => 'No',
+				),
+				'edit_modal' => 'Default',
+			),
+		),
+		'location' => array(
+			array(
+				array(
+					'param' => 'post_type',
+					'operator' => '==',
+					'value' => 'post',
+				),
+			),
+		),
+		'menu_order' => 0,
+		'position' => 'acf_after_title',
+		'style' => 'default',
+		'label_placement' => 'top',
+		'instruction_placement' => 'label',
+		'hide_on_screen' => array(
+			0 => 'discussion',
+			1 => 'comments',
+			2 => 'send-trackbacks',
+		),
+		'active' => true,
+		'description' => '',
+	));
+
+	acf_add_local_field_group(array(
+		'key' => 'group_61f8409e71121',
+		'title' => 'Social Promotion',
+		'fields' => array(
+			array(
+				'key' => 'field_61f84c0c977e0',
+				'label' => 'SEO Title',
+				'name' => 'seo_title',
+				'type' => 'text',
+				'instructions' => '',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'default_value' => '',
+				'placeholder' => '',
+				'prepend' => '',
+				'append' => '',
+				'maxlength' => '',
+			),
+			array(
+				'key' => 'field_61f840a8b8597',
+				'label' => 'Suggested Tweet',
+				'name' => 'suggested_tweet',
+				'type' => 'textarea',
+				'instructions' => 'This value will be sent to Social Flow as a suggested Tweet for the post',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'default_value' => '',
+				'placeholder' => '',
+				'maxlength' => 280,
+				'rows' => 2,
+				'new_lines' => '',
+			),
+			array(
+				'key' => 'field_61f841bb978e6',
+				'label' => 'Suggested Social Post',
+				'name' => 'suggested_social_post',
+				'type' => 'textarea',
+				'instructions' => '',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'default_value' => '',
+				'placeholder' => '',
+				'maxlength' => '',
+				'rows' => 3,
+				'new_lines' => '',
+			),
+		),
+		'location' => array(
+			array(
+				array(
+					'param' => 'post_type',
+					'operator' => '==',
+					'value' => 'post',
+				),
+			),
+		),
+		'menu_order' => 10,
+		'position' => 'side',
+		'style' => 'default',
+		'label_placement' => 'top',
+		'instruction_placement' => 'label',
+		'hide_on_screen' => array(
+			0 => 'discussion',
+			1 => 'comments',
+			2 => 'send-trackbacks',
+		),
+		'active' => true,
+		'description' => '',
+	));
+
+	endif;
