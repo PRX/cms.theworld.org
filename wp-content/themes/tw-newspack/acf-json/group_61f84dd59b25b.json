@@ -1,0 +1,65 @@
+{
+    "key": "group_61f84dd59b25b",
+    "title": "Media",
+    "fields": [
+        {
+            "key": "field_61f8500077263",
+            "label": "Video",
+            "name": "video",
+            "type": "oembed",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "width": "",
+            "height": ""
+        },
+        {
+            "key": "field_61f84e113504f",
+            "label": "Slideshow",
+            "name": "slideshow",
+            "type": "photo_gallery",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "fields[slideshow": {
+                "edit_modal": "Default",
+                "images_limit": "",
+                "remove_edit_button": "No",
+                "remove_delete_button": "No"
+            },
+            "edit_modal": "Default"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "post"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "acf_after_title",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "discussion",
+        "comments",
+        "send-trackbacks"
+    ],
+    "active": true,
+    "description": "",
+    "modified": 1643663403
+}

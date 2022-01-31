@@ -1046,3 +1046,100 @@ if ( function_exists( '\Newspack_Sponsors\get_sponsors_for_post' ) ) {
  * Load Web Stories compatibility file.
  */
 require get_template_directory() . '/inc/web-stories.php';
+
+/**
+ * Custom Post Type Taxonomies.
+ */
+function cptui_register_my_taxes() {
+
+	/**
+	 * Taxonomy: Resource Development Tags.
+	 */
+
+	$labels = [
+		"name" => __( "Resource Development Tags", "newspack" ),
+		"singular_name" => __( "Resource Development Tag", "newspack" ),
+	];
+
+
+	$args = [
+		"label" => __( "Resource Development Tags", "newspack" ),
+		"labels" => $labels,
+		"public" => false,
+		"publicly_queryable" => false,
+		"hierarchical" => false,
+		"show_ui" => true,
+		"show_in_menu" => true,
+		"show_in_nav_menus" => false,
+		"query_var" => true,
+		"rewrite" => [ 'slug' => 'resource_development', 'with_front' => true, ],
+		"show_admin_column" => false,
+		"show_in_rest" => true,
+		"rest_base" => "resource_development",
+		"rest_controller_class" => "WP_REST_Terms_Controller",
+		"show_in_quick_edit" => false,
+		"show_in_graphql" => false,
+	];
+	register_taxonomy( "resource_development", [ "post" ], $args );
+
+	/**
+	 * Taxonomy: Story Types.
+	 */
+
+	$labels = [
+		"name" => __( "Story Types", "newspack" ),
+		"singular_name" => __( "Story Type", "newspack" ),
+	];
+
+
+	$args = [
+		"label" => __( "Story Types", "newspack" ),
+		"labels" => $labels,
+		"public" => false,
+		"publicly_queryable" => false,
+		"hierarchical" => false,
+		"show_ui" => true,
+		"show_in_menu" => false,
+		"show_in_nav_menus" => false,
+		"query_var" => true,
+		"rewrite" => [ 'slug' => 'story_type', 'with_front' => true, ],
+		"show_admin_column" => false,
+		"show_in_rest" => true,
+		"rest_base" => "story_type",
+		"rest_controller_class" => "WP_REST_Terms_Controller",
+		"show_in_quick_edit" => false,
+		"show_in_graphql" => false,
+	];
+	register_taxonomy( "story_type", [ "post" ], $args );
+
+	/**
+	 * Taxonomy: Programs.
+	 */
+
+	$labels = [
+		"name" => __( "Programs", "newspack" ),
+		"singular_name" => __( "Program", "newspack" ),
+	];
+
+
+	$args = [
+		"label" => __( "Programs", "newspack" ),
+		"labels" => $labels,
+		"public" => true,
+		"publicly_queryable" => true,
+		"hierarchical" => false,
+		"show_ui" => true,
+		"show_in_menu" => false,
+		"show_in_nav_menus" => false,
+		"query_var" => true,
+		"rewrite" => [ 'slug' => 'program', 'with_front' => true, ],
+		"show_admin_column" => false,
+		"show_in_rest" => true,
+		"rest_base" => "program",
+		"rest_controller_class" => "WP_REST_Terms_Controller",
+		"show_in_quick_edit" => false,
+		"show_in_graphql" => false,
+	];
+	register_taxonomy( "program", [ "post" ], $args );
+}
+add_action( 'init', 'cptui_register_my_taxes' );
