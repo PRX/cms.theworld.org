@@ -1359,6 +1359,25 @@ if( function_exists('acf_add_local_field_group') ):
 		'title' => 'Media',
 		'fields' => array(
 			array(
+				'key' => 'field_61f96c6925a62',
+				'label' => 'Audio',
+				'name' => 'audio',
+				'type' => 'file',
+				'instructions' => '',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'return_format' => 'url',
+				'library' => 'all',
+				'min_size' => '',
+				'max_size' => '',
+				'mime_types' => 'mp3, wav',
+			),
+			array(
 				'key' => 'field_61f8500077263',
 				'label' => 'Video',
 				'name' => 'video',

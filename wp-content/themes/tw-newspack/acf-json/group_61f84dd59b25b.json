@@ -3,6 +3,25 @@
     "title": "Media",
     "fields": [
         {
+            "key": "field_61f96c6925a62",
+            "label": "Audio",
+            "name": "audio",
+            "type": "file",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "library": "all",
+            "min_size": "",
+            "max_size": "",
+            "mime_types": "mp3, wav"
+        },
+        {
             "key": "field_61f8500077263",
             "label": "Video",
             "name": "video",
@@ -61,5 +80,5 @@
     ],
     "active": true,
     "description": "",
-    "modified": 1643665934
+    "modified": 1643736209
 }
