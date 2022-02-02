@@ -1048,103 +1048,6 @@ if ( function_exists( '\Newspack_Sponsors\get_sponsors_for_post' ) ) {
 require get_template_directory() . '/inc/web-stories.php';
 
 /**
- * Custom Post Type Taxonomies.
- */
-function cptui_register_my_taxes() {
-
-	/**
-	 * Taxonomy: Resource Development Tags.
-	 */
-
-	$labels = [
-		"name" => __( "Resource Development Tags", "newspack" ),
-		"singular_name" => __( "Resource Development Tag", "newspack" ),
-	];
-
-
-	$args = [
-		"label" => __( "Resource Development Tags", "newspack" ),
-		"labels" => $labels,
-		"public" => false,
-		"publicly_queryable" => false,
-		"hierarchical" => false,
-		"show_ui" => true,
-		"show_in_menu" => true,
-		"show_in_nav_menus" => false,
-		"query_var" => true,
-		"rewrite" => [ 'slug' => 'resource_development', 'with_front' => true, ],
-		"show_admin_column" => false,
-		"show_in_rest" => true,
-		"rest_base" => "resource_development",
-		"rest_controller_class" => "WP_REST_Terms_Controller",
-		"show_in_quick_edit" => false,
-		"show_in_graphql" => false,
-	];
-	register_taxonomy( "resource_development", [ "post" ], $args );
-
-	/**
-	 * Taxonomy: Story Types.
-	 */
-
-	$labels = [
-		"name" => __( "Story Types", "newspack" ),
-		"singular_name" => __( "Story Type", "newspack" ),
-	];
-
-
-	$args = [
-		"label" => __( "Story Types", "newspack" ),
-		"labels" => $labels,
-		"public" => false,
-		"publicly_queryable" => false,
-		"hierarchical" => false,
-		"show_ui" => true,
-		"show_in_menu" => false,
-		"show_in_nav_menus" => false,
-		"query_var" => true,
-		"rewrite" => [ 'slug' => 'story_type', 'with_front' => true, ],
-		"show_admin_column" => false,
-		"show_in_rest" => true,
-		"rest_base" => "story_type",
-		"rest_controller_class" => "WP_REST_Terms_Controller",
-		"show_in_quick_edit" => false,
-		"show_in_graphql" => false,
-	];
-	register_taxonomy( "story_type", [ "post" ], $args );
-
-	/**
-	 * Taxonomy: Programs.
-	 */
-
-	$labels = [
-		"name" => __( "Programs", "newspack" ),
-		"singular_name" => __( "Program", "newspack" ),
-	];
-
-
-	$args = [
-		"label" => __( "Programs", "newspack" ),
-		"labels" => $labels,
-		"public" => true,
-		"publicly_queryable" => true,
-		"hierarchical" => false,
-		"show_ui" => true,
-		"show_in_menu" => false,
-		"show_in_nav_menus" => false,
-		"query_var" => true,
-		"rewrite" => [ 'slug' => 'program', 'with_front' => true, ],
-		"show_admin_column" => false,
-		"show_in_rest" => true,
-		"rest_base" => "program",
-		"rest_controller_class" => "WP_REST_Terms_Controller",
-		"show_in_quick_edit" => false,
-		"show_in_graphql" => false,
-	];
-	register_taxonomy( "program", [ "post" ], $args );
-}
-add_action( 'init', 'cptui_register_my_taxes' );
-
-/**
  * ACF config.
  */
 
@@ -1171,7 +1074,7 @@ if( function_exists('acf_add_local_field_group') ):
 				'field_type' => 'multi_select',
 				'allow_null' => 0,
 				'add_term' => 1,
-				'save_terms' => 0,
+				'save_terms' => 1,
 				'load_terms' => 0,
 				'return_format' => 'id',
 				'multiple' => 0,
@@ -1183,14 +1086,7 @@ if( function_exists('acf_add_local_field_group') ):
 				'type' => 'taxonomy',
 				'instructions' => '',
 				'required' => 0,
-				'conditional_logic' => array(
-					array(
-						array(
-							'field' => 'field_61f95154c2457',
-							'operator' => '!=empty',
-						),
-					),
-				),
+				'conditional_logic' => 0,
 				'wrapper' => array(
 					'width' => '',
 					'class' => '',
@@ -1222,7 +1118,7 @@ if( function_exists('acf_add_local_field_group') ):
 				'field_type' => 'multi_select',
 				'allow_null' => 0,
 				'add_term' => 1,
-				'save_terms' => 0,
+				'save_terms' => 1,
 				'load_terms' => 0,
 				'return_format' => 'id',
 				'multiple' => 0,
@@ -1243,8 +1139,8 @@ if( function_exists('acf_add_local_field_group') ):
 				'taxonomy' => 'story_type',
 				'field_type' => 'multi_select',
 				'allow_null' => 0,
-				'add_term' => 0,
-				'save_terms' => 0,
+				'add_term' => 1,
+				'save_terms' => 1,
 				'load_terms' => 0,
 				'return_format' => 'id',
 				'multiple' => 0,
@@ -1266,7 +1162,7 @@ if( function_exists('acf_add_local_field_group') ):
 				'field_type' => 'multi_select',
 				'allow_null' => 0,
 				'add_term' => 1,
-				'save_terms' => 0,
+				'save_terms' => 1,
 				'load_terms' => 0,
 				'return_format' => 'id',
 				'multiple' => 0,
@@ -1352,6 +1248,7 @@ if( function_exists('acf_add_local_field_group') ):
 		),
 		'active' => true,
 		'description' => '',
+		'modified' => 1643729358,
 	));
 
 	acf_add_local_field_group(array(
@@ -1381,7 +1278,7 @@ if( function_exists('acf_add_local_field_group') ):
 				'key' => 'field_61f8500077263',
 				'label' => 'Video',
 				'name' => 'video',
-				'type' => 'oembed',
+				'type' => 'file',
 				'instructions' => '',
 				'required' => 0,
 				'conditional_logic' => 0,
@@ -1390,8 +1287,11 @@ if( function_exists('acf_add_local_field_group') ):
 					'class' => '',
 					'id' => '',
 				),
-				'width' => '',
-				'height' => '',
+				'return_format' => 'url',
+				'library' => 'all',
+				'min_size' => '',
+				'max_size' => '',
+				'mime_types' => '',
 			),
 			array(
 				'key' => 'field_61f84e113504f',
@@ -1521,6 +1421,7 @@ if( function_exists('acf_add_local_field_group') ):
 		),
 		'active' => true,
 		'description' => '',
+		'modified' => 1643662401,
 	));
 
 	endif;
