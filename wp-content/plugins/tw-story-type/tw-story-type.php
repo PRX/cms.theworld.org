@@ -1,6 +1,7 @@
 <?php
 /*
 Plugin Name: TW Story Types
+Description: Creates the Story Types custom taxonomy
 */
 
 // Register Custom Taxonomy

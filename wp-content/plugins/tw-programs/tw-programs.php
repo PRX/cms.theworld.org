@@ -1,6 +1,7 @@
 <?php
 /*
 Plugin Name: TW Programs
+Description: Creates the Programs custom taxonomy
 */
 
 // Register Custom Taxonomy

@@ -1,6 +1,7 @@
 <?php
 /*
 Plugin Name: TW Resource Development Tags
+Description: Creates the Resource Development custom taxonomy
 */
 
 // Register Custom Taxonomy
