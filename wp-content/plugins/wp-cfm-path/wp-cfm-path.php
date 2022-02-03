@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: wpcfm-config-path-alter
+Plugin Name: WPCFM-Config-Path-Alter
 Description: Alters the wpcfm config path
 Version: 0.1
 */
