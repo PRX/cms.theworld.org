@@ -3,7 +3,7 @@
 # List Development Plugins
    $plugins = array(
     'jetpack/jetpack.php',
-    'pantheon-advanced-page-cache.php'
+    'pantheon-advanced-page-cache/pantheon-advanced-page-cache.php'
        );
 
 # Live-specific configs
