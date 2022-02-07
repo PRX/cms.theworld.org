@@ -1,7 +1,12 @@
 <?php
 
-# List Live Plugins
-   $plugins = array(
+# List Dev Plugins
+   $dev_plugins = array(
+	'jetpack/jetpack.php',
+	'pantheon-advanced-page-cache.php'
+       );
+
+   $live_plugins = array(
 	'jetpack/jetpack.php',
 	'pantheon-advanced-page-cache.php'
        );
@@ -11,9 +16,15 @@
 
    # Disable Development Plugins
        require_once(ABSPATH . 'wp-admin/includes/plugin.php');
-       foreach ($plugins as $plugin) {
-           if(is_plugin_active($plugin)) {
-	            deactivate_plugins($plugin);
+       foreach ($dev_plugins as $dev_plugin) {
+           if(is_plugin_active($dev_plugin)) {
+	            deactivate_plugins($dev_plugin);
+           }
+       }
+       # Activate Live Plugins
+       foreach ($live_plugins as $live_plugin) {
+           if(is_plugin_inactive($live_plugin)) {
+               activate_plugin($live_plugin);
            }
        }
 
@@ -23,20 +34,18 @@
 
    # Configs for All environments but Live
    else {
-
-  	# Activate Development Plugins
+  	   # Disable Live Plugins
        require_once(ABSPATH . 'wp-admin/includes/plugin.php');
-       foreach ($plugins as $plugin) {
-           if(is_plugin_inactive($plugin)) {
-               activate_plugin($plugin);
+       foreach ($live_plugins as $live_plugin) {
+           if(is_plugin_active($live_plugin)) {
+              deactivate_plugins($live_plugin);
            }
        }
 
-   # Disable Live Plugins
-       require_once(ABSPATH . 'wp-admin/includes/plugin.php');
-       foreach ($plugins as $plugin) {
-           if(is_plugin_active($plugin)) {
-	            deactivate_plugins($plugin);
+       # Activate Development Plugins
+       foreach ($dev_plugins as $dev_plugin) {
+           if(is_plugin_inactive($dev_plugin)) {
+               activate_plugin($dev_plugin);
            }
        }
    # Enable development mode for jetpack
