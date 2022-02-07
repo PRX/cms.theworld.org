@@ -1,6 +1,10 @@
 name: the-world-wp
-recipe: pantheon
+recipe: wordpress
 config:
-  framework: wordpress
-  site: the-world-wp
-  id: fa3253e3-f798-4bae-a25f-e278d44a9aab
+  php: '7.4'
+  via: apache:2.4
+  database: mysql
+tooling:
+  wp:
+    service: appserver
+    cmd: 'wp'
