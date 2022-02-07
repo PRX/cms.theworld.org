@@ -1,6 +1,6 @@
 <?php
 
-# List Development Plugins
+# List Live Plugins
    $plugins = array(
 	'jetpack/jetpack.php',
 	'pantheon-advanced-page-cache.php'
