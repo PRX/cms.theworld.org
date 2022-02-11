@@ -18,7 +18,7 @@ echo "Activate Configuration Management before importing configuration"
 lando wp plugin activate wp-cfm
 
 echo "Import configuration from WP CFM bundles"
-# lando wp config pull config-bundlewai
+lando wp config pull sample_bundle
 
 echo "Create local admin user"
 lando wp user create local-admin local-admin@the-world-wp.com
