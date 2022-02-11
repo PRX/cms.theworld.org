@@ -1,10 +1,39 @@
 <?php
 /*
-Plugin Name: WP-CFM Lando path alter
-Description: Alters the wpcfm config path
+Plugin Name: WP-CFM config path alter
+Description: Alters the wpcfm config path for local / dev / live environments
 Version: 0.1
 */
 // Tell wp-cfm where our config files live
+
+function set_multi_env() {
+
+    // If we are in a Pantheon environment, set the 3 instances slugs out of the box.
+    $environments = ['dev', 'live'];
+
+    return $environments;
+}
+add_filter( 'wpcfm_multi_env', 'set_multi_env' );
+
+/**
+ * @param string $env - Default is an empty string ''.
+ * @return string
+ */
+function set_current_env( $env ) {
+    // Detect with your own code logic the current environment the WordPress site is running.
+    // Generally this will be defined in a constant inside `$_ENV` or `$_SERVER` super-globals.
+    // ...
+
+    if ( in_array( PANTHEON_ENVIRONMENT, array('test', 'live' ) ) ){
+      $env = 'live';
+    }
+    else {
+      $env = 'dev';
+    }
+
+    return $env;
+}
+add_filter( 'wpcfm_current_env', 'set_current_env' );
 
 /**
  * @param string $config_dir - Default is "<root>/wp-content/config"
@@ -15,13 +44,7 @@ function change_config_dir( $config_dir ) {
     if ( defined( 'PANTHEON_ENVIRONMENT' ) ) {
       // Set the Pantheon environment to test or live
       if ( in_array( PANTHEON_ENVIRONMENT, array('lando') ) ) {
-
-        if ( defined( 'WPCFM_CURRENT_ENV' ) && !empty( WPCFM_CURRENT_ENV ) ) {
-          $config_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/config/' . WPCFM_CURRENT_ENV;
-        }
-        else {
-          $config_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/config';
-        }
+        $config_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/config/' . WPCFM_CURRENT_ENV;
       }
     }
 
@@ -38,13 +61,7 @@ function change_config_url( $config_url ) {
     if ( defined( 'PANTHEON_ENVIRONMENT' ) ) {
       // Set the Pantheon environment to test or live
       if ( in_array( PANTHEON_ENVIRONMENT, array('lando') ) ) {
-
-        if ( defined( 'WPCFM_CURRENT_ENV' ) && !empty( WPCFM_CURRENT_ENV ) ) {
-          $config_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/config/' . WPCFM_CURRENT_ENV;
-        }
-        else {
-          $config_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/config';
-        }
+        $config_url = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/config/' . WPCFM_CURRENT_ENV;
       }
     }
     return $config_url;
