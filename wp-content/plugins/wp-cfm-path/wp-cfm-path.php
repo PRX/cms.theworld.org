@@ -12,11 +12,10 @@ Version: 0.1
  */
 function change_config_dir( $config_dir ) {
     // Change default path to $config_dir if lando.
-    $config_dir = '';
     if ( defined( 'PANTHEON_ENVIRONMENT' ) ) {
       // Set the Pantheon environment to test or live
       if ( in_array( PANTHEON_ENVIRONMENT, array('lando') ) ) {
-        $config_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/config';
+        $config_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/config/' . WPCFM_CURRENT_ENV;
       }
     }
 
@@ -30,11 +29,10 @@ add_filter( 'wpcfm_config_dir', 'change_config_dir' );
  */
 function change_config_url( $config_url ) {
     // Change default URL to $config_url if lando
-    $config_url = '';
     if ( defined( 'PANTHEON_ENVIRONMENT' ) ) {
       // Set the Pantheon environment to test or live
       if ( in_array( PANTHEON_ENVIRONMENT, array('lando') ) ) {
-        $config_url = WP_HOME . '/wp-content/config';
+        $config_url = WP_HOME . '/wp-content/config/' . WPCFM_CURRENT_ENV;
       }
     }
     return $config_url;
