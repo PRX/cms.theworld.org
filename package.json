@@ -1,0 +1,26 @@
+{
+  "name": "the-world-wp",
+  "version": "0.0.0-development",
+  "description": "The World WP scripts and packages for development",
+  "license": "UNLICENSED",
+  "private": true,
+  "repository": {
+    "url": "https://github.com/PRX/cms.theworld.org.git",
+    "type": "git"
+  },
+  "scripts": {
+    "refresh": "./scripts/refresh.sh",
+    "local": "./scripts/local.sh"
+  },
+  "bugs": {
+    "url": "https://github.com/LuminexCorporation/luminexcorp/issues"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "browserslist": [
+    "last 1 version",
+    "> 1%",
+    "ie 11"
+  ]
+}

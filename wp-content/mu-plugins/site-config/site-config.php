@@ -8,9 +8,10 @@
  Author URI: https://pantheon.io/docs/contributors
 */
 # Ensuring that this is on Pantheon
-if ( isset( $_ENV['PANTHEON_ENVIRONMENT'] ) ) :
+if ( isset( $_ENV['PANTHEON_ENVIRONMENT'] ) ) {
+  # Symlink to the env-configs file
+  require_once( 'site-config/live-specific-configs.php' );
+}
+else {
 
-# Symlink to the env-configs file
-require_once( 'site-config/live-specific-configs.php' );
-
-endif;
+}

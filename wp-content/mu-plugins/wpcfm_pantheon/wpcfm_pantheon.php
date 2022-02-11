@@ -1,3 +1,5 @@
+<?php
+
 /**
  * @param array $environments - Default is an empty array [] meaning multi environment config is disabled.
  * @return array
