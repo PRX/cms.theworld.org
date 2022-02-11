@@ -16,9 +16,11 @@ fi
 
 echo "Activate Configuration Management before importing configuration"
 lando wp plugin activate wp-cfm
-
-echo "Import configuration from WP CFM bundles"
-lando wp config pull sample_bundle
+lando wp plugin activate wp-cfm-path
+echo "Import configuration from WP CFM bundles and Replace domain in the database."
+lando wp config pull all
+echo "Replace any traces of a non-local domain in the database with the Lando domain"
+lando wp --path=/app --url=*-the-world-wp.pantheonsite.io search-replace '*-the-world-wp.pantheonsite.io' 'the-world-wp.lndo.site'
 
 echo "Create local admin user"
 lando wp user create local-admin local-admin@the-world-wp.com

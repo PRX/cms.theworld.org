@@ -10,7 +10,8 @@
   },
   "scripts": {
     "refresh": "./scripts/refresh.sh",
-    "local": "./scripts/local.sh"
+    "local": "./scripts/local.sh",
+    "config-export": "./scripts/config-export.sh"
   },
   "bugs": {
     "url": "https://github.com/LuminexCorporation/luminexcorp/issues"
