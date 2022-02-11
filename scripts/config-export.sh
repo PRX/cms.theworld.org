@@ -1,2 +1,2 @@
-echo "Export configuration from WP CFM bundles and Replace domain in the database."
+echo "Export configuration from WP CFM bundles."
 lando wp config push all

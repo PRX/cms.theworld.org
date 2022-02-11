@@ -15,7 +15,13 @@ function change_config_dir( $config_dir ) {
     if ( defined( 'PANTHEON_ENVIRONMENT' ) ) {
       // Set the Pantheon environment to test or live
       if ( in_array( PANTHEON_ENVIRONMENT, array('lando') ) ) {
-        $config_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/config/' . WPCFM_CURRENT_ENV;
+
+        if ( defined( 'WPCFM_CURRENT_ENV' ) && !empty( WPCFM_CURRENT_ENV ) ) {
+          $config_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/config/' . WPCFM_CURRENT_ENV;
+        }
+        else {
+          $config_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/config';
+        }
       }
     }
 
@@ -32,7 +38,13 @@ function change_config_url( $config_url ) {
     if ( defined( 'PANTHEON_ENVIRONMENT' ) ) {
       // Set the Pantheon environment to test or live
       if ( in_array( PANTHEON_ENVIRONMENT, array('lando') ) ) {
-        $config_url = WP_HOME . '/wp-content/config/' . WPCFM_CURRENT_ENV;
+
+        if ( defined( 'WPCFM_CURRENT_ENV' ) && !empty( WPCFM_CURRENT_ENV ) ) {
+          $config_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/config/' . WPCFM_CURRENT_ENV;
+        }
+        else {
+          $config_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/config';
+        }
       }
     }
     return $config_url;

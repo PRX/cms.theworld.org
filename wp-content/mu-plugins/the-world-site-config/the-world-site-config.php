@@ -5,8 +5,9 @@
  Description: Activates and deactivates plugins based on environment.
  Version: 1.0
  Author: Joe Tower
+ Text Domain: the_world_site_config
  *
- * @package the-world-site-config
+ * @package the_world_site_config
 */
 
 // If this file is called directly, abort.
@@ -24,20 +25,20 @@ function the_world_site_config_multi_env_register( $environments ) {
     ];
     return $environments;
 }
-add_filter( 'the-world-site-config', 'the_world_site_config_multi_env_register' );
+add_filter( 'the_world_site_config', 'the_world_site_config_multi_env_register' );
 
 # Ensuring that this is on Pantheon or Lando (Pantheon recipe) environment
 if ( isset( $_ENV['PANTHEON_ENVIRONMENT'] ) ) {
 
   // Enable production specific config for the test and live environments.
   if ( in_array( PANTHEON_ENVIRONMENT, array('test', 'live' ) ) ){
-    add_filter( 'the-world-site-config', 'live' );
+    add_filter( 'the_world_site_config', 'live' );
 
     require_once( 'site-config/live-specific-configs.php' );
   }
   // Enable dev specific config for dev, multidevs, and lando environments.
   else {
-    add_filter( 'the-world-site-config', 'dev' );
+    add_filter( 'the_world_site_config', 'dev' );
 
     require_once( 'site-config/dev-specific-configs.php' );
   }
