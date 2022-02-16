@@ -29,7 +29,8 @@ Shaping the future of audio by building technology, training talented producers 
 
 ## Dependencies
 
-- Lando (https://docs.lando.dev/)
+- Lando (https://docs.lando.dev/) - version `>=3.6`
+- Node `^16.x`
 
 
 ## Setup
@@ -42,7 +43,7 @@ This repository uses Lando for local development. Run the following commands:
 
 2. Retrieve and export of the database and place it in the `reference/` directory. If a database export does not exist within this directory the script will attempt to pull the database from Pantheon's dev environment. After a successful import it will find and replace all domain records in the database with your local domain and import any configuration bundles saved to `wp-content/config`. Finally, it will generate a `local-admin` user for you.
 
-`lando refresh`
+`npm run refresh`
 
 
 ## Development
