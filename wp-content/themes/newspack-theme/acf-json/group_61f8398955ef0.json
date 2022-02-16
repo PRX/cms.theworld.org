@@ -59,5 +59,6 @@
     ],
     "active": true,
     "description": "",
-    "modified": 1643729358
+    "show_in_rest": false,
+    "modified": 1645048654
 }
