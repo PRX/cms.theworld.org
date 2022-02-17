@@ -73,6 +73,8 @@ final class Newspack_Newsletters {
 		add_action( 'wp_head', [ __CLASS__, 'public_newsletter_custom_style' ], 10, 2 );
 		add_filter( 'display_post_states', [ __CLASS__, 'display_post_states' ], 10, 2 );
 		add_action( 'pre_get_posts', [ __CLASS__, 'maybe_display_public_archive_posts' ] );
+		add_filter( 'posts_join', [ __CLASS__, 'filter_non_public_newsletters_join' ], 11, 2 );
+		add_filter( 'posts_where', [ __CLASS__, 'filter_non_public_newsletters_where' ], 11, 2 );
 		add_action( 'template_redirect', [ __CLASS__, 'maybe_display_public_post' ] );
 		add_filter( 'manage_' . self::NEWSPACK_NEWSLETTERS_CPT . '_posts_columns', [ __CLASS__, 'add_public_page_column' ] );
 		add_action( 'manage_' . self::NEWSPACK_NEWSLETTERS_CPT . '_posts_custom_column', [ __CLASS__, 'public_page_column_content' ], 10, 2 );
@@ -461,50 +463,99 @@ final class Newspack_Newsletters {
 	}
 
 	/**
-	 * Allow newsletter posts to appear in archive pages, but only if set to be public.
+	 * Convenience function to determine whether a Newspack specific filter should be applied to a query.
+	 * Queries that should contain public newsletters: any archive (term, author, or date), search, or
+	 * blog page query that can contain regular posts.
+	 *
+	 * @param WP_Query $query The WP query object.
+	 * @param boolean  $include_newsletters If true, only apply filter when the query includes newsletters.
+	 *
+	 * @return bool
+	 */
+	public static function should_apply_filter_to_query( $query, $include_newsletters = false ) {
+		$maybe_apply_filter = true;
+
+		if ( $include_newsletters ) {
+			$post_types         = $query->get( 'post_type' );
+			$maybe_apply_filter = 'any' === $post_types || self::NEWSPACK_NEWSLETTERS_CPT === $post_types || ( is_array( $post_types ) && in_array( self::NEWSPACK_NEWSLETTERS_CPT, $post_types ) );
+		}
+
+		return $maybe_apply_filter && ! is_admin() && $query->is_main_query() && ( $query->is_archive() || $query->is_search() || $query->is_home() );
+	}
+
+	/**
+	 * Allow newsletter posts to appear when regular posts are queried.
 	 *
 	 * @param array $query The WP query object.
 	 */
 	public static function maybe_display_public_archive_posts( $query ) {
-		// Only run on the main front-end query for post category and tag archives, or newsletter CPT archives.
-		if (
-			is_admin() ||
-			! $query->is_main_query() ||
-			(
-				! is_category() &&
-				! is_tag() &&
-				! is_post_type_archive( self::NEWSPACK_NEWSLETTERS_CPT )
-			)
-		) {
+		if ( ! self::should_apply_filter_to_query( $query ) ) {
 			return;
 		}
 
-		// Allow Newsletter posts to appear in post category and tag archives.
-		if ( is_category() || is_tag() || empty( $query->get( 'post_type' ) ) ) {
-			$query->set( 'post_type', [ 'post', self::NEWSPACK_NEWSLETTERS_CPT ] );
+		$post_types = $query->get( 'post_type' );
+
+		// An 'any' post_types arg means any post type, so no need to add anything.
+		if ( 'any' === $post_types ) {
+			return;
 		}
 
-		// Filter out non-public Newsletter posts.
-		$meta_query        = $query->get( 'meta_query', [] ); // phpcs:ignore WordPressVIPMinimum.Hooks.PreGetPosts.PreGetPosts
-		$meta_query_params = [
-			[
-				'key'     => 'is_public',
-				'value'   => true,
-				'compare' => '=',
-			],
-		];
-
-		// If a regular post archive, also allow posts that don't have the is_public meta field.
-		if ( is_category() || is_tag() ) {
-			$meta_query_params['relation'] = 'OR';
-			$meta_query_params[]           = [
-				'key'     => 'is_public',
-				'compare' => 'NOT EXISTS',
-			];
+		// If post_types arg is empty or 'post', we need to convert it to an array so we can add the newsletter post type.
+		if ( empty( $post_types ) || 'post' === $post_types ) {
+			$post_types = [ 'post' ];
 		}
 
-		$meta_query[] = $meta_query_params;
-		$query->set( 'meta_query', $meta_query ); // phpcs:ignore WordPressVIPMinimum.Hooks.PreGetPosts.PreGetPosts
+		// If post_types arg is an array and doesn't already contain the newsletter post type, add it.
+		$contains_regular_posts = is_array( $post_types ) && in_array( 'post', $post_types ) && ! in_array( self::NEWSPACK_NEWSLETTERS_CPT, $post_types );
+
+		if ( $contains_regular_posts ) {
+			$post_types[] = self::NEWSPACK_NEWSLETTERS_CPT;
+			$query->set( 'post_type', $post_types ); // phpcs:ignore
+		}
+	}
+
+	/**
+	 * Custom join to be used in conjunction with filter_non_public_newsletters_where
+	 * so that only public newsletters which are published are displayed in queries.
+	 *
+	 * @param string   $join Join SQL statement.
+	 * @param WP_Query $query WP Query object.
+	 *
+	 * @return string
+	 */
+	public static function filter_non_public_newsletters_join( $join, $query ) {
+		global $wpdb;
+
+		if ( self::should_apply_filter_to_query( $query, true ) ) {
+			$join .= "LEFT JOIN {$wpdb->postmeta} AS cj1 ON (
+                        {$wpdb->posts}.ID = cj1.post_id
+                        AND {$wpdb->posts}.post_type = 'newspack_nl_cpt'
+                        AND cj1.meta_key = 'is_public'
+                        AND cj1.meta_value = '1' ) ";
+			$join .= "LEFT JOIN {$wpdb->postmeta} AS cj2
+                        ON ( {$wpdb->posts}.ID = cj2.post_id AND cj2.meta_key = 'is_public' ) ";
+		}
+
+		return $join;
+	}
+
+	/**
+	 * Custom where to be used in conjunction with filter_non_public_newsletters_join
+	 * so that only public newsletters which are published are displayed in queries.
+	 *
+	 * @param string   $where SQL constraints making up the WHERE statement.
+	 * @param WP_Query $query WP Query object.
+	 *
+	 * @return string
+	 */
+	public static function filter_non_public_newsletters_where( $where, $query ) {
+		global $wpdb;
+
+		if ( self::should_apply_filter_to_query( $query, true ) ) {
+			$where .= 'AND ( ( cj1.post_id IS NOT NULL ) OR ( cj2.post_id IS NULL ) )';
+		}
+
+		return $where;
 	}
 
 	/**
@@ -562,7 +613,7 @@ final class Newspack_Newsletters {
 		if ( 'public_page' === $column_name ) {
 			$is_public = get_post_meta( $post_id, 'is_public', true );
 			?>
-			<span class="inline_data is_public" data-is_public="<?php echo esc_html( $is_public ); ?>">
+			<span class="inline_data is_public" data-is_public="<?php echo esc_attr( $is_public ); ?>">
 				<?php echo empty( $is_public ) ? esc_html__( 'No', 'newspack-newsletters' ) : esc_html__( 'Yes', 'newspack-newsletters' ); ?>
 			</span>
 			<?php
@@ -651,6 +702,28 @@ final class Newspack_Newsletters {
 				'permission_callback' => [ __CLASS__, 'api_authoring_permissions_check' ],
 			]
 		);
+
+		\register_rest_route(
+			'wp/v2/' . Newspack_Newsletters_Ads::NEWSPACK_NEWSLETTERS_ADS_CPT,
+			'count',
+			[
+				/**
+				 * Return an array of properties required to render a useful ads warning.
+				 *
+				 * @uses Newspack_Newsletters::get_ads_warning_in_editor()
+				 */
+				'callback'            => [ __CLASS__, 'get_ads_warning_in_editor' ],
+				'methods'             => 'GET',
+
+				/**
+				 * Ensure the user can call this route.
+				 *
+				 * @uses Newspack_Newsletters::api_administration_permissions_check()
+				 */
+				'permission_callback' => [ __CLASS__, 'api_administration_permissions_check' ],
+			]
+		);
+
 		\register_rest_route(
 			'newspack-newsletters/v1',
 			'post-mjml',
@@ -740,10 +813,10 @@ final class Newspack_Newsletters {
 	 */
 	public static function api_get_layouts() {
 		$layouts_query = new WP_Query(
-			array(
+			[
 				'post_type'      => Newspack_Newsletters_Layouts::NEWSPACK_NEWSLETTERS_LAYOUT_CPT,
 				'posts_per_page' => -1,
-			)
+			]
 		);
 		$user_layouts  = array_map(
 			function ( $post ) {
@@ -824,7 +897,9 @@ final class Newspack_Newsletters {
 		];
 		$is_esp_manual    = 'manual' === $service_provider;
 
-		if ( ! $is_esp_manual && ! self::$provider && get_option( 'newspack_newsletters_mailchimp_api_key', false ) ) {
+		// 'newspack_mailchimp_api_key' is a new option introduced to manage MC API key accross Newspack plugins.
+		// Keeping the old option for backwards compatibility.
+		if ( ! $is_esp_manual && ! self::$provider && get_option( 'newspack_mailchimp_api_key', get_option( 'newspack_newsletters_mailchimp_api_key' ) ) ) {
 			// Legacy – Mailchimp provider set before multi-provider handling was set up.
 			self::set_service_provider( 'mailchimp' );
 		}
@@ -1037,6 +1112,39 @@ final class Newspack_Newsletters {
 	public static function debug_mode() {
 		return defined( 'NEWSPACK_NEWSLETTERS_DEBUG_MODE' ) ? NEWSPACK_NEWSLETTERS_DEBUG_MODE : false;
 	}
+
+
+	/**
+	 * Get properties required to render a useful modal in the editor that alerts
+	 * users of ads they're sending.
+	 *
+	 * @param WP_REST_REQUEST $request The WP Request Object.
+	 * @return array
+	 */
+	public static function get_ads_warning_in_editor( $request ) {
+		$letterhead                 = new Newspack_Newsletters_Letterhead();
+		$has_letterhead_credentials = $letterhead->has_api_credentials();
+		$post_date                  = $request->get_param( 'date' );
+		$newspack_ad_type           = Newspack_Newsletters_Ads::NEWSPACK_NEWSLETTERS_ADS_CPT;
+
+		$url_to_manage_promotions   = 'https://app.tryletterhead.com/promotions';
+		$url_to_manage_newspack_ads = "/wp-admin/edit.php?post_type={$newspack_ad_type}";
+
+		$ads                   = Newspack_Newsletters_Renderer::get_ads( $post_date, 0 );
+		$ads_label             = $has_letterhead_credentials ? __( 'promotion', 'newspack-newsletters' ) : __( 'ad', 'newspack-newsletters' );
+		$ads_manage_url        = $has_letterhead_credentials ? $url_to_manage_promotions : $url_to_manage_newspack_ads;
+		$ads_manage_url_rel    = $has_letterhead_credentials ? 'noreferrer' : '';
+		$ads_manage_url_target = $has_letterhead_credentials ? '_blank' : '_self';
+
+		return [
+			'count'           => count( $ads ),
+			'label'           => $ads_label,
+			'manageUrl'       => $ads_manage_url,
+			'manageUrlRel'    => $ads_manage_url_rel,
+			'manageUrlTarget' => $ads_manage_url_target,
+		];
+	}
+
 
 	/**
 	 * Which Email Service Provider should be used.

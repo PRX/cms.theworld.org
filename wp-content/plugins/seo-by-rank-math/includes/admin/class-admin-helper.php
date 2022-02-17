@@ -31,9 +31,13 @@ class Admin_Helper {
 	 * @return array
 	 */
 	public static function get_htaccess_data() {
-		if ( ! function_exists( 'get_home_path' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/file.php';
+		if ( ! Helper::is_filesystem_direct() ) {
+			return [
+				'content'  => '',
+				'writable' => false,
+			];
 		}
+
 		$wp_filesystem = WordPress::get_filesystem();
 		if ( empty( $wp_filesystem ) ) {
 			return;
@@ -69,7 +73,7 @@ class Admin_Helper {
 		$view = rank_math()->admin_dir() . "views/{$view}.php";
 
 		if ( ! file_exists( $view ) ) {
-			wp_redirect( Helper::get_admin_url() );
+			Helper::redirect( Helper::get_admin_url() );
 			exit;
 		}
 
@@ -171,6 +175,8 @@ class Admin_Helper {
 		if ( $registered && isset( $registered['username'] ) && isset( $registered['api_key'] ) ) {
 			Api::get()->deactivate_site( $registered['username'], $registered['api_key'] );
 			self::get_registration_data( false );
+
+			do_action( 'rank_math/deregister_site' );
 		}
 	}
 
@@ -317,7 +323,7 @@ class Admin_Helper {
 
 		return apply_filters(
 			'rank_math/license/activate_url',
-			Security::add_query_arg_raw( $args, 'https://rankmath.com/auth/' ),
+			Security::add_query_arg_raw( $args, 'https://rankmath.com/auth' ),
 			$args
 		);
 	}

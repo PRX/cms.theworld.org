@@ -73,6 +73,9 @@ class WPSEO_Upgrade {
 			'15.9.1-RC0' => 'upgrade_1591',
 			'16.2-RC0'   => 'upgrade_162',
 			'16.5-RC0'   => 'upgrade_165',
+			'17.2-RC0'   => 'upgrade_172',
+			'17.7.1-RC0' => 'upgrade_1771',
+			'17.9-RC0'   => 'upgrade_179',
 		];
 
 		array_walk( $routines, [ $this, 'run_upgrade_routine' ], $version );
@@ -830,6 +833,36 @@ class WPSEO_Upgrade {
 	}
 
 	/**
+	 * Performs the 17.2 upgrade. Cleans out any unnecessary indexables. See $cleanup_integration->get_cleanup_tasks() to see what will be cleaned out.
+	 *
+	 * @return void
+	 */
+	private function upgrade_172() {
+		\wp_unschedule_hook( 'wpseo_cleanup_orphaned_indexables' );
+		\wp_unschedule_hook( 'wpseo_cleanup_indexables' );
+
+		if ( ! \wp_next_scheduled( \Yoast\WP\SEO\Integrations\Cleanup_Integration::START_HOOK ) ) {
+			\wp_schedule_single_event( ( time() + ( MINUTE_IN_SECONDS * 5 ) ), \Yoast\WP\SEO\Integrations\Cleanup_Integration::START_HOOK );
+		}
+	}
+
+	/**
+	 * Performs the 17.7.1 upgrade routine.
+	 */
+	private function upgrade_1771() {
+		$enabled_auto_updates = \get_site_option( 'auto_update_plugins' );
+		$addon_update_watcher = YoastSEO()->classes->get( \Yoast\WP\SEO\Integrations\Watchers\Addon_Update_Watcher::class );
+		$addon_update_watcher->toggle_auto_updates_for_add_ons( 'auto_update_plugins', $enabled_auto_updates, [] );
+	}
+
+	/**
+	 * Performs the 17.9 upgrade routine.
+	 */
+	private function upgrade_179() {
+		WPSEO_Options::set( 'wincher_integration_active', true );
+	}
+
+	/**
 	 * Sets the home_url option for the 15.1 upgrade routine.
 	 *
 	 * @return void
@@ -859,7 +892,7 @@ class WPSEO_Upgrade {
 	 * else to `false`.
 	 */
 	public function set_indexation_completed_option_for_145() {
-		WPSEO_Options::set( 'indexables_indexation_completed', YoastSEO()->helpers->indexing->get_unindexed_count() === 0 );
+		WPSEO_Options::set( 'indexables_indexation_completed', YoastSEO()->helpers->indexing->get_limited_filtered_unindexed_count( 1 ) === 0 );
 	}
 
 	/**
