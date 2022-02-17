@@ -192,16 +192,11 @@ if( function_exists('acf_add_local_field_group') ):
 		),
     'location' => array(
       array(
-        array(
-          'param' => 'post_type',
-          'operator' => '==',
-          'value' => 'tw_episodes',
-        ),
-        array(
-          'param' => 'post_type',
-          'operator' => '==',
-          'value' => 'post',
-        ),
+				array(
+					'param' => 'post_type',
+					'operator' => '==',
+					'value' => 'post',
+				),
       ),
     ),
 		'menu_order' => 0,
