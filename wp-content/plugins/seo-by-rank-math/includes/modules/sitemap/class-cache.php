@@ -50,6 +50,11 @@ class Cache {
 	public function __construct() {
 		$this->wp_filesystem = WordPress::get_filesystem();
 		$this->mode          = $this->is_writable() ? 'file' : 'db';
+
+		/**
+		 * Change sitemap caching mode (can be "file" or "db").
+		 */
+		$this->mode = apply_filters( 'rank_math/sitemap/cache_mode', $this->mode );
 	}
 
 	/**
@@ -58,7 +63,7 @@ class Cache {
 	 * @return bool
 	 */
 	public function is_writable() {
-		if ( is_null( $this->wp_filesystem ) ) {
+		if ( is_null( $this->wp_filesystem ) || ! Helper::is_filesystem_direct() ) {
 			return false;
 		}
 
