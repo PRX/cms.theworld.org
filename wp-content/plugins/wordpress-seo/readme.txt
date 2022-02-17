@@ -4,8 +4,8 @@ Donate link: https://yoa.st/1up
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: SEO, XML sitemap, Content analysis, Readability, Schema
-Tested up to: 5.8
-Stable tag: 16.7
+Tested up to: 5.9
+Stable tag: 18.1
 Requires PHP: 5.6.20
 
 Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.
@@ -42,7 +42,7 @@ We know content is king, that's why Yoast SEO is famous for its **state-of-the-a
 
 * **SEO analysis**: an invaluable tool while writing SEO-friendly content with the right (focus) keyphrases in mind.
 * **Readability analysis**: ensures that humans and search engines can read and understand your content.
-* **Full language support** for: English, German, French, Dutch, Spanish, Italian, Russian, Indonesian, Polish, Portuguese, Arabic, Swedish, Hebrew, Hungarian, Turkish and Czech.
+* **Full language support** for: English, German, French, Dutch, Spanish, Italian, Russian, Indonesian, Polish, Portuguese, Arabic, Swedish, Hebrew, Hungarian, Turkish, Czech, Norwegian, Slovak and Greek.
 * **A Google preview**, which shows what your listings will look like in the search results. Even on mobile devices!
 * **Innovative Schema blocks** for the WordPress block editor, so that your FAQ and HowTo content can be shown directly in the search results. Plus a breadcrumbs block to guide your users.
 * **[Premium] Internal linking blocks** to easily improve the structure of your content. Easily add a **table of contents block**, a **related links block**, a **subpages** block, or **siblings block**! Plus, we’ll keep adding these easy-to-add blocks to improve your site structure.
@@ -126,7 +126,7 @@ Want more information on search engine optimization and Yoast SEO? Have a look a
 * Also follow Yoast on [Facebook](https://facebook.com/yoast), [Instagram](https://www.instagram.com/yoast/) & [Twitter](https://twitter.com/yoast).
 
 == Installation ==
-Starting with Yoast SEO consists of just two steps: installing and setting up the plugin. Yoast SEO is designed to work with your site’s specific needs, so don’t forget to go through the Yoast SEO configuration wizard as explained in the ‘after activation’ step!
+Starting with Yoast SEO consists of just two steps: installing and setting up the plugin. Yoast SEO is designed to work with your site’s specific needs, so don’t forget to go through the Yoast SEO configuration workout as explained in the ‘after activation’ step!
 
 ### INSTALL YOAST SEO FROM WITHIN WORDPRESS
 
@@ -143,8 +143,8 @@ Starting with Yoast SEO consists of just two steps: installing and setting up th
 
 ### AFTER ACTIVATION
 
-1. You should see (a notice to start) the Yoast SEO configuration wizard;
-1. Go through the configuration wizard and set up the plugin for your site;
+1. You should see (a notice to start) the Yoast SEO configuration workout;
+1. Go through the configuration workout and set up the plugin for your site;
 1. You’re done!
 
 == Frequently Asked Questions ==
@@ -236,47 +236,51 @@ Your question has most likely been answered on our help center: [yoast.com/help/
 
 == Changelog ==
 
-= 16.7 =
-Release Date: July 13th, 2021
+= 18.1 =
+Release Date: February 8th, 2022
 
-Meet Yoast SEO 16.7! This release comes with extended support for headless WordPress. Yoast SEO comes with a REST API that developers can use to access our metadata in a headless WordPress installation. In Yoast SEO 16.7, we’re making more data available and also in a different format: JSON. Read more about what’s new in Yoast SEO 16.7 in [our release post](https://yoa.st/release-16-7)!
-
-Enhancements:
-
-* Upgrades our REST API to include individual keys/values for all of our meta tags, data and schema output. Read all about it in [this in-depth explanation about our REST API](https://yoa.st/rest-api).
-
-Bugfixes:
-
-* Fixes a bug where a database entry would be added in the indexables table every time a WooCommerce order was created.
-* Fixes a bug where the SEO optimization could run indefinitely when the database contained at least 25 faulty indexables without a permalink.
-* Fixes a bug where the Advanced section and Schema tab wouldn't be visible in the metabox for Editors. Props to [jordif](https://github.com/jordif).
-
-= 16.6.1 =
-Release Date: July 1st, 2021
-
-Bugfixes:
-
-* Fixes a bug where many Premium editor features would not work if Yoast SEO was updated to version 16.6 while Yoast SEO Premium was still on version 16.5 or lower.
-
-= 16.6 =
-Release Date: June 29th, 2021
-
-Yoast SEO 16.6 comes with a new round of improvements and fixes. We’ve updated the analysis to exclude sentences inside tables and table captions from the consecutive sentences assessment. Enjoy! Read more about what’s new in Yoast SEO 16.6 in [our release post](https://yoa.st/release-16-6)!
+Yoast SEO 18.1 is out today! This new release brings another round of bug fixes, plus a new way for us to handle the translations in our plugin — leading to a smaller plugin size for you to install. Read more about what's new in Yoast SEO 18.1 in [our release post in English](https://yoa.st/release-8-2-22) or [our release post in Spanish](https://yoa.st/release-8-2-22-spanish)!
 
 Enhancements:
 
-* Updates `SearchAction` schema to comply with Google's updated specification.
-* Excludes sentences inside tables and table captions from the consecutive sentences assessment.
-* Adds adjacent relative links (`rel="prev"` and `rel="next"`) for WooCommerce shop pages. Props to [stodorovic](https://github.com/stodorovic).
-* Adds increased compatibility for LiteSpeed web servers. Props to [J-Rey](https://github.com/J-Rey).
-* Adds adjacent relative links for WooCommerce shop pages. Props to [stodorovic](https://github.com/stodorovic).
+* Changes the overall SEO score color on the post type overview pages to red when no keyphrase is set.
 
 Bugfixes:
 
-* Fixes a bug where an error would be shown on the page overview and post overview when the website's MySQL database was run in ANSI-mode. Props to [stodorovic](https://github.com/stodorovic).
-* Fixes a bug where shortcodes would be removed from the Open Graph description even when they were explicitly added. Props to [Lomerill](https://github.com/Lomerill).
-* Fixes a bug where using the `wpseo_schema_{@type}` filter would result in a fatal error.
-* Fixes a bug where the last breadcrumb item was stripped in breadcrumb Schema output on subsequent pages of a static posts page.
+* Fixes a bug where images inserted into our FAQ or HowTo blocks would be rendered wider then their respective container when using a Block Theme.
+* Fixes a bug where plugins that would initialize after our plugin would be unable to register certain plugin information or utilize certain hooks.
+* Fixes a bug where capitalized keyphrases would show up twice in the Wincher SEO performance tracking modal. 
+
+Other:
+
+* Switches from packaged script translations to those from wordpress.org in order to reduce ZIP size and disk usage.
+
+= 18.0 =
+Release Date: January 25th, 2022
+
+Yoast SEO 18.0 is out now! This release contains a number of bug fixes and a couple of enhancements. We've enhanced schema presentation for non-alphanumeric languages and made several improvements in both the SEO and readability analysis of the Japanese language. Read more about what's new in Yoast SEO 18.0 in [our release post in English](https://yoa.st/release-18-0) or [our release post in Spanish](https://yoa.st/release-18-0-spanish)!
+
+Enhancements:
+
+* Limits a potentially slow query to certain routes, which makes it so it gets called fewer times.
+* Enhances schema presentation for languages that are not alphanumeric. Props to [sous-studio](https://github.com/sous-studio).
+
+Bugfixes:
+
+* Fixes a bug where removing an image from our Facebook Preview and Twitter Preview modals could lead to a confusing experience due to focus loss.
+* Fixes a bug where clicking outside of a Yoast modal in the block editor would not close the modal.
+* Fixes a bug where Japanese keyphrase enclosed in double quotes failed to be recognized in Keyword in meta description, Keyword density, Keyphrase distribution, Keyphrase in introduction, Keyphrase in image text and in Keyphrase in subheading assessments.
+* Fixes a bug where synonyms enclosed in double quotes in the Link keyphrase assessment failed to be recognized even when there were exact matches in the anchor text.  
+* Fixes a bug where incorrect assessments were shown for keyphrases only consisting of function words in Japanese.
+* Fixes a bug where a fatal error would be thrown if the link count of a corrupt indexable item would get updated.
+* Fixes a bug where the title tag would not be correct in Full Site Editing themes.
+* Fixes a bug where the text length assessment would count URLs from videos loaded in the article in the total amount of the copy characters in Japanese.
+* Fixes a bug where Japanese full stops in a text would be counted as three characters instead of one.
+
+Other:
+
+* Sets the WordPress tested up to version to 5.9.
+* Sets WooCommerce tested up to version to 6.1.
 
 = Earlier versions =
 For the changelog of earlier versions, please refer to [the changelog on yoast.com](https://yoa.st/yoast-seo-changelog).

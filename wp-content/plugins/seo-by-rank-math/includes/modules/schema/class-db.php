@@ -40,10 +40,17 @@ class DB {
 	 *
 	 * @return array
 	 */
-	public static function get_schemas( $object_id, $table = 'postmeta' ) {
+	public static function get_schemas( $object_id, $table = 'postmeta', $from_db = false ) {
+		static $schema_cache = [];
+
 		// Add exception handler.
 		if ( is_null( $object_id ) ) {
 			return [];
+		}
+
+		// Get from cache.
+		if ( ! $from_db && isset( $schema_cache[ $table . '_' . $object_id ] ) ) {
+			return $schema_cache[ $table . '_' . $object_id ];
 		}
 
 		$key  = 'termmeta' === $table ? 'term_id' : 'post_id';
@@ -59,6 +66,9 @@ class DB {
 			$id             = 'schema-' . $schema->meta_id;
 			$schemas[ $id ] = maybe_unserialize( $schema->meta_value );
 		}
+
+		// Add to cache.
+		$schema_cache[ $table . '_' . $object_id ] = $schemas;
 
 		return $schemas;
 	}
@@ -77,7 +87,19 @@ class DB {
 			return false;
 		}
 
-		$types = wp_list_pluck( $schemas, '@type' );
+		$types = array_reduce(
+			wp_list_pluck( $schemas, '@type' ),
+			function( $carry, $type ) {
+				if ( is_array( $type ) ) {
+					return array_merge( $carry, $type );
+				}
+
+				$carry[] = $type;
+				return $carry;
+			},
+			[]
+		);
+
 		if ( $sanitize ) {
 			$types = array_map(
 				function ( $type ) {
@@ -99,7 +121,7 @@ class DB {
 		$data = self::table()
 			->select( 'post_id' )
 			->select( 'meta_value' )
-			->whereLike( 'meta_value', $id )
+			->whereLike( 'meta_value', $id, '%:"' )
 			->one();
 
 		if ( ! empty( $data ) ) {
