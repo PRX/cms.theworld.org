@@ -190,15 +190,20 @@ if( function_exists('acf_add_local_field_group') ):
 				'first_day' => 1,
 			),
 		),
-		'location' => array(
-			array(
-				array(
-					'param' => 'post_type',
-					'operator' => '==',
-					'value' => 'post',
-				),
-			),
-		),
+    'location' => array(
+      array(
+        array(
+          'param' => 'post_type',
+          'operator' => '==',
+          'value' => 'tw_episodes',
+        ),
+        array(
+          'param' => 'post_type',
+          'operator' => '==',
+          'value' => 'post',
+        ),
+      ),
+    ),
 		'menu_order' => 0,
 		'position' => 'side',
 		'style' => 'seamless',
