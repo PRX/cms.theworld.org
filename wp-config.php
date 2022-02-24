@@ -1,18 +1,17 @@
 <?php
-/**
- * This config file is yours to hack on. It will work out of the box on Pantheon
- * but you may find there are a lot of neat tricks to be used here.
- *
- * See our documentation for more details:
- *
- * https://pantheon.io/docs
- */
+
+require_once(dirname(__FILE__) . '/wp-config-constants.php');
 
 /**
- * Pantheon platform settings. Everything you need should already be set.
+ * Server platform settings.
+ *
+ * Loads on platform servers and Lando environments using a recipe for that platform.
+ *
+ * This config MUST translate platform environment type variable to the appropriate
+ * value for `WP_ENVIRONMENT_TYPE`, which will be used to load environment config settings.
  */
-if (file_exists(dirname(__FILE__) . '/wp-config-pantheon.php') && isset($_ENV['PANTHEON_ENVIRONMENT'])) {
-	require_once(dirname(__FILE__) . '/wp-config-pantheon.php');
+if (file_exists(dirname(__FILE__) . '/wp-config-' . SERVER_PLATFORM_NAME . '.php') && isset($_ENV[SERVER_PLATFORM_ENVIRONMENT_VARIABLE_NAME])) {
+	require_once(dirname(__FILE__) . '/wp-config-' . SERVER_PLATFORM_NAME . '.php');
 
 /**
  * Local configuration information.
@@ -20,16 +19,24 @@ if (file_exists(dirname(__FILE__) . '/wp-config-pantheon.php') && isset($_ENV['P
  * If you are working in a local/desktop development environment and want to
  * keep your config separate, we recommend using a 'wp-config-local.php' file,
  * which you should also make sure you .gitignore.
+ *
+ * Not loaded when server platform config would be used, eg. Lando environment using a platform recipe.
  */
-} elseif (file_exists(dirname(__FILE__) . '/wp-config-local.php') && !isset($_ENV['PANTHEON_ENVIRONMENT'])){
+} elseif (file_exists(dirname(__FILE__) . '/wp-config-local.php') && !isset($_ENV[SERVER_PLATFORM_ENVIRONMENT_VARIABLE_NAME])){
+	/**
+	 * Set WP_ENVIRONMENT_TYPE to development.
+	 */
+	if (getenv('WP_ENVIRONMENT_TYPE') === false) {
+		putenv('WP_ENVIRONMENT_TYPE=development');
+	}
 	# IMPORTANT: ensure your local config does not include wp-settings.php
 	require_once(dirname(__FILE__) . '/wp-config-local.php');
 
 /**
- * This block will be executed if you are NOT running on Pantheon and have NO
+ * This block will be executed if you are NOT running on platform server or Lando recipe, and have NO
  * wp-config-local.php. Insert alternate config here if necessary.
  *
- * If you are only running on Pantheon, you can ignore this block.
+ * If you are only running on a platform server or Lando recipe, you can ignore this block.
  */
 } else {
 	define('DB_NAME',          'database_name');
