@@ -31,6 +31,8 @@ Shaping the future of audio by building technology, training talented producers 
 
 - Lando (https://docs.lando.dev/) - version `>=3.6`
 - Node `^16.x`
+- PHP_CodeSniffer (https://github.com/squizlabs/PHP_CodeSniffer) - `>=3.6`
+  - WordPress-Coding-Standards (https://github.com/WordPress/WordPress-Coding-Standards) - `>=2.3`
 
 
 ## Setup
