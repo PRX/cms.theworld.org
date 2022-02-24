@@ -33,7 +33,7 @@ require_once(dirname(__FILE__) . '/configs/global/global-plugins.php');
 $plugins_to_activate = array_merge($plugins_to_activate, GLOBAL_PLUGINS);
 
 // Get production plugins.
-if ( in_array( $_ENV['WP_ENVIRONMENT_TYPE'], array( 'staging', 'production' ) ) ){
+if ( in_array( getenv('WP_ENVIRONMENT_TYPE'), array( 'staging', 'production' ) ) ){
   require_once(dirname(__FILE__) . '/configs/production/production-plugins.php');
   $plugins_to_activate = array_merge($plugins_to_activate, PRODUCTION_PLUGINS);
 }
@@ -61,7 +61,7 @@ require_once(dirname(__FILE__) . '/configs/global/global-config.php');
  * - Staging
  * - Production
 */
-if ( in_array( $_ENV['WP_ENVIRONMENT_TYPE'], array( 'staging', 'production' ) ) ){
+if ( in_array( getenv('WP_ENVIRONMENT_TYPE'), array( 'staging', 'production' ) ) ){
   require_once(dirname(__FILE__) . '/configs/production/production-config.php');
 }
 /**

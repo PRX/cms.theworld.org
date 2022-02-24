@@ -39,20 +39,23 @@ if (file_exists(dirname(__FILE__) . '/wp-config-' . SERVER_PLATFORM_NAME . '.php
  * If you are only running on a platform server or Lando recipe, you can ignore this block.
  */
 } else {
-	define('DB_NAME',          'database_name');
-	define('DB_USER',          'database_username');
-	define('DB_PASSWORD',      'database_password');
-	define('DB_HOST',          'database_host');
-	define('DB_CHARSET',       'utf8');
-	define('DB_COLLATE',       '');
-	define('AUTH_KEY',         'put your unique phrase here');
-	define('SECURE_AUTH_KEY',  'put your unique phrase here');
-	define('LOGGED_IN_KEY',    'put your unique phrase here');
-	define('NONCE_KEY',        'put your unique phrase here');
-	define('AUTH_SALT',        'put your unique phrase here');
-	define('SECURE_AUTH_SALT', 'put your unique phrase here');
-	define('LOGGED_IN_SALT',   'put your unique phrase here');
-	define('NONCE_SALT',       'put your unique phrase here');
+  /**
+   *
+   */
+	// define('DB_NAME',          'database_name');
+	// define('DB_USER',          'database_username');
+	// define('DB_PASSWORD',      'database_password');
+	// define('DB_HOST',          'database_host');
+	// define('DB_CHARSET',       'utf8');
+	// define('DB_COLLATE',       '');
+	// define('AUTH_KEY',         'put your unique phrase here');
+	// define('SECURE_AUTH_KEY',  'put your unique phrase here');
+	// define('LOGGED_IN_KEY',    'put your unique phrase here');
+	// define('NONCE_KEY',        'put your unique phrase here');
+	// define('AUTH_SALT',        'put your unique phrase here');
+	// define('SECURE_AUTH_SALT', 'put your unique phrase here');
+	// define('LOGGED_IN_SALT',   'put your unique phrase here');
+	// define('NONCE_SALT',       'put your unique phrase here');
 }
 
 
@@ -67,17 +70,22 @@ if (file_exists(dirname(__FILE__) . '/wp-config-' . SERVER_PLATFORM_NAME . '.php
 $table_prefix = 'wp_';
 
 /**
- * For developers: WordPress debugging mode.
- *
- * Change this to true to enable the display of notices during development.
- * It is strongly recommended that plugin and theme developers use WP_DEBUG
- * in their development environments.
- *
- * You may want to examine $_ENV['PANTHEON_ENVIRONMENT'] to set this to be
- * "true" in dev, but false in test and live.
- */
-if ( ! defined( 'WP_DEBUG' ) ) {
-	define('WP_DEBUG', false);
+ * Enable production environment configs.
+ * - Staging
+ * - Production
+*/
+if ( in_array( getenv('WP_ENVIRONMENT_TYPE'), array( 'staging', 'production' ) ) ){
+	# IMPORTANT: ensure production config does not include wp-settings.php
+  require_once(dirname(__FILE__) . '/wp-config-production.php');
+}
+/**
+ * Enable development environment configs.
+ * - Local
+ * - Development
+*/
+else {
+	# IMPORTANT: ensure development config does not include wp-settings.php
+  require_once(dirname(__FILE__) . '/wp-config-development.php');
 }
 
 /* That's all, stop editing! Happy Pressing. */
