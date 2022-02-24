@@ -12,7 +12,6 @@ define('GLOBAL_PLUGINS', array(
   'newspack-blocks/newspack-blocks.php',
   'newspack-image-credits/newspack-image-credits.php',
   'newspack-newsletters/newspack-newsletters.php',
-  'publish-to-apple-news/apple-news.php',
   'pwa/pwa.php',
   'redirection/redirection.php',
   'wordpress-importer/wordpress-importer.php',
