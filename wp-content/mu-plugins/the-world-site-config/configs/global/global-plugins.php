@@ -9,7 +9,7 @@ define('GLOBAL_PLUGINS', array(
   'co-authors-plus/co-authors-plus.php',
   'custom-post-type-ui/custom-post-type-ui.php',
   'disable-comments/disable-comments.php',
-  'external-media-without-import/external-media-without-import.php',
+  'PATCH-external-media-without-import/external-media-without-import.php',
   'newspack-blocks/newspack-blocks.php',
   'newspack-image-credits/newspack-image-credits.php',
   'navz-photo-gallery/navz-photo-gallery.php',
