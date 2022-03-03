@@ -17,7 +17,7 @@
             },
             "taxonomy": "program",
             "field_type": "multi_select",
-            "allow_null": 0,
+            "allow_null": 1,
             "add_term": 0,
             "save_terms": 0,
             "load_terms": 0,
@@ -39,7 +39,7 @@
             },
             "taxonomy": "Story Type",
             "field_type": "multi_select",
-            "allow_null": 0,
+            "allow_null": 1,
             "add_term": 0,
             "save_terms": 0,
             "load_terms": 0,
@@ -61,7 +61,7 @@
             },
             "taxonomy": "Resource Development Tag",
             "field_type": "multi_select",
-            "allow_null": 0,
+            "allow_null": 1,
             "add_term": 0,
             "save_terms": 0,
             "load_terms": 0,
@@ -87,5 +87,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1646338052
+    "modified": 1646341793
 }
