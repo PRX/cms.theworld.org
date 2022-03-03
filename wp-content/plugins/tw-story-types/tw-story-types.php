@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: TW Story Types
-Description: Creates the Story Types custom taxonomy
+Description: Creates the Story Type custom taxonomy
 */
 
 // Register Custom Taxonomy
@@ -34,12 +34,12 @@ function tw_story_types_taxonomy() {
 		'hierarchical'               => false,
 		'public'                     => true,
 		'show_ui'                    => true,
-		'show_admin_column'          => false,
-		'show_in_nav_menus'          => false,
+		'show_admin_column'          => true,
+		'show_in_nav_menus'          => true,
 		'show_tagcloud'              => false,
-		'show_in_rest'               => false,
+		'show_in_rest'               => true,
 	);
-	register_taxonomy( 'Story Type', array( 'post' ), $args );
+	register_taxonomy( 'story_type', array( 'post' ), $args );
 
 }
 add_action( 'init', 'tw_story_types_taxonomy', 0 );

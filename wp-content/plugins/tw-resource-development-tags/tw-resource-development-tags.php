@@ -34,12 +34,12 @@ function tw_resource_development_tags_taxonomy() {
 		'hierarchical'               => false,
 		'public'                     => true,
 		'show_ui'                    => true,
-		'show_admin_column'          => false,
-		'show_in_nav_menus'          => false,
+		'show_admin_column'          => true,
+		'show_in_nav_menus'          => true,
 		'show_tagcloud'              => false,
-		'show_in_rest'               => false,
+		'show_in_rest'               => true,
 	);
-	register_taxonomy( 'Resource Development Tag', array( 'post' ), $args );
+	register_taxonomy( 'resource_development_tag', array( 'post' ), $args );
 
 }
 add_action( 'init', 'tw_resource_development_tags_taxonomy', 0 );
