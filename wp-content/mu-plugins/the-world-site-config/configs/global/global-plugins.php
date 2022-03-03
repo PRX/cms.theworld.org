@@ -6,6 +6,7 @@ define('GLOBAL_PLUGINS', array(
   'wp-native-php-sessions/pantheon-sessions.php',
   'acf-to-rest-api/class-acf-to-rest-api.php',
   'advanced-custom-fields/acf.php',
+  'advanced-custom-fields-pro/acf.php',
   'co-authors-plus/co-authors-plus.php',
   'custom-post-type-ui/custom-post-type-ui.php',
   'disable-comments/disable-comments.php',
