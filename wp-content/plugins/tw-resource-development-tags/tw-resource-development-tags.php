@@ -34,10 +34,10 @@ function tw_resource_development_tags_taxonomy() {
 		'hierarchical'               => false,
 		'public'                     => true,
 		'show_ui'                    => true,
-		'show_admin_column'          => true,
-		'show_in_nav_menus'          => true,
+		'show_admin_column'          => false,
+		'show_in_nav_menus'          => false,
 		'show_tagcloud'              => false,
-		'show_in_rest'               => true,
+		'show_in_rest'               => false,
 	);
 	register_taxonomy( 'Resource Development Tag', array( 'post' ), $args );
 
