@@ -14,6 +14,7 @@ define('GLOBAL_PLUGINS', array(
   'newspack-newsletters/newspack-newsletters.php',
   'pwa/pwa.php',
   'redirection/redirection.php',
+  'user-role-editor/user-role-editor.php',
   'wordpress-importer/wordpress-importer.php',
   'wordpress-seo/wp-seo.php',
   'wp-cfm-path/wp-cfm-path.php',
