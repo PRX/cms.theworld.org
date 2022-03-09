@@ -151,20 +151,23 @@ function admin_post_add_external_media_without_import() {
 
 function sanitize_and_validate_input() {
 	$raw_urls = explode( "\n", $_POST['urls'] );
-	$urls = array();
+	$info = array(
+    'urls' => array(),
+  );
+
+  if ( empty($raw_urls) ) {
+		$info['error'] = _('No URL\'s submitted.');
+		return $info;
+  }
+
 	foreach ( $raw_urls as $i => $raw_url ) {
 		// Don't call sanitize_text_field on url because it removes '%20'.
 		// Always use esc_url/esc_url_raw when sanitizing URLs. See:
 		// https://codex.wordpress.org/Function_Reference/esc_url
-		$urls[$i] = esc_url_raw( trim( $raw_url ) );
+		$info['urls'][] = esc_url_raw( trim( $raw_url ) );
 	}
-    unset( $url );  // break the reference with the last element
 
-	$input = array(
-		'urls' =>  $urls
-	);
-
-	return $input;
+	return $info;
 }
 
 function add_external_media_without_import() {
@@ -180,14 +183,82 @@ function add_external_media_without_import() {
 	$failed_urls = array();
 
 	foreach ( $urls as $url ) {
+    if (!$fp = fopen($url, 'r')) {
+      array_push( $failed_urls, $url );
+      continue;
+    }
+
+    $meta = stream_get_meta_data($fp);
+
+    // Close file stream.
+    fclose($fp);
+
+    foreach ( $meta['wrapper_data'] as $index => $value) {
+      if (preg_match('~HTTP/\d+\.\d+ 200 OK~', $value) === 1) {
+        $ok_index = $index;
+        break;
+      }
+    }
+
+    $ok_headers = array_slice($meta['wrapper_data'], $ok_index + 1);
+    $headers = array_reduce($ok_headers, function($c, $val) {
+      list($key, $val) = explode(': ', $val);
+
+      $c[strtolower($key)] = $val;
+
+      return $c;
+    }, array());
 		$filename = wp_basename( $url );
+    $filesize = $headers['content-length'];
+		$mime_type = $headers['content-type'];
+
+    // Insert into database.
 		$attachment = array(
 			'guid' => $url,
+			'post_mime_type' => $mime_type,
 			'post_title' => preg_replace( '/\.[^.]+$/', '', $filename ),
 		);
-		$attachment_metadata['sizes'] = array( 'full' => $attachment_metadata );
 		$attachment_id = wp_insert_attachment( $attachment );
+
+    // Add metadata.
+		$attachment_metadata = array(
+      'file' => $filename,
+      'filesize' => $filesize,
+    );
+
+    // Get metadata from file.
+    $tmp_file = download_url($url);
+    if ( !is_wp_error($tmp_file) ) {
+      $tmp_attachment_metadata = array();
+
+      if ( wp_attachment_is( 'image', $attachment_id ) ) {
+        $tmp_attachment_metadata = wp_read_image_metadata( $tmp_file );
+        if ( $image_size = wp_getimagesize($tmp_file) ) {
+          list($width, $height) = $image_size;
+          $attachment_metadata['width'] = $width;
+          $attachment_metadata['height'] = $height;
+          $attachment_metadata['sizes'] = array( 'full' => $attachment_metadata );
+        }
+      } elseif ( wp_attachment_is( 'video', $attachment_id ) ) {
+        $tmp_attachment_metadata = wp_read_video_metadata( $tmp_file );
+      } elseif ( wp_attachment_is( 'audio', $attachment_id ) ) {
+        $tmp_attachment_metadata = wp_read_audio_metadata( $tmp_file );
+      }
+
+      // Remove the blob of binary data from the array.
+      unset( $tmp_attachment_metadata['image']['data'] );
+
+      // Merge file metadata with initial values.
+      $attachment_metadata = array_merge($attachment_metadata, $tmp_attachment_metadata);
+
+      // Remove temp file.
+      unlink($tmp_file);
+    }
+
+    // Update attachment with metadata.
 		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+
+    // Add to our successful attachments.
 		array_push( $attachment_ids, $attachment_id );
 	}
 
