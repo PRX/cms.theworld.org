@@ -22,4 +22,5 @@ define('GLOBAL_PLUGINS', array(
   'wordpress-seo/wp-seo.php',
   'wp-cfm-path/wp-cfm-path.php',
   'wp-cfm/wp-cfm.php',
+  'xml-sitemap-feed/xml-sitemap.php',
 ));
