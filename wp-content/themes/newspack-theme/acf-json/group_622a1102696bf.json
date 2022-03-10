@@ -25,8 +25,8 @@
                 "taxonomy"
             ],
             "elements": "",
-            "min": "",
-            "max": "",
+            "min": 0,
+            "max": 10,
             "return_format": "object"
         },
         {
@@ -52,8 +52,8 @@
                 "taxonomy"
             ],
             "elements": "",
-            "min": "",
-            "max": "",
+            "min": 0,
+            "max": 10,
             "return_format": "object"
         },
         {
@@ -79,8 +79,8 @@
                 "taxonomy"
             ],
             "elements": "",
-            "min": "",
-            "max": "",
+            "min": 0,
+            "max": 10,
             "return_format": "object"
         },
         {
@@ -106,8 +106,8 @@
                 "taxonomy"
             ],
             "elements": "",
-            "min": "",
-            "max": "",
+            "min": 0,
+            "max": 10,
             "return_format": "object"
         }
     ],
@@ -129,5 +129,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1646924673
+    "modified": 1646933783
 }
