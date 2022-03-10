@@ -1,0 +1,69 @@
+{
+    "key": "group_622a343e21112",
+    "title": "Category Details",
+    "fields": [
+        {
+            "key": "field_622a3464daa23",
+            "label": "Archive Category",
+            "name": "archive_category",
+            "type": "true_false",
+            "instructions": "When checked, the term page will remain visible to the public, but will be removed from being selected. This helps keep the category selection grid clean from outdated category terms.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Show in Category Grid",
+            "default_value": 1,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_622a34fa3cd84",
+            "label": "Sort by",
+            "name": "sort_by",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "Most recent story first": "Most recent story first",
+                "Oldest story first": "Oldest story first"
+            },
+            "default_value": "Most recent story first",
+            "allow_null": 0,
+            "multiple": 0,
+            "ui": 0,
+            "return_format": "value",
+            "ajax": 0,
+            "placeholder": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "taxonomy",
+                "operator": "==",
+                "value": "category"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "seamless",
+    "label_placement": "left",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 1,
+    "modified": 1646933335
+}
