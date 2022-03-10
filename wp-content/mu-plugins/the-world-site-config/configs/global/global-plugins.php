@@ -15,6 +15,7 @@ define('GLOBAL_PLUGINS', array(
   'pwa/pwa.php',
   'redirection/redirection.php',
   'user-role-editor/user-role-editor.php',
+  'tw-media/tw-media.php',
   'tw-programs/tw-programs.php',
   'tw-resource-development-tags/tw-resource-development-tags.php',
   'tw-story-types/tw-story-types.php',
