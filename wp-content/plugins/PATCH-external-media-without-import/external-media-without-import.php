@@ -25,6 +25,7 @@ https://www.gnu.org/licenses/gpl-3.0-standalone.html.
 namespace emwi;
 
 function init_emwi() {
+  wp_enqueue_media();
 	$style = 'emwi-css';
 	$css_file = plugins_url( '/external-media-without-import.css', __FILE__ );
 	wp_register_style( $style, $css_file );
@@ -79,7 +80,7 @@ function post_upload_ui() {
 			<?php echo __('or'); ?>
 		</div>
 		<div class="row2">
-			<?php if ( 'grid' === $media_library_mode ) :  // FIXME: seems that media_library_mode being empty also means grid mode ?>
+			<?php if ( empty($media_library_mode) || 'grid' === $media_library_mode ) :  // FIXME: seems that media_library_mode being empty also means grid mode ?>
 				<button id="emwi-show" class="button button-large">
 					<?php echo __('Add External Media without Import'); ?>
 				</button>
@@ -106,7 +107,7 @@ function print_media_new_panel( $is_in_upload_ui ) {
 ?>
 	<div id="emwi-media-new-panel" <?php if ( $is_in_upload_ui ) : ?>style="display: none"<?php endif; ?>>
 		<label id="emwi-urls-label"><?php echo __('Add medias from URLs'); ?></label>
-		<textarea id="emwi-urls" rows="<?php echo $is_in_upload_ui ? 3 : 10 ?>" name="urls" required placeholder="<?php echo __("Please fill in the media URLs.\nMultiple URLs are supported with each URL specified in one line.");?>" value="<?php if ( isset( $_GET['urls'] ) ) echo esc_url( $_GET['urls'] ); ?>"></textarea>
+		<textarea id="emwi-urls" rows="10" name="urls" required placeholder="<?php echo __("Please fill in the media URLs.\nMultiple URLs are supported with each URL specified in one line.");?>" value="<?php if ( isset( $_GET['urls'] ) ) echo esc_url( $_GET['urls'] ); ?>"></textarea>
 		<div id="emwi-buttons-row">
 		<input type="hidden" name="action" value="add_external_media_without_import">
 		<span class="spinner"></span>

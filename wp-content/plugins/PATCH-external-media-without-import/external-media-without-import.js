@@ -36,17 +36,19 @@ jQuery(function ( $ ) {
 		wp.media.post( 'add_external_media_without_import', postData )
 			.done(function ( response ) {
 				// Update the attachment list in browser.
-				var frame = wp.media.frame || wp.media.library;
+				var frame = wp.media.library || wp.media.frame;
 				if ( frame ) {
 					frame.content.mode( 'browse' );
 					// The frame variable may be MediaFrame.Manage or MediaFrame.EditAttachments.
 					// In the later case, library = frame.library.
-					var library = frame.state().get( 'library' ) || frame.library;
+          var frameState = frame.state();
+					var library = (frameState && frameState.get( 'library' )) || frame.library;
 					response.attachments.forEach( function ( elem ) {
 						var attachment = wp.media.model.Attachment.create( elem );
 						attachment.fetch();
 						library.add( attachment ? [ attachment ] : [] );
-						if ( wp.media.frame._state != 'library' ) {
+            console.log(wp.media.frame._state);
+						if ( wp.media.frame._state === 'library' ) {
 							var selection = frame.state().get( 'selection' );
 							if ( selection ) {
 								selection.add( attachment );
