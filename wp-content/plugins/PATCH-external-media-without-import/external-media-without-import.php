@@ -37,11 +37,9 @@ function init_emwi() {
 }
 add_action( 'admin_enqueue_scripts', 'emwi\init_emwi' );
 
-add_action( 'admin_menu', 'emwi\add_submenu' );
 add_action( 'post-plupload-upload-ui', 'emwi\post_upload_ui' );
 add_action( 'post-html-upload-ui', 'emwi\post_upload_ui' );
 add_action( 'wp_ajax_add_external_media_without_import', 'emwi\wp_ajax_add_external_media_without_import' );
-add_action( 'admin_post_add_external_media_without_import', 'emwi\admin_post_add_external_media_without_import' );
 
 /**
  * This filter is to make attachments added by this plugin pass the test
@@ -61,61 +59,36 @@ add_filter( 'get_attached_file', function( $file, $attachment_id ) {
 	return $file;
 }, 10, 2 );
 
-function add_submenu() {
-	add_submenu_page(
-		'upload.php',
-		__( 'Add External Media without Import' ),
-		__( 'Add External Media without Import' ),
-		'manage_options',
-		'add-external-media-without-import',
-		'emwi\print_submenu_page'
-	);
-}
-
 function post_upload_ui() {
-	$media_library_mode = get_user_option( 'media_library_mode', get_current_user_id() );
 ?>
 	<div id="emwi-in-upload-ui">
 		<div class="row1">
 			<?php echo __('or'); ?>
 		</div>
 		<div class="row2">
-			<?php if ( empty($media_library_mode) || 'grid' === $media_library_mode ) :  // FIXME: seems that media_library_mode being empty also means grid mode ?>
-				<button id="emwi-show" class="button button-large">
-					<?php echo __('Add External Media without Import'); ?>
-				</button>
-				<?php print_media_new_panel( true ); ?>
-			<?php else : ?>
-				<a class="button button-large" href="<?php echo esc_url( admin_url( '/upload.php?page=add-external-media-without-import', __FILE__ ) ); ?>">
-					<?php echo __('Add External Media without Import'); ?>
-				</a>
-			<?php endif; ?>
+      <button id="emwi-show" class="button button-large">
+        <?php echo __('Add External Media without Import'); ?>
+      </button>
+      <?php print_media_new_panel(); ?>
 		</div>
 	</div>
 <?php
 }
 
-function print_submenu_page() {
+function print_media_new_panel() {
 ?>
-	<form action="<?php echo esc_url( admin_url('admin-post.php') ); ?>" method="post">
-	  <?php print_media_new_panel( false ); ?>
-	</form>
-<?php
-}
-
-function print_media_new_panel( $is_in_upload_ui ) {
-?>
-	<div id="emwi-media-new-panel" <?php if ( $is_in_upload_ui ) : ?>style="display: none"<?php endif; ?>>
-		<label id="emwi-urls-label"><?php echo __('Add medias from URLs'); ?></label>
-		<textarea id="emwi-urls" rows="10" name="urls" required placeholder="<?php echo __("Please fill in the media URLs.\nMultiple URLs are supported with each URL specified in one line.");?>" value="<?php if ( isset( $_GET['urls'] ) ) echo esc_url( $_GET['urls'] ); ?>"></textarea>
+	<div id="emwi-media-new-panel" style="display: none">
+		<label id="emwi-urls-label"><?php echo __('Add media from URL\'s'); ?></label>
+		<textarea id="emwi-urls" rows="10" name="urls" required placeholder="<?php echo __("Please fill in the media URL's.\nProvide multiple URL's each on its own line.");?>" value="<?php if ( isset( $_GET['urls'] ) ) echo esc_url( $_GET['urls'] ); ?>"></textarea>
+		<div id="emwi-hidden" style="display: none">
+			<span id="emwi-error"><?php if ( isset( $_GET['error'] ) ) echo esc_html( $_GET['error'] ); ?></span>
+    </div>
 		<div id="emwi-buttons-row">
-		<input type="hidden" name="action" value="add_external_media_without_import">
-		<span class="spinner"></span>
-		<input type="button" id="emwi-clear" class="button" value="<?php echo __('Clear') ?>">
-		<input type="submit" id="emwi-add" class="button button-primary" value="<?php echo __('Add') ?>">
-		<?php if ( $is_in_upload_ui ) : ?>
-			<input type="button" id="emwi-cancel" class="button" value="<?php echo __('Cancel') ?>">
-		<?php endif; ?>
+      <input type="hidden" name="action" value="add_external_media_without_import">
+      <span class="spinner"></span>
+      <input type="button" id="emwi-clear" class="button" value="<?php echo __('Clear') ?>">
+      <input type="submit" id="emwi-add" class="button button-primary" value="<?php echo __('Add') ?>">
+      <input type="button" id="emwi-cancel" class="button" value="<?php echo __('Cancel') ?>">
 		</div>
 	</div>
 <?php
@@ -137,17 +110,6 @@ function wp_ajax_add_external_media_without_import() {
 		$info['error'] = isset( $info['error'] ) ? $info['error'] . "\nAnother error also occurred. " . $error : $error;
 	}
 	wp_send_json_success( $info );
-}
-
-function admin_post_add_external_media_without_import() {
-	$info = add_external_media_without_import();
-	$redirect_url = 'upload.php';
-	$urls = $info['urls'];
-	if ( ! empty( $urls ) ) {
-		$redirect_url = $redirect_url . '?page=add-external-media-without-import&urls=' . urlencode( $urls );
-	}
-	wp_redirect( admin_url( $redirect_url ) );
-	exit;
 }
 
 function sanitize_and_validate_input() {
@@ -269,7 +231,7 @@ function add_external_media_without_import() {
 	$info['urls'] = $failed_urls_string;
 
 	if ( ! empty( $failed_urls_string ) ) {
-		$info['error'] = 'Failed to get info of the image(s).';
+		$info['error'] = 'Failed to get info for these URL\'s. Please check them and try again.';
 	}
 
 	return $info;
