@@ -45,20 +45,6 @@
 	margin-right: 1em;
 }
 
-#emwi-width {
-	margin-right: 2.5em;
-	width: 6em;
-}
-
-#emwi-height {
-	margin-right: 7em;
-	width: 6em;
-}
-
-#emwi-type {
-	width: 17em;
-}
-
 #emwi-buttons-row {
 	margin-top: 1.5em;
 	text-align: right;
@@ -77,4 +63,9 @@
 
 #emwi-add {
 	margin-right: 1.5em;
+}
+
+#emwi-show {
+  position: relative;
+  z-index: 1;
 }
