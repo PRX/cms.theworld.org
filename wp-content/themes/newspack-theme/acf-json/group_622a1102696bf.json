@@ -19,13 +19,9 @@
                 "guest-author"
             ],
             "taxonomy": "",
-            "filters": [
-                "search",
-                "post_type",
-                "taxonomy"
-            ],
+            "filters": "",
             "elements": "",
-            "min": 0,
+            "min": "",
             "max": 10,
             "return_format": "object"
         },
@@ -46,13 +42,9 @@
                 "guest-author"
             ],
             "taxonomy": "",
-            "filters": [
-                "search",
-                "post_type",
-                "taxonomy"
-            ],
+            "filters": "",
             "elements": "",
-            "min": 0,
+            "min": "",
             "max": 10,
             "return_format": "object"
         },
@@ -73,13 +65,9 @@
                 "guest-author"
             ],
             "taxonomy": "",
-            "filters": [
-                "search",
-                "post_type",
-                "taxonomy"
-            ],
+            "filters": "",
             "elements": "",
-            "min": 0,
+            "min": "",
             "max": 10,
             "return_format": "object"
         },
@@ -100,13 +88,9 @@
                 "guest-author"
             ],
             "taxonomy": "",
-            "filters": [
-                "search",
-                "post_type",
-                "taxonomy"
-            ],
+            "filters": "",
             "elements": "",
-            "min": 0,
+            "min": "",
             "max": 10,
             "return_format": "object"
         }
@@ -129,5 +113,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1646933927
+    "modified": 1647457981
 }

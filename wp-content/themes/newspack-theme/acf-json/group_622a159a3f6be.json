@@ -4,7 +4,7 @@
     "fields": [
         {
             "key": "field_622a15ada3493",
-            "label": "Featured Episodes",
+            "label": "Related Stories",
             "name": "related_stories",
             "type": "relationship",
             "instructions": "",
@@ -19,13 +19,9 @@
                 "post"
             ],
             "taxonomy": "",
-            "filters": [
-                "search",
-                "post_type",
-                "taxonomy"
-            ],
+            "filters": "",
             "elements": "",
-            "min": 0,
+            "min": "",
             "max": 10,
             "return_format": "object"
         }
@@ -48,5 +44,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1646933908
+    "modified": 1647457932
 }
