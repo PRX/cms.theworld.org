@@ -6,7 +6,7 @@ Pantheon is website platform optimized and configured to run high performance si
 
 # PRX - The World
 
-Shaping the future of audio by building technology, training talented producers and connecting them with supportive listeners.:
+Shaping the future of audio by building technology, training talented producers and connecting them with supportive listeners.
 
 
 ## Development instance:
