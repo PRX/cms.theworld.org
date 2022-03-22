@@ -47,6 +47,29 @@ final class Newspack_Newsletters_Renderer {
 	protected static $post_permalink = null;
 
 	/**
+	 * Inline tags that are allowed to be rendered in a text block.
+	 * 
+	 * @var bool[]|array[] Associative array of tag names to allowed attributes.
+	 */
+	public static $allowed_inline_tags = [
+		's'      => true,
+		'b'      => true,
+		'strong' => true,
+		'i'      => true,
+		'em'     => true,
+		'mark'   => true,
+		'u'      => true,
+		'small'  => true,
+		'sub'    => true,
+		'sup'    => true,
+		'a'      => [
+			'href'   => true,
+			'target' => true,
+			'rel'    => true,
+		],
+	];
+
+	/**
 	 * Convert a list to HTML attributes.
 	 *
 	 * @param array $attributes Array of attributes.
@@ -82,14 +105,13 @@ final class Newspack_Newsletters_Renderer {
 			return $block_attrs['customFontSize'] . 'px';
 		}
 		if ( isset( $block_attrs['fontSize'] ) ) {
-			// Gutenberg's default font size presets.
-			// https://github.com/WordPress/gutenberg/blob/359858da0675943d8a759a0a7c03e7b3846536f5/packages/block-editor/src/store/defaults.js#L87-L113 .
 			$sizes = array(
-				'small'  => '13px',
-				'normal' => '16px',
-				'medium' => '20px',
-				'large'  => '36px',
-				'huge'   => '48px',
+				'small'   => '12px',
+				'normal'  => '16px',
+				'medium'  => '16px',
+				'large'   => '24px',
+				'huge'    => '36px',
+				'x-large' => '36px',
 			);
 			return $sizes[ $block_attrs['fontSize'] ];
 		}
@@ -165,6 +187,11 @@ final class Newspack_Newsletters_Renderer {
 			$attrs['font-size'] = $font_size;
 		}
 
+		if ( isset( $attrs['style']['spacing']['padding'] ) ) {
+			$padding          = $attrs['style']['spacing']['padding'];
+			$attrs['padding'] = sprintf( '%s %s %s %s', $padding['top'], $padding['right'], $padding['bottom'], $padding['left'] );
+		}
+
 		// Remove block-only attributes.
 		array_map(
 			function ( $key ) use ( &$attrs ) {
@@ -175,7 +202,7 @@ final class Newspack_Newsletters_Renderer {
 			[ 'customBackgroundColor', 'customTextColor', 'customFontSize', 'fontSize', 'backgroundColor', 'style' ]
 		);
 
-		if ( isset( $attrs['background-color'] ) ) {
+		if ( ! isset( $attrs['padding'] ) && isset( $attrs['background-color'] ) ) {
 			$attrs['padding'] = '0';
 		}
 
@@ -189,7 +216,7 @@ final class Newspack_Newsletters_Renderer {
 			unset( $attrs['align'] );
 		}
 
-		if ( isset( $attrs['full-width'] ) && 'full-width' == $attrs['full-width'] && isset( $attrs['background-color'] ) ) {
+		if ( ! isset( $attrs['padding'] ) && isset( $attrs['full-width'] ) && 'full-width' == $attrs['full-width'] && isset( $attrs['background-color'] ) ) {
 			$attrs['padding'] = '12px 0';
 		}
 
@@ -310,10 +337,9 @@ final class Newspack_Newsletters_Renderer {
 				$dom = new DomDocument();
 				libxml_use_internal_errors( true );
 				$dom->loadHTML( mb_convert_encoding( $inner_html, 'HTML-ENTITIES', get_bloginfo( 'charset' ) ) );
-				$xpath      = new DOMXpath( $dom );
-				$img        = $xpath->query( '//img' )[0];
+				$img        = $dom->getElementsByTagName( 'img' )->item( 0 );
 				$img_src    = $img->getAttribute( 'src' );
-				$figcaption = $xpath->query( '//figcaption/text()' )[0];
+				$figcaption = $dom->getElementsByTagName( 'figcaption' )->item( 0 );
 
 				$img_attrs = array(
 					'padding' => '0',
@@ -356,6 +382,11 @@ final class Newspack_Newsletters_Renderer {
 				$markup = '<mj-image ' . self::array_to_attributes( $img_attrs ) . ' />';
 
 				if ( $figcaption ) {
+					$caption_html  = '';
+					$caption_nodes = $figcaption->childNodes; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+					foreach ( $caption_nodes as $caption_node ) {
+						$caption_html .= $dom->saveHTML( $caption_node );
+					}
 					$caption_attrs = array(
 						'align'       => 'center',
 						'color'       => '#555d66',
@@ -363,8 +394,10 @@ final class Newspack_Newsletters_Renderer {
 						'font-size'   => '13px',
 						'font-family' => $font_family,
 					);
-					 // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-					$markup .= '<mj-text ' . self::array_to_attributes( $caption_attrs ) . '>' . $figcaption->wholeText . '</mj-text>';
+					$markup       .= '<mj-text ' . self::array_to_attributes( $caption_attrs ) . '>' . wp_kses(
+						$caption_html,
+						self::$allowed_inline_tags
+					) . '</mj-text>';
 				}
 
 				$block_mjml_markup = $markup;
