@@ -1,0 +1,32 @@
+<wpml-config>
+    <custom-types>
+        <custom-type translate="1">guest_author</custom-type>
+    </custom-types>
+    <custom-fields>
+        <custom-field action="translate" label="First Name" group="Profile">molongui_guest_author_first_name</custom-field>
+        <custom-field action="translate" label="Last Name" group="Profile">molongui_guest_author_last_name</custom-field>
+        <custom-field action="translate" label="Display Name" group="Profile">molongui_guest_author_display_name</custom-field>
+        <custom-field action="translate" label="E-mail" group="Profile">_molongui_guest_author_mail</custom-field>
+        <custom-field action="translate" label="Telephone" group="Profile">_molongui_guest_author_phone</custom-field>
+        <custom-field action="translate" label="Web" group="Profile">_molongui_guest_author_web</custom-field>
+        <custom-field action="translate" label="Jop Position" group="Profile">_molongui_guest_author_job</custom-field>
+        <custom-field action="translate" label="Company" group="Profile">_molongui_guest_author_company</custom-field>
+        <custom-field action="translate" label="Company URL" group="Profile">_molongui_guest_author_company_link</custom-field>
+        <custom-field action="translate" label="Short Bio" group="Bio" style="visual">_molongui_guest_author_short_bio</custom-field>
+    </custom-fields>
+    <admin-texts>
+        <key name="molongui_authorship_strings">
+            <key name="*"/>
+            <key name="headline" />
+            <key name="about_the_author" />
+            <key name="related_posts" />
+            <key name="profile_title" />
+            <key name="at" />
+            <key name="web" />
+            <key name="more_posts" />
+            <key name="bio" />
+            <key name="related_title" />
+            <key name="no_related_posts" />
+        </key>
+    </admin-texts>
+</wpml-config>
