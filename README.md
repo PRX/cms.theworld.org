@@ -6,8 +6,9 @@ Pantheon is website platform optimized and configured to run high performance si
 
 # PRX - The World
 
-Shaping the future of audio by building technology, training talented producers and connecting them with supportive listeners.
+The World is a public radio program that crosses borders and time zones to bring home the stories that matter. From PRX.
 
+PRX is Shaping the future of audio by building technology, training talented producers and connecting them with supportive listeners.
 
 ## Development instance:
 
