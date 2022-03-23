@@ -5,6 +5,7 @@
 define('GLOBAL_PLUGINS', array(
   'wp-native-php-sessions/pantheon-sessions.php',
   'advanced-custom-fields-pro/acf.php',
+  'PATCH-s3-uploads/s3-uploads.php',
   'co-authors-plus/co-authors-plus.php',
   'custom-post-type-ui/custom-post-type-ui.php',
   'disable-comments/disable-comments.php',
@@ -15,6 +16,7 @@ define('GLOBAL_PLUGINS', array(
   'pwa/pwa.php',
   'redirection/redirection.php',
   'user-role-editor/user-role-editor.php',
+  'tw-episodes/tw-episodes.php',
   'tw-media/tw-media.php',
   'tw-programs/tw-programs.php',
   'tw-resource-development-tags/tw-resource-development-tags.php',

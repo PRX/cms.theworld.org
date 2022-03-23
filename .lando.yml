@@ -1,5 +1,7 @@
 name: the-world-wp
 recipe: pantheon
+env_file:
+  - .env
 config:
   framework: wordpress
   id: fa3253e3-f798-4bae-a25f-e278d44a9aab

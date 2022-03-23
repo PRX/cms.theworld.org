@@ -44,7 +44,7 @@ function tw_programs_taxonomy() {
 		'show_tagcloud'              => false,
 		'show_in_rest'               => true,
 	);
-	register_taxonomy( 'program', array( 'post' ), $args );
+	register_taxonomy( 'program', [ 'post', 'episode' ], $args );
 
 }
 add_action( 'init', 'tw_programs_taxonomy', 0 );
