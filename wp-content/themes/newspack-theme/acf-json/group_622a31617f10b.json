@@ -1,12 +1,12 @@
 {
     "key": "group_622a31617f10b",
-    "title": "Hosts",
+    "title": "Program Hosts",
     "fields": [
         {
             "key": "field_622a3175fb705",
             "label": "Hosts",
             "name": "hosts",
-            "type": "clone",
+            "type": "relationship",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -15,13 +15,17 @@
                 "class": "",
                 "id": ""
             },
-            "clone": [
-                "field_622a111626720"
+            "post_type": [
+                "guest-author"
             ],
-            "display": "seamless",
-            "layout": "block",
-            "prefix_label": 0,
-            "prefix_name": 0
+            "taxonomy": "",
+            "filters": [
+                "search"
+            ],
+            "elements": "",
+            "min": "",
+            "max": "",
+            "return_format": "object"
         }
     ],
     "location": [
@@ -42,5 +46,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1646932627
+    "modified": 1648046269
 }

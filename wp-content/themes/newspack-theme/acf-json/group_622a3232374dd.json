@@ -1,12 +1,12 @@
 {
     "key": "group_622a3232374dd",
-    "title": "Editors",
+    "title": "Category Editors",
     "fields": [
         {
             "key": "field_622a32371632d",
             "label": "Editors",
             "name": "editors",
-            "type": "clone",
+            "type": "relationship",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -15,13 +15,17 @@
                 "class": "",
                 "id": ""
             },
-            "clone": [
-                "field_622a11a2747d2"
+            "post_type": [
+                "guest-author"
             ],
-            "display": "seamless",
-            "layout": "block",
-            "prefix_label": 0,
-            "prefix_name": 0
+            "taxonomy": "",
+            "filters": [
+                "search"
+            ],
+            "elements": "",
+            "min": "",
+            "max": "",
+            "return_format": "object"
         }
     ],
     "location": [
@@ -42,5 +46,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1646932613
+    "modified": 1648046285
 }

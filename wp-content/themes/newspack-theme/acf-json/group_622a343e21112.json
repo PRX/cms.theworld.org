@@ -7,7 +7,7 @@
             "label": "Archive Category",
             "name": "archive_category",
             "type": "true_false",
-            "instructions": "When checked, the term page will remain visible to the public, but will be removed from being selected. This helps keep the category selection grid clean from outdated category terms.",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -15,7 +15,7 @@
                 "class": "",
                 "id": ""
             },
-            "message": "Show in Category Grid",
+            "message": "Active Category",
             "default_value": 1,
             "ui": 0,
             "ui_on_text": "",
@@ -65,5 +65,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1646933335
+    "modified": 1648046540
 }
