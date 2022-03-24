@@ -1,26 +1,7 @@
 {
     "key": "group_622a69c137333",
-    "title": "Audio Metadata",
+    "title": "Audio Fields",
     "fields": [
-        {
-            "key": "field_622a69ed0dfde",
-            "label": "Audio Title",
-            "name": "audio_title",
-            "type": "text",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": "",
-            "maxlength": ""
-        },
         {
             "key": "field_622a69fd0dfdf",
             "label": "Audio type",
@@ -48,13 +29,83 @@
             "placeholder": ""
         },
         {
+            "key": "field_622a69ed0dfde",
+            "label": "Audio Title",
+            "name": "audio_title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_622a69fd0dfdf",
+                        "operator": "!=",
+                        "value": "standard"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_623cd5687a201",
+            "label": "Segments List",
+            "name": "segments_list",
+            "type": "relationship",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_622a69fd0dfdf",
+                        "operator": "==",
+                        "value": "program-episode"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "attachment"
+            ],
+            "taxonomy": "",
+            "filters": [
+                "search",
+                "post_type",
+                "taxonomy"
+            ],
+            "elements": "",
+            "min": "",
+            "max": 20,
+            "return_format": "object"
+        },
+        {
             "key": "field_622a6a5bbd407",
             "label": "Program",
             "name": "program",
             "type": "taxonomy",
             "instructions": "",
             "required": 0,
-            "conditional_logic": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_622a69fd0dfdf",
+                        "operator": "!=",
+                        "value": "standard"
+                    }
+                ]
+            ],
             "wrapper": {
                 "width": "",
                 "class": "",
@@ -76,7 +127,15 @@
             "type": "date_picker",
             "instructions": "",
             "required": 0,
-            "conditional_logic": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_622a69fd0dfdf",
+                        "operator": "!=",
+                        "value": "standard"
+                    }
+                ]
+            ],
             "wrapper": {
                 "width": "",
                 "class": "",
@@ -93,7 +152,15 @@
             "type": "date_picker",
             "instructions": "",
             "required": 0,
-            "conditional_logic": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_622a69fd0dfdf",
+                        "operator": "!=",
+                        "value": "standard"
+                    }
+                ]
+            ],
             "wrapper": {
                 "width": "",
                 "class": "",
@@ -110,7 +177,15 @@
             "type": "relationship",
             "instructions": "",
             "required": 0,
-            "conditional_logic": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_622a69fd0dfdf",
+                        "operator": "!=",
+                        "value": "standard"
+                    }
+                ]
+            ],
             "wrapper": {
                 "width": "",
                 "class": "",
@@ -126,33 +201,6 @@
             "elements": "",
             "min": "",
             "max": "",
-            "return_format": "object"
-        },
-        {
-            "key": "field_622a6b3956edf",
-            "label": "Related Segments",
-            "name": "related_segments",
-            "type": "relationship",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "post_type": [
-                "post"
-            ],
-            "taxonomy": "",
-            "filters": [
-                "search",
-                "post_type",
-                "taxonomy"
-            ],
-            "elements": "",
-            "min": 0,
-            "max": 20,
             "return_format": "object"
         },
         {
@@ -180,7 +228,7 @@
             {
                 "param": "attachment",
                 "operator": "==",
-                "value": "all"
+                "value": "audio"
             }
         ]
     ],
@@ -193,5 +241,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1648152240
+    "modified": 1648154358
 }
