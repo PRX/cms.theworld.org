@@ -66,14 +66,14 @@
             "add_term": 0,
             "save_terms": 0,
             "load_terms": 0,
-            "return_format": "id",
+            "return_format": "object",
             "multiple": 0
         },
         {
             "key": "field_622a6a928a4f6",
             "label": "Broadcast Date",
             "name": "broadcast_date",
-            "type": "clone",
+            "type": "date_picker",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -82,13 +82,9 @@
                 "class": "",
                 "id": ""
             },
-            "clone": [
-                "field_622111ffbae7d"
-            ],
-            "display": "seamless",
-            "layout": "block",
-            "prefix_label": 0,
-            "prefix_name": 0
+            "display_format": "F j, Y",
+            "return_format": "U",
+            "first_day": 1
         },
         {
             "key": "field_622a6ac11faf8",
@@ -104,7 +100,7 @@
                 "id": ""
             },
             "display_format": "F j, Y",
-            "return_format": "Ymd",
+            "return_format": "U",
             "first_day": 1
         },
         {
@@ -125,9 +121,7 @@
             ],
             "taxonomy": "",
             "filters": [
-                "search",
-                "post_type",
-                "taxonomy"
+                "search"
             ],
             "elements": "",
             "min": "",
@@ -199,5 +193,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1646947537
+    "modified": 1648152240
 }
