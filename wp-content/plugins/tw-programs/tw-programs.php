@@ -29,11 +29,6 @@ function tw_programs_taxonomy() {
 		'items_list'                 => __( 'Items list', 'text_domain' ),
 		'items_list_navigation'      => __( 'Items list navigation', 'text_domain' ),
 	);
-	$rewrite = array(
-		'slug'                       => 'programs/',
-		'with_front'                 => true,
-		'hierarchical'               => false,
-	);
 	$args = array(
 		'labels'                     => $labels,
 		'hierarchical'               => false,
