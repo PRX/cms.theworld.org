@@ -20,31 +20,6 @@
             "ui": 0,
             "ui_on_text": "",
             "ui_off_text": ""
-        },
-        {
-            "key": "field_622a34fa3cd84",
-            "label": "Sort by",
-            "name": "sort_by",
-            "type": "select",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "choices": {
-                "Most recent story first": "Most recent story first",
-                "Oldest story first": "Oldest story first"
-            },
-            "default_value": "Most recent story first",
-            "allow_null": 0,
-            "multiple": 0,
-            "ui": 0,
-            "return_format": "value",
-            "ajax": 0,
-            "placeholder": ""
         }
     ],
     "location": [
@@ -65,5 +40,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1648046540
+    "modified": 1648241766
 }
