@@ -6,7 +6,7 @@
             "key": "field_622a111626720",
             "label": "Hosts",
             "name": "hosts",
-            "type": "relationship",
+            "type": "taxonomy",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -15,23 +15,20 @@
                 "class": "",
                 "id": ""
             },
-            "post_type": [
-                "guest-author"
-            ],
-            "taxonomy": "",
-            "filters": [
-                "search"
-            ],
-            "elements": "",
-            "min": "",
-            "max": 10,
-            "return_format": "object"
+            "taxonomy": "contributor",
+            "field_type": "multi_select",
+            "allow_null": 1,
+            "add_term": 1,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "id",
+            "multiple": 0
         },
         {
             "key": "field_622a116e3e41b",
             "label": "Producers",
             "name": "producers",
-            "type": "relationship",
+            "type": "taxonomy",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -40,23 +37,20 @@
                 "class": "",
                 "id": ""
             },
-            "post_type": [
-                "guest-author"
-            ],
-            "taxonomy": "",
-            "filters": [
-                "search"
-            ],
-            "elements": "",
-            "min": "",
-            "max": 10,
-            "return_format": "object"
+            "taxonomy": "contributor",
+            "field_type": "multi_select",
+            "allow_null": 1,
+            "add_term": 1,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "id",
+            "multiple": 0
         },
         {
             "key": "field_622a11a2747d2",
             "label": "Reporters",
             "name": "reporters",
-            "type": "relationship",
+            "type": "taxonomy",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -65,23 +59,20 @@
                 "class": "",
                 "id": ""
             },
-            "post_type": [
-                "guest-author"
-            ],
-            "taxonomy": "",
-            "filters": [
-                "search"
-            ],
-            "elements": "",
-            "min": "",
-            "max": 10,
-            "return_format": "object"
+            "taxonomy": "contributor",
+            "field_type": "multi_select",
+            "allow_null": 1,
+            "add_term": 1,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "id",
+            "multiple": 0
         },
         {
             "key": "field_622a11ceed329",
             "label": "Guests",
             "name": "guests",
-            "type": "relationship",
+            "type": "taxonomy",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -90,17 +81,14 @@
                 "class": "",
                 "id": ""
             },
-            "post_type": [
-                "guest-author"
-            ],
-            "taxonomy": "",
-            "filters": [
-                "search"
-            ],
-            "elements": "",
-            "min": "",
-            "max": 10,
-            "return_format": "object"
+            "taxonomy": "contributor",
+            "field_type": "multi_select",
+            "allow_null": 1,
+            "add_term": 1,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "id",
+            "multiple": 0
         }
     ],
     "location": [
@@ -121,5 +109,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1647964107
+    "modified": 1648150854
 }
