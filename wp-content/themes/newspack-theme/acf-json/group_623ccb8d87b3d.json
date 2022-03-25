@@ -6,7 +6,7 @@
             "key": "field_623ccbb012bd9",
             "label": "Facebook",
             "name": "facebook",
-            "type": "link",
+            "type": "url",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -15,13 +15,14 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array"
+            "default_value": "",
+            "placeholder": ""
         },
         {
             "key": "field_623ccbd685718",
             "label": "Twitter",
             "name": "twitter",
-            "type": "link",
+            "type": "url",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -30,13 +31,14 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array"
+            "default_value": "",
+            "placeholder": ""
         },
         {
             "key": "field_623ccbeb5ddcf",
             "label": "Instagram",
             "name": "Instagram",
-            "type": "link",
+            "type": "url",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -45,13 +47,14 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array"
+            "default_value": "",
+            "placeholder": ""
         },
         {
             "key": "field_623ccbf967ff9",
             "label": "TikTok",
             "name": "tiktok",
-            "type": "link",
+            "type": "url",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -60,13 +63,14 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array"
+            "default_value": "",
+            "placeholder": ""
         },
         {
             "key": "field_623ccc15ce693",
             "label": "Tumblr",
             "name": "tumblr",
-            "type": "link",
+            "type": "url",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -75,13 +79,14 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array"
+            "default_value": "",
+            "placeholder": ""
         },
         {
             "key": "field_623ccc238bbe9",
             "label": "Podcast",
             "name": "podcast",
-            "type": "link",
+            "type": "url",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -90,13 +95,14 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array"
+            "default_value": "",
+            "placeholder": ""
         },
         {
             "key": "field_623ccc3387beb",
             "label": "Blog",
             "name": "blog",
-            "type": "link",
+            "type": "url",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -105,13 +111,14 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array"
+            "default_value": "",
+            "placeholder": ""
         },
         {
             "key": "field_623ccc442086f",
             "label": "Website",
             "name": "website",
-            "type": "link",
+            "type": "url",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -120,13 +127,14 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array"
+            "default_value": "",
+            "placeholder": ""
         },
         {
             "key": "field_623ccc4e94dbf",
             "label": "Email",
             "name": "email",
-            "type": "link",
+            "type": "email",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -135,13 +143,16 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array"
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
         },
         {
             "key": "field_623ccc5cce3d4",
             "label": "RSS",
             "name": "rss",
-            "type": "link",
+            "type": "url",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -150,7 +161,8 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array"
+            "default_value": "",
+            "placeholder": ""
         }
     ],
     "location": [
@@ -171,5 +183,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1648151711
+    "modified": 1648240009
 }

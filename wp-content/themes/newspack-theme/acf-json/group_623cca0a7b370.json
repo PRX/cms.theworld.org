@@ -59,7 +59,7 @@
             "choices": {
                 "the_world": "The World Staff",
                 "pri_staff": "PRX Staff",
-                "studio|Studio 360 Staff (LEGACY)": "studio|Studio 360 Staff (LEGACY)",
+                "studio": "Studio 360 Staff (LEGACY)",
                 "pri_org_staff": "Network Editorial Staff (LEGACY)",
                 "podcaster": "PRI Podcast Network Host (LEGACY)"
             },
@@ -107,7 +107,7 @@
             "library": "all",
             "min_size": "",
             "max_size": "",
-            "mime_types": "jpg, png"
+            "mime_types": "jpg, jpeg, png"
         },
         {
             "key": "field_623ccea44041e",
@@ -153,5 +153,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1648152326
+    "modified": 1648239915
 }
