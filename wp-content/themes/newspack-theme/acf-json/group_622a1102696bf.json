@@ -18,10 +18,10 @@
             "taxonomy": "contributor",
             "field_type": "multi_select",
             "allow_null": 1,
-            "add_term": 1,
+            "add_term": 0,
             "save_terms": 0,
             "load_terms": 0,
-            "return_format": "id",
+            "return_format": "object",
             "multiple": 0
         },
         {
@@ -40,10 +40,10 @@
             "taxonomy": "contributor",
             "field_type": "multi_select",
             "allow_null": 1,
-            "add_term": 1,
+            "add_term": 0,
             "save_terms": 0,
             "load_terms": 0,
-            "return_format": "id",
+            "return_format": "object",
             "multiple": 0
         },
         {
@@ -62,10 +62,10 @@
             "taxonomy": "contributor",
             "field_type": "multi_select",
             "allow_null": 1,
-            "add_term": 1,
+            "add_term": 0,
             "save_terms": 0,
             "load_terms": 0,
-            "return_format": "id",
+            "return_format": "object",
             "multiple": 0
         },
         {
@@ -84,10 +84,10 @@
             "taxonomy": "contributor",
             "field_type": "multi_select",
             "allow_null": 1,
-            "add_term": 1,
+            "add_term": 0,
             "save_terms": 0,
             "load_terms": 0,
-            "return_format": "id",
+            "return_format": "object",
             "multiple": 0
         }
     ],
@@ -109,5 +109,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1648496363
+    "modified": 1648499401
 }

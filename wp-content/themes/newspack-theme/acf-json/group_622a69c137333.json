@@ -66,7 +66,7 @@
             "add_term": 0,
             "save_terms": 0,
             "load_terms": 0,
-            "return_format": "id",
+            "return_format": "object",
             "multiple": 0
         },
         {
@@ -121,13 +121,13 @@
                 "id": ""
             },
             "taxonomy": "contributor",
-            "field_type": "checkbox",
-            "add_term": 1,
+            "field_type": "multi_select",
+            "allow_null": 0,
+            "add_term": 0,
             "save_terms": 0,
             "load_terms": 0,
-            "return_format": "id",
-            "multiple": 0,
-            "allow_null": 0
+            "return_format": "object",
+            "multiple": 0
         },
         {
             "key": "field_622a6b3956edf",
@@ -194,5 +194,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1648496501
+    "modified": 1648500318
 }
