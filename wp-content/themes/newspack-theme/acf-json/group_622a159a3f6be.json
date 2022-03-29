@@ -35,6 +35,20 @@
                 "operator": "==",
                 "value": "episode"
             }
+        ],
+        [
+            {
+                "param": "taxonomy",
+                "operator": "==",
+                "value": "category"
+            }
+        ],
+        [
+            {
+                "param": "taxonomy",
+                "operator": "==",
+                "value": "program"
+            }
         ]
     ],
     "menu_order": 2,
