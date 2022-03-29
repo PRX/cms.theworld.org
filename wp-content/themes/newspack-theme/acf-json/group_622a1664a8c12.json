@@ -29,12 +29,26 @@
                 "operator": "==",
                 "value": "episode"
             }
+        ],
+        [
+            {
+                "param": "taxonomy",
+                "operator": "==",
+                "value": "category"
+            }
+        ],
+        [
+            {
+                "param": "taxonomy",
+                "operator": "==",
+                "value": "program"
+            }
         ]
     ],
     "menu_order": -20,
     "position": "side",
-    "style": "default",
-    "label_placement": "top",
+    "style": "seamless",
+    "label_placement": "left",
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
