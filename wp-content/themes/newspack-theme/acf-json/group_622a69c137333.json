@@ -119,6 +119,28 @@
             "multiple": 0
         },
         {
+            "key": "field_62425676f5ee3",
+            "label": "Audio Byline",
+            "name": "audio_byline",
+            "type": "taxonomy",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "taxonomy": "contributor",
+            "field_type": "multi_select",
+            "allow_null": 0,
+            "add_term": 0,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "object",
+            "multiple": 0
+        },
+        {
             "key": "field_622a6a928a4f6",
             "label": "Broadcast Date",
             "name": "broadcast_date",
@@ -206,5 +228,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1648500318
+    "modified": 1648514713
 }
