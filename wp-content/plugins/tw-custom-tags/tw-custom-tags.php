@@ -45,7 +45,7 @@ function tw_city_taxonomy()
         'show_tagcloud' => false,
         'show_in_rest' => true,
     ];
-    register_taxonomy('City', ['post'], $args);
+    register_taxonomy('city', ['post'], $args);
 }
 add_action('init', 'tw_city_taxonomy', 0);
 
@@ -94,7 +94,7 @@ function tw_continent_taxonomy()
         'show_tagcloud' => false,
         'show_in_rest' => true,
     ];
-    register_taxonomy('Continent', ['post'], $args);
+    register_taxonomy('continent', ['post'], $args);
 }
 add_action('init', 'tw_continent_taxonomy', 0);
 
@@ -143,7 +143,7 @@ function tw_country_taxonomy()
         'show_tagcloud' => false,
         'show_in_rest' => true,
     ];
-    register_taxonomy('Country', ['post'], $args);
+    register_taxonomy('country', ['post'], $args);
 }
 add_action('init', 'tw_country_taxonomy', 0);
 
@@ -192,7 +192,7 @@ function tw_person_taxonomy()
         'show_tagcloud' => false,
         'show_in_rest' => true,
     ];
-    register_taxonomy('Person', ['post'], $args);
+    register_taxonomy('person', ['post'], $args);
 }
 add_action('init', 'tw_person_taxonomy', 0);
 
@@ -245,7 +245,7 @@ function tw_province_state_taxonomy()
         'show_tagcloud' => false,
         'show_in_rest' => true,
     ];
-    register_taxonomy('Province or State', ['post'], $args);
+    register_taxonomy('province_state', ['post'], $args);
 }
 add_action('init', 'tw_province_state_taxonomy', 0);
 
@@ -294,7 +294,7 @@ function tw_region_taxonomy()
         'show_tagcloud' => false,
         'show_in_rest' => true,
     ];
-    register_taxonomy('Region', ['post'], $args);
+    register_taxonomy('region', ['post'], $args);
 }
 add_action('init', 'tw_region_taxonomy', 0);
 
@@ -343,6 +343,6 @@ function tw_social_tag_taxonomy()
         'show_tagcloud' => false,
         'show_in_rest' => true,
     ];
-    register_taxonomy('Social Tag', ['post'], $args);
+    register_taxonomy('social_tag', ['post'], $args);
 }
 add_action('init', 'tw_social_tag_taxonomy', 0);
