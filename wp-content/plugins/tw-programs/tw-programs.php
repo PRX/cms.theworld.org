@@ -1,10 +1,16 @@
 <?php
-/*
-Plugin Name: TW Programs
-Description: Creates the Programs custom taxonomy
-*/
+/**
+ * Plugin Name: TW Programs
+ * Description: Creates the Programs custom taxonomy
+ *
+ * @package tw_programs
+ */
 
-// Register Custom Taxonomy
+/**
+ * Register Program Taxonomy
+ *
+ * @return void
+ */
 function tw_programs_taxonomy() {
 
 	$labels = array(
@@ -29,17 +35,17 @@ function tw_programs_taxonomy() {
 		'items_list'                 => __( 'Items list', 'text_domain' ),
 		'items_list_navigation'      => __( 'Items list navigation', 'text_domain' ),
 	);
-	$args = array(
-		'labels'                     => $labels,
-		'hierarchical'               => false,
-		'public'                     => true,
-		'show_ui'                    => true,
-		'show_admin_column'          => true,
-		'show_in_nav_menus'          => false,
-		'show_tagcloud'              => false,
-		'show_in_rest'               => true,
+	$args   = array(
+		'labels'            => $labels,
+		'hierarchical'      => false,
+		'public'            => true,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'show_in_nav_menus' => false,
+		'show_tagcloud'     => false,
+		'show_in_rest'      => true,
 	);
-	register_taxonomy( 'program', [ 'post', 'episode' ], $args );
+	register_taxonomy( 'program', array( 'post', 'episode' ), $args );
 
 }
 add_action( 'init', 'tw_programs_taxonomy', 0 );

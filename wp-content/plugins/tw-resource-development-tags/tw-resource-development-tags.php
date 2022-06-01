@@ -1,10 +1,16 @@
 <?php
-/*
-Plugin Name: TW Resource Development Tags
-Description: Creates the Resource Development custom taxonomy
-*/
+/**
+ * Plugin Name: TW Resource Development Tags
+ * Description: Creates the Resource Development custom taxonomy
+ *
+ * @package tw_resource_development_tags
+ */
 
-// Register Custom Taxonomy
+/**
+ * Register Resource Development Tags Taxonomy
+ *
+ * @return void
+ */
 function tw_resource_development_tags_taxonomy() {
 
 	$labels = array(
@@ -29,15 +35,15 @@ function tw_resource_development_tags_taxonomy() {
 		'items_list'                 => __( 'Items list', 'text_domain' ),
 		'items_list_navigation'      => __( 'Items list navigation', 'text_domain' ),
 	);
-	$args = array(
-		'labels'                     => $labels,
-		'hierarchical'               => false,
-		'public'                     => true,
-		'show_ui'                    => true,
-		'show_admin_column'          => true,
-		'show_in_nav_menus'          => true,
-		'show_tagcloud'              => false,
-		'show_in_rest'               => true,
+	$args   = array(
+		'labels'            => $labels,
+		'hierarchical'      => false,
+		'public'            => true,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'show_in_nav_menus' => true,
+		'show_tagcloud'     => false,
+		'show_in_rest'      => true,
 	);
 	register_taxonomy( 'resource_development_tag', array( 'post' ), $args );
 
