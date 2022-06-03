@@ -1,10 +1,16 @@
 <?php
-/*
-Plugin Name: TW Episodes
-Description: Manages the Episode custom post type
-*/
+/**
+ * Plugin Name: TW Episodes
+ * Description: Manages the Episode custom post type
+ *
+ * @package tw_episodes
+ */
 
-// Register Custom Post Type
+/**
+ * Register Episode Post Type.
+ *
+ * @return void
+ */
 function tw_episodes_post_type() {
 
 	$labels = array(
@@ -36,25 +42,25 @@ function tw_episodes_post_type() {
 		'items_list_navigation' => __( 'Items list navigation', 'text_domain' ),
 		'filter_items_list'     => __( 'Filter items list', 'text_domain' ),
 	);
-	$args = array(
-		'label'                 => __( 'Episodes', 'text_domain' ),
-		'description'           => __( 'Manages the Episode custom post type', 'text_domain' ),
-		'labels'                => $labels,
-		'supports'              => array( 'title', 'editor', 'thumbnail', 'custom-fields' ),
-		'taxonomies'            => array( 'category', 'post_tag', 'tw_programs' ),
-		'hierarchical'          => false,
-		'public'                => true,
-		'show_ui'               => true,
-		'show_in_menu'          => true,
-		'menu_position'         => 5,
-		'show_in_admin_bar'     => true,
-		'show_in_nav_menus'     => true,
-		'can_export'            => true,
-		'has_archive'           => true,
-		'exclude_from_search'   => false,
-		'publicly_queryable'    => true,
-		'capability_type'       => 'page',
-		'show_in_rest'          => true,
+	$args   = array(
+		'label'               => __( 'Episodes', 'text_domain' ),
+		'description'         => __( 'Manages the Episode custom post type', 'text_domain' ),
+		'labels'              => $labels,
+		'supports'            => array( 'title', 'editor', 'thumbnail', 'custom-fields' ),
+		'taxonomies'          => array( 'category', 'post_tag', 'tw_programs' ),
+		'hierarchical'        => false,
+		'public'              => true,
+		'show_ui'             => true,
+		'show_in_menu'        => true,
+		'menu_position'       => 5,
+		'show_in_admin_bar'   => true,
+		'show_in_nav_menus'   => true,
+		'can_export'          => true,
+		'has_archive'         => true,
+		'exclude_from_search' => false,
+		'publicly_queryable'  => true,
+		'capability_type'     => 'page',
+		'show_in_rest'        => true,
 	);
 	register_post_type( 'episode', $args );
 
