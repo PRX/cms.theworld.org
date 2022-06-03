@@ -1,15 +1,18 @@
 {
     "cSpell.words": [
-        "ABSPATH",
-        "DOCROOT",
-        "Lando",
-        "multidev",
-        "multidevs",
-        "SITEURL",
-        "ssot",
-        "untrailingslashit",
-        "wpcfm",
-        "WPINC"
+      "ABSPATH",
+      "DOCROOT",
+      "jetpack",
+      "Lando",
+      "multidev",
+      "multidevs",
+      "newspack",
+      "SITEURL",
+      "ssot",
+      "untrailingslashit",
+      "wpcfm",
+      "WPINC",
+      "WPMU"
     ],
     "cSpell.ignorePaths": [
         "package-lock.json",
@@ -18,6 +21,17 @@
         ".git/objects",
         ".vscode",
         ".vscode-insiders",
-        "wp-content/plugins"
-    ]
+        "wp-content/plugins",
+        "vendor"
+    ],
+    "phpcs.composerJsonPath": "composer.json",
+    "phpcs.executablePath": "vendor/bin/phpcs",
+    "phpcs.standard": "WordPress",
+    "phpSniffer.autoDetect": true,
+    "phpSniffer.standard": "WordPress",
+    "[php]": {
+      "editor.defaultFormatter": "wongjn.php-sniffer"
+    },
+    "editorconfig.generateAuto": false,
+    "editor.formatOnSave": true
 }
