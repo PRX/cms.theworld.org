@@ -62,6 +62,10 @@ Thumbs.db
 wp-config-local.php
 local-config.php
 
+# Composer Vendor Files #
+#########################
+Vendor
+
 # Custom #
 ##########
 reference/

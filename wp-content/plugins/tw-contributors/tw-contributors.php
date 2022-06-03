@@ -1,10 +1,16 @@
 <?php
-/*
-Plugin Name: TW Contributors
-Description: Creates the Contributors custom taxonomy
-*/
+/**
+ * Plugin Name: TW Contributors
+ * Description: Creates the Contributors custom taxonomy
+ *
+ * @package tw_contributors
+ */
 
-// Register Custom Taxonomy
+/**
+ * Register Contributors Taxonomy
+ *
+ * @return void
+ */
 function tw_contributors_taxonomy() {
 
 	$labels = array(
@@ -29,18 +35,18 @@ function tw_contributors_taxonomy() {
 		'items_list'                 => __( 'Items list', 'text_domain' ),
 		'items_list_navigation'      => __( 'Items list navigation', 'text_domain' ),
 	);
-	$args = array(
-		'labels'                     => $labels,
-		'description'	               => 'Biographical details of folks that work on content.',
-		'hierarchical'               => false,
-		'public'                     => true,
-		'show_ui'                    => true,
-		'show_admin_column'          => true,
-		'show_in_nav_menus'          => false,
-		'show_tagcloud'              => false,
-		'show_in_rest'               => true,
+	$args   = array(
+		'labels'            => $labels,
+		'description'       => 'Biographical details of folks that work on content.',
+		'hierarchical'      => false,
+		'public'            => true,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'show_in_nav_menus' => false,
+		'show_tagcloud'     => false,
+		'show_in_rest'      => true,
 	);
-	register_taxonomy( 'contributor', [ 'post', 'attachment' ], $args );
+	register_taxonomy( 'contributor', array( 'post', 'attachment' ), $args );
 
 }
 add_action( 'init', 'tw_contributors_taxonomy', 0 );

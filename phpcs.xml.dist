@@ -13,6 +13,7 @@
 	<exclude-pattern>/bin/class-ruleset-test.php</exclude-pattern>
 	<!-- Exclude Composer vendor directory. -->
 	<exclude-pattern>*/vendor/*</exclude-pattern>
+  <exclude-pattern>*/plugins/*</exclude-pattern>
 
 	<rule ref="WordPress">
 		<exclude name="WordPress.Files.FileName"/>
