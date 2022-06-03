@@ -1,10 +1,16 @@
 <?php
-/*
-Plugin Name: TW Media
-Description: Creates terms needed for image and audio files
-*/
+/**
+ * Plugin Name: TW Media
+ * Description: Creates terms needed for image and audio files
+ *
+ * @package tw_media
+ */
 
-// Register Custom Taxonomy
+/**
+ * Register License Taxonomy.
+ *
+ * @return void
+ */
 function tw_license_taxonomy() {
 
 	$labels = array(
@@ -29,17 +35,17 @@ function tw_license_taxonomy() {
 		'items_list'                 => __( 'Items list', 'text_domain' ),
 		'items_list_navigation'      => __( 'Items list navigation', 'text_domain' ),
 	);
-	$args = array(
-		'labels'                     => $labels,
-		'hierarchical'               => false,
-		'public'                     => true,
-		'show_ui'                    => true,
-		'show_admin_column'          => false,
-		'show_in_nav_menus'          => true,
-		'show_tagcloud'              => false,
-		'show_in_rest'               => true,
+	$args   = array(
+		'labels'            => $labels,
+		'hierarchical'      => false,
+		'public'            => true,
+		'show_ui'           => true,
+		'show_admin_column' => false,
+		'show_in_nav_menus' => true,
+		'show_tagcloud'     => false,
+		'show_in_rest'      => true,
 	);
-	register_taxonomy( 'license', ['attachment'], $args );
+	register_taxonomy( 'license', array( 'attachment' ), $args );
 
 }
 add_action( 'init', 'tw_license_taxonomy', 0 );

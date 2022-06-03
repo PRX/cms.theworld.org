@@ -1,10 +1,16 @@
 <?php
-/*
-Plugin Name: TW Story Types
-Description: Creates the Story Type custom taxonomy
-*/
+/**
+ * Plugin Name: TW Story Types
+ * Description: Creates the Story Type custom taxonomy
+ *
+ * @package tw_story_types
+ */
 
-// Register Custom Taxonomy
+/**
+ * Register Story Types Taxonomy
+ *
+ * @return void
+ */
 function tw_story_types_taxonomy() {
 
 	$labels = array(
@@ -29,15 +35,15 @@ function tw_story_types_taxonomy() {
 		'items_list'                 => __( 'Items list', 'text_domain' ),
 		'items_list_navigation'      => __( 'Items list navigation', 'text_domain' ),
 	);
-	$args = array(
-		'labels'                     => $labels,
-		'hierarchical'               => false,
-		'public'                     => true,
-		'show_ui'                    => true,
-		'show_admin_column'          => true,
-		'show_in_nav_menus'          => true,
-		'show_tagcloud'              => false,
-		'show_in_rest'               => true,
+	$args   = array(
+		'labels'            => $labels,
+		'hierarchical'      => false,
+		'public'            => true,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'show_in_nav_menus' => true,
+		'show_tagcloud'     => false,
+		'show_in_rest'      => true,
 	);
 	register_taxonomy( 'story_type', array( 'post' ), $args );
 
