@@ -1,6 +1,8 @@
 <?php
 /**
  * Configuration for staging environment.
+ *
+ * @package the_world_site_config
  */
 
 /**
@@ -8,7 +10,7 @@
  */
 $staging_plugins = array();
 
-tw_activate_plugins($staging_plugins);
+tw_activate_plugins( $staging_plugins );
 
 /**
  * Configure activated plugins below.
