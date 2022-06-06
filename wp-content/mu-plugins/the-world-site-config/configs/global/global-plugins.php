@@ -26,6 +26,7 @@ define(
 		'tw-media/tw-media.php',
 		'tw-programs/tw-programs.php',
 		'tw-resource-development-tags/tw-resource-development-tags.php',
+		'tw-segments/tw-segments.php',
 		'tw-story-types/tw-story-types.php',
 		'wordpress-importer/wordpress-importer.php',
 		'wordpress-seo/wp-seo.php',

@@ -46,7 +46,7 @@ function tw_contributors_taxonomy() {
 		'show_tagcloud'     => false,
 		'show_in_rest'      => true,
 	);
-	register_taxonomy( 'contributor', array( 'post', 'attachment' ), $args );
+	register_taxonomy( 'contributor', array( 'post', 'attachment', 'segment' ), $args );
 
 }
-add_action( 'init', 'tw_contributors_taxonomy', 0 );
+add_action('init', 'tw_contributors_taxonomy', 0);
