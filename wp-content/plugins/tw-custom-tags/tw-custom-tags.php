@@ -4,7 +4,11 @@ Plugin Name: TW Custom Tags
 Description: Creates the custom taxonomies for metadata
 */
 
-// Register Cities Taxonomy
+/**
+ * Register Cities Taxonomy
+ *
+ * @return void
+ */
 function tw_city_taxonomy()
 {
     $labels = [
@@ -49,7 +53,11 @@ function tw_city_taxonomy()
 }
 add_action('init', 'tw_city_taxonomy', 0);
 
-// Register Continent Taxonomy
+/**
+ * Register Continent Taxonomy
+ *
+ * @return void
+ */
 function tw_continent_taxonomy()
 {
     $labels = [
@@ -98,7 +106,11 @@ function tw_continent_taxonomy()
 }
 add_action('init', 'tw_continent_taxonomy', 0);
 
-// Register Country Taxonomy
+/**
+ * Register Country Taxonomy
+ *
+ * @return void
+ */
 function tw_country_taxonomy()
 {
     $labels = [
@@ -147,7 +159,11 @@ function tw_country_taxonomy()
 }
 add_action('init', 'tw_country_taxonomy', 0);
 
-// Register Person Taxonomy
+/**
+ * Register Person Taxonomy
+ *
+ * @return void
+ */
 function tw_person_taxonomy()
 {
     $labels = [
@@ -196,7 +212,11 @@ function tw_person_taxonomy()
 }
 add_action('init', 'tw_person_taxonomy', 0);
 
-// Register Province or State Taxonomy
+/**
+ * Register Province or State Taxonomy
+ *
+ * @return void
+ */
 function tw_province_state_taxonomy()
 {
     $labels = [
@@ -249,7 +269,11 @@ function tw_province_state_taxonomy()
 }
 add_action('init', 'tw_province_state_taxonomy', 0);
 
-// Register Region Taxonomy
+/**
+ * Register Region Taxonomy
+ *
+ * @return void
+ */
 function tw_region_taxonomy()
 {
     $labels = [
@@ -298,7 +322,11 @@ function tw_region_taxonomy()
 }
 add_action('init', 'tw_region_taxonomy', 0);
 
-// Register Social Tag Taxonomy
+/**
+ * Register Social Tag Taxonomy
+ *
+ * @return void
+ */
 function tw_social_tag_taxonomy()
 {
     $labels = [
