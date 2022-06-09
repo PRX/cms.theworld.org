@@ -29,7 +29,7 @@
         {
             "key": "field_622a2dae46e20",
             "label": "Logo",
-            "name": "Logo",
+            "name": "logo",
             "type": "image",
             "instructions": "",
             "required": 0,
@@ -65,6 +65,13 @@
                 "operator": "==",
                 "value": "program"
             }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "program"
+            }
         ]
     ],
     "menu_order": 0,
@@ -76,5 +83,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1646931687
+    "modified": 1655916526
 }

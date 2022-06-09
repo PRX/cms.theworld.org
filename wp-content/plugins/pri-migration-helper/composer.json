@@ -1,0 +1,12 @@
+{
+    "name": "wordpress/primh",
+    "require": {
+        "swaggest/json-diff": "^3.8"
+    },
+    "authors": [
+        {
+            "name": "Sean12mps",
+            "email": "sean.michael.piettojo@gmail.com"
+        }
+    ]
+}
