@@ -2,7 +2,7 @@
 
 This is a WordPress repository configured to run on the [Pantheon platform](https://pantheon.io).
 
-Pantheon is website platform optimized and configured to run high performance sites with an amazing developer workflow. There is built-in support for features such as Varnish, Redis, Apache Solr, New Relic, Nginx, PHP-FPM, MySQL, PhantomJS and more. 
+Pantheon is website platform optimized and configured to run high performance sites with an amazing developer workflow. There is built-in support for features such as Varnish, Redis, Apache Solr, New Relic, Nginx, PHP-FPM, MySQL, PhantomJS and more.
 
 # PRX - The World
 
@@ -16,17 +16,14 @@ PRX is Shaping the future of audio by building technology, training talented pro
 - Test : https://test-the-world-wp.pantheonsite.io
 - Multidev : https://[git-branch]-the-world-wp.pantheonsite.io
 
-
 ## Production instance:
 
 - live-the-world-wp.pantheonsite.io
 - TBD Domain
 
-
 ## JIRA:
 
 - https://fourkitchens.atlassian.net/jira/software/c/projects/PRIS/boards/236
-
 
 ## Dependencies
 
@@ -34,7 +31,6 @@ PRX is Shaping the future of audio by building technology, training talented pro
 - Node `^16.x`
 - PHP_CodeSniffer (https://github.com/squizlabs/PHP_CodeSniffer) - `>=3.6`
   - WordPress-Coding-Standards (https://github.com/WordPress/WordPress-Coding-Standards) - `>=2.3`
-
 
 ## Setup
 
@@ -48,12 +44,27 @@ This repository uses Lando for local development. Run the following commands:
 
 `npm run refresh`
 
-
 ## Development
+
+### Composer Dependencies
+
+Run `composer install` to install dev dependencies. Install latest version of Composer if you don't already have it installed.
+
+- PHPCS
+- WordPress Coding Standards Sniffer
+
+#### VS Code Extensions
+
+Install the following extension:
+
+- PHPCS (ikappas.phpcs)
+- PHP Sniffer (wongjn.php-sniffer)
+- EditorConfig for VS Code (EditorConfig.EditorConfig)
 
 ### Theme Development
 
 - TBD
+
 ### Configuration
 
 This wordpress installation uses WP-CFM to manage database changes and deploy them between environments. Follow the steps below to ensure your local changes are properly captured and deployed.

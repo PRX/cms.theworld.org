@@ -22,6 +22,7 @@ define(
 		'redirection/redirection.php',
 		'user-role-editor/user-role-editor.php',
 		'tw-contributors/tw-contributors.php',
+    'tw-custom-tags/tw-custom-tags.php',
 		'tw-episodes/tw-episodes.php',
 		'tw-media/tw-media.php',
 		'tw-programs/tw-programs.php',
