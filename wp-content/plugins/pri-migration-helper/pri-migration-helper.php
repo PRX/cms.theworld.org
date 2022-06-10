@@ -194,13 +194,33 @@ function pri_migration_import_node_fields( $args ) {
 		}
 	 */
 
+	/* Debug
+	echo "<pre>";
+	var_dump( $custom_field_name );
+	var_dump( $custom_field );
+	var_dump( $custom_field_values );
+	echo "</pre>";
+	exit;
+	 */
+
 	switch ( $custom_field_name ) {
 
 		case 'image':
 			$custom_field_name = 'migrated_featured_image';
 
-			$custom_field['module'] = '';
-			$custom_field['label']  = 'Migrated Featured Image';
+			$custom_field['module']  = 'text';
+			$custom_field['type']    = 'text_textarea';
+			$custom_field['type']    = 'text_textarea';
+			$custom_field['label']   = 'Migrated Featured Image';
+			$custom_field['columns'] = array(
+				'value' => 'value_migrated_featured_image',
+			);
+
+			$custom_field_values = array(
+				array(
+					'value_migrated_featured_image' => wp_json_encode( $custom_field_values ),
+				),
+			);
 			break;
 	}
 
