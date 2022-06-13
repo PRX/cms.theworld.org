@@ -160,6 +160,7 @@ function pri_migration_import_node_fields( $args ) {
 	$args = apply_filters( $filter_name, $args );
 
 	/* Debug
+	 */
 	echo "<pre>";
 	var_dump( $filter_name );
 	var_dump( $custom_field_name );
@@ -167,7 +168,6 @@ function pri_migration_import_node_fields( $args ) {
 	var_dump( $custom_field_values );
 	var_dump( $args );
 	echo "</pre>";
-	 */
 
 	return $args;
 }
