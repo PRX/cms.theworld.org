@@ -657,9 +657,8 @@ if ( !class_exists('FG_Drupal_to_WordPress_CPT_ACF', false) ) {
 			$fields_ids = array();
 			// Create the ACF group
 			$fields_group_id = $this->create_acf_group('user', 'user_form');
-			foreach ( $custom_fields as $custom_field ) {
+			foreach ( $custom_fields as $field_slug => $custom_field ) {
 				// Create the field
-				$field_slug = sanitize_title(preg_replace('/^field_/', '', $custom_field['field_name']));
 				$fields_group_id = apply_filters('fgd2wp_user_parent_group_id', $fields_group_id, $custom_field);
 				$field_id = $this->create_acf5_field($field_slug, $custom_field, 'user', $fields_group_id);
 				if ( !empty($field_id) ) {

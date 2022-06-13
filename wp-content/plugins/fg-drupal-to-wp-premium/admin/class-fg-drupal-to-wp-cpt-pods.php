@@ -89,6 +89,17 @@ if ( !class_exists('FG_Drupal_to_WordPress_CPT_Pods', false) ) {
 		}
 		
 		/**
+		 * Check if the repeating fields are supported
+		 * 
+		 * @since 3.31.0
+		 * 
+		 * @return bool Repeating fields supported
+		 */
+		public function is_repeating_fields_supported() {
+			return true;
+		}
+		
+		/**
 		 * Get the field prefix
 		 * 
 		 * @return string Field prefix
@@ -502,9 +513,8 @@ if ( !class_exists('FG_Drupal_to_WordPress_CPT_Pods', false) ) {
 				// Register the "User" pod
 				$pod_id = $this->register_pod('user', 'user', __('User'), __('Users'));
 				$fields_group_id = $this->create_pods_group($pod_id, 'user');
-				foreach ( $custom_fields as $slug => $custom_field_data ) {
+				foreach ( $custom_fields as $field_slug => $custom_field_data ) {
 					// Create the field
-					$field_slug = sanitize_title(preg_replace('/^field_/', '', $custom_field_data['field_name']));
 					$this->register_custom_field($field_slug, $custom_field_data, 'user', $pod_id, $fields_group_id);
 				}
 			}

@@ -16,7 +16,7 @@
  * Plugin Name:       FG Drupal to WordPress Premium
  * Plugin URI:        https://www.fredericgilles.net/fg-drupal-to-wordpress/
  * Description:       A plugin to migrate a Drupal site to WordPress
- * Version:           3.30.0
+ * Version:           3.33.0
  * Author:            Frédéric GILLES
  * Author URI:        https://www.fredericgilles.net/
  * License:           GPLv2 or later
@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'FGD2WPP_PLUGIN_VERSION', '3.30.0' );
+define( 'FGD2WPP_PLUGIN_VERSION', '3.33.0' );
 
 /**
  * The code that runs during plugin activation.

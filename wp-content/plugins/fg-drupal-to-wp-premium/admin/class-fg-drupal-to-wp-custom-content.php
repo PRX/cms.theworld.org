@@ -1833,11 +1833,16 @@ if ( !class_exists('FG_Drupal_to_WordPress_Custom_Content', false) ) {
 		 * @param array $user Drupal user
 		 */
 		public function import_user_fields_values($new_user_id, $user) {
+			$date = date('Y-m-d H:i:s', $user['created']);
 			// Get the user fields values
 			$user_fields_values = array();
 			foreach ( $this->user_fields as $custom_field_name => $custom_field ) {
 				$custom_field_values = $this->plugin->get_user_custom_field_values($user, $custom_field);
 				if ( !empty($custom_field_values) ) {
+					if ( isset($custom_field['collection']) || ($custom_field['type'] == 'paragraphs')) { // Field collection or Paragraphs field
+						do_action('fgd2wp_import_node_field', $new_user_id, $custom_field_name, 'user', $custom_field, $custom_field_values, $date);
+						continue;
+					}
 					$user_fields_values[$custom_field_name] = array(
 						'field' => $custom_field,
 						'values' => $custom_field_values,
@@ -1847,7 +1852,6 @@ if ( !class_exists('FG_Drupal_to_WordPress_Custom_Content', false) ) {
 			$user_fields_values = apply_filters('fgd2wpp_get_user_fields_values', $user_fields_values, $user);
 			
 			// Save the user fields values
-			$date = date('Y-m-d H:i:s', $user['created']);
 			foreach ( $user_fields_values as $custom_field_name => $user_field_values ) {
 				$this->plugin->cpt->set_custom_user_field($new_user_id, $custom_field_name, $user_field_values['field'], $user_field_values['values'], $date);
 			}

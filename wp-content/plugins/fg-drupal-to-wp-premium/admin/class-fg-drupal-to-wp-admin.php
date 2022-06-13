@@ -57,7 +57,7 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 
 		protected $faq_url;					// URL of the FAQ page
 		protected $notices = array();		// Error or success messages
-		
+
 		private $log_file;
 		private $log_file_url;
 		private $test_antiduplicate = false;
@@ -150,16 +150,16 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 				echo '<div class="' . $notice['level'] . '"><p>[' . $this->plugin_name . '] ' . $notice['message'] . "</p></div>\n";
 			}
 		}
-		
+
 		/**
 		 * Write a message in the log file
-		 * 
+		 *
 		 * @param string $message
 		 */
 		public function log($message) {
 			file_put_contents($this->log_file, "$message\n", FILE_APPEND);
 		}
-		
+
 		/**
 		 * Store an admin notice
 		 */
@@ -220,7 +220,7 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 			$this->dispatch($action);
 			$this->display_admin_page(); // Display the admin page
 		}
-		
+
 		/**
 		 * Import triggered by AJAX
 		 *
@@ -232,7 +232,7 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 				$action = filter_input(INPUT_POST, 'plugin_action', FILTER_SANITIZE_STRING);
 
 				$this->set_plugin_options();
-			
+
 				if ( $action == 'update_wordpress_info') {
 					// Update the WordPress database info
 					echo $this->get_database_info();
@@ -258,10 +258,10 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 			}
 			wp_die();
 		}
-		
+
 		/**
 		 * Set the plugin options
-		 * 
+		 *
 		 * @since 3.0.2
 		 */
 		public function set_plugin_options() {
@@ -299,22 +299,22 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 			if ( is_array($options) ) {
 				$this->plugin_options = array_merge($this->plugin_options, $options);
 			}
-			
+
 			do_action('fgd2wp_set_plugin_options');
 		}
-		
+
 		/**
 		 * Empty the log file
-		 * 
+		 *
 		 * @since 2.26.0
 		 */
 		public function empty_log_file() {
 			file_put_contents($this->log_file, '');
 		}
-		
+
 		/**
 		 * Set the local timezone
-		 * 
+		 *
 		 * @since 2.22.0
 		 */
 		public function set_local_timezone() {
@@ -324,10 +324,10 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 				date_default_timezone_set($timezone);
 			}
 		}
-		
+
 		/**
 		 * Dispatch the actions
-		 * 
+		 *
 		 * @param string $action Action
 		 * @return object Result to return to the caller
 		 */
@@ -349,10 +349,10 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 			if ( version_compare(get_bloginfo('version'), '4.4', '<') ) {
 				$this->display_admin_error(sprintf(__('WordPress 4.4+ is required. Please <a href="%s">update WordPress</a>.', 'fg-drupal-to-wp'), admin_url('update-core.php')));
 			}
-			
+
 			else {
 				do_action('fgd2wp_pre_dispatch');
-				
+
 				if ( !empty($action) ) {
 					switch($action) {
 
@@ -466,7 +466,7 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 
 		/**
 		 * Display the admin page
-		 * 
+		 *
 		 */
 		private function display_admin_page() {
 			$data = $this->plugin_options;
@@ -478,14 +478,14 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 			$data['database_info'] = $this->get_database_info();
 
 			$data['tab'] = filter_input(INPUT_GET, 'tab', FILTER_SANITIZE_STRING);
-			
+
 			// Hook for modifying the admin page
 			$data = apply_filters('fgd2wp_pre_display_admin_page', $data);
 
 			// Load the CSS and Javascript
 			$this->enqueue_styles();
 			$this->enqueue_scripts();
-			
+
 			include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/admin-display.php';
 
 			// Hook for doing other actions after displaying the admin page
@@ -495,9 +495,9 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 
 		/**
 		 * Get the WP options name
-		 * 
+		 *
 		 * @since 2.0.0
-		 * 
+		 *
 		 * @param array $option_names Option names
 		 * @return array Option names
 		 */
@@ -505,10 +505,10 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 			$option_names[] = 'fgd2wp_options';
 			return $option_names;
 		}
-		
+
 		/**
 		 * Get the WordPress database info
-		 * 
+		 *
 		 * @return string Database info
 		 */
 		private function get_database_info() {
@@ -527,10 +527,10 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 			$database_info = apply_filters('fgd2wp_get_database_info', $database_info);
 			return $database_info;
 		}
-		
+
 		/**
 		 * Count the number of posts for a post type
-		 * 
+		 *
 		 * @param string $post_type Post type
 		 */
 		public function count_posts($post_type) {
@@ -547,7 +547,7 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 
 		/**
 		 * Add an help tab
-		 * 
+		 *
 		 */
 		public function add_help_tab() {
 			$screen = get_current_screen();
@@ -568,7 +568,7 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 
 		/**
 		 * Instructions help screen
-		 * 
+		 *
 		 * @return string Help content
 		 */
 		public function help_instructions() {
@@ -577,7 +577,7 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 
 		/**
 		 * Options help screen
-		 * 
+		 *
 		 * @return string Help content
 		 */
 		public function help_options() {
@@ -628,7 +628,7 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 
 		/**
 		 * Execute a SQL query on the Drupal database
-		 * 
+		 *
 		 * @param string $sql SQL query
 		 * @param bool $display_error Display the error?
 		 * @return array Query result
@@ -673,9 +673,9 @@ if ( !class_exists('FG_Drupal_to_WordPress_Admin', false) ) {
 
 			if ( $action == 'all' ) {
 				// Remove all content
-				
+
 				$this->save_wp_data();
-				
+
 				$sql_queries[] = "TRUNCATE $wpdb->commentmeta";
 				$sql_queries[] = "TRUNCATE $wpdb->comments";
 				$sql_queries[] = "TRUNCATE $wpdb->term_relationships";
@@ -694,9 +694,9 @@ WHERE term_id > 1 -- non-classe
 SQL;
 				$sql_queries[] = "ALTER TABLE $wpdb->terms AUTO_INCREMENT = 2";
 				$sql_queries[] = "ALTER TABLE $wpdb->term_taxonomy AUTO_INCREMENT = 2";
-				
+
 			} else {
-				
+
 				// (Re)create a temporary table with the IDs to delete
 				$sql_queries[] = <<<SQL
 DROP TEMPORARY TABLE IF EXISTS {$wpdb->prefix}fg_data_to_delete;
@@ -708,14 +708,14 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$wpdb->prefix}fg_data_to_delete (
 PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8;
 SQL;
-				
+
 				// Insert the imported posts IDs in the temporary table
 				$sql_queries[] = <<<SQL
 INSERT IGNORE INTO {$wpdb->prefix}fg_data_to_delete (`id`)
 SELECT post_id FROM $wpdb->postmeta
 WHERE meta_key LIKE '_fgd2wp_%'
 SQL;
-				
+
 				// Delete the imported posts and related data
 
 				$sql_queries[] = <<<SQL
@@ -758,14 +758,14 @@ SQL;
 				$sql_queries[] = <<<SQL
 TRUNCATE {$wpdb->prefix}fg_data_to_delete;
 SQL;
-				
+
 				// Insert the imported terms IDs in the temporary table
 				$sql_queries[] = <<<SQL
 INSERT IGNORE INTO {$wpdb->prefix}fg_data_to_delete (`id`)
 SELECT term_id FROM $wpdb->termmeta
 WHERE meta_key LIKE '_fgd2wp_%'
 SQL;
-				
+
 				// Delete the imported terms and related data
 
 				$sql_queries[] = <<<SQL
@@ -782,14 +782,14 @@ SQL;
 				$sql_queries[] = <<<SQL
 TRUNCATE {$wpdb->prefix}fg_data_to_delete;
 SQL;
-				
+
 				// Insert the imported comments IDs in the temporary table
 				$sql_queries[] = <<<SQL
 INSERT IGNORE INTO {$wpdb->prefix}fg_data_to_delete (`id`)
 SELECT comment_id FROM $wpdb->commentmeta
 WHERE meta_key LIKE '_fgd2wp_%'
 SQL;
-				
+
 				// Delete the imported comments and related data
 				$sql_queries[] = <<<SQL
 -- Delete Comments and Comment metas
@@ -812,13 +812,13 @@ SQL;
 			if ( $action == 'all' ) {
 				$this->restore_wp_data();
 			}
-				
+
 			// Hook for doing other actions after emptying the database
 			do_action('fgd2wp_post_empty_database', $action);
 
 			// Drop the temporary table
 			$wpdb->query("DROP TEMPORARY TABLE IF EXISTS {$wpdb->prefix}fg_data_to_delete;");
-				
+
 			// Reset the Drupal import counters
 			update_option('fgd2wp_last_node_article_id', 0);
 			update_option('fgd2wp_last_node_story_id', 0);
@@ -834,18 +834,18 @@ SQL;
 			$this->clean_cache(array(), 'category');
 			$this->clean_cache(array(), 'post_tag');
 			delete_transient('wc_count_comments');
-			
+
 			$this->optimize_database();
 
 			$this->progressbar->set_total_count(0);
-			
+
 			$wpdb->hide_errors();
 			return ($result !== false);
 		}
 
 		/**
 		 * Save the data used by the theme (WP 5.9)
-		 * 
+		 *
 		 * @since 3.18.0
 		 */
 		private function save_wp_data() {
@@ -853,10 +853,10 @@ SQL;
 			$this->save_wp_terms();
 			$this->save_wp_term_relationships();
 		}
-		
+
 		/**
 		 * Save the posts and post meta used by the theme (WP 5.9)
-		 * 
+		 *
 		 * @since 3.18.0
 		 */
 		private function save_wp_posts() {
@@ -879,7 +879,7 @@ SQL;
 
 		/**
 		 * Save the terms, term taxonomies and term meta used by the theme (WP 5.9)
-		 * 
+		 *
 		 * @since 3.18.0
 		 */
 		private function save_wp_terms() {
@@ -903,7 +903,7 @@ SQL;
 
 		/**
 		 * Save the terms relationships used by the theme (WP 5.9)
-		 * 
+		 *
 		 * @since 3.18.0
 		 */
 		private function save_wp_term_relationships() {
@@ -922,7 +922,7 @@ SQL;
 
 		/**
 		 * Restore the saved data used by the theme (WP 5.9)
-		 * 
+		 *
 		 * @since 3.18.0
 		 */
 		private function restore_wp_data() {
@@ -930,10 +930,10 @@ SQL;
 			$this->restore_wp_terms();
 			$this->restore_wp_term_relationships();
 		}
-		
+
 		/**
 		 * Restore the saved posts and post meta used by the theme (WP 5.9)
-		 * 
+		 *
 		 * @since 3.18.0
 		 */
 		private function restore_wp_posts() {
@@ -954,7 +954,7 @@ SQL;
 
 		/**
 		 * Restore the saved terms, term taxonomies and term meta used by the theme (WP 5.9)
-		 * 
+		 *
 		 * @since 3.18.0
 		 */
 		private function restore_wp_terms() {
@@ -979,10 +979,10 @@ SQL;
 				}
 			}
 		}
-		
+
 		/**
 		 * Restore the saved term relationships used by the theme (WP 5.9)
-		 * 
+		 *
 		 * @since 3.18.0
 		 */
 		private function restore_wp_term_relationships() {
@@ -1008,7 +1008,7 @@ SQL;
 			global $wpdb;
 
 			$sql = <<<SQL
-OPTIMIZE TABLE 
+OPTIMIZE TABLE
 `$wpdb->commentmeta`,
 `$wpdb->comments`,
 `$wpdb->options`,
@@ -1024,7 +1024,7 @@ SQL;
 
 		/**
 		 * Test the database connection
-		 * 
+		 *
 		 * @return boolean
 		 */
 		public function test_database_connection() {
@@ -1052,7 +1052,7 @@ SQL;
 		public function get_drupal_info() {
 			$this->taxonomies_enabled = version_compare($this->drupal_version, '7', '<')? $this->table_exists('vocabulary') : $this->table_exists('taxonomy_term_data');
 			$this->comments_enabled = version_compare($this->drupal_version, '7', '<')? $this->table_exists('comments') : $this->table_exists('comment');
-			
+
 			$message = __('Drupal data found:', 'fg-drupal-to-wp') . "\n";
 
 			// Articles
@@ -1090,7 +1090,7 @@ SQL;
 
 		/**
 		 * Get the number of Drupal taxonomies terms
-		 * 
+		 *
 		 * @param string $taxonomy Taxonomy name (categories, tags)
 		 * @return int Number of taxonomies terms
 		 */
@@ -1133,7 +1133,7 @@ SQL;
 
 		/**
 		 * Get the number of Drupal nodes
-		 * 
+		 *
 		 * @param string $node_type Node type (article, page)
 		 * @param string $entity_type Entity type (node, media)
 		 * @return int Number of nodes
@@ -1226,13 +1226,13 @@ SQL;
 
 				define('WP_IMPORTING', true);
 				update_option('fgd2wp_stop_import', false, false); // Reset the stop import action
-				
+
 				// To solve the issue of links containing ":" in multisite mode
 				kses_remove_filters();
-				
+
 				global $wp_filter;
 				unset($wp_filter['wp_insert_post']); // Remove the "wp_insert_post" that consumes a lot of CPU and memory
-				
+
 				// Check prerequesites before the import
 				$do_import = apply_filters('fgd2wp_pre_import_check', true);
 				if ( !$do_import) {
@@ -1241,19 +1241,19 @@ SQL;
 
 				$total_elements_count = $this->get_total_elements_count();
 				$this->progressbar->set_total_count($total_elements_count);
-				
+
 				// Default file paths
 				$this->set_default_file_paths();
-				
+
 				// Set the Download Manager
 				$this->download_manager = new FG_Drupal_to_WordPress_Download($this, $this->plugin_options['download_protocol']);
 				$this->download_manager->test_connection();
-				
+
 				$this->imported_media = $this->get_imported_drupal_posts($meta_key = '_fgd2wp_old_file');
-				
+
 				// Hook for doing other actions before the import
 				do_action('fgd2wp_pre_import');
-				
+
 				// Taxonomies
 				if ( !isset($this->premium_options['skip_taxonomies']) || !$this->premium_options['skip_taxonomies'] ) {
 					$this->taxonomy_term_hierarchy = $this->get_taxonomy_term_hierarchy();
@@ -1268,7 +1268,7 @@ SQL;
 
 				// Set the list of previously imported taxonomies
 				$this->imported_taxonomies = $this->get_term_metas_by_metakey('_fgd2wp_old_taxonomy_id');
-				
+
 				if ( !isset($this->premium_options['skip_nodes']) || !$this->premium_options['skip_nodes'] ) {
 					// Articles, pages and medias
 					if ( !isset($this->premium_options['nodes_to_skip']) || !in_array('article', $this->premium_options['nodes_to_skip']) ) {
@@ -1281,7 +1281,7 @@ SQL;
 							$this->display_admin_notice(sprintf(_n('%d article imported', '%d articles imported', $articles_count, 'fg-drupal-to-wp'), $articles_count));
 						}
 					}
-					
+
 					if ( !isset($this->premium_options['nodes_to_skip']) || !in_array('story', $this->premium_options['nodes_to_skip']) ) {
 						$stories_count = $this->get_nodes_count('story');
 						if ( $stories_count > 0 ) {
@@ -1289,7 +1289,7 @@ SQL;
 							$this->display_admin_notice(sprintf(_n('%d story imported', '%d stories imported', $stories_count, 'fg-drupal-to-wp'), $stories_count));
 						}
 					}
-					
+
 					if ( !isset($this->premium_options['nodes_to_skip']) || !in_array('post', $this->premium_options['nodes_to_skip']) ) {
 						$posts_count = $this->get_nodes_count('post');
 						if ( $posts_count > 0 ) {
@@ -1297,18 +1297,18 @@ SQL;
 							$this->display_admin_notice(sprintf(_n('%d post imported', '%d posts imported', $posts_count, 'fg-drupal-to-wp'), $posts_count));
 						}
 					}
-					
+
 					if ( !isset($this->premium_options['nodes_to_skip']) || !in_array('page', $this->premium_options['nodes_to_skip']) ) {
 						$pages_count = $this->import_nodes('page');
 						$this->display_admin_notice(sprintf(_n('%d page imported', '%d pages imported', $pages_count, 'fg-drupal-to-wp'), $pages_count));
 					}
-					
+
 				}
 				if ( !$this->import_stopped() ) {
 					// Hook for doing other actions after the import
 					do_action('fgd2wp_post_import');
 				}
-				
+
 				if ( !isset($this->premium_options['skip_nodes']) || !$this->premium_options['skip_nodes'] ) {
 					$this->display_admin_notice(sprintf(_n('%d media imported', '%d medias imported', $this->media_count, 'fg-drupal-to-wp'), $this->media_count));
 				}
@@ -1324,23 +1324,23 @@ SQL;
 				}
 
 				if ( $this->import_stopped() ) {
-					
+
 					// Import stopped by the user
 					$this->display_admin_notice("IMPORT STOPPED BY USER");
-					
+
 				} else {
 					// Import completed
 					$this->display_admin_notice(__("Don't forget to modify internal links.", 'fg-drupal-to-wp'));
 					$this->display_admin_notice("IMPORT COMPLETED");
 				}
-				
+
 				wp_cache_flush();
 			}
 		}
 
 		/**
 		 * Actions to do before the import
-		 * 
+		 *
 		 * @param bool $import_doable Can we start the import?
 		 * @return bool Can we start the import?
 		 */
@@ -1356,12 +1356,12 @@ SQL;
 
 		/**
 		 * Get the number of elements to import
-		 * 
+		 *
 		 * @return int Number of elements to import
 		 */
 		private function get_total_elements_count() {
 			$count = 0;
-			
+
 			// Taxonomies
 			if ( !isset($this->premium_options['skip_taxonomies']) || !$this->premium_options['skip_taxonomies'] ) {
 				$count += $this->get_taxonomies_terms_count('categories');
@@ -1385,13 +1385,13 @@ SQL;
 			}
 
 			$count = apply_filters('fgd2wp_get_total_elements_count', $count);
-			
+
 			return $count;
 		}
-		
+
 		/**
 		 * Get the whole taxonomies terms hierarchy
-		 * 
+		 *
 		 * @return array Term hierarchy
 		 */
 		public function get_taxonomy_term_hierarchy() {
@@ -1400,7 +1400,7 @@ SQL;
 			}
 			$hierarchy = array();
 			$prefix = $this->plugin_options['prefix'];
-			
+
 			if ( version_compare($this->drupal_version, '8.5', '<') ) {
 				if ( version_compare($this->drupal_version, '7', '<') ) {
 					// Drupal 6
@@ -1428,7 +1428,7 @@ SQL;
 			}
 			return $hierarchy;
 		}
-		
+
 		/**
 		 * Import taxonomies terms
 		 *
@@ -1439,22 +1439,22 @@ SQL;
 		public function import_taxonomies_terms($taxonomy, $taxonomy_name='') {
 			$imported_terms_count = 0;
 			$all_terms = array();
-			
+
 			if ( $this->import_stopped() ) {
 				return 0;
 			}
-			
+
 			$message = sprintf(__('Importing %s...', 'fg-drupal-to-wp'), $taxonomy);
 			if ( defined('WP_CLI') ) {
 				$progress_cli = \WP_CLI\Utils\make_progress_bar($message, $this->get_taxonomies_terms_count($taxonomy));
 			} else {
 				$this->log($message);
 			}
-			
+
 			if ( empty($taxonomy_name) ) {
 				$taxonomy_name = $taxonomy; // For Drupal 6 only
 			}
-			
+
 			do {
 				if ( $this->import_stopped() ) {
 					break;
@@ -1462,35 +1462,35 @@ SQL;
 				$terms = $this->get_taxonomies_terms($taxonomy, $this->chunks_size, $taxonomy_name); // Get the Drupal taxonomies
 				$terms_count = count($terms);
 				$terms = apply_filters('fgd2wp_pre_insert_taxonomies_terms', $terms, $taxonomy);
-				
+
 				if ( !is_null($terms) && (count($terms) > 0) ) {
 					$all_terms = array_merge($all_terms, $terms);
 					// Insert the taxonomies terms
 					$imported_terms_count += $this->insert_taxonomies_terms($terms, $taxonomy);
 				}
-				
+
 				if ( defined('WP_CLI') ) {
 					$progress_cli->tick($this->chunks_size);
 				}
 			} while ( !is_null($terms) && ($terms_count > 0) );
-			
+
 			$all_terms = apply_filters('fgd2wp_import_taxonomies_terms', $all_terms, $taxonomy);
-			
+
 			// Update the terms with their parent ids
 			$this->update_parent_taxonomies_terms($all_terms, $taxonomy);
-			
+
 			if ( defined('WP_CLI') ) {
 				$progress_cli->finish();
 			}
-			
+
 			if ( !$this->import_stopped() ) {
 				// Hook after importing all the taxonomies
 				do_action('fgd2wp_post_import_taxonomies_terms', $all_terms, $taxonomy);
 			}
-			
+
 			return $imported_terms_count;
 		}
-		
+
 		/**
 		 * Get Drupal taxonomies terms
 		 *
@@ -1502,7 +1502,7 @@ SQL;
 		 */
 		public function get_taxonomies_terms($taxonomy, $limit=1000, $taxonomy_name='', $taxonomy_module='') {
 			$terms = array();
-			
+
 			if ( !$this->taxonomies_enabled) {
 				return array();
 			}
@@ -1512,7 +1512,7 @@ SQL;
 			$taxonomy_module = esc_sql($taxonomy_module);
 			$last_taxonomy_metakey = "fgd2wp_last_taxonomy_${taxonomy}_id";
 			$last_taxonomy_id = (int)get_option($last_taxonomy_metakey); // to restore the import where it left
-			
+
 			// Hooks for adding extra cols and extra joins
 			$extra_cols = apply_filters('fgd2wp_get_terms_add_extra_cols', '');
 
@@ -1564,10 +1564,10 @@ SQL;
 			$terms = $this->drupal_query($sql);
 			return $terms;
 		}
-		
+
 		/**
 		 * Insert a list of taxonomies terms in the database
-		 * 
+		 *
 		 * @param array $terms List of terms
 		 * @param string $taxonomy WordPress Taxonomy
 		 * @return int Number of inserted terms
@@ -1578,12 +1578,12 @@ SQL;
 			$term_metakey = '_fgd2wp_old_taxonomy_id';
 			$last_taxonomy_metakey = "fgd2wp_last_taxonomy_${taxonomy}_id";
 			$wp_taxonomy = $this->map_taxonomy($taxonomy);
-			
+
 			// Set the list of previously imported taxonomies terms
 			$this->imported_taxonomies = $this->get_term_metas_by_metakey($term_metakey);
-			
+
 			$new_terms = array();
-			
+
 			foreach ( $terms as $term ) {
 
 				$term_id = apply_filters('fgd2wp_get_taxonomy_term_id', $term['tid'], $term);
@@ -1596,9 +1596,9 @@ SQL;
 
 					continue; // Do not import already imported term
 				}
-				
+
 				$args = array();
-				
+
 				// Description
 				if ( isset($term['description']) ) {
 					$args['description'] = $term['description'];
@@ -1613,16 +1613,16 @@ SQL;
 						$args['parent'] = $parent_tax_id;
 					}
 				}
-				
+
 				// Hook before inserting the term
 				$args = apply_filters('fgd2wp_pre_insert_taxonomy_term', $args, $term, $wp_taxonomy);
-				
+
 				$new_term = wp_insert_term($term['name'], $wp_taxonomy, $args);
-				
+
 				// Store the last ID to resume the import where it left off
 				$term_id_without_prefix = preg_replace('/^(\D*)/', '', $term_id);
 				update_option($last_taxonomy_metakey, $term_id_without_prefix);
-				
+
 				if ( is_wp_error($new_term) ) {
 					if ( isset($new_term->error_data['term_exists']) ) {
 						// Store the Drupal taxonomy term ID
@@ -1638,27 +1638,27 @@ SQL;
 
 				// Store the Drupal taxonomy term ID
 				add_term_meta($new_term_id, $term_metakey, $term_id, true);
-				
+
 				// Hook after inserting the term
 				do_action('fgd2wp_post_insert_taxonomy_term', $new_term_id, $term, $wp_taxonomy);
 			}
-			
+
 			$this->progressbar->increment_current_count($processed_terms_count);
-			
+
 			// Update cache
 			if ( !empty($new_terms) ) {
 				wp_update_term_count_now($new_terms, $wp_taxonomy);
 				$this->clean_cache($new_terms, $wp_taxonomy);
 			}
-			
+
 			return $terms_count;
 		}
 
 		/**
 		 * Build the taxonomy slug
-		 * 
+		 *
 		 * @since 1.54.1
-		 * 
+		 *
 		 * @param string $taxonomy Taxonomy name
 		 * @return string Taxonomy slug
 		 */
@@ -1669,10 +1669,10 @@ SQL;
 			$taxonomy = substr(sanitize_key(FG_Drupal_to_WordPress_Tools::convert_to_latin(remove_accents($taxonomy))), 0, 30); // The taxonomy is limited to 30 characters in Types
 			return $taxonomy;
 		}
-		
+
 		/**
 		 * Update the parent taxonomies terms
-		 * 
+		 *
 		 * @param array $terms Taxonomies terms
 		 * @param string $taxonomy Taxonomy
 		 */
@@ -1692,10 +1692,10 @@ SQL;
 				}
 			}
 		}
-		
+
 		/**
 		 * Clean the cache
-		 * 
+		 *
 		 * @param array $terms Terms
 		 * @param string $taxonomy Taxonomy
 		 */
@@ -1720,23 +1720,25 @@ SQL;
 			} else {
 				$this->log($message);
 			}
-			
+
 			// Hook for doing other actions before the import
 			do_action('fgd2wp_pre_import_nodes');
 
 			// Set the list of previously imported taxonomies
 			$term_metakey = '_fgd2wp_old_taxonomy_id';
 			$this->imported_taxonomies = $this->get_term_metas_by_metakey($term_metakey);
-			
+
 			$post_type = $this->map_post_type($content_type);
-			
+
+			$import_count = 2;
+
 			do {
 				if ( $this->import_stopped() ) {
 					break;
 				}
 				$nodes = $this->get_nodes($content_type, $this->chunks_size, $entity_type); // Get the Drupal nodes
 				$nodes_count = count($nodes);
-				
+
 				if ( is_array($nodes) ) {
 					foreach ( $nodes as $node ) {
 						$new_post_id = $this->import_node($node, $content_type, $post_type, $entity_type);
@@ -1746,15 +1748,19 @@ SQL;
 						// Hook for doing other actions after importing the node
 						do_action('fgd2wp_post_import_post', $new_post_id, $node, $content_type, $post_type, $entity_type);
 						$imported_nodes_count++;
-						
+
 						if ( defined('WP_CLI') ) {
 							$progress_cli->tick();
 						}
 					}
 				}
 				$this->progressbar->increment_current_count($nodes_count);
-			} while ( !is_null($nodes) && ($nodes_count > 0) );
-			
+
+				$import_count--;
+
+			// } while ( !is_null($nodes) && ($nodes_count > 0) );
+			} while ( $import_count > 0 );
+
 			if ( defined('WP_CLI') ) {
 				$progress_cli->finish();
 			}
@@ -1764,9 +1770,11 @@ SQL;
 				do_action('fgd2wp_post_import_nodes');
 			}
 
+			exit;
+
 			return $imported_nodes_count;
 		}
-		
+
 		/**
 		 * Get Drupal nodes
 		 *
@@ -1822,7 +1830,7 @@ SQL;
 
 		/**
 		 * Import a node
-		 * 
+		 *
 		 * @param array $node Post data
 		 * @param string $content_type Content type (article, page)
 		 * @param string $post_type WP post type
@@ -1830,7 +1838,7 @@ SQL;
 		 * @return int new post ID | false | WP_Error
 		 */
 		public function import_node($node, $content_type, $post_type, $entity_type='node') {
-			
+
 			// Anti-duplicate
 			if ( !$this->test_antiduplicate ) {
 				sleep(2);
@@ -1841,24 +1849,24 @@ SQL;
 				}
 				$this->test_antiduplicate = true;
 			}
-			
+
 			$last_node_type_metakey = "fgd2wp_last_${entity_type}_${content_type}_id";
-			
+
 			// Slug
 			$slug = $this->get_node_slug($node);
-			
+
 			// Get the body
 			if ( $entity_type == 'node' ) {
 				$body = $this->get_data_body($node);
 				$node = array_merge($node, $body);
 			}
-			
+
 			// Hook for modifying the Drupal node before processing
 			$node = apply_filters('fgd2wp_pre_process_node', $node);
-			
+
 			// Date
 			$post_date = empty($node['created'])? date('Y-m-d H:i:s') : date('Y-m-d H:i:s', $node['created']);
-			
+
 			// Categories
 			$categories_ids = array();
 			if ( !isset($this->premium_options['skip_taxonomies']) || !$this->premium_options['skip_taxonomies'] ) {
@@ -1871,7 +1879,7 @@ SQL;
 					}
 				}
 			}
-			
+
 			// Tags
 			$tag_names = array();
 			if ( !isset($this->premium_options['skip_taxonomies']) || !$this->premium_options['skip_taxonomies'] ) {
@@ -1882,7 +1890,7 @@ SQL;
 					}
 				}
 			}
-			
+
 			// Medias
 			$post_media = array();
 			$featured_image_id = '';
@@ -1890,7 +1898,7 @@ SQL;
 			if ( !$this->plugin_options['skip_media'] ) {
 				// Featured image
 				list($featured_image_id, $node) = $this->get_and_process_featured_image($node);
-				
+
 				// Import media
 				if ( !$this->plugin_options['only_featured_image'] ) {
 					// Media from content
@@ -1900,7 +1908,7 @@ SQL;
 					$result = $this->import_media_from_content($body, $post_date, array('ref' => 'node ID=' . $node['nid']));
 					$post_media = $result['media'];
 					$this->media_count += $result['media_count'];
-					
+
 					// Media gallery (image_attach)
 					$media_gallery = array();
 					$media_gallery = apply_filters('fgd2wp_import_media_gallery', $media_gallery, $node, $post_date);
@@ -1909,31 +1917,31 @@ SQL;
 						if ( empty($featured_image_id) ) {
 							$featured_image_id = reset($media_gallery);
 						}
-						
+
 						// Create the gallery
 						$gallery_ids = array_values($media_gallery);
 						$gallery_shortcode = '[gallery ids="' . implode(', ', $gallery_ids) . '"]';
-						
+
 						$post_media = array_merge($post_media, $media_gallery);
 					}
 				}
 			}
-			
+
 			// Define excerpt and node content
 			list($excerpt, $content) = $this->set_excerpt_content($node);
-			
+
 			// Add the gallery
 			if ( !empty($gallery_shortcode) ) {
 				$content .= $gallery_shortcode;
 			}
-			
+
 			// Process content
 			$excerpt = $this->process_content($excerpt, $post_media);
 			$content = $this->process_content($content, $post_media);
-			
+
 			// Status
 			$status = ($node['status'] > 0)? 'publish': 'draft';
-			
+
 			// Insert the post
 			$new_post = array(
 				'post_category'		=> $categories_ids,
@@ -1951,10 +1959,10 @@ SQL;
 			$new_post = apply_filters('fgd2wp_pre_insert_post', $new_post, $node);
 
 			$new_post_id = wp_insert_post($new_post, true);
-			
+
 			// Increment the Drupal last imported post ID
 			update_option($last_node_type_metakey, $node['nid']);
-			
+
 			if ( is_wp_error($new_post_id) ) {
 				$this->display_admin_error(sprintf(__('Node #%d:', 'fg-drupal-to-wp'), $node['nid']) . ' ' . $new_post_id->get_error_message() . ' ' . $new_post_id->get_error_data());
 			} else {
@@ -1963,7 +1971,7 @@ SQL;
 					$post_media[] = $featured_image_id;
 				}
 				$this->add_post_media($new_post_id, $new_post, $post_media, false);
-				
+
 				// Set the featured image
 				if ( !empty($featured_image_id) ) {
 					set_post_thumbnail($new_post_id, $featured_image_id);
@@ -1971,19 +1979,21 @@ SQL;
 
 				// Add the Drupal ID as a post meta in order to modify links after
 				add_post_meta($new_post_id, '_fgd2wp_old_' . $entity_type . '_id', $node['nid'], true);
-				
+
 				// Hook for doing other actions after inserting the post
 				do_action('fgd2wp_post_insert_post', $new_post_id, $node, $post_type, $entity_type);
 			}
 
+			exit;
+
 			return $new_post_id;
 		}
-		
+
 		/**
 		 * Get the node slug
-		 * 
+		 *
 		 * @since 2.31.0
-		 * 
+		 *
 		 * @param array $node Node
 		 * @param string $language Language
 		 * @return string Slug
@@ -2028,10 +2038,10 @@ SQL;
 			}
 			return $slug;
 		}
-		
+
 		/**
 		 * Get the body (content, summary) of the node
-		 * 
+		 *
 		 * @param array $node Node
 		 * @return array Node body (content and summary)
 		 */
@@ -2075,7 +2085,7 @@ SQL;
 						$extra_criteria .= " AND b.language IN('" . $node['language'] . "', 'und')";
 					}
 				}
-				
+
 				if ( !$this->table_exists($table_name) ) {
 					return array('', '');
 				}
@@ -2102,10 +2112,10 @@ SQL;
 			}
 			return $body;
 		}
-		
+
 		/**
 		 * Get the taxonomies terms associated with a node
-		 * 
+		 *
 		 * @param int $node_id Node ID
 		 * @param string $taxonomy Taxonomy name (all by default)
 		 * @param string $taxonomy_module Taxonomy module (for Drupal 6 only)
@@ -2118,9 +2128,9 @@ SQL;
 			if ( !$this->taxonomies_enabled) {
 				return array();
 			}
-			
+
 			$prefix = $this->plugin_options['prefix'];
-			
+
 			// Hooks for adding extra cols and extra joins
 			$extra_cols = apply_filters('fgd2wp_get_terms_add_extra_cols', '');
 
@@ -2184,10 +2194,10 @@ SQL;
 			$terms = apply_filters('fgd2wp_get_node_taxonomies_terms', $terms, $node_id, $entity_type);
 			return $terms;
 		}
-		
+
 		/**
 		 * Get the WordPress term ids corresponding to the Drupal terms
-		 * 
+		 *
 		 * @param array $terms Taxonomies terms
 		 * @return array Taxonomies terms ids
 		 */
@@ -2201,10 +2211,10 @@ SQL;
 			}
 			return $terms_ids;
 		}
-		
+
 		/**
 		 * Get the post type associated to a Drupal content type
-		 * 
+		 *
 		 * @param string $content_type Drupal content type
 		 * @return string WordPress post type
 		 */
@@ -2219,18 +2229,21 @@ SQL;
 				case 'page':
 					$post_type = 'page';
 					break;
+				case 'author': // "author" is a reserved type in WordPress
+					$post_type = 'authors';
+					break;
 				default:
 					$post_type = substr(sanitize_key($content_type), 0, 20);
 			}
-			$post_type = apply_filters('fgd2wp_convert_node_type', $post_type, $content_type); // TODO rename field to fgd2wp_map_post_type
+			$post_type = apply_filters('fgd2wp_map_post_type', $post_type, $content_type);
 			return $post_type;
 		}
-		
+
 		/**
 		 * Map a taxonomy
-		 * 
+		 *
 		 * @since 1.40.0
-		 * 
+		 *
 		 * @param string $taxonomy Taxonomy
 		 * @return string Taxonomy
 		 */
@@ -2251,12 +2264,12 @@ SQL;
 			}
 			return $wp_taxonomy;
 		}
-		
+
 		/**
 		 * Determine the featured image and modify the node if needed
-		 * 
+		 *
 		 * @since      1.0.0
-		 * 
+		 *
 		 * @param array $node Post data
 		 * @return array [Featured image ID, Node]
 		 */
@@ -2264,7 +2277,7 @@ SQL;
 			$featured_image = '';
 			$featured_image_id = 0;
 			list($featured_image, $node) = apply_filters('fgd2wp_pre_import_media', array($featured_image, $node));
-			
+
 			// Set the featured image from the image field
 			if ( empty($featured_image) && $this->plugin_options['featured_image'] == 'featured' ) {
 				$field_image = $this->get_field_image($node['nid'], $node['type']);
@@ -2283,7 +2296,7 @@ SQL;
 					$featured_image_id = $this->import_media($featured_image['name'], $featured_image['filename'], $featured_image['date'], $featured_image['attributs'], array('ref' => 'node ID=' . $node['nid']));
 				}
 			}
-			
+
 			// Set the featured image from the content
 			if ( empty($featured_image) && $this->plugin_options['featured_image'] != 'none' ) {
 				if ( isset($node['body_summary']) && isset($node['body_value']) ) {
@@ -2307,16 +2320,16 @@ SQL;
 					}
 				}
 			}
-			
+
 			if ( !empty($featured_image_id) ) {
 				$this->media_count++;
 			}
 			return array($featured_image_id, $node);
 		}
-		
+
 		/**
 		 * Get the field image from a node
-		 * 
+		 *
 		 * @param int $node_id Node ID
 		 * @param string $node_type Node type
 		 * @return array Image data
@@ -2331,13 +2344,13 @@ SQL;
 				// No native image field for Drupal 6, but can be obtained with a CCK field
 				$image = apply_filters('fgd2wp_get_drupal6_field_image', $image, $node_id, $node_type);
 				return $image;
-				
+
 			} elseif ( version_compare($this->drupal_version, '8', '<') ) {
 				// Drupal 7
 				$table_name = 'field_data_field_image';
 				$timestamp_field = 'timestamp';
 				$field_image_id_field = 'field_image_fid';
-				
+
 			} else {
 				// Drupal 8
 				$table_name = 'node__field_image';
@@ -2380,19 +2393,19 @@ SQL;
 			}
 			return $image;
 		}
-		
+
 		/**
 		 * Get the default Drupal file paths and set them as globals
-		 * 
+		 *
 		 * @since 1.16.4
 		 */
 		private function set_default_file_paths() {
-				
+
 			// Public path
 			if ( $this->plugin_options['file_public_path_source'] == 'changed' ) {
 				// Get the path entered in the options
 				$this->file_public_path = $this->plugin_options['file_public_path'];
-				
+
 			} else {
 				// Get the default values from the database
 				$this->file_public_path = $this->get_drupal_variable('file_public_path');
@@ -2406,7 +2419,7 @@ SQL;
 			if ( $this->plugin_options['file_private_path_source'] == 'changed' ) {
 				// Get the path entered in the options
 				$this->file_private_path = $this->plugin_options['file_private_path'];
-				
+
 			} else {
 				$this->file_private_path = $this->get_drupal_variable('file_private_path');
 				if ( empty($this->file_private_path) ) {
@@ -2414,13 +2427,13 @@ SQL;
 				}
 			}
 			$this->file_private_path = trailingslashit($this->file_private_path);
-			
+
 			do_action('fgd2wp_set_default_file_paths');
 		}
-		
+
 		/**
 		 * Get the real image path from the uri field
-		 * 
+		 *
 		 * @param string $uri Image URI
 		 * @return string Image path
 		 */
@@ -2430,19 +2443,19 @@ SQL;
 			$path = apply_filters('fgd2wp_get_path_from_uri', $path);
 			return $path;
 		}
-		
+
 		/**
 		 * Get the image attributes
-		 * 
+		 *
 		 * @since 1.16.0
-		 * 
+		 *
 		 * @param array $file File data
 		 * @param string $field_name Field name (alt, description)
 		 * @return string Image field value
 		 */
 		public function get_image_attributes($file, $field_name) {
 			$value = '';
-			
+
 			if ( isset($file[$field_name]) && !empty($file[$field_name]) ) {
 				// field
 				$value = $file[$field_name];
@@ -2455,31 +2468,31 @@ SQL;
 			}
 			return $value;
 		}
-		
+
 		/**
 		 * Get the first image from a content
-		 * 
+		 *
 		 * @since      1.0.0
-		 * 
+		 *
 		 * @param string $content
 		 * @return string Featured image tag
 		 */
 		private function get_first_image_from($content) {
 			$matches = array();
 			$featured_image = '';
-			
+
 			$img_pattern = '#(<img .*?>)#i';
 			if ( preg_match($img_pattern, $content, $matches) ) {
 				$featured_image = $matches[1];
 			}
 			return $featured_image;
 		}
-		
+
 		/**
 		 * Remove the image from the content
-		 * 
+		 *
 		 * @since      1.0.0
-		 * 
+		 *
 		 * @param string $image Image to remove
 		 * @param string $content Content
 		 * @return string Content
@@ -2496,7 +2509,7 @@ SQL;
 			}
 			return $content;
 		}
-		
+
 		/**
 		 * Import post medias from content
 		 *
@@ -2516,7 +2529,7 @@ SQL;
 			$matches = array();
 			$alt_matches = array();
 			$title_matches = array();
-			
+
 			if ( preg_match_all('#<(img|a)(.*?)(src|href)="(.*?)"(.*?)>#s', $content, $matches, PREG_SET_ORDER) > 0 ) {
 				if ( is_array($matches) ) {
 					foreach ($matches as $match ) {
@@ -2549,7 +2562,7 @@ SQL;
 				'media_count'	=> $media_count
 			);
 		}
-		
+
 		/**
 		 * Import a media
 		 *
@@ -2565,7 +2578,7 @@ SQL;
 				$date = date('Y-m-d H:i:s');
 			}
 			$import_external = ($this->plugin_options['import_external'] == 1) || (isset($options['force_external']) && $options['force_external'] );
-			
+
 			$filename = trim($filename); // for filenames with extra spaces at the beginning or at the end
 			$filename = preg_replace('/[?#].*/', '', $filename); // Remove the attributes and anchors
 			$filename = html_entity_decode($filename); // for filenames with HTML entities
@@ -2573,7 +2586,7 @@ SQL;
 			if ( preg_match('#^//#', $filename) ) {
 				$filename = 'http:' . $filename;
 			}
-			
+
 			$filetype = wp_check_filetype($filename);
 			if ( empty($filetype['type']) ) { // Unrecognized file type
 				return false;
@@ -2584,7 +2597,7 @@ SQL;
 
 			// Upload the file from the Drupal web site to WordPress upload dir
 			if ( preg_match('/^http/', $filename) ) {
-				if ( $import_external || // External file 
+				if ( $import_external || // External file
 					preg_match('#^' . $this->plugin_options['url'] . '#', $filename) // Local file
 				) {
 					$old_filename = $filename;
@@ -2599,21 +2612,21 @@ SQL;
 					$old_filename = trailingslashit($this->plugin_options['url']) . $filename;
 				}
 			}
-			
+
 			// Don't re-import the already imported media
 			if ( array_key_exists($old_filename, $this->imported_media) ) {
 				return $this->imported_media[$old_filename];
 			}
-			
+
 			// Get the upload path
 			$upload_path = $this->upload_dir($filename, $date, get_option('uploads_use_yearmonth_folders'));
-			
+
 			// Make sure we have an uploads directory.
 			if ( !wp_mkdir_p($upload_path) ) {
 				$this->display_admin_error(sprintf(__("Unable to create directory %s", 'fg-drupal-to-wp'), $upload_path));
 				return false;
 			}
-			
+
 			$new_filename = $filename;
 			if ( $this->plugin_options['import_duplicates'] == 1 ) {
 				// Images with duplicate names
@@ -2631,7 +2644,7 @@ SQL;
 			$upload_dir = wp_upload_dir();
 			$guid = str_replace($upload_dir['basedir'], $upload_dir['baseurl'], $new_full_filename);
 			$attachment_id = $this->get_post_id_from_guid($guid);
-			
+
 			if ( empty($attachment_id) ) {
 				if ( !$this->download_manager->copy($old_filename, $new_full_filename) ) {
 					$error = error_get_last();
@@ -2655,13 +2668,13 @@ SQL;
 				update_post_meta($attachment_id, '_fgd2wp_old_file', $old_filename);
 				$this->imported_media[$old_filename] = $attachment_id;
 			}
-			
+
 			return $attachment_id;
 		}
-		
+
 		/**
 		 * Determine the media upload directory
-		 * 
+		 *
 		 * @param string $filename Filename
 		 * @param date $date Date
 		 * @param bool $use_yearmonth_folders Use the Year/Month tree folder
@@ -2680,10 +2693,10 @@ SQL;
 			}
 			return $upload_path;
 		}
-		
+
 		/**
 		 * Save the attachment and generates its metadata
-		 * 
+		 *
 		 * @param string $attachment_title Attachment name
 		 * @param string $basename Original attachment filename
 		 * @param string $new_full_filename New attachment filename with path
@@ -2697,7 +2710,7 @@ SQL;
 		 */
 		public function insert_attachment($attachment_title, $basename, $new_full_filename, $guid, $date, $filetype, $image_alt='', $description='', $image_caption='') {
 			$post_name = 'attachment-' . sanitize_title($attachment_title); // Prefix the post name to avoid wrong redirect to a post with the same name
-			
+
 			// If the attachment does not exist yet, insert it in the database
 			$attachment_id = 0;
 			$attachment = $this->get_attachment_from_name($post_name);
@@ -2709,7 +2722,7 @@ SQL;
 			}
 			if ( $attachment_id == 0 ) {
 				$attachment_data = array(
-					'guid'				=> $guid, 
+					'guid'				=> $guid,
 					'post_date'			=> $date,
 					'post_mime_type'	=> $filetype,
 					'post_name'			=> $post_name,
@@ -2721,7 +2734,7 @@ SQL;
 				$attachment_id = wp_insert_attachment($attachment_data, $new_full_filename);
 				add_post_meta($attachment_id, '_fgd2wp_imported', 1, true); // To delete the imported attachments
 			}
-			
+
 			if ( !empty($attachment_id) ) {
 				if ( preg_match('/(image|audio|video)/', $filetype) ) { // Image, audio or video
 					if ( !$this->plugin_options['skip_thumbnails'] ) {
@@ -2742,7 +2755,7 @@ SQL;
 				return false;
 			}
 		}
-		
+
 		/**
 		 * Check if the attachment exists in the database
 		 *
@@ -2767,21 +2780,21 @@ SQL;
 
 		/**
 		 * Stop the import
-		 * 
+		 *
 		 */
 		public function stop_import() {
 			update_option('fgd2wp_stop_import', true);
 		}
-		
+
 		/**
 		 * Test if the import needs to stop
-		 * 
+		 *
 		 * @return boolean Import needs to stop or not
 		 */
 		public function import_stopped() {
 			return get_option('fgd2wp_stop_import');
 		}
-		
+
 		/**
 		 * Return the excerpt and the content of a node
 		 *
@@ -2791,21 +2804,21 @@ SQL;
 		public function set_excerpt_content($node) {
 			$excerpt = '';
 			$content = isset($node['body_value'])? $node['body_value'] : '';
-			
+
 			switch ( $this->plugin_options['summary'] ) {
 				case 'in_excerpt':
 					if ( !empty($node['body_summary']) ) {
 						$excerpt = $node['body_summary'];
 					}
 					break;
-				
+
 				case 'in_content':
 					// Posts with a "Read more" link
 					if ( !empty($node['body_summary']) ) {
 						$content = $node['body_summary'] . "\n<!--more-->\n" . $content;
 					}
 					break;
-				
+
 				case 'in_excerpt_and_content':
 					if ( !empty($node['body_summary']) ) {
 						$excerpt = $node['body_summary'];
@@ -2827,7 +2840,7 @@ SQL;
 
 			if ( !empty($content) ) {
 				$content = apply_filters('fgd2wp_pre_process_content', $content, $post_media);
-				
+
 				// Replace page breaks
 				$content = preg_replace("#<hr([^>]*?)class=\"system-pagebreak\"(.*?)/>#", "<!--nextpage-->", $content);
 
@@ -2950,7 +2963,7 @@ SQL;
 
 		/**
 		 * Remove all the links from the content and replace them with a specific tag
-		 * 
+		 *
 		 * @param array $matches Result of the preg_match
 		 * @return string Replacement
 		 */
@@ -2961,7 +2974,7 @@ SQL;
 
 		/**
 		 * Restore the links in the content and replace them with the new calculated link
-		 * 
+		 *
 		 * @param array $matches Result of the preg_match
 		 * @return string Replacement
 		 */
@@ -3014,7 +3027,7 @@ SQL;
 			} else {
 				$this->log($message);
 			}
-			
+
 			// Hook for doing other actions before modifying the links
 			do_action('fgd2wp_pre_modify_links');
 
@@ -3031,11 +3044,11 @@ SQL;
 				foreach ( $posts as $post ) {
 					$current_links_count = $this->links_count;
 					$post = apply_filters('fgd2wp_post_get_post', $post); // Used to translate the links
-					
+
 					// Modify the links in the content
 					$content = $this->modify_links_in_string($post->post_content);
 					$content = apply_filters('fgd2wp_modify_links_in_content', $content);
-					
+
 					if ( $this->links_count != $current_links_count ) { // Some links were modified
 						// Update the post
 						wp_update_post(array(
@@ -3044,9 +3057,9 @@ SQL;
 						));
 						$post->post_content = $content;
 					}
-					
+
 					do_action('fgd2wp_post_modify_post_links', $post);
-					
+
 					if ( defined('WP_CLI') ) {
 						$progress_cli->tick();
 					}
@@ -3057,16 +3070,16 @@ SQL;
 			if ( defined('WP_CLI') ) {
 				$progress_cli->finish();
 			}
-			
+
 			// Hook for doing other actions after modifying the links
 			do_action('fgd2wp_post_modify_links');
 		}
-		
+
 		/**
 		 * Modify the links in a string
-		 * 
+		 *
 		 * @since 2.8.0
-		 * 
+		 *
 		 * @param string $content Content
 		 * @return string Content
 		 */
@@ -3095,18 +3108,18 @@ SQL;
 			}
 			return $content;
 		}
-		
+
 		/**
 		 * Modify a link
-		 * 
+		 *
 		 * @since 2.8.0
-		 * 
+		 *
 		 * @param string $link Link
 		 * @return string Link modified
 		 */
 		private function modify_link($link) {
 			$new_link = '';
-			
+
 			// Find a post link or a term link
 			$linked_object = $this->get_wp_object_from_drupal_url($link);
 
@@ -3124,7 +3137,7 @@ SQL;
 			}
 			return $new_link;
 		}
-		
+
 		/**
 		 * Test if the link is an internal link or not
 		 *
@@ -3136,12 +3149,12 @@ SQL;
 				(preg_match("#^(http|//)#", $link) == 0);
 			return $result;
 		}
-		
+
 		/**
 		 * Get a WordPress post or term that matches a Drupal URL
-		 * 
+		 *
 		 * @since 1.6.0
-		 * 
+		 *
 		 * @param string $url URL
 		 * @return WP_Post | WP_Term | null
 		 */
@@ -3149,13 +3162,13 @@ SQL;
 			$object = null;
 			$object_type = '';
 			$object_name = $this->remove_html_extension(basename($url));
-			
+
 			// Try to find a post by its post name
 			$object_id = $this->get_post_by_name($object_name);
 			if ( $object_id ) {
 				$object_type = 'post';
 			}
-			
+
 			// Try to find a post or a term in the redirect table
 			if ( empty($object_id) && class_exists('FG_Drupal_to_WordPress_Redirect') ) {
 				$redirect_obj = new FG_Drupal_to_WordPress_Redirect();
@@ -3169,7 +3182,7 @@ SQL;
 					}
 				}
 			}
-			
+
 			// Try to find a post or a term by an ID in the URL
 			if ( empty($object_id) ) {
 				$meta_key_value = $this->get_drupal_id_in_link($url);
@@ -3187,7 +3200,7 @@ SQL;
 					}
 				}
 			}
-			
+
 			if ( !empty($object_id) ) {
 				switch ( $object_type ) {
 					case 'post':
@@ -3206,7 +3219,7 @@ SQL;
 
 		/**
 		 * Remove the file extension .html
-		 * 
+		 *
 		 * @param string $url URL
 		 * @return string URL
 		 */
@@ -3214,10 +3227,10 @@ SQL;
 			$url = preg_replace('/\.html$/', '', $url);
 			return $url;
 		}
-		
+
 		/**
 		 * Get a post by its name
-		 * 
+		 *
 		 * @global object $wpdb
 		 * @param string $post_name Post name
 		 * @param string $post_type Post type
@@ -3228,7 +3241,7 @@ SQL;
 			$post_id = $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type= %s", $post_name, $post_type));
 			return $post_id;
 		}
-		
+
 		/**
 		 * Get the Drupal ID in a link
 		 *
@@ -3246,11 +3259,11 @@ SQL;
 				if ( preg_match("#node/(\d+)#", $link, $matches) || preg_match("#node-(\d+)-#", $link, $matches) ) {
 					$meta_key_value['meta_value'] = $matches[1];
 					$meta_key_value['meta_key'] = '_fgd2wp_old_node_id';
-					
+
 				} elseif ( preg_match("#taxonomy/term/(\d+)#", $link, $matches) || preg_match("#term-(\d+)-#", $link, $matches) ) {
 					$meta_key_value['meta_value'] = $matches[1];
 					$meta_key_value['meta_key'] = '_fgd2wp_old_taxonomy_id';
-					
+
 				} else {
 					$meta_key_value = apply_filters('fgd2wp_post_get_drupal_id_in_link', $meta_key_value);
 				}
@@ -3260,7 +3273,7 @@ SQL;
 
 		/**
 		 * Split a link by its anchor link
-		 * 
+		 *
 		 * @param string $link Original link
 		 * @return array(string link, string anchor_link) [link without anchor, anchor_link]
 		 */
@@ -3280,7 +3293,7 @@ SQL;
 		/**
 		 * Copy a remote file
 		 * in replacement of the copy function
-		 * 
+		 *
 		 * @deprecated
 		 * @param string $url URL of the source file
 		 * @param string $path destination file
@@ -3292,7 +3305,7 @@ SQL;
 
 		/**
 		 * Recount the items for a taxonomy
-		 * 
+		 *
 		 * @return boolean
 		 */
 		private function terms_tax_count($taxonomy) {
@@ -3311,7 +3324,7 @@ SQL;
 
 		/**
 		 * Recount the items for each category and tag
-		 * 
+		 *
 		 * @return boolean
 		 */
 		private function terms_count() {
@@ -3426,9 +3439,9 @@ SQL;
 
 		/**
 		 * Get a Post ID from its GUID
-		 * 
+		 *
 		 * @since 2.30.0
-		 * 
+		 *
 		 * @global object $wpdb
 		 * @param string $guid GUID
 		 * @return int Post ID
@@ -3437,12 +3450,12 @@ SQL;
 			global $wpdb;
 			return $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE guid=%s", $guid));
 		}
-		
+
 		/**
 		 * Returns the imported term ID corresponding to a meta key and value
 		 *
 		 * @since      1.0.0
-		 * 
+		 *
 		 * @param string $meta_key Meta key
 		 * @param string $meta_value Meta value
 		 * @return int WordPress category ID
@@ -3459,7 +3472,7 @@ SQL;
 		 * Returns the imported term taxonomies (including their taxonomy) mapped with their Drupal ID
 		 *
 		 * @since 1.4.0
-		 * 
+		 *
 		 * @return array of terms [drupal_taxonomy_id => [wordpress_term_id, wordpress_taxonomy]]
 		 */
 		public function get_imported_drupal_taxonomies() {
@@ -3551,7 +3564,7 @@ SQL;
 						}
 					}
 				} catch ( PDOException $e ) {}
-				
+
 				// Store the result in cache for the current request
 				wp_cache_set($cache_key, $column_exists);
 			}
@@ -3595,7 +3608,7 @@ SQL;
 						$table_exists = !empty($result);
 					}
 				} catch ( PDOException $e ) {}
-				
+
 				// Store the result in cache for the current request
 				wp_cache_set($cache_key, $table_exists);
 			}
@@ -3604,17 +3617,17 @@ SQL;
 
 		/**
 		 * Test if a remote file exists
-		 * 
+		 *
 		 * @param string $filePath
 		 * @return boolean True if the file exists
 		 */
 		public function url_exists($filePath) {
 			$url = str_replace(' ', '%20', $filePath);
-			
+
 			// Try the get_headers method
 			$headers = @get_headers($url);
 			$result = preg_match("/200/", $headers[0]);
-			
+
 			if ( !$result && strpos($filePath, 'https:') !== 0 ) {
 				// Try the fsock method
 				$url = str_replace('http://', '', $url);
@@ -3636,20 +3649,20 @@ SQL;
 					$result = false;
 				}
 			}
-			
+
 			return $result;
 		}
-		
+
 		/**
 		 * Get all the term metas corresponding to a meta key
-		 * 
+		 *
 		 * @param string $meta_key Meta key
 		 * @return array List of term metas: term_id => meta_value
 		 */
 		public function get_term_metas_by_metakey($meta_key) {
 			global $wpdb;
 			$metas = array();
-			
+
 			$sql = "SELECT term_id, meta_value FROM {$wpdb->termmeta} WHERE meta_key = '$meta_key'";
 			$results = $wpdb->get_results($sql);
 			foreach ( $results as $result ) {
@@ -3658,10 +3671,10 @@ SQL;
 			ksort($metas);
 			return $metas;
 		}
-		
+
 		/**
 		 * Search a term by its slug (LIKE search)
-		 * 
+		 *
 		 * @param string $slug slug
 		 * @return int Term id
 		 */
@@ -3672,12 +3685,12 @@ SQL;
 				WHERE slug LIKE '$slug'
 			");
 		}
-		
+
 		/**
 		 * Get a Drupal variable
-		 * 
+		 *
 		 * @since 1.9.0
-		 * 
+		 *
 		 * @param string $variable_name Variable name
 		 * @return string Variable value
 		 */
@@ -3703,12 +3716,12 @@ SQL;
 			}
 			return $variable;
 		}
-		
+
 		/**
 		 * Get a Drupal config
-		 * 
+		 *
 		 * @since 2.13.0
-		 * 
+		 *
 		 * @param string $query Query
 		 * @param string $collection Collection
 		 * @return string Config name and data
@@ -3730,12 +3743,12 @@ SQL;
 			}
 			return $config;
 		}
-		
+
 		/**
 		 * Same as get_post_meta() but query the key with LIKE
-		 * 
+		 *
 		 * @since 3.23.1
-		 * 
+		 *
 		 * @param int $post_id Post ID
 		 * @param string $meta_key Meta key
 		 * @return string Meta value
@@ -3750,6 +3763,6 @@ SQL;
 			$result = $wpdb->get_col($sql);
 			return $result;
 		}
-		
+
 	}
 }

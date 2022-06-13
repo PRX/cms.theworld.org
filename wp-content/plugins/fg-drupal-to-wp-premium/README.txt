@@ -3,8 +3,8 @@ Contributors: Kerfred
 Plugin Uri: https://www.fredericgilles.net/fg-drupal-to-wordpress/
 Tags: drupal, wordpress, importer, migration, migrator, converter, import, cck, internationalization, ubercart
 Requires at least: 4.5
-Tested up to: 5.9.3
-Stable tag: 3.30.0
+Tested up to: 6.0
+Stable tag: 3.33.0
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -16,7 +16,7 @@ A plugin to migrate a Drupal site to WordPress
 
 This plugin migrates articles, stories, pages, categories, tags, images, users and comments from Drupal to WordPress.
 
-It has been tested with **Drupal 4, 5, 6, 7, 8 & 9** and **WordPress 5.9**. It is compatible with multisite installations.
+It has been tested with **Drupal 4, 5, 6, 7, 8 & 9** and **WordPress 6.0**. It is compatible with multisite installations.
 
 Major features include:
 
@@ -116,6 +116,18 @@ The FAQ is available on https://www.fredericgilles.net/support/kb/index.php
 You can let a comment or report a bug on the Support Center: https://www.fredericgilles.net/support/
 
 == Changelog ==
+
+= 3.33.0 =
+* Fixed: Page 404 for the posts of type "author"
+* Tweak: Rename the hook "fgd2wp_convert_node_type" to "fgd2wp_map_post_type"
+
+= 3.32.0 =
+* New: Ability to import the fields collections and paragraphs fields related to the users
+
+= 3.31.0 =
+* Fixed: Wrong user field slug in ACF and Pods
+* Fixed: Warning: call_user_func_array() expects parameter 1 to be a valid callback, class 'FG_Drupal_to_WordPress_CPT_Pods' does not have a method 'is_repeating_fields_supported'
+* Tested with WordPress 6.0
 
 = 3.30.0 =
 * New: Import the Date Popup Timepicker fields as datetime fields

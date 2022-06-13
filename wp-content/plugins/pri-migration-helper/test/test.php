@@ -1,5 +1,44 @@
 <?php
 
+/**
+ * Testing JSON Diff
+ *
+ * @return void
+ */
+function test_json_diff() {
+
+	$json1 = wp_json_file_decode( PMH_TEST_DIR . '/json1.json' );
+	$json2 = wp_json_file_decode( PMH_TEST_DIR . '/json2.json' );
+
+	$diff = pmh_get_json_diff( $json1, $json2 );
+
+	/* Debug
+	 */
+	echo "<pre>";
+	var_dump( $diff );
+	echo "</pre>";
+	exit;
+}
+// add_action( 'admin_init', 'test_json_diff' );
+
+/**
+ * Get JSON Diff
+ *
+ * @param stdClass $json1 Json decoded.
+ * @param stdClass $json2 Json decoded.
+ * @return Swaggest\JsonDiff\JsonPatch
+ */
+function pmh_get_json_diff( $json1, $json2 ) {
+
+	require_once PMH_DIR . 'vendor/autoload.php';
+	require_once PMH_DIR . 'vendor/swaggest/json-diff/src/JsonDiff.php';
+
+	$diff = new Swaggest\JsonDiff\JsonDiff( $json1, $json2 );
+
+	return $diff->getPatch();
+}
+
+
 /*
 
 pmh_get_json_diff( $json1, $json2 )
