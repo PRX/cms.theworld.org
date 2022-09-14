@@ -15,6 +15,7 @@ define(
 		'custom-post-type-ui/custom-post-type-ui.php',
 		'disable-comments/disable-comments.php',
 		'PATCH-external-media-without-import/external-media-without-import.php',
+		'microsoft-start/index.php',
 		'newspack-blocks/newspack-blocks.php',
 		'newspack-image-credits/newspack-image-credits.php',
 		'newspack-newsletters/newspack-newsletters.php',
