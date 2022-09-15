@@ -1,0 +1,125 @@
+// Program Nodes Custom Fields:
+{
+  "node": {
+    "program": {
+      "ref_authors": {
+        "field_name": "field_ref_authors",
+        "node_type": "program",
+        "table_name": "field_data_field_ref_authors",
+        "module": "entityreference",
+        "columns": { "target_id": "field_ref_authors_target_id" },
+        "label": "Hosted By",
+        "type": "entityreference",
+        "description": "Hosts and other regular contributors whose bios should appear on the program's page.",
+        "default_value": "",
+        "required": 0,
+        "cardinality": "-1",
+        "repetitive": true,
+        "entity_type": "node",
+        "order": 10,
+        "referenceable_types": ["person"],
+        "target_type": "node"
+      },
+      "links_sponsors": {
+        "field_name": "field_links_sponsors",
+        "node_type": "program",
+        "table_name": "field_data_field_links_sponsors",
+        "module": "link",
+        "columns": {
+          "url": "field_links_sponsors_url",
+          "title": "field_links_sponsors_title",
+          "attributes": "field_links_sponsors_attributes"
+        },
+        "label": "Sponsors",
+        "type": "link_field",
+        "description": "",
+        "default_value": "",
+        "required": 0,
+        "cardinality": "-1",
+        "repetitive": true,
+        "entity_type": "node",
+        "order": 11
+      },
+      "image_banner": {
+        "field_name": "field_image_banner",
+        "node_type": "program",
+        "table_name": "field_data_field_image_banner",
+        "module": "image",
+        "columns": {
+          "fid": "field_image_banner_fid",
+          "alt": "field_image_banner_alt",
+          "title": "field_image_banner_title",
+          "width": "field_image_banner_width",
+          "height": "field_image_banner_height"
+        },
+        "label": "Banner image",
+        "type": "media_generic",
+        "description": "This is the image that will display at the top of the program. Please note that the image will be displayed at its original size and dimensions. No cropping or re-sizing will take place beyond keeping the image inside the boundaries of the page.",
+        "default_value": "",
+        "required": 0,
+        "cardinality": "1",
+        "repetitive": false,
+        "entity_type": "node",
+        "order": 4
+      },
+      "teaser": {
+        "field_name": "field_teaser",
+        "node_type": "program",
+        "table_name": "field_data_field_teaser",
+        "module": "text",
+        "columns": {
+          "value": "field_teaser_value",
+          "format": "field_teaser_format"
+        },
+        "label": "Teaser",
+        "type": "text_textarea",
+        "description": "Add a brief description of the program which will be used where this shows up in listings.",
+        "default_value": "",
+        "required": 0,
+        "cardinality": "1",
+        "repetitive": false,
+        "entity_type": "node",
+        "order": 2
+      },
+      "podcast_logo": {
+        "field_name": "field_podcast_logo",
+        "node_type": "program",
+        "table_name": "field_data_field_podcast_logo",
+        "module": "image",
+        "columns": {
+          "fid": "field_podcast_logo_fid",
+          "alt": "field_podcast_logo_alt",
+          "title": "field_podcast_logo_title",
+          "width": "field_podcast_logo_width",
+          "height": "field_podcast_logo_height"
+        },
+        "label": "Podcast Logo",
+        "type": "media_generic",
+        "description": "",
+        "default_value": "",
+        "required": 0,
+        "cardinality": "1",
+        "repetitive": false,
+        "entity_type": "node",
+        "order": 6
+      },
+      "featured_stories": {
+        "field_name": "field_featured_stories",
+        "node_type": "program",
+        "table_name": "field_data_field_featured_stories",
+        "module": "node_reference",
+        "columns": { "nid": "field_featured_stories_nid" },
+        "label": "Featured stories",
+        "type": "node_reference",
+        "description": "",
+        "default_value": "",
+        "required": 0,
+        "cardinality": "5",
+        "repetitive": true,
+        "entity_type": "node",
+        "order": 1,
+        "referenceable_types": ["discussion", "story"]
+      }
+    }
+  }
+}

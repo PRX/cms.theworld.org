@@ -1,23 +1,26 @@
 <?php
+/**
+ * Admin helper
+ *
+ * @package WordPress
+ */
 
 /**
  * Testing JSON Diff
  *
  * @return void
  */
-function test_json_diff() {
+function test_json_diff( $json_url_1, $json_url_2 ) {
 
-	$json1 = wp_json_file_decode( PMH_TEST_DIR . '/json1.json' );
-	$json2 = wp_json_file_decode( PMH_TEST_DIR . '/json2.json' );
+	$json1 = wp_remote_get( $json_url_1 );
+	$obj1  = json_decode( wp_remote_retrieve_body( $json1 ) );
 
-	$diff = pmh_get_json_diff( $json1, $json2 );
+	$json2 = wp_remote_get( $json_url_2 );
+	$obj2  = json_decode( wp_remote_retrieve_body( $json2 ) );
 
-	/* Debug
-	 */
-	echo "<pre>";
-	var_dump( $diff );
-	echo "</pre>";
-	exit;
+	$diff = pmh_get_json_diff(  $obj1, $obj2 );
+
+	return $diff;
 }
 // add_action( 'admin_init', 'test_json_diff' );
 
@@ -35,7 +38,7 @@ function pmh_get_json_diff( $json1, $json2 ) {
 
 	$diff = new Swaggest\JsonDiff\JsonDiff( $json1, $json2 );
 
-	return $diff->getPatch();
+	return $diff;
 }
 
 
@@ -105,3 +108,5 @@ object(Swaggest\JsonDiff\JsonPatch)#2510 (2) {
   }
 }
 */
+
+
