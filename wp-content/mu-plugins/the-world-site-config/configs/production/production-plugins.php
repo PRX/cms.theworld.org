@@ -9,5 +9,6 @@ define(
 	'PRODUCTION_PLUGINS',
 	array(
 		'pantheon-advanced-page-cache/pantheon-advanced-page-cache.php',
+		'pri-external-attachment/pri-external-attachment.php',
 	)
 );

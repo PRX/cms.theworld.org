@@ -16,8 +16,7 @@
                 "id": ""
             },
             "post_type": [
-                "post",
-                "segment"
+                "post"
             ],
             "taxonomy": "",
             "filters": [
@@ -50,6 +49,27 @@
                 "operator": "==",
                 "value": "program"
             }
+        ],
+        [
+            {
+                "param": "taxonomy",
+                "operator": "==",
+                "value": "contributor"
+            }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "program"
+            }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "person"
+            }
         ]
     ],
     "menu_order": 2,
@@ -61,5 +81,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1652888210
+    "modified": 1655916582
 }

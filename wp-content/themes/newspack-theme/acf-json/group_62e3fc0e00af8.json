@@ -1,11 +1,11 @@
 {
-    "key": "group_622a32ff021a3",
-    "title": "Sponsor Links",
+    "key": "group_62e3fc0e00af8",
+    "title": "Episodes Custom",
     "fields": [
         {
-            "key": "field_622a3327b11a4",
-            "label": "Sponsor Links",
-            "name": "collection-sponsor_links",
+            "key": "field_62e3fc14d73ae",
+            "label": "Amazon Items",
+            "name": "amazon_items",
             "type": "repeater",
             "instructions": "",
             "required": 0,
@@ -22,10 +22,10 @@
             "button_label": "",
             "sub_fields": [
                 {
-                    "key": "field_622a33c7bd044",
-                    "label": "Sponsor Links",
-                    "name": "sponsor_links",
-                    "type": "link",
+                    "key": "field_62e3fc2cd73af",
+                    "label": "Amazon Item",
+                    "name": "amazon_item",
+                    "type": "text",
                     "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
@@ -34,7 +34,11 @@
                         "class": "",
                         "id": ""
                     },
-                    "return_format": "array"
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
                 }
             ]
         }
@@ -42,41 +46,20 @@
     "location": [
         [
             {
-                "param": "taxonomy",
-                "operator": "==",
-                "value": "category"
-            }
-        ],
-        [
-            {
-                "param": "taxonomy",
-                "operator": "==",
-                "value": "program"
-            }
-        ],
-        [
-            {
                 "param": "post_type",
                 "operator": "==",
-                "value": "program"
-            }
-        ],
-        [
-            {
-                "param": "post_type",
-                "operator": "==",
-                "value": "person"
+                "value": "episode"
             }
         ]
     ],
     "menu_order": 0,
     "position": "normal",
-    "style": "seamless",
-    "label_placement": "left",
+    "style": "default",
+    "label_placement": "top",
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "show_in_rest": 1,
-    "modified": 1655990408
+    "show_in_rest": 0,
+    "modified": 1659108440
 }
