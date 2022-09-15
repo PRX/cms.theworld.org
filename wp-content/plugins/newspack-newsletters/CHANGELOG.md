@@ -1,3 +1,230 @@
+# [1.47.0](https://github.com/Automattic/newspack-newsletters/compare/v1.46.4...v1.47.0) (2022-06-13)
+
+
+### Bug Fixes
+
+* ensure controlled statuses after a post update ([#835](https://github.com/Automattic/newspack-newsletters/issues/835)) ([cbfd642](https://github.com/Automattic/newspack-newsletters/commit/cbfd64225375a55e47d192722681e54ed678e3a6))
+* migrate newsletters post status ([#825](https://github.com/Automattic/newspack-newsletters/issues/825)) ([d59792d](https://github.com/Automattic/newspack-newsletters/commit/d59792d22f3e3e339ba0c050d9fd7cde60ed313f))
+
+
+### Features
+
+* handle post status through `is_public` meta ([#824](https://github.com/Automattic/newspack-newsletters/issues/824)) ([20065ae](https://github.com/Automattic/newspack-newsletters/commit/20065ae1a390da73f8fb7fb692bb027136e12bd8))
+* update init modal sidebar design ([#828](https://github.com/Automattic/newspack-newsletters/issues/828)) ([3246ed6](https://github.com/Automattic/newspack-newsletters/commit/3246ed6a0fa25d39e0800fdc77196c559dc45bf1))
+
+# [1.47.0-alpha.1](https://github.com/Automattic/newspack-newsletters/compare/v1.46.4...v1.47.0-alpha.1) (2022-06-02)
+
+
+### Bug Fixes
+
+* ensure controlled statuses after a post update ([#835](https://github.com/Automattic/newspack-newsletters/issues/835)) ([cbfd642](https://github.com/Automattic/newspack-newsletters/commit/cbfd64225375a55e47d192722681e54ed678e3a6))
+* migrate newsletters post status ([#825](https://github.com/Automattic/newspack-newsletters/issues/825)) ([d59792d](https://github.com/Automattic/newspack-newsletters/commit/d59792d22f3e3e339ba0c050d9fd7cde60ed313f))
+
+
+### Features
+
+* handle post status through `is_public` meta ([#824](https://github.com/Automattic/newspack-newsletters/issues/824)) ([20065ae](https://github.com/Automattic/newspack-newsletters/commit/20065ae1a390da73f8fb7fb692bb027136e12bd8))
+* update init modal sidebar design ([#828](https://github.com/Automattic/newspack-newsletters/issues/828)) ([3246ed6](https://github.com/Automattic/newspack-newsletters/commit/3246ed6a0fa25d39e0800fdc77196c559dc45bf1))
+
+## [1.46.4](https://github.com/Automattic/newspack-newsletters/compare/v1.46.3...v1.46.4) (2022-05-30)
+
+
+### Bug Fixes
+
+* allow CoAuthors Plus assets on editor ([#826](https://github.com/Automattic/newspack-newsletters/issues/826)) ([df0fde7](https://github.com/Automattic/newspack-newsletters/commit/df0fde7d1dba5f9d11e7353eadddc2e0e9b89d7a))
+
+## [1.46.4-alpha.1](https://github.com/Automattic/newspack-newsletters/compare/v1.46.3...v1.46.4-alpha.1) (2022-05-27)
+
+
+### Bug Fixes
+
+* allow CoAuthors Plus assets on editor ([#826](https://github.com/Automattic/newspack-newsletters/issues/826)) ([df0fde7](https://github.com/Automattic/newspack-newsletters/commit/df0fde7d1dba5f9d11e7353eadddc2e0e9b89d7a))
+
+## [1.46.3](https://github.com/Automattic/newspack-newsletters/compare/v1.46.2...v1.46.3) (2022-05-27)
+
+
+### Bug Fixes
+
+* ensure scheduled sending only fires for newsletters ([#837](https://github.com/Automattic/newspack-newsletters/issues/837)) ([30d1cbd](https://github.com/Automattic/newspack-newsletters/commit/30d1cbde541ed63cde2410b37f88def70e876187))
+
+## [1.46.2](https://github.com/Automattic/newspack-newsletters/compare/v1.46.1...v1.46.2) (2022-05-26)
+
+
+### Bug Fixes
+
+* ensure scheduled newsletter is sent through a lock meta ([#836](https://github.com/Automattic/newspack-newsletters/issues/836)) ([9f1a2ae](https://github.com/Automattic/newspack-newsletters/commit/9f1a2aedfc4ae3d7571bb228e1551e47fc31c275))
+
+## [1.46.2-hotfix.1](https://github.com/Automattic/newspack-newsletters/compare/v1.46.1...v1.46.2-hotfix.1) (2022-05-26)
+
+
+### Bug Fixes
+
+* ensure scheduled newsletter is sent through a lock meta ([e5bcd89](https://github.com/Automattic/newspack-newsletters/commit/e5bcd89e3204f8df690709ad2b0c2b8563e983e8))
+
+## [1.46.1](https://github.com/Automattic/newspack-newsletters/compare/v1.46.0...v1.46.1) (2022-05-25)
+
+
+### Bug Fixes
+
+* sending scheduled newsletters ([#831](https://github.com/Automattic/newspack-newsletters/issues/831)) ([f2028fb](https://github.com/Automattic/newspack-newsletters/commit/f2028fb7fd98163e78c00bc5c35bef20a05fde9f))
+
+## [1.46.1-hotfix.1](https://github.com/Automattic/newspack-newsletters/compare/v1.46.0...v1.46.1-hotfix.1) (2022-05-25)
+
+
+### Bug Fixes
+
+* sending scheduled newsletters ([2a25225](https://github.com/Automattic/newspack-newsletters/commit/2a25225f79e032ae454fe3e47fd40708f3b8c6e9))
+
+# [1.46.0](https://github.com/Automattic/newspack-newsletters/compare/v1.45.0...v1.46.0) (2022-05-18)
+
+
+### Bug Fixes
+
+* api middleware execution logic ([#817](https://github.com/Automattic/newspack-newsletters/issues/817)) ([089c319](https://github.com/Automattic/newspack-newsletters/commit/089c31981ccf20fceca50826ce005cd7bc9ece4f))
+* ensure layout update has ID ([#797](https://github.com/Automattic/newspack-newsletters/issues/797)) ([2a099e9](https://github.com/Automattic/newspack-newsletters/commit/2a099e9ccc85177198ace23f63450e1a97933af9))
+
+
+### Features
+
+* add another layout and add scroll effect to layout picker ([#801](https://github.com/Automattic/newspack-newsletters/issues/801)) ([a17ad0d](https://github.com/Automattic/newspack-newsletters/commit/a17ad0d460924cf211f4bbf75ce29ec9aeccf651))
+* update all layouts with block visibility ([#800](https://github.com/Automattic/newspack-newsletters/issues/800)) ([744aad1](https://github.com/Automattic/newspack-newsletters/commit/744aad1bfa379bf2ec4a852fc47900567a10c80a))
+* update social links and add new block styles ([#806](https://github.com/Automattic/newspack-newsletters/issues/806)) ([59ff8b6](https://github.com/Automattic/newspack-newsletters/commit/59ff8b6cbba1c12a87beaddf8cbc9bdc6d6c814d))
+
+# [1.46.0-alpha.2](https://github.com/Automattic/newspack-newsletters/compare/v1.46.0-alpha.1...v1.46.0-alpha.2) (2022-05-11)
+
+
+### Bug Fixes
+
+* api middleware execution logic ([#817](https://github.com/Automattic/newspack-newsletters/issues/817)) ([089c319](https://github.com/Automattic/newspack-newsletters/commit/089c31981ccf20fceca50826ce005cd7bc9ece4f))
+
+
+### Features
+
+* update social links and add new block styles ([#806](https://github.com/Automattic/newspack-newsletters/issues/806)) ([59ff8b6](https://github.com/Automattic/newspack-newsletters/commit/59ff8b6cbba1c12a87beaddf8cbc9bdc6d6c814d))
+
+# [1.46.0-alpha.1](https://github.com/Automattic/newspack-newsletters/compare/v1.45.0...v1.46.0-alpha.1) (2022-05-05)
+
+
+### Bug Fixes
+
+* ensure layout update has ID ([#797](https://github.com/Automattic/newspack-newsletters/issues/797)) ([2a099e9](https://github.com/Automattic/newspack-newsletters/commit/2a099e9ccc85177198ace23f63450e1a97933af9))
+
+
+### Features
+
+* add another layout and add scroll effect to layout picker ([#801](https://github.com/Automattic/newspack-newsletters/issues/801)) ([a17ad0d](https://github.com/Automattic/newspack-newsletters/commit/a17ad0d460924cf211f4bbf75ce29ec9aeccf651))
+* update all layouts with block visibility ([#800](https://github.com/Automattic/newspack-newsletters/issues/800)) ([744aad1](https://github.com/Automattic/newspack-newsletters/commit/744aad1bfa379bf2ec4a852fc47900567a10c80a))
+
+# [1.45.0](https://github.com/Automattic/newspack-newsletters/compare/v1.44.0...v1.45.0) (2022-05-03)
+
+
+### Bug Fixes
+
+* add all accepted keys to get_post_type_labels() ([#743](https://github.com/Automattic/newspack-newsletters/issues/743)) ([5b64218](https://github.com/Automattic/newspack-newsletters/commit/5b64218cf3dc96cb08967d40d29d599371bae513))
+* height of block visibility when using floats ([#789](https://github.com/Automattic/newspack-newsletters/issues/789)) ([4bab9da](https://github.com/Automattic/newspack-newsletters/commit/4bab9da3561d339e7b85b9216f642f71d076bd1c))
+* **layouts:** updating layouts ([e75dbcc](https://github.com/Automattic/newspack-newsletters/commit/e75dbcc01dd90d3396737f510e3bc58b3e33a3d8)), closes [#607](https://github.com/Automattic/newspack-newsletters/issues/607)
+
+
+### Features
+
+* add 2 new layouts ([#788](https://github.com/Automattic/newspack-newsletters/issues/788)) ([3af1f2f](https://github.com/Automattic/newspack-newsletters/commit/3af1f2fb66c5013babec04c2a9a8c47a4050fa84))
+* add new layout ([#795](https://github.com/Automattic/newspack-newsletters/issues/795)) ([d941c87](https://github.com/Automattic/newspack-newsletters/commit/d941c8752201cc0230505edfed8eeaab31cba9da))
+* reorganise layouts and add header group to all of them ([#796](https://github.com/Automattic/newspack-newsletters/issues/796)) ([385294c](https://github.com/Automattic/newspack-newsletters/commit/385294c49a40d9f9cfce52519623f48b6433006d))
+
+# [1.45.0-alpha.1](https://github.com/Automattic/newspack-newsletters/compare/v1.44.0...v1.45.0-alpha.1) (2022-05-02)
+
+
+### Bug Fixes
+
+* add all accepted keys to get_post_type_labels() ([#743](https://github.com/Automattic/newspack-newsletters/issues/743)) ([5b64218](https://github.com/Automattic/newspack-newsletters/commit/5b64218cf3dc96cb08967d40d29d599371bae513))
+* height of block visibility when using floats ([#789](https://github.com/Automattic/newspack-newsletters/issues/789)) ([4bab9da](https://github.com/Automattic/newspack-newsletters/commit/4bab9da3561d339e7b85b9216f642f71d076bd1c))
+* **layouts:** updating layouts ([e75dbcc](https://github.com/Automattic/newspack-newsletters/commit/e75dbcc01dd90d3396737f510e3bc58b3e33a3d8)), closes [#607](https://github.com/Automattic/newspack-newsletters/issues/607)
+
+
+### Features
+
+* add 2 new layouts ([#788](https://github.com/Automattic/newspack-newsletters/issues/788)) ([3af1f2f](https://github.com/Automattic/newspack-newsletters/commit/3af1f2fb66c5013babec04c2a9a8c47a4050fa84))
+* add new layout ([#795](https://github.com/Automattic/newspack-newsletters/issues/795)) ([d941c87](https://github.com/Automattic/newspack-newsletters/commit/d941c8752201cc0230505edfed8eeaab31cba9da))
+* reorganise layouts and add header group to all of them ([#796](https://github.com/Automattic/newspack-newsletters/issues/796)) ([385294c](https://github.com/Automattic/newspack-newsletters/commit/385294c49a40d9f9cfce52519623f48b6433006d))
+
+# [1.44.0](https://github.com/Automattic/newspack-newsletters/compare/v1.43.0...v1.44.0) (2022-04-18)
+
+
+### Bug Fixes
+
+* **layouts:** ensure selected layout is saved ([#786](https://github.com/Automattic/newspack-newsletters/issues/786)) ([5c659d1](https://github.com/Automattic/newspack-newsletters/commit/5c659d1bc3952c6786d22b89b5022c58fad3777d))
+
+
+### Features
+
+* ActiveCampaign esp integration ([#775](https://github.com/Automattic/newspack-newsletters/issues/775)) ([0d38151](https://github.com/Automattic/newspack-newsletters/commit/0d381510dc86b8eb7c548c5e3c101dd1c3e6a42d))
+* add block support for Site Logo, Site Tagline, and Site Title ([#679](https://github.com/Automattic/newspack-newsletters/issues/679)) ([714b498](https://github.com/Automattic/newspack-newsletters/commit/714b4982b96690f031a9a0c509ebd1fd992d774e))
+* simplify visibility option ([#733](https://github.com/Automattic/newspack-newsletters/issues/733)) ([d7ea865](https://github.com/Automattic/newspack-newsletters/commit/d7ea86546ac0c62728362008669d65aa2e484dca))
+
+# [1.44.0-alpha.3](https://github.com/Automattic/newspack-newsletters/compare/v1.44.0-alpha.2...v1.44.0-alpha.3) (2022-04-13)
+
+
+### Bug Fixes
+
+* **layouts:** ensure selected layout is saved ([#786](https://github.com/Automattic/newspack-newsletters/issues/786)) ([5c659d1](https://github.com/Automattic/newspack-newsletters/commit/5c659d1bc3952c6786d22b89b5022c58fad3777d))
+
+# [1.44.0-alpha.2](https://github.com/Automattic/newspack-newsletters/compare/v1.44.0-alpha.1...v1.44.0-alpha.2) (2022-04-08)
+
+
+### Features
+
+* ActiveCampaign esp integration ([#775](https://github.com/Automattic/newspack-newsletters/issues/775)) ([0d38151](https://github.com/Automattic/newspack-newsletters/commit/0d381510dc86b8eb7c548c5e3c101dd1c3e6a42d))
+
+# [1.44.0-alpha.1](https://github.com/Automattic/newspack-newsletters/compare/v1.43.0...v1.44.0-alpha.1) (2022-04-07)
+
+
+### Features
+
+* add block support for Site Logo, Site Tagline, and Site Title ([#679](https://github.com/Automattic/newspack-newsletters/issues/679)) ([714b498](https://github.com/Automattic/newspack-newsletters/commit/714b4982b96690f031a9a0c509ebd1fd992d774e))
+* simplify visibility option ([#733](https://github.com/Automattic/newspack-newsletters/issues/733)) ([d7ea865](https://github.com/Automattic/newspack-newsletters/commit/d7ea86546ac0c62728362008669d65aa2e484dca))
+
+# [1.43.0](https://github.com/Automattic/newspack-newsletters/compare/v1.42.1...v1.43.0) (2022-04-05)
+
+
+### Bug Fixes
+
+* disable row group block variation ([#772](https://github.com/Automattic/newspack-newsletters/issues/772)) ([82224ff](https://github.com/Automattic/newspack-newsletters/commit/82224ff1e372ac6cc0e585f9fd774cf86e245e33))
+* move subject back to the sidebar ([#773](https://github.com/Automattic/newspack-newsletters/issues/773)) ([46aad75](https://github.com/Automattic/newspack-newsletters/commit/46aad752ba45f4b36ba9eaf7530a3a5952c57a2b))
+
+
+### Features
+
+* allow theme customization ([#766](https://github.com/Automattic/newspack-newsletters/issues/766)) ([ebf3cca](https://github.com/Automattic/newspack-newsletters/commit/ebf3ccaac14a0df5e8641ce03d9404141c939793))
+* minify and notify clipable email body ([#764](https://github.com/Automattic/newspack-newsletters/issues/764)) ([2c1c6a3](https://github.com/Automattic/newspack-newsletters/commit/2c1c6a32c3437b447324b4b33c26121668c5801e))
+
+# [1.43.0-alpha.1](https://github.com/Automattic/newspack-newsletters/compare/v1.42.1...v1.43.0-alpha.1) (2022-03-31)
+
+
+### Bug Fixes
+
+* disable row group block variation ([#772](https://github.com/Automattic/newspack-newsletters/issues/772)) ([82224ff](https://github.com/Automattic/newspack-newsletters/commit/82224ff1e372ac6cc0e585f9fd774cf86e245e33))
+* move subject back to the sidebar ([#773](https://github.com/Automattic/newspack-newsletters/issues/773)) ([46aad75](https://github.com/Automattic/newspack-newsletters/commit/46aad752ba45f4b36ba9eaf7530a3a5952c57a2b))
+
+
+### Features
+
+* allow theme customization ([#766](https://github.com/Automattic/newspack-newsletters/issues/766)) ([ebf3cca](https://github.com/Automattic/newspack-newsletters/commit/ebf3ccaac14a0df5e8641ce03d9404141c939793))
+* minify and notify clipable email body ([#764](https://github.com/Automattic/newspack-newsletters/issues/764)) ([2c1c6a3](https://github.com/Automattic/newspack-newsletters/commit/2c1c6a32c3437b447324b4b33c26121668c5801e))
+
+## [1.42.1](https://github.com/Automattic/newspack-newsletters/compare/v1.42.0...v1.42.1) (2022-03-22)
+
+
+### Bug Fixes
+
+* color palette css rules ([#757](https://github.com/Automattic/newspack-newsletters/issues/757)) ([2d929ac](https://github.com/Automattic/newspack-newsletters/commit/2d929ac8277b833aaceada281bd6eae73c465805))
+
+## [1.42.1-alpha.1](https://github.com/Automattic/newspack-newsletters/compare/v1.42.0...v1.42.1-alpha.1) (2022-03-15)
+
+
+### Bug Fixes
+
+* color palette css rules ([#757](https://github.com/Automattic/newspack-newsletters/issues/757)) ([2d929ac](https://github.com/Automattic/newspack-newsletters/commit/2d929ac8277b833aaceada281bd6eae73c465805))
+
 # [1.42.0](https://github.com/Automattic/newspack-newsletters/compare/v1.41.0...v1.42.0) (2022-03-08)
 
 

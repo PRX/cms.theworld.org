@@ -48,7 +48,7 @@ final class Newspack_Newsletters_Renderer {
 
 	/**
 	 * Inline tags that are allowed to be rendered in a text block.
-	 * 
+	 *
 	 * @var bool[]|array[] Associative array of tag names to allowed attributes.
 	 */
 	public static $allowed_inline_tags = [
@@ -57,7 +57,7 @@ final class Newspack_Newsletters_Renderer {
 		'strong' => true,
 		'i'      => true,
 		'em'     => true,
-		'mark'   => true,
+		'span'   => true,
 		'u'      => true,
 		'small'  => true,
 		'sub'    => true,
@@ -76,6 +76,7 @@ final class Newspack_Newsletters_Renderer {
 	 * @return string HTML attributes as a string.
 	 */
 	private static function array_to_attributes( $attributes ) {
+		$attributes = apply_filters( 'newspack_newsletters_mjml_component_attributes', $attributes );
 		return join(
 			' ',
 			array_map(
@@ -115,6 +116,51 @@ final class Newspack_Newsletters_Renderer {
 			);
 			return $sizes[ $block_attrs['fontSize'] ];
 		}
+	}
+
+	/**
+	 * Get the social icon and color based on the block attributes.
+	 *
+	 * @param string $service_name The service name.
+	 * @param array  $block_attrs  Block attributes.
+	 *
+	 * @return array[
+	 *   'icon'  => string,
+	 *   'color' => string,
+	 * ] The icon and color or empty array if service not found.
+	 */
+	private static function get_social_icon( $service_name, $block_attrs ) {
+		$services_colors = [
+			'facebook'  => '#1977f2',
+			'instagram' => '#f00075',
+			'linkedin'  => '#0577b5',
+			'tiktok'    => '#000000',
+			'tumblr'    => '#011835',
+			'twitter'   => '#21a1f3',
+			'wordpress' => '#3499cd',
+			'youtube'   => '#ff0100',
+		];
+		if ( ! isset( $services_colors[ $service_name ] ) ) {
+			return [];
+		}
+		$icon  = 'white';
+		$color = $services_colors[ $service_name ];
+		if ( isset( $block_attrs['className'] ) ) {
+			if ( 'is-style-filled-black' === $block_attrs['className'] || 'is-style-circle-white' === $block_attrs['className'] ) {
+				$icon = 'black';
+			}
+			if ( 'is-style-filled-black' === $block_attrs['className'] || 'is-style-filled-white' === $block_attrs['className'] ) {
+				$color = 'transparent';
+			} elseif ( 'is-style-circle-black' === $block_attrs['className'] ) {
+				$color = '#000';
+			} elseif ( 'is-style-circle-white' === $block_attrs['className'] ) {
+				$color = '#fff';
+			}
+		}
+		return [
+			'icon'  => sprintf( '%s-%s.png', $icon, $service_name ),
+			'color' => $color,
+		];
 	}
 
 	/**
@@ -251,6 +297,26 @@ final class Newspack_Newsletters_Renderer {
 	}
 
 	/**
+	 * Whether the block is empty.
+	 *
+	 * @param WP_Block $block The block.
+	 *
+	 * @return bool Whether the block is empty.
+	 */
+	public static function is_empty_block( $block ) {
+		$blocks_without_inner_html = [
+			'core/site-logo',
+			'core/site-title',
+			'core/site-tagline',
+		];
+
+		$empty_block_name = empty( $block['blockName'] );
+		$empty_html       = ! in_array( $block['blockName'], $blocks_without_inner_html, true ) && empty( $block['innerHTML'] );
+
+		return $empty_block_name || $empty_html;
+	}
+
+	/**
 	 * Convert a Gutenberg block to an MJML component.
 	 * MJML component will be put in an mj-column in an mj-section for consistent layout,
 	 * unless it's a group or a columns block.
@@ -267,7 +333,7 @@ final class Newspack_Newsletters_Renderer {
 		$inner_blocks = $block['innerBlocks'];
 		$inner_html   = $block['innerHTML'];
 
-		if ( ! isset( $attrs['innerBlocksToInsert'] ) && ( empty( $block_name ) || empty( $inner_html ) ) ) {
+		if ( ! isset( $attrs['innerBlocksToInsert'] ) && self::is_empty_block( $block ) ) {
 			return '';
 		}
 
@@ -296,6 +362,11 @@ final class Newspack_Newsletters_Renderer {
 
 		$font_family = 'core/heading' === $block_name ? self::$font_header : self::$font_body;
 
+		if ( ! empty( $inner_html ) ) {
+			// Replace <mark /> with <span />.
+			$inner_html = preg_replace( '/<mark\s(.+?)>(.+?)<\/mark>/is', '<span $1>$2</span>', $inner_html );
+		}
+
 		switch ( $block_name ) {
 			/**
 			 * Text-based blocks.
@@ -304,6 +375,8 @@ final class Newspack_Newsletters_Renderer {
 			case 'core/list':
 			case 'core/heading':
 			case 'core/quote':
+			case 'core/site-title':
+			case 'core/site-tagline':
 			case 'newspack-newsletters/share':
 				$text_attrs = array_merge(
 					array(
@@ -320,6 +393,28 @@ final class Newspack_Newsletters_Renderer {
 					return '';
 				}
 
+				if ( 'core/site-tagline' === $block_name ) {
+					$inner_html = get_bloginfo( 'description' );
+				}
+
+				if ( 'core/site-title' === $block_name ) {
+					$inner_html = get_bloginfo( 'name' );
+					$tag_name   = 'h1';
+					if ( isset( $attrs['level'] ) ) {
+						$tag_name = 0 === $attrs['level'] ? 'p' : 'h' . (int) $attrs['level'];
+					}
+					if ( ! ( isset( $attrs['isLink'] ) && ! $attrs['isLink'] ) ) {
+						$link_attrs = array(
+							'href="' . esc_url( get_bloginfo( 'url' ) ) . '"',
+						);
+						if ( isset( $attrs['linkTarget'] ) && '_blank' === $attrs['linkTarget'] ) {
+							$link_attrs[] = 'target="_blank"';
+						}
+						$inner_html = sprintf( '<a %1$s>%2$s</a>', implode( ' ', $link_attrs ), esc_html( $inner_html ) );
+					}
+					$inner_html = sprintf( '<%1$s>%2$s</%1$s>', $tag_name, $inner_html );
+				}
+
 				// Only mj-text has to use container-background-color attr for background color.
 				if ( isset( $text_attrs['background-color'] ) ) {
 					$text_attrs['container-background-color'] = $text_attrs['background-color'];
@@ -330,13 +425,34 @@ final class Newspack_Newsletters_Renderer {
 				break;
 
 			/**
+			 * Site logo block.
+			 */
+			case 'core/site-logo':
+				$custom_logo_id = get_theme_mod( 'custom_logo' );
+				$image          = wp_get_attachment_image_src( $custom_logo_id, 'full' );
+				$markup         = '';
+				if ( ! empty( $image ) ) {
+					$img_attrs = array(
+						'padding' => '0',
+						'width'   => sprintf( '%spx', isset( $attrs['width'] ) ? $attrs['width'] : '125' ),
+						'align'   => isset( $attrs['align'] ) ? $attrs['align'] : 'left',
+						'src'     => $image[0],
+						'href'    => isset( $attrs['isLink'] ) && ! $attrs['isLink'] ? '' : esc_url( home_url( '/' ) ),
+						'target'  => isset( $attrs['linkTarget'] ) && '_blank' === $attrs['linkTarget'] ? '_blank' : '',
+					);
+					$markup   .= '<mj-image ' . self::array_to_attributes( $img_attrs ) . ' />';
+				}
+				$block_mjml_markup = $markup;
+				break;
+
+			/**
 			 * Image block.
 			 */
 			case 'core/image':
 				// Parse block content.
 				$dom = new DomDocument();
 				libxml_use_internal_errors( true );
-				$dom->loadHTML( mb_convert_encoding( $inner_html, 'HTML-ENTITIES', get_bloginfo( 'charset' ) ) );
+				$dom->loadHTML( mb_convert_encoding( $inner_html, 'HTML-ENTITIES', get_bloginfo( 'charset' ) ), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
 				$img        = $dom->getElementsByTagName( 'img' )->item( 0 );
 				$img_src    = $img->getAttribute( 'src' );
 				$figcaption = $dom->getElementsByTagName( 'figcaption' )->item( 0 );
@@ -388,6 +504,7 @@ final class Newspack_Newsletters_Renderer {
 						$caption_html .= $dom->saveHTML( $caption_node );
 					}
 					$caption_attrs = array(
+						'css-class'   => 'image-caption',
 						'align'       => 'center',
 						'color'       => '#555d66',
 						'line-height' => '1.56',
@@ -481,7 +598,7 @@ final class Newspack_Newsletters_Renderer {
 			 * Spacer block.
 			 */
 			case 'core/spacer':
-				$attrs['height']    = $attrs['height'] . 'px';
+				$attrs['height']    = $attrs['height'];
 				$block_mjml_markup .= '<mj-spacer ' . self::array_to_attributes( $attrs ) . '/>';
 				break;
 
@@ -489,33 +606,6 @@ final class Newspack_Newsletters_Renderer {
 			 * Social links block.
 			 */
 			case 'core/social-links':
-				$social_icons = array(
-					'wordpress' => array(
-						'color' => '#3499cd',
-						'icon'  => 'wordpress.png',
-					),
-					'facebook'  => array(
-						'color' => '#1977f2',
-						'icon'  => 'facebook.png',
-					),
-					'twitter'   => array(
-						'color' => '#21a1f3',
-						'icon'  => 'twitter.png',
-					),
-					'instagram' => array(
-						'color' => '#f00075',
-						'icon'  => 'instagram.png',
-					),
-					'linkedin'  => array(
-						'color' => '#0577b5',
-						'icon'  => 'linkedin.png',
-					),
-					'youtube'   => array(
-						'color' => '#ff0100',
-						'icon'  => 'youtube.png',
-					),
-				);
-
 				$social_wrapper_attrs = array(
 					'icon-size'     => '24px',
 					'mode'          => 'horizontal',
@@ -534,12 +624,13 @@ final class Newspack_Newsletters_Renderer {
 						$url = $link_block['attrs']['url'];
 						// Handle older version of the block, where innner blocks we named `core/social-link-<service>`.
 						$service_name = isset( $link_block['attrs']['service'] ) ? $link_block['attrs']['service'] : str_replace( 'core/social-link-', '', $link_block['blockName'] );
+						$social_icon  = self::get_social_icon( $service_name, $attrs );
 
-						if ( isset( $social_icons[ $service_name ] ) ) {
+						if ( ! empty( $social_icon ) ) {
 							$img_attrs = array(
 								'href'             => $url,
-								'src'              => plugins_url( 'assets/' . $social_icons[ $service_name ]['icon'], dirname( __FILE__ ) ),
-								'background-color' => $social_icons[ $service_name ]['color'],
+								'src'              => plugins_url( 'assets/' . $social_icon['icon'], dirname( __FILE__ ) ),
+								'background-color' => $social_icon['color'],
 								'css-class'        => 'social-element',
 							);
 
