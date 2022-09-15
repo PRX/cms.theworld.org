@@ -14,11 +14,11 @@
 ?>
 <div id="fgd2wp_admin_page" class="wrap">
 	<h2><?php print $data['title'] ?></h2>
-	
+
 	<p><?php print $data['description'] ?></p>
-	
+
 	<?php require('database-info.php'); ?>
-	
+
 	<?php require('tabs.php'); ?>
 	<?php switch ( $data['tab'] ): ?>
 <?php case 'help': ?>
@@ -32,7 +32,7 @@
 
 <?php default: ?>
 	<?php require('empty-content.php'); ?>
-	
+
 	<form id="form_import" method="post">
 
 		<?php wp_nonce_field( 'parameters_form', 'fgd2wp_nonce' ); ?>
@@ -43,20 +43,22 @@
 			<?php require('database-settings.php'); ?>
 			<?php require('behavior.php'); ?>
 			<?php require('premium-features.php'); ?>
-			
+
+			<?php require('check-helper.php'); // DINKUM: Import checker. ?>
+
 			<?php do_action('fgd2wp_post_display_behavior_options'); ?>
 			<?php require('partial-import.php'); ?>
-			
+
 			<?php require('actions.php'); ?>
 			<?php do_action('fgd2wp_post_display_actions'); ?>
 			<?php require('progress-bar.php'); ?>
 			<?php require('logger.php'); ?>
 		</table>
 	</form>
-	
+
 	<?php require('after-migration.php'); ?>
-	
+
 	<?php require('paypal-donate.php'); ?>
 	<?php endswitch; ?>
-	
+
 </div>

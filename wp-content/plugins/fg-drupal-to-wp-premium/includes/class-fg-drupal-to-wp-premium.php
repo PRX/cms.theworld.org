@@ -136,7 +136,7 @@ class FG_Drupal_to_WordPress_Premium {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-fg-drupal-to-wp-download-fs.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-fg-drupal-to-wp-download-ftp.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-fg-drupal-to-wp-download-http.php';
-		
+
 		/**
 		 *  FTP functions
 		 */
@@ -178,6 +178,11 @@ class FG_Drupal_to_WordPress_Premium {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-fg-drupal-to-wp-redirect.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-fg-drupal-to-wp-url-rewriting.php';
 
+		/**
+		 * DINKUM: Helper functions
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/fg-drupal-to-wp-helpers.php';
+
 		$this->loader = new FG_Drupal_to_WordPress_Loader();
 
 	}
@@ -214,12 +219,12 @@ class FG_Drupal_to_WordPress_Premium {
 	private function define_admin_hooks() {
 
 		global $fgd2wpp;
-		
+
 		// Add links to the plugin page
 		$this->loader->add_filter( 'plugin_action_links_fg-drupal-to-wp-premium/fg-drupal-to-wp-premium.php', $this, 'plugin_action_links' );
-		
+
 		$this->loader->add_action( 'init', $this, 'acf_hack' ); // Prevent ACF from removing the Custom Fields metabox
-		
+
 		/**
 		 * The plugin is hooked to the WordPress importer
 		 */
@@ -237,7 +242,7 @@ class FG_Drupal_to_WordPress_Premium {
 			$plugin_cli = new FG_Drupal_to_WordPress_WPCLI($plugin_admin);
 			WP_CLI::add_command('import-drupal', $plugin_cli);
 		}
-		
+
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'init' );
 		$this->loader->add_action( 'fgd2wp_post_test_database_connection', $plugin_admin, 'get_drupal_info', 9 );
 		$this->loader->add_action( 'load-importer-fgd2wp', $plugin_admin, 'add_help_tab', 20 );
@@ -245,13 +250,13 @@ class FG_Drupal_to_WordPress_Premium {
 		$this->loader->add_action( 'wp_ajax_fgd2wpp_import', $plugin_admin, 'ajax_importer' );
 		$this->loader->add_filter( 'fgd2wp_pre_import_check', $plugin_admin, 'pre_import_check', 10, 1 );
 		$this->loader->add_filter( 'fgd2wp_get_option_names', $plugin_admin, 'get_option_names', 10, 1 );
-		
+
 		/*
 		 * Modules checker
 		 */
 		$plugin_modules_check = new FG_Drupal_to_WordPress_Modules_Check( $plugin_admin );
 		$this->loader->add_action( 'fgd2wp_post_test_database_connection', $plugin_modules_check, 'check_modules' );
-		
+
 		/*
 		 * FTP connection
 		 */
@@ -260,7 +265,7 @@ class FG_Drupal_to_WordPress_Premium {
 		$this->loader->add_filter( 'fgd2wp_post_save_plugin_options', $plugin_ftp, 'save_ftp_settings' );
 		$this->loader->add_action( 'fgd2wp_dispatch', $plugin_ftp, 'test_ftp_connection', 10, 1 );
 		$this->loader->add_filter( 'fgd2wp_get_option_names', $plugin_ftp, 'get_option_names', 10, 1 );
-		
+
 		/*
 		 * Premium features
 		 */
@@ -270,7 +275,7 @@ class FG_Drupal_to_WordPress_Premium {
 		$this->loader->add_action( 'fgd2wp_post_save_plugin_options', $plugin_admin, 'save_premium_options' );
 		$this->loader->add_filter( 'fgd2wp_pre_process_node', $plugin_admin, 'replace_media_shortcodes_in_node' );
 		$this->loader->add_action( 'fgd2wp_post_insert_post', $plugin_admin, 'import_drupal5_attachments', 30, 2 );
-		
+
 		/*
 		 * Users
 		 */
@@ -295,7 +300,7 @@ class FG_Drupal_to_WordPress_Premium {
 		$this->loader->add_filter( 'fgd2wpp_get_user_last_name', $plugin_user_profile, 'get_user_last_name', 10, 2 );
 		$this->loader->add_filter( 'fgd2wpp_get_user_website', $plugin_user_profile, 'get_user_website', 10, 2 );
 		$this->loader->add_filter( 'fgd2wpp_get_user_fields_values', $plugin_user_profile, 'get_user_fields_values', 10, 2 );
-		
+
 		/*
 		 * Menus
 		 */
@@ -313,7 +318,7 @@ class FG_Drupal_to_WordPress_Premium {
 		$this->loader->add_action( 'fgd2wp_post_empty_database', $plugin_comments, 'reset_last_comment_id' );
 		$this->loader->add_filter( 'fgd2wp_get_total_elements_count', $plugin_comments, 'get_total_elements_count' );
 		$this->loader->add_action( 'fgd2wp_post_import', $plugin_comments, 'import_comments', 30 ); // Import the comments after all the contents
-		
+
 		/*
 		 * Blocks
 		 */
@@ -332,6 +337,7 @@ class FG_Drupal_to_WordPress_Premium {
 		$this->loader->add_action( 'fgd2wp_post_empty_database', $plugin_custom_content, 'empty_database' );
 		$this->loader->add_filter( 'fgd2wp_database_connection_successful', $plugin_custom_content, 'add_partial_import_nodes_content_to_response' );
 		$this->loader->add_action( 'fgd2wp_post_save_plugin_options', $plugin_custom_content, 'save_partial_import_nodes_options' );
+		$this->loader->add_action( 'fgd2wp_post_save_plugin_options', $plugin_custom_content, 'save_partial_import_taxonomies_options' );
 		$this->loader->add_action( 'fgd2wp_post_test_database_connection', $plugin_custom_content, 'check_required_plugins' );
 		$this->loader->add_filter( 'fgd2wp_get_total_elements_count', $plugin_custom_content, 'get_total_elements_count' );
 		$this->loader->add_action( 'fgd2wp_post_empty_database', $plugin_custom_content, 'reset_last_custom_content_ids' );
@@ -360,26 +366,26 @@ class FG_Drupal_to_WordPress_Premium {
 		$this->loader->add_action( 'fgd2wp_post_empty_database', $plugin_urls, 'reset_urls' );
 		$this->loader->add_action( 'fgd2wp_post_import', $plugin_urls, 'import_urls' );
 		$this->loader->add_filter( 'fgd2wp_get_total_elements_count', $plugin_urls, 'get_total_elements_count' );
-		
+
 		/*
 		 * Parent pages
 		 */
 		$plugin_parent_pages = new FG_Drupal_to_WordPress_Parent_Pages( $plugin_admin );
 		$this->loader->add_action( 'fgd2wp_post_import', $plugin_parent_pages, 'set_parent_pages', 11 ); // After importing the URLs
-		
+
 		/*
 		 * Video Embed field
 		 */
 		$plugin_video_embed_field = new FG_Drupal_to_WordPress_Video_Embed_Field( $plugin_admin );
 		$this->loader->add_filter( 'fgd2wp_post_get_custom_field', $plugin_video_embed_field, 'get_video_embed_custom_fields', 10, 4 );
-		
+
 		/*
 		 * Image Attach
 		 */
 		$plugin_image_attach = new FG_Drupal_to_WordPress_Image_Attach( $plugin_admin );
 		$this->loader->add_action( 'fgd2wp_pre_import', $plugin_image_attach, 'test_image_attach_data' );
 		$this->loader->add_filter( 'fgd2wp_import_media_gallery', $plugin_image_attach, 'import_images', 10, 3 );
-		
+
 		/*
 		 * Media Entity
 		 */
@@ -392,20 +398,20 @@ class FG_Drupal_to_WordPress_Premium {
 		$this->loader->add_filter( 'fgd2wp_get_nodes_sql', $plugin_media_entity, 'get_media_entities', 10, 6 );
 		$this->loader->add_filter( 'fgd2wp_get_node_taxonomies_terms', $plugin_media_entity, 'get_node_taxonomies_terms', 10, 3 );
 		$this->loader->add_filter( 'fgd2wp_get_imported_posts', $plugin_media_entity, 'get_imported_media', 10, 1 );
-		
+
 		/*
 		 * Media
 		 */
 		$plugin_media = new FG_Drupal_to_WordPress_Media( $plugin_admin );
 		$this->loader->add_filter( 'fgd2wp_pre_process_content', $plugin_media, 'import_media', 10, 1 );
 		$this->loader->add_filter( 'fgd2wp_get_custom_field_values', $plugin_media, 'get_caption', 10, 1 );
-		
+
 		/*
 		 * bbCode
 		 */
 		$plugin_bbcode = new FG_Drupal_to_WordPress_BbCode( $plugin_admin );
 		$this->loader->add_action( 'fgd2wp_pre_process_node', $plugin_bbcode, 'replace_bbcode_in_node' );
-		
+
 	}
 
 	/**
@@ -423,7 +429,7 @@ class FG_Drupal_to_WordPress_Premium {
 
 	/**
 	 * Prevent ACF from removing the Custom Fields metabox
-	 * 
+	 *
 	 * @since 3.4.4
 	 */
 	public function acf_hack() {
@@ -433,7 +439,7 @@ class FG_Drupal_to_WordPress_Premium {
 			}
 		}
 	}
-	
+
 	/**
 	 * Register all of the hooks related to the public-facing functionality
 	 * of the plugin.
@@ -448,19 +454,19 @@ class FG_Drupal_to_WordPress_Premium {
 		 */
 		$plugin_users_authenticate = new FG_Drupal_to_WordPress_Users_Authenticate();
 		$this->loader->add_filter('authenticate', $plugin_users_authenticate, 'auth_signon', 30, 3);
-		
+
 		/*
 		 * URL redirect
 		 */
 		$plugin_redirect = new FG_Drupal_to_WordPress_Redirect();
 		$this->loader->add_action( 'fgd2wp_post_empty_database', $plugin_redirect, 'empty_redirects' );
 		$this->loader->add_action( 'fgd2wpp_post_404_redirect', $plugin_redirect, 'process_url' );
-		
+
 		/*
 		 * URL rewriting
 		 */
 		new FG_Drupal_to_WordPress_URL_Rewriting();
-		
+
 	}
 
 	/**

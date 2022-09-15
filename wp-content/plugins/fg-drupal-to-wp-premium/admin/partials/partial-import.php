@@ -5,6 +5,12 @@
 					<div id="partial_import">
 					<input id="skip_taxonomies" name="skip_taxonomies" type="checkbox" value="1" <?php checked($data['skip_taxonomies'], 1); ?> /> <label for="skip_taxonomies" ><?php _e('Don\'t import the taxonomies', 'fgd2wpp'); ?></label>
 					<br />
+					<!-- DINKUM: Add skip taxonomies. -->
+					<div id="skip_taxonomies_box">
+						<small><a href="#" id="toggle_taxonomy_types"><?php _e('Select / Deselect all', 'fgd2wpp'); ?></a></small><br />
+						<div id="partial_import_taxonomies"><?php echo $data['partial_import_taxonomies']; ?></div>
+					</div>
+					<br />
 					<input id="skip_nodes" name="skip_nodes" type="checkbox" value="1" <?php checked($data['skip_nodes'], 1); ?> /> <label for="skip_nodes" ><?php _e('Don\'t import the nodes', 'fgd2wpp'); ?></label>
 					<br />
 					<div id="skip_nodes_box">

@@ -20,9 +20,9 @@ if ( !class_exists('FG_Drupal_to_WordPress_Media', false) ) {
 	 * @author     Frédéric GILLES
 	 */
 	class FG_Drupal_to_WordPress_Media {
-		
+
 		private $plugin;
-		
+
 		/**
 		 * Initialize the class and set its properties.
 		 *
@@ -32,10 +32,10 @@ if ( !class_exists('FG_Drupal_to_WordPress_Media', false) ) {
 
 			$this->plugin = $plugin;
 		}
-		
+
 		/**
 		 * Import the Drupal Media media
-		 * 
+		 *
 		 * @param string $content Content
 		 * @return string Content
 		 */
@@ -61,10 +61,10 @@ if ( !class_exists('FG_Drupal_to_WordPress_Media', false) ) {
 			}
 			return $content;
 		}
-		
+
 		/**
 		 * Get the Media object
-		 * 
+		 *
 		 * @param string $uuid UUID
 		 * @return array Media data
 		 */
@@ -86,10 +86,10 @@ if ( !class_exists('FG_Drupal_to_WordPress_Media', false) ) {
 			}
 			return $media;
 		}
-		
+
 		/**
 		 * Get the media value
-		 * 
+		 *
 		 * @param array $media Media data
 		 * @return array Values
 		 */
@@ -160,10 +160,10 @@ if ( !class_exists('FG_Drupal_to_WordPress_Media', false) ) {
 			}
 			return $values;
 		}
-		
+
 		/**
 		 * Get the field names related to a bundle
-		 * 
+		 *
 		 * @param string $bundle Bundle
 		 * @return array Field names
 		 */
@@ -179,12 +179,12 @@ if ( !class_exists('FG_Drupal_to_WordPress_Media', false) ) {
 			}
 			return $fields;
 		}
-		
+
 		/**
 		 * Does the field type match the bundle?
-		 * 
+		 *
 		 * @since 3.5.3
-		 * 
+		 *
 		 * @param string $field_type Field type
 		 * @param type $bundle Bundle
 		 * @return boolean
@@ -203,12 +203,12 @@ if ( !class_exists('FG_Drupal_to_WordPress_Media', false) ) {
 			}
 			return $match;
 		}
-		
+
 		/**
 		 * Guess the column name
-		 * 
+		 *
 		 * @since 2.35.0
-		 * 
+		 *
 		 * @param string $table_name Table name
 		 * @param string $field_name Field name
 		 * @return string Column name
@@ -223,12 +223,12 @@ if ( !class_exists('FG_Drupal_to_WordPress_Media', false) ) {
 			}
 			return '';
 		}
-		
+
 		/**
 		 * Get the media caption
-		 * 
+		 *
 		 * @since 3.8.0
-		 * 
+		 *
 		 * @param array $custom_field_values Values
 		 * @return array Values
 		 */
@@ -253,6 +253,6 @@ if ( !class_exists('FG_Drupal_to_WordPress_Media', false) ) {
 			}
 			return $custom_field_values;
 		}
-		
+
 	}
 }
