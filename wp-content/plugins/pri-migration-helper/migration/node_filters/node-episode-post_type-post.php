@@ -62,6 +62,10 @@ function pmh_filter__node_episode__field( $args ) {
 			$custom_field_name = 'broadcast_date';
 			break;
 
+		case 'music_heard_on_air_body':
+			$custom_field_name = 'music_heard_on_air';
+			break;
+
 		case 'teaser':
 			$custom_field_name = 'excerpt';
 			break;
@@ -106,19 +110,19 @@ function pri_migration_fgd2wp_episode_merge_content( $new_post_id, $node, $conte
 	if ( 'episode' !== $post_type || empty( $new_post_id ) ) {
 		return;
 	}
-	$content = get_post_field( 'post_content', $new_post_id, 'raw' );
-	$spotify = pri_convert_spotify_tracks( $new_post_id );
-	if ( $spotify ) {
-		$content .= $spotify;
-	}
+	// $content = get_post_field( 'post_content', $new_post_id, 'raw' );
+	// $spotify = pri_convert_spotify_tracks( $new_post_id );
+	// if ( $spotify ) {
+	// $content .= $spotify;
+	// }
 	// $amazon = pri_convert_amazon_items( $new_post_id );
 	// if ( $amazon ) {
 	// $content .= $amazon;
 	// }
-	$music = get_post_meta( $new_post_id, 'music_heard_on_air_body', true );
-	if ( $music ) {
-		$content .= $music;
-	}
+	// $music = get_post_meta( $new_post_id, 'music_heard_on_air_body', true );
+	// if ( $music ) {
+	// $content .= $music;
+	// }
 
 	if ( ! empty( $content ) ) {
 		wp_update_post(
@@ -130,7 +134,7 @@ function pri_migration_fgd2wp_episode_merge_content( $new_post_id, $node, $conte
 	}
 }
 // The priority is 99 because it needs to be called after all the insert post methods were executed.
-add_action( 'fgd2wp_post_import_post', 'pri_migration_fgd2wp_episode_merge_content', 90, 5 );
+// add_action( 'fgd2wp_post_import_post', 'pri_migration_fgd2wp_episode_merge_content', 90, 5 );
 
 
 /**
@@ -397,6 +401,9 @@ function pri_pmh_episode_set_ref_story( $episode_post_id, $meta_values ) {
 function episode_pmh_set_collection_field_name( $custom_field_name ) {
 	if ( $custom_field_name && 'collection-amazon_item' === $custom_field_name ) {
 		$custom_field_name = 'amazon_items';
+	}
+	if ( $custom_field_name && 'collection-spotify_playlist' === $custom_field_name ) {
+		$custom_field_name = 'spotify_playlists';
 	}
 	return $custom_field_name;
 }
