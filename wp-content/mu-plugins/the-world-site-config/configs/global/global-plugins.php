@@ -9,9 +9,11 @@ define(
 	'GLOBAL_PLUGINS',
 	array(
 		'wp-native-php-sessions/pantheon-sessions.php',
+		'admin-taxonomy-filter/admin-taxonomy-filter.php',
 		'advanced-custom-fields-pro/acf.php',
 		'acf-to-rest-api/class-acf-to-rest-api.php',
 		'PATCH-s3-uploads/s3-uploads.php',
+		'codepress-admin-columns/codepress-admin-columns.php',
 		'custom-post-type-ui/custom-post-type-ui.php',
 		'disable-comments/disable-comments.php',
 		'PATCH-external-media-without-import/external-media-without-import.php',
