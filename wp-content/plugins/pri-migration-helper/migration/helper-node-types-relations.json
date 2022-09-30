@@ -1,0 +1,694 @@
+// Nodes Type Relations:
+{
+  "category": [
+    {
+      "slug": "vertical_assoc",
+      "label": "Vertical Association",
+      "post_type": "vertical",
+      "entity_type": "node",
+      "cardinality": "1"
+    },
+    {
+      "slug": "featured_stories",
+      "label": "Featured stories",
+      "post_type": "discussion",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "featured_stories",
+      "label": "Featured stories",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "featured_story",
+      "label": "Featured story",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "1"
+    },
+    {
+      "slug": "ref_editor",
+      "label": "Team",
+      "post_type": "person",
+      "entity_type": "node",
+      "cardinality": -1
+    }
+  ],
+  "series": [
+    {
+      "slug": "vertical_assoc",
+      "label": "Vertical Association",
+      "post_type": "vertical",
+      "entity_type": "node",
+      "cardinality": "1"
+    },
+    {
+      "slug": "featured_stories",
+      "label": "Featured stories",
+      "post_type": "discussion",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "featured_stories",
+      "label": "Featured stories",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "featured_story",
+      "label": "Featured story",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "1"
+    }
+  ],
+  "person": [
+    {
+      "slug": "featured_stories",
+      "label": "Featured stories",
+      "post_type": "discussion",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "featured_stories",
+      "label": "Featured stories",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "ref_program",
+      "label": "Program",
+      "post_type": "program",
+      "entity_type": "node",
+      "cardinality": "1"
+    }
+  ],
+  "program": [
+    {
+      "slug": "featured_stories",
+      "label": "Featured stories",
+      "post_type": "discussion",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "featured_stories",
+      "label": "Featured stories",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "ref_program",
+      "label": "Does this podcast relate to another program?",
+      "post_type": "program",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "ref_authors",
+      "label": "Hosted By",
+      "post_type": "person",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "featured_story",
+      "label": "Featured Content",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "1"
+    },
+    {
+      "slug": "square_content",
+      "label": "Square content",
+      "post_type": "blog",
+      "entity_type": "node",
+      "cardinality": "12"
+    },
+    {
+      "slug": "square_content",
+      "label": "Square content",
+      "post_type": "discussion",
+      "entity_type": "node",
+      "cardinality": "12"
+    },
+    {
+      "slug": "square_content",
+      "label": "Square content",
+      "post_type": "episode",
+      "entity_type": "node",
+      "cardinality": "12"
+    },
+    {
+      "slug": "square_content",
+      "label": "Square content",
+      "post_type": "freeform",
+      "entity_type": "node",
+      "cardinality": "12"
+    },
+    {
+      "slug": "square_content",
+      "label": "Square content",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "12"
+    },
+    {
+      "slug": "square_content",
+      "label": "Square content",
+      "post_type": "vertical",
+      "entity_type": "node",
+      "cardinality": "12"
+    }
+  ],
+  "playlist": [
+    {
+      "slug": "audio_files",
+      "label": "Audio files",
+      "post_type": "user_audio",
+      "entity_type": "node",
+      "cardinality": -1
+    }
+  ],
+  "episode": [
+    {
+      "slug": "you_may_also_enjoy",
+      "label": "You may also enjoy",
+      "post_type": "blog",
+      "entity_type": "node",
+      "cardinality": "3"
+    },
+    {
+      "slug": "you_may_also_enjoy",
+      "label": "You may also enjoy",
+      "post_type": "episode",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "you_may_also_enjoy",
+      "label": "You may also enjoy",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "3"
+    },
+    {
+      "slug": "ref_program",
+      "label": "Program",
+      "post_type": "program",
+      "entity_type": "node",
+      "cardinality": "1"
+    },
+    {
+      "slug": "ref_producers",
+      "label": "Producers",
+      "post_type": "person",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "ref_guests",
+      "label": "Guests",
+      "post_type": "person",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "ref_hosts",
+      "label": "Hosts",
+      "post_type": "person",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "ref_reporters",
+      "label": "Reporters",
+      "post_type": "person",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "ref_episode_stories",
+      "label": "Stories in this episode",
+      "post_type": "blog",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "ref_episode_stories",
+      "label": "Stories in this episode",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": -1
+    }
+  ],
+  "new_story": [
+    {
+      "slug": "new_story_creator_ref",
+      "label": "Creator Reference",
+      "post_type": "person",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "new_story_program_ref",
+      "label": "Program Reference",
+      "post_type": "program",
+      "entity_type": "node",
+      "cardinality": "1"
+    },
+    {
+      "slug": "new_story_story_ref",
+      "label": "Story Reference",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "1"
+    }
+  ],
+  "vertical": [
+    {
+      "slug": "freeform_block_select",
+      "label": "Freeform Block Select",
+      "post_type": "freeform",
+      "entity_type": "node",
+      "cardinality": "1"
+    },
+    {
+      "slug": "ref_stories",
+      "label": "Featured stories",
+      "post_type": "discussion",
+      "entity_type": "node",
+      "cardinality": "2"
+    },
+    {
+      "slug": "ref_stories",
+      "label": "Featured stories",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "2"
+    },
+    {
+      "slug": "discussion",
+      "label": "Discussion",
+      "post_type": "discussion",
+      "entity_type": "node",
+      "cardinality": "1"
+    },
+    {
+      "slug": "featured_story",
+      "label": "Featured story",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "1"
+    },
+    {
+      "slug": "ref_moderator",
+      "label": "Moderator",
+      "post_type": "person",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "ref_editor",
+      "label": "Editor",
+      "post_type": "person",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "ref_special_coverage",
+      "label": "Special coverage",
+      "post_type": "blog",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "ref_special_coverage",
+      "label": "Special coverage",
+      "post_type": "discussion",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "ref_special_coverage",
+      "label": "Special coverage",
+      "post_type": "episode",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "ref_special_coverage",
+      "label": "Special coverage",
+      "post_type": "page",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "ref_special_coverage",
+      "label": "Special coverage",
+      "post_type": "program",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "ref_special_coverage",
+      "label": "Special coverage",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "ref_special_coverage",
+      "label": "Special coverage",
+      "post_type": "vertical",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "select_awl_sections",
+      "label": "Select AWL sections",
+      "post_type": "vertical_block",
+      "entity_type": "node",
+      "cardinality": -1
+    }
+  ],
+  "tw_cta": [
+    {
+      "slug": "tw_cta_newsletter_sign_up",
+      "label": "Newsletter Sign Up",
+      "post_type": "newsletter_sign_up",
+      "entity_type": "node",
+      "cardinality": "1"
+    },
+    {
+      "slug": "tw_cta_target_content",
+      "label": "Content",
+      "post_type": "episode",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "tw_cta_target_content",
+      "label": "Content",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "tw_cta_target_program",
+      "label": "Program",
+      "post_type": "program",
+      "entity_type": "node",
+      "cardinality": "1"
+    }
+  ],
+  "feeds_story": [
+    {
+      "slug": "ref_program",
+      "label": "Program",
+      "post_type": "program",
+      "entity_type": "node",
+      "cardinality": "1"
+    }
+  ],
+  "live_stream_item": [
+    {
+      "slug": "ref_program",
+      "label": "Program",
+      "post_type": "program",
+      "entity_type": "node",
+      "cardinality": "1"
+    },
+    {
+      "slug": "ref_authors",
+      "label": "Host",
+      "post_type": "person",
+      "entity_type": "node",
+      "cardinality": -1
+    }
+  ],
+  "music_heard_on_air": [
+    {
+      "slug": "ref_program",
+      "label": "Program",
+      "post_type": "program",
+      "entity_type": "node",
+      "cardinality": "1"
+    }
+  ],
+  "post": [
+    {
+      "slug": "ref_program",
+      "label": "Program",
+      "post_type": "program",
+      "entity_type": "node",
+      "cardinality": "1"
+    },
+    {
+      "slug": "ref_related_stories",
+      "label": "Related stories",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "byline",
+      "label": "Byline",
+      "post_type": "person",
+      "entity_type": "node",
+      "cardinality": -1
+    }
+  ],
+  "homepage": [
+    {
+      "slug": "featured_story",
+      "label": "Featured story",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "1"
+    },
+    {
+      "slug": "special_coverage_story_1",
+      "label": "Special Coverage Story 1",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "1"
+    },
+    {
+      "slug": "special_coverage_story_2",
+      "label": "Special Coverage Story 2",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "1"
+    }
+  ],
+  "field_fc_story_creat": [
+    {
+      "slug": "ref_person",
+      "label": "Person",
+      "post_type": "person",
+      "entity_type": "node",
+      "cardinality": "1"
+    }
+  ],
+  "story_act": [
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "blog",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "discussion",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "donor_blog",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "episode",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "feed",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "feed_item",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "freeform",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "homepage",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "live_stream",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "live_stream_item",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "page",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "person",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "playlist",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "program",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "story_act",
+      "entity_type": "node",
+      "cardinality": -1
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "user_audio",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "vertical",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "story_act_internal_link",
+      "label": "Internal Link",
+      "post_type": "webform",
+      "entity_type": "node",
+      "cardinality": "5"
+    }
+  ],
+  "field_cards": [
+    {
+      "slug": "cards_content",
+      "label": "Content",
+      "post_type": "episode",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "cards_content",
+      "label": "Content",
+      "post_type": "freeform",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "cards_content",
+      "label": "Content",
+      "post_type": "post",
+      "entity_type": "node",
+      "cardinality": "5"
+    },
+    {
+      "slug": "cards_program",
+      "label": "Program",
+      "post_type": "program",
+      "entity_type": "node",
+      "cardinality": "1"
+    },
+    {
+      "slug": "cards_vertical",
+      "label": "Vertical",
+      "post_type": "vertical",
+      "entity_type": "node",
+      "cardinality": "1"
+    }
+  ],
+  "audio": [
+    {
+      "slug": "audio_program",
+      "label": "Program",
+      "post_type": "program",
+      "entity_type": "node",
+      "cardinality": "1"
+    },
+    {
+      "slug": "audio_author",
+      "label": "Author",
+      "post_type": "person",
+      "entity_type": "node",
+      "cardinality": -1
+    }
+  ],
+  "tw_cta_regions_conte": [],
+  "tw_cta_regions_landi": [],
+  "tw_cta_regions_proje": [],
+  "tw_cta_regions_site": []
+}

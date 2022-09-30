@@ -1,0 +1,222 @@
+// Person Nodes Custom Fields:
+{
+  "node": {
+    "person": {
+      "image": {
+        "field_name": "field_image",
+        "node_type": "person",
+        "table_name": "field_data_field_image",
+        "module": "image",
+        "columns": {
+          "fid": "field_image_fid",
+          "alt": "field_image_alt",
+          "title": "field_image_title",
+          "width": "field_image_width",
+          "height": "field_image_height"
+        },
+        "label": "Image",
+        "type": "media_generic",
+        "description": "Upload an image to go with this person.",
+        "default_value": "",
+        "required": 0,
+        "cardinality": "1",
+        "repetitive": false,
+        "entity_type": "node",
+        "order": 4
+      },
+      "teaser": {
+        "field_name": "field_teaser",
+        "node_type": "person",
+        "table_name": "field_data_field_teaser",
+        "module": "text",
+        "columns": {
+          "value": "field_teaser_value",
+          "format": "field_teaser_format"
+        },
+        "label": "Teaser",
+        "type": "text_textarea",
+        "description": "Add a short description which will be used when this person is listed somewhere. ",
+        "default_value": "",
+        "required": 0,
+        "cardinality": "1",
+        "repetitive": false,
+        "entity_type": "node",
+        "order": 5
+      },
+      "social_links": {
+        "field_name": "field_social_links",
+        "node_type": "person",
+        "table_name": "field_data_field_social_links",
+        "module": "field_collection",
+        "columns": { "value": "field_social_links_value" },
+        "label": "Social links",
+        "type": "collection",
+        "description": "Add links to social media services.",
+        "default_value": "",
+        "required": 0,
+        "cardinality": "1",
+        "repetitive": 1,
+        "entity_type": "node",
+        "order": 7,
+        "collection": [
+          {
+            "label": "Blog",
+            "field_name": "field_blog",
+            "type": "link_field",
+            "table_name": "field_data_field_blog",
+            "columns": { "url": "field_blog_url", "title": "field_blog_title" }
+          },
+          {
+            "label": "Facebook",
+            "field_name": "field_facebook",
+            "type": "link_field",
+            "table_name": "field_data_field_facebook",
+            "columns": {
+              "url": "field_facebook_url",
+              "title": "field_facebook_title"
+            }
+          },
+          {
+            "label": "Get in touch",
+            "field_name": "field_get_in_touch",
+            "type": "link_field",
+            "table_name": "field_data_field_get_in_touch",
+            "columns": {
+              "url": "field_get_in_touch_url",
+              "title": "field_get_in_touch_title"
+            }
+          },
+          {
+            "label": "Tumblr",
+            "field_name": "field_tumblr",
+            "type": "link_field",
+            "table_name": "field_data_field_tumblr",
+            "columns": {
+              "url": "field_tumblr_url",
+              "title": "field_tumblr_title"
+            }
+          },
+          {
+            "label": "Twitter",
+            "field_name": "field_twitter",
+            "type": "link_field",
+            "table_name": "field_data_field_twitter",
+            "columns": {
+              "url": "field_twitter_url",
+              "title": "field_twitter_title"
+            }
+          },
+          {
+            "label": "Website",
+            "field_name": "field_website",
+            "type": "link_field",
+            "table_name": "field_data_field_website",
+            "columns": {
+              "url": "field_website_url",
+              "title": "field_website_title"
+            }
+          },
+          {
+            "label": "RSS",
+            "field_name": "field_rss",
+            "type": "link_field",
+            "table_name": "field_data_field_rss",
+            "columns": {
+              "url": "field_rss_url",
+              "title": "field_rss_title",
+              "attributes": "field_rss_attributes"
+            }
+          },
+          {
+            "label": "Podcast",
+            "field_name": "field_podcast",
+            "type": "link_field",
+            "table_name": "field_data_field_podcast",
+            "columns": {
+              "url": "field_podcast_url",
+              "title": "field_podcast_title",
+              "attributes": "field_podcast_attributes"
+            }
+          }
+        ]
+      },
+      "position": {
+        "field_name": "field_position",
+        "node_type": "person",
+        "table_name": "field_data_field_position",
+        "module": "text",
+        "columns": {
+          "value": "field_position_value",
+          "format": "field_position_format"
+        },
+        "label": "Position",
+        "type": "text_textfield",
+        "description": "What is the position or title the person holds (optional). Ex: Reporter, Africa Corespondent, Vice President of Digitial",
+        "default_value": "",
+        "required": 0,
+        "cardinality": "1",
+        "repetitive": false,
+        "entity_type": "node",
+        "order": 2
+      },
+      "department": {
+        "field_name": "field_department",
+        "node_type": "person",
+        "table_name": "field_data_field_department",
+        "module": "list",
+        "columns": { "value": "field_department_value" },
+        "label": "Department(s)",
+        "type": "options",
+        "description": "Enter in as many departments as the Person belongs to. Skip if their department is not listed.",
+        "default_value": "",
+        "required": 0,
+        "cardinality": "-1",
+        "repetitive": false,
+        "entity_type": "node",
+        "order": 3,
+        "options": {
+          "pri_org_staff": "PRI.org Staff",
+          "pri_staff": "PRI Staff",
+          "the_world": "The World Staff",
+          "podcaster": "PRI Podcast Network Host",
+          "studio": "Studio 360 Staff"
+        }
+      },
+      "ref_program": {
+        "field_name": "field_ref_program",
+        "node_type": "person",
+        "table_name": "field_data_field_ref_program",
+        "module": "entityreference",
+        "columns": { "target_id": "field_ref_program_target_id" },
+        "label": "Program",
+        "type": "entityreference",
+        "description": "",
+        "default_value": "",
+        "required": 0,
+        "cardinality": "1",
+        "repetitive": false,
+        "entity_type": "node",
+        "order": 1,
+        "referenceable_types": ["program"],
+        "target_type": "node"
+      },
+      "featured_stories": {
+        "field_name": "field_featured_stories",
+        "node_type": "person",
+        "table_name": "field_data_field_featured_stories",
+        "module": "node_reference",
+        "columns": { "nid": "field_featured_stories_nid" },
+        "label": "Featured stories",
+        "type": "node_reference",
+        "description": "",
+        "default_value": "",
+        "required": 0,
+        "cardinality": "5",
+        "repetitive": true,
+        "entity_type": "node",
+        "order": 9,
+        "referenceable_types": ["discussion", "story"]
+      }
+    }
+  }
+}
