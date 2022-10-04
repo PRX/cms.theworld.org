@@ -1,5 +1,5 @@
 # WordPress #
-############
+#############
 wp-config-local.php
 wp-cli.local.yml
 wp-content/uploads
@@ -49,9 +49,23 @@ Thumbs.db
 ._*
 
 # Vim generated files #
-######################
+#######################
 *.un~
 
 # SASS #
-##########
+########
 .sass-cache
+
+# Local Dev Files #
+###################
+.env
+wp-config-local.php
+local-config.php
+
+# Composer Vendor Files #
+#########################
+Vendor
+
+# Custom #
+##########
+reference/

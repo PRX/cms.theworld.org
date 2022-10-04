@@ -1,0 +1,44 @@
+{
+    "key": "group_622a629eb83b7",
+    "title": "Image Fields",
+    "fields": [
+        {
+            "key": "field_622a6312b1b5d",
+            "label": "Hide Image",
+            "name": "hide_image",
+            "type": "true_false",
+            "instructions": "Hide image when we are not sure we have the rights to use it. Once usage rights have been determined or acquired, deselect this option.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "attachment",
+                "operator": "==",
+                "value": "image"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "seamless",
+    "label_placement": "left",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 1,
+    "modified": 1648154104
+}
