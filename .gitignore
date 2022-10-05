@@ -64,7 +64,7 @@ local-config.php
 
 # Composer Vendor Files #
 #########################
-Vendor
+./Vendor
 
 # Custom #
 ##########
