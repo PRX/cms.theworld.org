@@ -47,7 +47,7 @@ if ( ! class_exists( 'FG_Drupal_to_WordPress_Admin', false ) ) {
 		public $imported_media          = array();
 		public $imported_taxonomies     = array();
 		public $taxonomy_term_hierarchy = array(); // Terms with their parent
-		public $chunks_size             = 5;
+		public $chunks_size             = 10;
 		public $media_count             = 0;            // Number of imported medias
 		public $links_count             = 0;            // Number of links modified
 		public $file_public_path        = '';      // Drupal public medias directory
@@ -65,10 +65,10 @@ if ( ! class_exists( 'FG_Drupal_to_WordPress_Admin', false ) ) {
 		// private $debug_nodes_limit        = 200; // Default ASC to import from the beginning.
 		// DINKUM: Default ASC to import from the beginning.
 		// private $order_by_get_nodes = 'ASC';
-		private $order_by_get_nodes = 'DESC';
+		private $order_by_get_nodes = 'ASC';
 
 		// DINKUM: Number of nodes per node type. This value should be the same or higher than the chunks_size.
-		private $how_many_nodes_to_import = 5;
+		private $how_many_nodes_to_import = 0;
 
 		/**
 		 * Initialize the class and set its properties.
