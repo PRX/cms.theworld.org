@@ -90,6 +90,11 @@ if ( ! class_exists( 'FG_Drupal_to_WordPress_Admin', false ) ) {
 				$this->log_file_url = preg_replace( '/^https?/', 'https', $this->log_file_url );
 			}
 
+			// DINKUM: Add import control.
+			$options = get_option( 'fgd2wpp_options' );
+			$this->chunks_size = isset( $options['fgd2wp_pmh_chunks_size'] ) ? (int) $options['fgd2wp_pmh_chunks_size'] : $this->chunks_size;
+			$this->how_many_nodes_to_import = isset( $options['fgd2wp_pmh_how_many_nodes_to_import'] ) ? (int) $options['fgd2wp_pmh_how_many_nodes_to_import'] : $this->how_many_nodes_to_import;
+
 			// Progress bar
 			$this->progressbar = new FG_Drupal_to_WordPress_ProgressBar( $this );
 
@@ -1836,6 +1841,10 @@ SQL;
 		protected function get_nodes( $content_type, $limit = 1000, $entity_type = 'node' ) {
 			$nodes = array();
 
+			// DINKUM: Skip blanks.
+			$options                  = get_option( 'fgd2wpp_options' );
+			$fgd2wp_skip_blank_titles = isset( $options['fgd2wp_skip_blank_titles'] ) ? (int) $options['fgd2wp_skip_blank_titles'] : false;
+
 			$last_node_type_metakey = "fgd2wp_last_${entity_type}_${content_type}_id";
 			$last_drupal_id         = (int) get_option( $last_node_type_metakey ); // to restore the import where it left
 			$prefix                 = $this->plugin_options['prefix'];
@@ -1864,8 +1873,14 @@ SQL;
 			$extra_joins = apply_filters( 'fgd2wp_get_nodes_add_extra_joins', $extra_joins );
 
 			// DINKUM: Change the order of the ID comparizon if you want to import newer or older first.
-			$last_id_comparison   = 'DESC' === $this->order_by_get_nodes ? '<' : '>';
-			$last_drupal_id_where = 'DESC' === $this->order_by_get_nodes && empty( $last_drupal_id ) ? "n.nid {$last_id_comparison} ( SELECT MAX(nm.nid) FROM ${prefix}${table_name} nm )" : "n.nid {$last_id_comparison} '{$last_drupal_id}'";
+			$last_id_comparison = 'DESC' === $this->order_by_get_nodes ? '<' : '>';
+			$extra_conditions   = ' AND ';
+			$extra_conditions  .= 'DESC' === $this->order_by_get_nodes && empty( $last_drupal_id ) ? "n.nid {$last_id_comparison} ( SELECT MAX(nm.nid) FROM ${prefix}${table_name} nm )" : "n.nid {$last_id_comparison} '{$last_drupal_id}'";
+
+			// DINKUM: Skip blank titles.
+			if ( $fgd2wp_skip_blank_titles ) {
+				$extra_conditions .= " AND n.title <> ''";
+			}
 
 			// DINKUM: $last_id_comparison and $this->order_by_get_nodes added to the query.
 			$sql   = "
@@ -1874,7 +1889,7 @@ SQL;
 				FROM ${prefix}${table_name} n
 				$extra_joins
 				WHERE n.type = '$content_type'
-				AND $last_drupal_id_where
+				$extra_conditions
 				ORDER BY n.nid $this->order_by_get_nodes
 				LIMIT $limit
 			";
@@ -1926,7 +1941,7 @@ SQL;
 
 			// Categories
 			$categories_ids = array();
-			if ( ! isset( $this->premium_options['skip_taxonomies'] ) || ! $this->premium_options['skip_taxonomies'] || ! in_array( 'categories', $this->premium_options['taxonomies_to_skip'] ) ) {
+			if ( ! isset( $this->premium_options['skip_taxonomies'] ) || ! $this->premium_options['skip_taxonomies'] || ( null != $this->premium_options['taxonomies_to_skip'] && ! in_array( 'categories', $this->premium_options['taxonomies_to_skip'] ) ) ) {
 				if ( $post_type != 'page' ) { // Pages don't have a category in WordPress
 					$categories     = $this->get_node_taxonomies_terms( $node['nid'], 'categories' );
 					$categories_ids = $this->get_wp_taxonomies_terms_ids( $categories );
@@ -1939,7 +1954,7 @@ SQL;
 
 			// Tags
 			$tag_names = array();
-			if ( ! isset( $this->premium_options['skip_taxonomies'] ) || ! $this->premium_options['skip_taxonomies'] || ! in_array( 'tags', $this->premium_options['taxonomies_to_skip'] ) ) {
+			if ( ! isset( $this->premium_options['skip_taxonomies'] ) || ! $this->premium_options['skip_taxonomies'] || ( null != $this->premium_options['taxonomies_to_skip'] && ! in_array( 'tags', $this->premium_options['taxonomies_to_skip'] ) ) ) {
 				if ( $post_type != 'page' ) { // Pages don't have a category in WordPress
 					$tags = $this->get_node_taxonomies_terms( $node['nid'], 'tags' );
 					foreach ( $tags as $tag ) {

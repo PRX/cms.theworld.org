@@ -92,6 +92,9 @@ class FG_Drupal_to_WordPress_Premium_Admin extends FG_Drupal_to_WordPress_Admin 
 			'skip_nodes'        => false,
 			'nodes_to_skip'     => array(),
 			'taxonomies_to_skip'=> array(), // DINKUM: Add taxonomy skip.
+			'fgd2wp_pmh_chunks_size'=> 10, // DINKUM: Add chunk size.
+			'fgd2wp_pmh_how_many_nodes_to_import'=> 0, // DINKUM: Add nodes to import.
+			'fgd2wp_skip_blank_titles'=> 0, // DINKUM: Add skip blanks.
 			'skip_users'        => false,
 			'skip_menus'        => false,
 			'skip_comments'     => false,
@@ -175,6 +178,11 @@ class FG_Drupal_to_WordPress_Premium_Admin extends FG_Drupal_to_WordPress_Admin 
 			'skip_comments'     => FILTER_VALIDATE_BOOLEAN,
 			'skip_blocks'       => FILTER_VALIDATE_BOOLEAN,
 			'skip_redirects'    => FILTER_VALIDATE_BOOLEAN,
+
+			// DINKUM: Import Control.
+			'fgd2wp_pmh_chunks_size'              => FILTER_SANITIZE_STRING,
+			'fgd2wp_pmh_how_many_nodes_to_import' => FILTER_SANITIZE_STRING,
+			'fgd2wp_skip_blank_titles'            => FILTER_VALIDATE_BOOLEAN,
 		);
 		$inputs = filter_input_array( INPUT_POST, $args );
 		$inputs = apply_filters( 'fgd2wpp_validate_form_premium_info', $inputs );

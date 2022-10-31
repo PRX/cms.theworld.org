@@ -159,6 +159,7 @@ function pmh_admin_enqueue() {
 		wp_enqueue_style( 'admin-style', plugin_dir_url( __FILE__ ) . '/css/admin-styling-css.css', array(), '' );
 		wp_enqueue_script( 'admin-script', plugin_dir_url( __FILE__ ) . '/js/admin-styling-js.js', array( 'jquery' ) );
 		wp_enqueue_script( 'ajax-script', plugin_dir_url( __FILE__ ) . '/js/json-diff-js.js', array( 'jquery' ) );
+		wp_enqueue_script( 'post-worker', plugin_dir_url( __FILE__ ) . '/js/post-worker.js', array( 'jquery' ) );
 		wp_localize_script( 'ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
 	}
 }
@@ -249,3 +250,315 @@ function pmh_admin_json_diff_clear() {
 	wp_die();
 }
 add_action( 'wp_ajax_json_diff_clear', 'pmh_admin_json_diff_clear' );
+
+/**
+ * Get object names.
+ *
+ * @return void
+ */
+function pmh_post_worker_select_object_type() {
+
+	$object_names = array();
+	$object_type  = sanitize_text_field( $_POST['objectType'] );
+
+	switch ( $object_type ) {
+
+		case 'taxonomy':
+			$_object_names = get_taxonomies( array(), 'names' );
+
+			if ( $_object_names ) {
+				foreach ( $_object_names as $_object_name => $name ) {
+					$object_names[] = $_object_name;
+				}
+			}
+			break;
+
+		case 'post-type':
+			$_object_names = get_post_types( array(), 'names' );
+
+			if ( $_object_names ) {
+				foreach ( $_object_names as $_object_name => $name ) {
+					$object_names[] = $_object_name;
+				}
+			}
+			break;
+	}
+
+	$response = array(
+		'object_names' => $object_names,
+	);
+
+	wp_send_json( $response );
+}
+add_action( 'wp_ajax_pmh_post_worker_select_object_type', 'pmh_post_worker_select_object_type' );
+
+/**
+ * Get object names.
+ *
+ * @return void
+ */
+function pmh_post_worker_get_sample() {
+
+	$samples = array();
+	$total   = 0;
+
+	$object_type   = sanitize_text_field( $_POST['objectType'] );
+	$object_name   = sanitize_text_field( $_POST['objectName'] );
+	$paged_process = (int) sanitize_text_field( $_POST['pagedProcess'] );
+
+	switch ( $object_type ) {
+
+		case 'taxonomy':
+			$total = wp_count_terms(
+				$object_name,
+				array(
+					'hide_empty'=> false,
+				)
+			);
+
+			$offset   = ( $paged_process - 1 ) * 50;
+			$args     = array(
+				'hide_empty' => false,
+				'number'     => 50,
+				'offset'     => $offset,
+			);
+			$_samples = get_terms( $object_name, $args );
+
+			if ( $_samples ) {
+				foreach ( $_samples as $_sample ) {
+
+					switch ( $_sample->taxonomy ) {
+						case 'program':
+							$term_meta_key = '_fgd2wp_old_program_id';
+							$post_prefix = 'node';
+							break;
+						case 'contributor':
+							$term_meta_key = '_fgd2wp_old_person_id';
+							$post_prefix = 'node';
+							break;
+						
+						default:
+							$term_meta_key = '_fgd2wp_old_taxonomy_id';
+							$post_prefix = 'taxonomy/term';
+							break;
+					}
+
+					$samples[] = array(
+						'old_url'   => wp_sprintf( '%s/%s', $post_prefix, get_term_meta( $_sample->term_id, $term_meta_key, true ) ),
+						'id'        => $_sample->term_id,
+						'type'      => $object_name,
+						'activated' => 1,
+					);
+				}
+			}
+			break;
+
+		case 'post-type':
+			$_total = wp_count_posts( $object_name );
+			$total  = (int) $_total->publish + (int) $_total->draft;
+
+			$args     = array(
+				'post_type'      => $object_name,
+				'posts_per_page' => 50,
+				'paged'          => $paged_process,
+			);
+			$_samples = get_posts( $args );
+
+			if ( $_samples ) {
+				switch ( $object_name ) {
+					case 'segment':
+						$post_meta_key = 'fid';
+						$post_prefix = 'file';
+						break;
+					
+					default:
+						$post_meta_key = 'nid';
+						$post_prefix = 'node';
+						break;
+				}
+				foreach ( $_samples as $_sample ) {
+					
+					$samples[] = array(
+						'old_url'   => wp_sprintf( '%s/%s', $post_prefix, get_post_meta( $_sample->ID, $post_meta_key, true ) ),
+						'id'        => $_sample->ID,
+						'type'      => $object_name,
+						'activated' => 1,
+					);
+				}
+			}
+			break;
+	}
+
+	$response = array(
+		'samples' => $samples,
+		'total'   => $total,
+	);
+
+	wp_send_json( $response );
+}
+add_action( 'wp_ajax_pmh_post_worker_get_sample', 'pmh_post_worker_get_sample' );
+
+
+/**
+ * Get object names.
+ *
+ * @return void
+ */
+function pmh_post_worker_run_process() {
+
+	global $wpdb;
+
+	$object_type   = sanitize_text_field( $_POST['objectType'] );
+	$object_name   = sanitize_text_field( $_POST['objectName'] );
+	$paged_process = (int) sanitize_text_field( $_POST['pagedProcess'] );
+
+	$next_paged_process = $paged_process + 1;
+
+	$paged = $paged_process;
+
+	// Log.
+	$log = "\n";
+
+	switch ( $object_type ) {
+
+		case 'taxonomy':
+			$offset = ( $paged - 1 ) * 50;
+			$args   = array(
+				'hide_empty' => false,
+				'number'     => 50,
+				'offset'     => $offset,
+			);
+			$terms  = get_terms( $object_name, $args );
+
+			if ( $terms ) {
+				foreach ( $terms as $term ) {
+
+					$term_id = $term->term_id;
+					switch ( $term->taxonomy ) {
+						case 'program':
+							$term_meta_key = '_fgd2wp_old_program_id';
+							$post_prefix = 'node';
+							break;
+						case 'contributor':
+							$term_meta_key = '_fgd2wp_old_person_id';
+							$post_prefix = 'node';
+							break;
+						
+						default:
+							$term_meta_key = '_fgd2wp_old_taxonomy_id';
+							$post_prefix = 'taxonomy/term';
+							break;
+					}
+					
+					$nid     = get_term_meta( $term_id, $term_meta_key, true );
+					$old_url = "$post_prefix/$nid";
+					$result  = $wpdb->get_results( "SELECT * FROM wp_fg_redirect WHERE old_url = '$old_url'" );
+
+					if ( ! $result ) {
+						$insert = $wpdb->insert(
+							'wp_fg_redirect',
+							array(
+								'old_url'   => wp_sprintf( '%s/%s', $post_prefix, get_term_meta( $term_id, $term_meta_key, true ) ),
+								'id'        => $term_id,
+								'type'      => $object_name,
+								'activated' => 1,
+							),
+							array(
+								'%s',
+								'%d',
+								'%s',
+								'%d',
+							),
+						);
+
+						$insert_log = $insert ? "Success - $term_id (pg-$paged)" : "Failed - $term_id (pg-$paged)";
+					} else {
+
+						$insert_log = "Duplicate - $term_id (pg-$paged)";
+					}
+
+					$log .= "\n$insert_log";
+				}
+			} else {
+				$next_paged_process = false;
+			}
+			break;
+
+		case 'post-type':
+			$_total = wp_count_posts( $object_name );
+			$total  = (int) $_total->publish + (int) $_total->draft;
+
+			$args     = array(
+				'post_status'    => 'all',
+				'post_type'      => $object_name,
+				'posts_per_page' => 50,
+				'paged'          => $paged,
+			);
+			$posts = get_posts( $args );
+
+			if ( $posts ) {
+				foreach ( $posts as $post ) {
+
+					$post_id = $post->ID;
+
+					$result = $wpdb->get_results( "SELECT * FROM wp_fg_redirect WHERE id = $post_id" );
+
+					if ( ! $result ) {
+						switch ( $object_name ) {
+							case 'segment':
+								$post_meta_key = 'fid';
+								$post_prefix = 'file';
+								break;
+							
+							default:
+								$post_meta_key = 'nid';
+								$post_prefix = 'node';
+								break;
+						}
+						$nid = get_post_meta( $post_id, $post_meta_key, true );
+
+						if ( $nid ) {
+
+							$insert = $wpdb->insert(
+								'wp_fg_redirect',
+								array(
+									'old_url'   => wp_sprintf( '%s/%s', $post_prefix, $nid ),
+									'id'        => $post_id,
+									'type'      => $object_name,
+									'activated' => 1,
+								),
+								array(
+									'%s',
+									'%d',
+									'%s',
+									'%d',
+								),
+							);
+
+							$insert_log = $insert ? "Success - $post_id (pg-$paged)" : "Failed - $post_id (pg-$paged)";
+
+						} else {
+
+							$insert_log = "No NID - $post_id (pg-$paged)";
+						}
+					} else {
+
+						$insert_log = "Duplicate - $post_id (pg-$paged)";
+					}
+
+					$log .= "\n$insert_log";
+				}
+			} else {
+				$next_paged_process = false;
+			}
+			break;
+	}
+
+	$response = array(
+		'log'                => $log,
+		'next_paged_process' => $next_paged_process,
+	);
+
+	wp_send_json( $response );
+}
+add_action( 'wp_ajax_pmh_post_worker_run_process', 'pmh_post_worker_run_process' );
