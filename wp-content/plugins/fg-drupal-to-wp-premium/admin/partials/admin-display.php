@@ -44,6 +44,7 @@
 			<?php require('behavior.php'); ?>
 			<?php require('premium-features.php'); ?>
 
+			<?php require('import-control.php'); // DINKUM: Import control. ?>
 			<?php require('check-helper.php'); // DINKUM: Import checker. ?>
 
 			<?php do_action('fgd2wp_post_display_behavior_options'); ?>

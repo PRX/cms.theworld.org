@@ -12,3 +12,5 @@ if ( ! defined( 'WP_DEBUG' ) ) {
 // Configure S3 Uploads.
 define( 'S3_UPLOADS_BUCKET', 'media-pri-org/s3fs-public' );
 define( 'S3_UPLOADS_REGION', 'us-east-1' );
+
+define( 'WP_MEMORY_LIMIT', '512M' );
