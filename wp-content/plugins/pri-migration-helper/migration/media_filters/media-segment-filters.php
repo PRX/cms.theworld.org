@@ -22,6 +22,7 @@ function pmh_post_add_related_files( $attachment_id, $related_attachment_ids ) {
 
 			$attachment          = get_post( $related_attachment_id );
 			$attachment_metadata = wp_get_attachment_metadata( $related_attachment_id );
+			$audio_node_id       = get_post_meta( $related_attachment_id, 'fid', true );
 
 			$attachment_data = array(
 				'post_type'   => 'segment',
@@ -40,7 +41,7 @@ function pmh_post_add_related_files( $attachment_id, $related_attachment_ids ) {
 
 				$segment_post_ids[] = $segment_post_id;
 
-				update_post_meta( $segment_post_id, 'fid', $related_attachment_id );
+				update_post_meta( $segment_post_id, 'fid', $audio_node_id );
 				update_post_meta( $segment_post_id, 'audio', $related_attachment_id );
 
 				// File audio metas.
