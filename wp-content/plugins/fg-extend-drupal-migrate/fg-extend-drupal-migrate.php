@@ -23,17 +23,40 @@ function fg_di_migrateget_nodes() {
 
 function fg_di_migrateget_team_id( $author ) {
 	global $wpdb;
+	$cache_key = sprintf( 'pmh_post_by_meta__fgd2wp_old_node_id_%s', sanitize_key( str_replace( '-', '_', $author ) ) );
+	$post_id = wp_cache_get( $cache_key );
+	if ( ! $post_id ) {
+		$sql  = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_fgd2wp_old_node_id' AND meta_value = {$author}";
+		$post_id = $wpdb->get_var( $sql );
 
-	$sql  = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_fgd2wp_old_node_id' AND meta_value = {$author}";
-	$team = get_post( $wpdb->get_var( $sql ) );
+		if ( $post_id ) {
+			wp_cache_set( $cache_key, $post_id );
+		}
+	}
+	$team = null;
+	if ( is_numeric( $post_id ) ) {
+		$team = get_post( $post_id );
+	}
+
 	return ( $team && ! is_wp_error( $team ) && 'team' === $team->post_type ) ? $team->ID : null;
 }
 
 function fg_di_migrateget_post( $nid ) {
 	global $wpdb;
+	$cache_key = sprintf( 'pmh_post_by_meta__fgd2wp_old_node_id_%s', sanitize_key( str_replace( '-', '_', $nid ) ) );
+	$post_id = wp_cache_get( $cache_key );
+	if ( ! $post_id ) {
+		$sql     = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_fgd2wp_old_node_id' AND meta_value = {$nid}";
+		$post_id = $wpdb->get_var( $sql );
 
-	$sql     = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_fgd2wp_old_node_id' AND meta_value = {$nid}";
-	$dp_post = get_post( $wpdb->get_var( $sql ) );
+		if ( $post_id ) {
+			wp_cache_set( $cache_key, $post_id );
+		}
+	}
+	$dp_post = null;
+	if ( is_numeric( $post_id ) ) {
+		$dp_post = get_post( $post_id );
+	}
 	return ( $dp_post && ! is_wp_error( $dp_post ) && 'post' === $dp_post->post_type ) ? $dp_post : null;
 }
 

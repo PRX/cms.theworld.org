@@ -1276,6 +1276,8 @@ SQL;
 			if ( $this->drupal_connect() ) {
 
 				$time_start = microtime( true );
+				wp_defer_term_counting( true );
+				wp_defer_comment_counting( true );
 
 				define( 'WP_IMPORTING', true );
 				update_option( 'fgd2wp_stop_import', false, false ); // Reset the stop import action
@@ -1303,7 +1305,7 @@ SQL;
 				$this->download_manager = new FG_Drupal_to_WordPress_Download( $this, $this->plugin_options['download_protocol'] );
 				$this->download_manager->test_connection();
 
-				$this->imported_media = $this->get_imported_drupal_posts( $meta_key = '_fgd2wp_old_file' );
+				$this->imported_media = $this->get_imported_drupal_posts( '_fgd2wp_old_file' );
 
 				// Hook for doing other actions before the import
 				do_action( 'fgd2wp_pre_import' );
@@ -1327,7 +1329,8 @@ SQL;
 				do_action( 'fgd2wp_post_import_taxonomies' );
 
 				// Set the list of previously imported taxonomies
-				$this->imported_taxonomies = $this->get_term_metas_by_metakey( '_fgd2wp_old_taxonomy_id' );
+				// DINKUM: Commented this line because it is being use on each import nodes method.
+				// $this->imported_taxonomies = $this->get_term_metas_by_metakey( '_fgd2wp_old_taxonomy_id' );
 
 				if ( ! isset( $this->premium_options['skip_nodes'] ) || ! $this->premium_options['skip_nodes'] ) {
 					// Articles, pages and medias
@@ -1393,6 +1396,8 @@ SQL;
 					$this->display_admin_notice( 'IMPORT COMPLETED' );
 				}
 
+				wp_defer_term_counting( false );
+				wp_defer_comment_counting( false );
 				wp_cache_flush();
 			}
 		}
@@ -2066,6 +2071,9 @@ SQL;
 
 				// DINKUM: Switch last node meta update.
 				add_post_meta( $new_post_id, '_fgd2wp_old_' . $entity_type . '_id', $node['nid'], true );
+
+				// DINKUM: Update helper db
+				$this->update_support_id_map_table( $new_post_id, $node['nid'], $entity_type );
 
 				// Add links between the post and its medias
 				if ( ! empty( $featured_image_id ) ) {
@@ -2826,6 +2834,9 @@ SQL;
 
 				update_post_meta( $attachment_id, '_fgd2wp_old_file', $old_filename );
 
+				// DINKUM: Update helper db
+				$this->update_support_id_map_table( $attachment_id, $attributes['fid'], 'file' );
+
 				$this->imported_media[ $old_filename ] = $attachment_id;
 
 				return $attachment_id;
@@ -3159,9 +3170,16 @@ SQL;
 						$image_src = wp_get_attachment_image_src( $attachment_id, 'full' );
 						// DINKUM: Custom image URL.
 						// $media['new_url'] = get_post_meta( $attachment_id, 'original_uri', true );
+						if ( ! $image_src ) {
+							$image_src = wp_get_attachment_image_src( $attachment_id );
+						}
+						if ( $image_src ) {
 						$media['new_url'] = $image_src[0];
 						$media['width']   = $image_src[1];
 						$media['height']  = $image_src[2];
+					} else {
+							$media['new_url'] = wp_get_attachment_url( $attachment_id );
+						}
 					} else {
 						// Other media
 						$media['new_url'] = wp_get_attachment_url( $attachment_id );
@@ -3708,16 +3726,41 @@ SQL;
 
 		/**
 		 * Returns the imported post ID corresponding to a meta key and value
+		 * DINKUM: Add support table usage.
 		 *
 		 * @param string $meta_key Meta key
 		 * @param string $meta_value Meta value
 		 * @return int WordPress post ID
 		 */
 		public function get_wp_post_id_from_meta( $meta_key, $meta_value ) {
+
 			global $wpdb;
+
+			$supported_keys = array(
+				'_fgd2wp_old_node_id' => 'node',
+				'fgd2wp_old_node_id'  => 'node',
+				'nid'  => 'node',
+				'_fgd2wp_old_file'    => 'file',
+				'fgd2wp_old_file'     => 'file',
+				'fid'     => 'file',
+			);
+
+			if ( array_key_exists( $meta_key, $supported_keys ) ) {
+
+				$support_table  = $wpdb->prefix . 'pmh_nodes';
+				$query_type     = $supported_keys[ $meta_key ];
+
+				$sql     = "SELECT post_id FROM {$support_table} WHERE type = '{$query_type}' AND node_id = '$meta_value' LIMIT 1";
+				$post_id = $wpdb->get_var( $sql );
+
+				if ( $post_id ) {
+					return $post_id;
+				}
+			}
 
 			$sql     = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '$meta_key' AND meta_value = '$meta_value' LIMIT 1";
 			$post_id = $wpdb->get_var( $sql );
+
 			return $post_id;
 		}
 
@@ -4068,6 +4111,32 @@ SQL;
 				AND meta_key LIKE '$meta_key'
 			";
 			$result = $wpdb->get_col( $sql );
+			return $result;
+		}
+
+		/**
+		 * DINKUM: meta save helper.
+		 *
+		 * @since 3.23.1
+		 *
+		 * @param int    $post_id Post ID
+		 * @param string $meta_key Meta key
+		 * @return string Meta value
+		 */
+		public function update_support_id_map_table( $post_id, $drupal_id, $type ) {
+
+			global $wpdb;
+
+			$table_name = $wpdb->prefix . 'pmh_nodes';
+
+			$data = array(
+				'post_id' => $post_id,
+				'node_id' => $drupal_id,
+				'type'    => $type,
+			);
+
+			$result = $wpdb->insert( $table_name, $data );
+
 			return $result;
 		}
 

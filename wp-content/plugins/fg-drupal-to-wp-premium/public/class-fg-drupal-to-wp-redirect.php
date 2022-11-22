@@ -29,6 +29,7 @@ if ( !class_exists('FG_Drupal_to_WordPress_Redirect', false) ) {
 		 */
 		static function install() {
 			self::create_table_wp();
+			self::create_support_table_node_id();
 		}
 		
 		/**
@@ -46,6 +47,26 @@ if ( !class_exists('FG_Drupal_to_WordPress_Redirect', false) ) {
 				  type varchar(20) NOT NULL,
 				  activated tinyint(1) NOT NULL,
 				  PRIMARY KEY  (old_url)
+				) $charset_collate;
+				";
+				require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+				dbDelta($sql);
+			}
+		}
+		
+		/**
+		 * DINKUM: Create support table for meta node id.
+		 */
+		private static function create_support_table_node_id() {
+			global $wpdb;
+			$charset_collate = $wpdb->get_charset_collate();
+			$table_name = $wpdb->prefix . 'pmh_nodes';
+			if ( $wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name ) {
+				$sql = "
+				CREATE TABLE $table_name (
+					post_id bigint(20) NOT NULL,
+					node_id bigint(20) NOT NULL,
+					type varchar(20) NOT NULL
 				) $charset_collate;
 				";
 				require_once(ABSPATH . 'wp-admin/includes/upgrade.php');

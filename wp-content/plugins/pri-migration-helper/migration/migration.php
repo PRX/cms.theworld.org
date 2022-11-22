@@ -397,24 +397,34 @@ function pmh_get_redirect_url( $url ) {
  * @return int Attachment ID or false.
  */
 function pmh_get_post_id_by_meta( $meta_key, $meta_value ) {
-
 	global $wpdb;
 
-	$query   = "
-		SELECT post_id
-		FROM `{$wpdb->postmeta}`
-		WHERE meta_key='${meta_key}'
-		AND meta_value='{$meta_value}'
-		LIMIT 1
-	";
-	$results = $wpdb->get_results( $query, ARRAY_A );
-	$result  = null;
+	$supported_keys = array(
+		'_fgd2wp_old_node_id' => 'node',
+		'fgd2wp_old_node_id'  => 'node',
+		'nid'                 => 'node',
+		'_fgd2wp_old_file'    => 'file',
+		'fgd2wp_old_file'     => 'file',
+		'fid'                 => 'file',
+	);
 
-	if ( is_array( $results ) && ! empty( $results ) && isset( $results[0]['post_id'] ) ) {
-		$result = $results[0]['post_id'];
+	if ( array_key_exists( $meta_key, $supported_keys ) ) {
+
+		$support_table  = $wpdb->prefix . 'pmh_nodes';
+		$query_type     = $supported_keys[ $meta_key ];
+
+		$sql     = "SELECT post_id FROM {$support_table} WHERE type = '{$query_type}' AND node_id = '$meta_value' LIMIT 1";
+		$post_id = $wpdb->get_var( $sql );
+
+		if ( $post_id ) {
+			return $post_id;
+		}
 	}
 
-	return $result;
+	$sql     = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '$meta_key' AND meta_value = '$meta_value' LIMIT 1";
+	$post_id = $wpdb->get_var( $sql );
+
+	return $post_id;
 }
 
 /**
