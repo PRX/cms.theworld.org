@@ -63,7 +63,6 @@ function pmh_post_add_related_files( $attachment_id, $related_attachment_ids ) {
 				wp_set_object_terms( $segment_post_id, array( $program ), 'program', true );
 
 				if ( isset( $attachment_metadata['file'] ) ) {
-
 					update_post_meta( $segment_post_id, '_fgd2wp_old_file', $attachment_metadata['file'] );
 				}
 			}
