@@ -12,13 +12,13 @@ PRX is Shaping the future of audio by building technology, training talented pro
 
 ## Development instance:
 
-- Develop : https://dev-the-world-wp.pantheonsite.io
-- Test : https://test-the-world-wp.pantheonsite.io
-- Multidev : https://[git-branch]-the-world-wp.pantheonsite.io
+- Develop : https://dev-the-world.pantheonsite.io
+- Test : https://test-the-world.pantheonsite.io
+- Multidev : https://[git-branch]-the-world.pantheonsite.io
 
 ## Production instance:
 
-- live-the-world-wp.pantheonsite.io
+- https://live-the-world.pantheonsite.io/
 - TBD Domain
 
 ## JIRA:
