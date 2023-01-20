@@ -1,0 +1,518 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: RSS Feed Pro\n"
+"POT-Creation-Date: 2022-02-08 04:51-0500\n"
+"PO-Revision-Date: 2022-02-08 04:52-0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: rss-feed-pro.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+
+#: inc/cpt.php:6
+msgctxt "Post Type General Name"
+msgid "RSS Archives"
+msgstr "Fluxes RSS"
+
+#: inc/cpt.php:7
+msgctxt "Post Type Singular Name"
+msgid "RSS Archive"
+msgstr "Flux RSS"
+
+#: inc/cpt.php:8 inc/cpt.php:36
+msgid "RSS Archives"
+msgstr "Fluxes RSS"
+
+#: inc/cpt.php:9 inc/cpt.php:35
+msgid "RSS Archive"
+msgstr "Flux RSS"
+
+#: inc/cpt.php:10
+msgid "RSS Archive Archives"
+msgstr "RSS Archives"
+
+#: inc/cpt.php:11
+msgid "RSS Archive Attributes"
+msgstr "Attributs du flux RSS"
+
+#: inc/cpt.php:12
+msgid "Parent RSS Archive:"
+msgstr "Fichier des flux RSS:"
+
+#: inc/cpt.php:13
+msgid "All RSS Archives"
+msgstr "RSS Archives"
+
+#: inc/cpt.php:14
+msgid "Add New RSS Archive"
+msgstr "Ajouter flux RSS"
+
+#: inc/cpt.php:15
+msgid "Add New"
+msgstr "Ajouter"
+
+#: inc/cpt.php:16
+msgid "New RSS Archive"
+msgstr "Nouveau flux RSS"
+
+#: inc/cpt.php:17
+msgid "Edit RSS Archive"
+msgstr "Éditer flux RSS"
+
+#: inc/cpt.php:18
+msgid "Update RSS Archive"
+msgstr "Metre à jour flux RSS"
+
+#: inc/cpt.php:19
+msgid "View RSS Archive"
+msgstr "Voir flux RSS"
+
+#: inc/cpt.php:20
+msgid "View RSS Archives"
+msgstr "Voir fluxes RSS"
+
+#: inc/cpt.php:21
+msgid "Search RSS Archive"
+msgstr "Chercher flux RSS"
+
+#: inc/cpt.php:22
+msgid "Not found"
+msgstr "Introuvable"
+
+#: inc/cpt.php:23
+msgid "Not found in Trash"
+msgstr "Pas dans la corbeille"
+
+#: inc/cpt.php:24
+msgid "Featured Image"
+msgstr "Image à la une"
+
+#: inc/cpt.php:25
+msgid "Set featured image"
+msgstr "Image à la une"
+
+#: inc/cpt.php:26
+msgid "Remove featured image"
+msgstr "Enlever l'image à la une"
+
+#: inc/cpt.php:27
+msgid "Use as featured image"
+msgstr "User image à la une"
+
+#: inc/cpt.php:28
+msgid "Insert into item"
+msgstr "Insérer dedans"
+
+#: inc/cpt.php:29
+msgid "Uploaded to this item"
+msgstr "Télécharger et ajouter"
+
+#: inc/cpt.php:30
+msgid "RSS Archives list"
+msgstr "Liste fluxes RSS"
+
+#: inc/cpt.php:31
+msgid "RSS Archives list navigation"
+msgstr "Navigation liste fluxes RSS"
+
+#: inc/cpt.php:32
+msgid "Filter items list"
+msgstr "Filtrer liste"
+
+#: inc/cpt.php:76
+msgid "Feed url"
+msgstr "URL de flux"
+
+#: inc/cpt.php:84
+msgid "Sort by"
+msgstr "Classer par"
+
+#: inc/cpt.php:91
+msgid "Year"
+msgstr "An"
+
+#: inc/cpt.php:94
+msgid "Category"
+msgstr "Catégorie"
+
+#: inc/cpt.php:97
+msgid "Author"
+msgstr "Auteur"
+
+#: inc/cpt.php:107
+msgid "Your Shortcode:"
+msgstr "Shortcode:"
+
+#: inc/lib.php:157 inc/lib.php:171
+msgid "Error in file: "
+msgstr "Error fichier: "
+
+#: inc/lib.php:1447 inc/lib.php:2138 inc/lib.php:2324
+msgid "No items, feed is empty."
+msgstr "Le flux est vide."
+
+#: inc/lib.php:1450
+msgid "Error: Feed has an error or is not valid."
+msgstr "Erreur: le flux n'est pas valide."
+
+#: inc/lib.php:1454 inc/lib.php:2158 inc/lib.php:2331
+msgid "&laquo; Previous"
+msgstr "&laquo; Précédent"
+
+#: inc/lib.php:1455 inc/lib.php:2162 inc/lib.php:2332
+msgid "Next &raquo;"
+msgstr "Après &raquo;"
+
+#: inc/lib.php:1456 inc/lib.php:1457 inc/lib.php:2165 inc/lib.php:2168
+#: inc/lib.php:2333 inc/lib.php:2334
+msgid "more items"
+msgstr "plus objets"
+
+#: inc/lib.php:1638 inc/lib.php:1699
+msgid "rssfp_import"
+msgstr "rssfp_import"
+
+#: inc/lib.php:1649 inc/lib.php:1701
+#, fuzzy
+#| msgid "Import a feed with RSSImport"
+msgid "Import a feed with rssfp_import"
+msgstr "Importer au flux avec RSSImport"
+
+#: inc/lib.php:2040
+msgid "Entries from any RSS or Atom feed"
+msgstr "Entrées du fluxes RSS ou Atom feed"
+
+#. Plugin Name of the plugin/theme
+#: inc/lib.php:2042
+msgid "RSS Feed Pro"
+msgstr "RSS Feed Pro"
+
+#: inc/lib.php:2148 inc/lib.php:2327
+msgid "Error: Feed has an error or is not valid"
+msgstr "Erreur: le flux n'est pas valide"
+
+#: inc/lib.php:2386 inc/widgets.php:122
+msgid "Title:"
+msgstr "Titre:"
+
+#: inc/lib.php:2394
+msgid "URL for Title (incl. http://):"
+msgstr "URL pour titre (incl. http://):"
+
+#: inc/lib.php:2403
+msgid "Display:"
+msgstr "Aficher:"
+
+#: inc/lib.php:2412
+msgid "FeedURL:"
+msgstr "FeedURL:"
+
+#: inc/lib.php:2421
+msgid "Before Description:"
+msgstr "Avant description:"
+
+#: inc/lib.php:2430
+msgid "Display Description:"
+msgstr "Aficher description:"
+
+#: inc/lib.php:2436 inc/lib.php:2463 inc/lib.php:2521 inc/lib.php:2568
+#: inc/lib.php:2645 inc/lib.php:2661 inc/lib.php:2675 inc/lib.php:2743
+#: inc/lib.php:2793 inc/lib.php:2807 inc/lib.php:2821
+msgid "False"
+msgstr "Faux"
+
+#: inc/lib.php:2439 inc/lib.php:2466 inc/lib.php:2524 inc/lib.php:2571
+#: inc/lib.php:2648 inc/lib.php:2664 inc/lib.php:2678 inc/lib.php:2746
+#: inc/lib.php:2796 inc/lib.php:2810 inc/lib.php:2824
+msgid "True"
+msgstr "Vrai"
+
+#: inc/lib.php:2444
+msgid "After Description:"
+msgstr "Après description:"
+
+#: inc/lib.php:2452
+msgid "You can use the following strings to create custom links:"
+msgstr "Ces strings peuvent être utilisé pour créer des liens:"
+
+#: inc/lib.php:2454
+msgid "Example:"
+msgstr "Exemple:"
+
+#: inc/lib.php:2458
+msgid "HTML:"
+msgstr "HTML:"
+
+#: inc/lib.php:2471
+msgid "Truncate Description Char:"
+msgstr "Tronquer description char:"
+
+#: inc/lib.php:2480
+msgid "Truncate Description String (HTML):"
+msgstr "Tronquer string description (HTML):"
+
+#: inc/lib.php:2489
+msgid "Truncate Title Char:"
+msgstr "Tronquer char titre:"
+
+#: inc/lib.php:2498
+msgid "Truncate Title String (HTML):"
+msgstr "Troncate string titre (HTML):"
+
+#: inc/lib.php:2507
+msgid "Before Date (HTML):"
+msgstr "Avant date (HTML):"
+
+#: inc/lib.php:2516
+msgid "Date:"
+msgstr "Date:"
+
+#: inc/lib.php:2529
+msgid "After Date (HTML):"
+msgstr "Après date (HTML):"
+
+#: inc/lib.php:2538
+msgid "Date Formatting:"
+msgstr "Formatage date:"
+
+#: inc/lib.php:2546
+msgid "Leave empty for use the date format of your WordPress settings."
+msgstr "Laisser vide pour utiliser format de date de paramètres WordPress."
+
+#: inc/lib.php:2548
+msgid "Documentation on date formatting"
+msgstr "Documentation sur formatage date"
+
+#: inc/lib.php:2553
+msgid "Before Creator (HTML):"
+msgstr "Avant créateur (HTML):"
+
+#: inc/lib.php:2562
+msgid "Creator:"
+msgstr "Créateur:"
+
+#: inc/lib.php:2576
+msgid "After Creator (HTML):"
+msgstr "Aprés créateur (HTML):"
+
+#: inc/lib.php:2585
+msgid "Before Items (HTML):"
+msgstr "Avant objets (HTML):"
+
+#: inc/lib.php:2594
+msgid "After Items (HTML):"
+msgstr "Après objets (HTML):"
+
+#: inc/lib.php:2603
+msgid "Before Item (HTML):"
+msgstr "Avant objet (HTML):"
+
+#: inc/lib.php:2612
+msgid "After Item (HTML):"
+msgstr "Après objet (HTML):"
+
+#: inc/lib.php:2621
+msgid "Target Attribut:"
+msgstr "Attribut objectif:"
+
+#: inc/lib.php:2630
+msgid "Rel Attribut:"
+msgstr "Attribut rel:"
+
+#: inc/lib.php:2639
+msgid "Desc4Title:"
+msgstr "TitreDescr:"
+
+#: inc/lib.php:2652
+msgid "Description for title-Attribut on Title-Link"
+msgstr "Description titre-Attribut titre-lien"
+
+#: inc/lib.php:2655
+msgid "Charsetscan:"
+msgstr "Charsetscan:"
+
+#: inc/lib.php:2669
+msgid "Debug mode:"
+msgstr "Débugger:"
+
+#: inc/lib.php:2683
+msgid "Before <em>No</em> Items Message (HTML):"
+msgstr "Avant message <em>pas</em> objets (HTML):"
+
+#: inc/lib.php:2692
+msgid "<em>No</em> Items Message:"
+msgstr "Message <em>pas</em> objets:"
+
+#: inc/lib.php:2701
+msgid "After <em>No</em> Items Message (HTML):"
+msgstr "Après message <em>pas</em> objets (HTML):"
+
+#: inc/lib.php:2710
+msgid "Before Error Message (HTML):"
+msgstr "Avant message erreur (HTML):"
+
+#: inc/lib.php:2719
+msgid "Error Message:"
+msgstr "Message erreur:"
+
+#: inc/lib.php:2728
+msgid "After Error Message (HTML):"
+msgstr "Après message erreur (HTML):"
+
+#: inc/lib.php:2737
+msgid "Pagination:"
+msgstr "Pagination:"
+
+#: inc/lib.php:2751
+msgid "Previous Pagination Link String:"
+msgstr "String liens pagination précédent:"
+
+#: inc/lib.php:2760
+msgid "Next Pagination Link String:"
+msgstr "String liens pagination prochain:"
+
+#: inc/lib.php:2769
+msgid "Previous Pagination Title String:"
+msgstr "String titre pagination précédent:"
+
+#: inc/lib.php:2778
+msgid "Next Pagination Title String:"
+msgstr "String titre pagination prochain:"
+
+#: inc/lib.php:2787
+msgid "Use SimplePie class:"
+msgstr "Utiliser SimplePie class:"
+
+#: inc/lib.php:2801
+msgid "Echo/Return:"
+msgstr "Echo/Return:"
+
+#: inc/lib.php:2815
+msgid "Random Order:"
+msgstr "Ordre aléatoire:"
+
+#: inc/lib.php:2829
+msgid "Order for Date, Title, Creator, Description:"
+msgstr "Ordre par date, titre, créateur, description:"
+
+#: inc/lib.php:2837
+msgid "Use a comma separated string for your order. On default, it is"
+msgstr "Utiliser string separé par virgule pour classer. Par défaut, c'est"
+
+#: inc/widgets.php:9
+msgid "RSS Feed Pro Archive"
+msgstr "Archive de flux RSS Pro"
+
+#: inc/widgets.php:10
+msgid ""
+"Display an RSS Feed on your blog by widget. Sort your RSS feed archive by "
+"Category, Year, and by Author Name"
+msgstr ""
+"Aficher flux RSS sur ton blog par widget. Classer les flux RSS par "
+"catégorie, an et par nom du créateur"
+
+#: rss-feed-pro.php:140
+msgid "Donation for Homeless"
+msgstr "Don pour les sans-abri"
+
+#: rss-feed-pro.php:163
+msgid "Shortcodes"
+msgstr "Shortcodes"
+
+#: rss-feed-pro.php:229 rss-feed-pro.php:599
+msgid "Invalid request!"
+msgstr "Requête invalide!"
+
+#: rss-feed-pro.php:277
+msgid "Sorry. No items were found for this criteria."
+msgstr "Pardon. Aucun élément n'a été trouvé pour ce critère."
+
+#: rss-feed-pro.php:352
+msgid "Error fetching the feed. May be the feed url is invalid."
+msgstr "Erreur de récupération du flux. L'URL peut-être invalide."
+
+#: rss-feed-pro.php:479
+msgid "Sorting by "
+msgstr "Classer par "
+
+#: rss-feed-pro.php:526
+msgid "year"
+msgstr "an"
+
+#: rss-feed-pro.php:529
+msgid "Select by Year"
+msgstr "Classer par an"
+
+#: rss-feed-pro.php:538
+msgid "category"
+msgstr "catégorie"
+
+#: rss-feed-pro.php:541
+msgid "Select by Category"
+msgstr "Classer par catégorie"
+
+#: rss-feed-pro.php:550
+msgid "author"
+msgstr "auteur"
+
+#: rss-feed-pro.php:553
+msgid "Select by Author"
+msgstr "Classer par auteur"
+
+#: rss-feed-pro.php:578
+msgid "How do you like"
+msgstr "Vous aimez"
+
+#: rss-feed-pro.php:578
+msgid "Your feedback assures the continued maintenance of this plugin"
+msgstr "Vos commentaires aident à la maintenance continue de ce plugin"
+
+#: rss-feed-pro.php:580
+msgid "Leave Feedback"
+msgstr "Laisser commentaires"
+
+#. Plugin URI of the plugin/theme
+msgid "https://wordpress.org/plugins/rss-feed-pro/"
+msgstr "https://wordpress.org/plugins/rss-feed-pro/"
+
+#. Description of the plugin/theme
+#, fuzzy
+#| msgid ""
+#| "Display an RSS Feed in a widget or on your blog by shortcode. Sort your "
+#| "RSS feed archive by Category, Year, and by Author Name or Creator."
+msgid ""
+"Display an RSS Feed in a widget, on a page or post by shortcode using any "
+"number of parameters. Provide users a means to sort your RSS feed archive by "
+"Category, Year, and by Author Name."
+msgstr ""
+"Aficher flux RSS en widget ou en blog par shortcode. Classer flux RSS par "
+"catégorie, an et par nom d'auteur ou créateur."
+
+#. Author of the plugin/theme
+msgid "Artios Media"
+msgstr "Artios Media"
+
+#. Author URI of the plugin/theme
+msgid "http://www.artiosmedia.com"
+msgstr "http://www.artiosmedia.com"
+
+#~ msgid "RSSImport"
+#~ msgstr "RSSImport"
+
+#~ msgid "Previous"
+#~ msgstr "Précédent"
+
+#~ msgid "Next"
+#~ msgstr "Prochain"

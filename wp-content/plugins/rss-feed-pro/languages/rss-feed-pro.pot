@@ -1,0 +1,499 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: RSS Feed Pro\n"
+"POT-Creation-Date: 2022-02-08 04:48-0500\n"
+"PO-Revision-Date: 2020-09-02 22:30+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: rss-feed-pro.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+
+#: inc/cpt.php:6
+msgctxt "Post Type General Name"
+msgid "RSS Archives"
+msgstr ""
+
+#: inc/cpt.php:7
+msgctxt "Post Type Singular Name"
+msgid "RSS Archive"
+msgstr ""
+
+#: inc/cpt.php:8 inc/cpt.php:36
+msgid "RSS Archives"
+msgstr ""
+
+#: inc/cpt.php:9 inc/cpt.php:35
+msgid "RSS Archive"
+msgstr ""
+
+#: inc/cpt.php:10
+msgid "RSS Archive Archives"
+msgstr ""
+
+#: inc/cpt.php:11
+msgid "RSS Archive Attributes"
+msgstr ""
+
+#: inc/cpt.php:12
+msgid "Parent RSS Archive:"
+msgstr ""
+
+#: inc/cpt.php:13
+msgid "All RSS Archives"
+msgstr ""
+
+#: inc/cpt.php:14
+msgid "Add New RSS Archive"
+msgstr ""
+
+#: inc/cpt.php:15
+msgid "Add New"
+msgstr ""
+
+#: inc/cpt.php:16
+msgid "New RSS Archive"
+msgstr ""
+
+#: inc/cpt.php:17
+msgid "Edit RSS Archive"
+msgstr ""
+
+#: inc/cpt.php:18
+msgid "Update RSS Archive"
+msgstr ""
+
+#: inc/cpt.php:19
+msgid "View RSS Archive"
+msgstr ""
+
+#: inc/cpt.php:20
+msgid "View RSS Archives"
+msgstr ""
+
+#: inc/cpt.php:21
+msgid "Search RSS Archive"
+msgstr ""
+
+#: inc/cpt.php:22
+msgid "Not found"
+msgstr ""
+
+#: inc/cpt.php:23
+msgid "Not found in Trash"
+msgstr ""
+
+#: inc/cpt.php:24
+msgid "Featured Image"
+msgstr ""
+
+#: inc/cpt.php:25
+msgid "Set featured image"
+msgstr ""
+
+#: inc/cpt.php:26
+msgid "Remove featured image"
+msgstr ""
+
+#: inc/cpt.php:27
+msgid "Use as featured image"
+msgstr ""
+
+#: inc/cpt.php:28
+msgid "Insert into item"
+msgstr ""
+
+#: inc/cpt.php:29
+msgid "Uploaded to this item"
+msgstr ""
+
+#: inc/cpt.php:30
+msgid "RSS Archives list"
+msgstr ""
+
+#: inc/cpt.php:31
+msgid "RSS Archives list navigation"
+msgstr ""
+
+#: inc/cpt.php:32
+msgid "Filter items list"
+msgstr ""
+
+#: inc/cpt.php:76
+msgid "Feed url"
+msgstr ""
+
+#: inc/cpt.php:84
+msgid "Sort by"
+msgstr ""
+
+#: inc/cpt.php:91
+msgid "Year"
+msgstr ""
+
+#: inc/cpt.php:94
+msgid "Category"
+msgstr ""
+
+#: inc/cpt.php:97
+msgid "Author"
+msgstr ""
+
+#: inc/cpt.php:107
+msgid "Your Shortcode:"
+msgstr ""
+
+#: inc/lib.php:157 inc/lib.php:171
+msgid "Error in file: "
+msgstr ""
+
+#: inc/lib.php:1447 inc/lib.php:2138 inc/lib.php:2324
+msgid "No items, feed is empty."
+msgstr ""
+
+#: inc/lib.php:1450
+msgid "Error: Feed has an error or is not valid."
+msgstr ""
+
+#: inc/lib.php:1454 inc/lib.php:2158 inc/lib.php:2331
+msgid "&laquo; Previous"
+msgstr ""
+
+#: inc/lib.php:1455 inc/lib.php:2162 inc/lib.php:2332
+msgid "Next &raquo;"
+msgstr ""
+
+#: inc/lib.php:1456 inc/lib.php:1457 inc/lib.php:2165 inc/lib.php:2168
+#: inc/lib.php:2333 inc/lib.php:2334
+msgid "more items"
+msgstr ""
+
+#: inc/lib.php:1638 inc/lib.php:1699
+msgid "rssfp_import"
+msgstr ""
+
+#: inc/lib.php:1649 inc/lib.php:1701
+msgid "Import a feed with rssfp_import"
+msgstr ""
+
+#: inc/lib.php:2040
+msgid "Entries from any RSS or Atom feed"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+#: inc/lib.php:2042
+msgid "RSS Feed Pro"
+msgstr ""
+
+#: inc/lib.php:2148 inc/lib.php:2327
+msgid "Error: Feed has an error or is not valid"
+msgstr ""
+
+#: inc/lib.php:2386 inc/widgets.php:122
+msgid "Title:"
+msgstr ""
+
+#: inc/lib.php:2394
+msgid "URL for Title (incl. http://):"
+msgstr ""
+
+#: inc/lib.php:2403
+msgid "Display:"
+msgstr ""
+
+#: inc/lib.php:2412
+msgid "FeedURL:"
+msgstr ""
+
+#: inc/lib.php:2421
+msgid "Before Description:"
+msgstr ""
+
+#: inc/lib.php:2430
+msgid "Display Description:"
+msgstr ""
+
+#: inc/lib.php:2436 inc/lib.php:2463 inc/lib.php:2521 inc/lib.php:2568
+#: inc/lib.php:2645 inc/lib.php:2661 inc/lib.php:2675 inc/lib.php:2743
+#: inc/lib.php:2793 inc/lib.php:2807 inc/lib.php:2821
+msgid "False"
+msgstr ""
+
+#: inc/lib.php:2439 inc/lib.php:2466 inc/lib.php:2524 inc/lib.php:2571
+#: inc/lib.php:2648 inc/lib.php:2664 inc/lib.php:2678 inc/lib.php:2746
+#: inc/lib.php:2796 inc/lib.php:2810 inc/lib.php:2824
+msgid "True"
+msgstr ""
+
+#: inc/lib.php:2444
+msgid "After Description:"
+msgstr ""
+
+#: inc/lib.php:2452
+msgid "You can use the following strings to create custom links:"
+msgstr ""
+
+#: inc/lib.php:2454
+msgid "Example:"
+msgstr ""
+
+#: inc/lib.php:2458
+msgid "HTML:"
+msgstr ""
+
+#: inc/lib.php:2471
+msgid "Truncate Description Char:"
+msgstr ""
+
+#: inc/lib.php:2480
+msgid "Truncate Description String (HTML):"
+msgstr ""
+
+#: inc/lib.php:2489
+msgid "Truncate Title Char:"
+msgstr ""
+
+#: inc/lib.php:2498
+msgid "Truncate Title String (HTML):"
+msgstr ""
+
+#: inc/lib.php:2507
+msgid "Before Date (HTML):"
+msgstr ""
+
+#: inc/lib.php:2516
+msgid "Date:"
+msgstr ""
+
+#: inc/lib.php:2529
+msgid "After Date (HTML):"
+msgstr ""
+
+#: inc/lib.php:2538
+msgid "Date Formatting:"
+msgstr ""
+
+#: inc/lib.php:2546
+msgid "Leave empty for use the date format of your WordPress settings."
+msgstr ""
+
+#: inc/lib.php:2548
+msgid "Documentation on date formatting"
+msgstr ""
+
+#: inc/lib.php:2553
+msgid "Before Creator (HTML):"
+msgstr ""
+
+#: inc/lib.php:2562
+msgid "Creator:"
+msgstr ""
+
+#: inc/lib.php:2576
+msgid "After Creator (HTML):"
+msgstr ""
+
+#: inc/lib.php:2585
+msgid "Before Items (HTML):"
+msgstr ""
+
+#: inc/lib.php:2594
+msgid "After Items (HTML):"
+msgstr ""
+
+#: inc/lib.php:2603
+msgid "Before Item (HTML):"
+msgstr ""
+
+#: inc/lib.php:2612
+msgid "After Item (HTML):"
+msgstr ""
+
+#: inc/lib.php:2621
+msgid "Target Attribut:"
+msgstr ""
+
+#: inc/lib.php:2630
+msgid "Rel Attribut:"
+msgstr ""
+
+#: inc/lib.php:2639
+msgid "Desc4Title:"
+msgstr ""
+
+#: inc/lib.php:2652
+msgid "Description for title-Attribut on Title-Link"
+msgstr ""
+
+#: inc/lib.php:2655
+msgid "Charsetscan:"
+msgstr ""
+
+#: inc/lib.php:2669
+msgid "Debug mode:"
+msgstr ""
+
+#: inc/lib.php:2683
+msgid "Before <em>No</em> Items Message (HTML):"
+msgstr ""
+
+#: inc/lib.php:2692
+msgid "<em>No</em> Items Message:"
+msgstr ""
+
+#: inc/lib.php:2701
+msgid "After <em>No</em> Items Message (HTML):"
+msgstr ""
+
+#: inc/lib.php:2710
+msgid "Before Error Message (HTML):"
+msgstr ""
+
+#: inc/lib.php:2719
+msgid "Error Message:"
+msgstr ""
+
+#: inc/lib.php:2728
+msgid "After Error Message (HTML):"
+msgstr ""
+
+#: inc/lib.php:2737
+msgid "Pagination:"
+msgstr ""
+
+#: inc/lib.php:2751
+msgid "Previous Pagination Link String:"
+msgstr ""
+
+#: inc/lib.php:2760
+msgid "Next Pagination Link String:"
+msgstr ""
+
+#: inc/lib.php:2769
+msgid "Previous Pagination Title String:"
+msgstr ""
+
+#: inc/lib.php:2778
+msgid "Next Pagination Title String:"
+msgstr ""
+
+#: inc/lib.php:2787
+msgid "Use SimplePie class:"
+msgstr ""
+
+#: inc/lib.php:2801
+msgid "Echo/Return:"
+msgstr ""
+
+#: inc/lib.php:2815
+msgid "Random Order:"
+msgstr ""
+
+#: inc/lib.php:2829
+msgid "Order for Date, Title, Creator, Description:"
+msgstr ""
+
+#: inc/lib.php:2837
+msgid "Use a comma separated string for your order. On default, it is"
+msgstr ""
+
+#: inc/widgets.php:9
+msgid "RSS Feed Pro Archive"
+msgstr ""
+
+#: inc/widgets.php:10
+msgid ""
+"Display an RSS Feed on your blog by widget. Sort your RSS feed archive by "
+"Category, Year, and by Author Name"
+msgstr ""
+
+#: rss-feed-pro.php:140
+msgid "Donation for Homeless"
+msgstr ""
+
+#: rss-feed-pro.php:163
+msgid "Shortcodes"
+msgstr ""
+
+#: rss-feed-pro.php:229 rss-feed-pro.php:599
+msgid "Invalid request!"
+msgstr ""
+
+#: rss-feed-pro.php:277
+msgid "Sorry. No items were found for this criteria."
+msgstr ""
+
+#: rss-feed-pro.php:352
+msgid "Error fetching the feed. May be the feed url is invalid."
+msgstr ""
+
+#: rss-feed-pro.php:479
+msgid "Sorting by "
+msgstr ""
+
+#: rss-feed-pro.php:526
+msgid "year"
+msgstr ""
+
+#: rss-feed-pro.php:529
+msgid "Select by Year"
+msgstr ""
+
+#: rss-feed-pro.php:538
+msgid "category"
+msgstr ""
+
+#: rss-feed-pro.php:541
+msgid "Select by Category"
+msgstr ""
+
+#: rss-feed-pro.php:550
+msgid "author"
+msgstr ""
+
+#: rss-feed-pro.php:553
+msgid "Select by Author"
+msgstr ""
+
+#: rss-feed-pro.php:578
+msgid "How do you like"
+msgstr ""
+
+#: rss-feed-pro.php:578
+msgid "Your feedback assures the continued maintenance of this plugin"
+msgstr ""
+
+#: rss-feed-pro.php:580
+msgid "Leave Feedback"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://wordpress.org/plugins/rss-feed-pro/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Display an RSS Feed in a widget, on a page or post by shortcode using any "
+"number of parameters. Provide users a means to sort your RSS feed archive "
+"by Category, Year, and by Author Name."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Artios Media"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.artiosmedia.com"
+msgstr ""
