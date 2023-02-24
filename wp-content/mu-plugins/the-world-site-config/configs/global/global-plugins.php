@@ -16,6 +16,7 @@ define(
 		'codepress-admin-columns/codepress-admin-columns.php',
 		'custom-post-type-ui/custom-post-type-ui.php',
 		'disable-comments/disable-comments.php',
+		'genesis-custom-blocks/genesis-custom-blocks.php',
 		'PATCH-external-media-without-import/external-media-without-import.php',
 		'newspack-blocks/newspack-blocks.php',
 		'newspack-image-credits/newspack-image-credits.php',
