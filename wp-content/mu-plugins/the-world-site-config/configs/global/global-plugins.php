@@ -27,6 +27,7 @@ define(
 		'tw-custom-tags/tw-custom-tags.php',
 		'tw-episodes/tw-episodes.php',
 		'tw-media/tw-media.php',
+		'tw-endpoint-helper/tw-endpoint-helper.php',
 		'tw-programs/tw-programs.php',
 		'tw-resource-development-tags/tw-resource-development-tags.php',
 		'tw-segments/tw-segments.php',
