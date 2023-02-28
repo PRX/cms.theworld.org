@@ -34,7 +34,7 @@ use Facebook\InstantArticles\Validators\Type;
 
 class InstantArticle extends Element implements ChildrenContainer, InstantArticleInterface
 {
-    const CURRENT_VERSION = '1.10.0';
+    const CURRENT_VERSION = '1.10.2';
 
     /**
      * The meta properties that are used on <head>
@@ -476,6 +476,14 @@ class InstantArticle extends Element implements ChildrenContainer, InstantArticl
     {
         $this->metaProperties[$property_name] = $property_content;
         return $this;
+    }
+
+    public function getMetaProperty($property_name)
+    {
+        if (array_key_exists($property_name, $this->metaProperties)) {
+            return $this->metaProperties[$property_name];
+        }
+        return null;
     }
 
     public function render($doctype = '<!doctype html>', $format = false, $validate = true)

@@ -20,7 +20,15 @@ class Image {
 	 *
 	 * @return false|string
 	 */
-	public function resize( $file, $max_w, $max_h, $crop = false, $suffix = null, $dest_path = null, $jpeg_quality = 90 ) {
+	public function resize(
+		$file,
+		$max_w,
+		$max_h,
+		$crop = false,
+		$suffix = null,
+		$dest_path = null,
+		$jpeg_quality = 90
+	) {
 		$editor = wp_get_image_editor( $file );
 
 		if ( is_wp_error( $editor ) ) {
@@ -77,12 +85,19 @@ class Image {
 
 		// Is Image
 		if ( $attributes = wp_get_attachment_image_src( $id, $size ) ) {
-			$src = $attributes[0];
+			list( $src, $width, $height ) = $attributes;
 
 			if ( is_array( $size ) ) {
 				$image = $this->markup_cover( $src, $size[0], $size[1], $id );
 			} else {
-				$image = $this->markup( $src, $attributes[1], $attributes[2], $id );
+				// In case of SVG
+				if ( 1 === (int) $width && 1 === (int) $height ) {
+					$_size = $this->get_image_sizes_by_name( $size );
+					$width = $_size['width'];
+					$height = $_size['height'];
+				}
+
+				$image = $this->markup( $src, $width, $height, $id );
 			}
 		} // Is File, use icon
 		else if ( $attributes = wp_get_attachment_image_src( $id, $size, true ) ) {
@@ -132,7 +147,6 @@ class Image {
 
 				$image = $this->markup( $src, $dimensions[0], $dimensions[1] );
 			} else {
-
 				$image = $this->markup( $url, $dimensions[0], $dimensions[1] );
 			}
 		} // External image
@@ -328,8 +342,11 @@ class Image {
 		}
 
 		$dom = new DOMDocument;
-		@$dom->loadHTML( $string );
+
+		libxml_use_internal_errors( true );
+		$dom->loadHTML( $string );
 		$dom->preserveWhiteSpace = false;
+		libxml_clear_errors();
 
 		$urls = [];
 

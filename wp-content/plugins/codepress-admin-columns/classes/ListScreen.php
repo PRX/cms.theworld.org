@@ -5,6 +5,7 @@ namespace AC;
 use AC\Column\Placeholder;
 use AC\Sanitize\Kses;
 use AC\Type\ListScreenId;
+use AC\Type\Url\Editor;
 use DateTime;
 use LogicException;
 use ReflectionClass;
@@ -41,7 +42,7 @@ abstract class ListScreen {
 	private $singular_label;
 
 	/**
-	 * Meta type of list screen; post, user, comment. Mostly used for fetching meta data.
+	 * Meta type of list screen; post, user, comment. Mostly used for fetching metadata.
 	 * @since 3.0
 	 * @var string
 	 */
@@ -458,10 +459,13 @@ abstract class ListScreen {
 	 * @since 2.0
 	 */
 	public function get_edit_link() {
-		return add_query_arg( [
+		$url = new Editor( 'columns' );
+		$url->add( [
 			'list_screen' => $this->key,
 			'layout_id'   => $this->get_layout_id(),
-		], ac_get_admin_url( 'columns' ) );
+		] );
+
+		return $url->get_url();
 	}
 
 	/**
@@ -784,7 +788,7 @@ abstract class ListScreen {
 	}
 
 	public function set_preferences( array $preferences ) {
-		$this->preferences = $preferences;
+		$this->preferences = apply_filters( 'ac/list_screen/preferences', $preferences, $this );
 
 		return $this;
 	}
@@ -823,7 +827,11 @@ abstract class ListScreen {
 			return $original_value;
 		}
 
-		$value = ( new Kses() )->sanitize( $column->get_value( $id ) );
+		$value = $column->get_value( $id );
+
+		if ( apply_filters( 'ac/column/value/sanitize', true, $column, $id ) ) {
+			$value = ( new Kses() )->sanitize( $value );
+		}
 
 		// You can overwrite the display value for original columns by making sure get_value() does not return an empty string.
 		if ( $column->is_original() && ac_helper()->string->is_empty( $value ) ) {
