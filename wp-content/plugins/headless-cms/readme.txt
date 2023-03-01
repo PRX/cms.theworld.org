@@ -2,7 +2,7 @@
 Contributors: gsayed786
 Tags: headless-cms, decoupled, graphql
 Requires at least: 4.6
-Tested up to: 5.6
+Tested up to: 6.0.1
 Stable tag: 4.9.2
 Requires PHP: 5.2.4
 License: GPLv2 or later

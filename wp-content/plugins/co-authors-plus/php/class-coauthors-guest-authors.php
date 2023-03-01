@@ -72,6 +72,9 @@ class CoAuthors_Guest_Authors {
 		// Add a Personal Data Exporter to guest authors
 		add_filter( 'wp_privacy_personal_data_exporters', array( $this, 'filter_personal_data_exporter' ), 1 );
 
+		// Filters the guest author menu URL in nav menus.
+		add_filter( 'nav_menu_link_attributes', array( $this, 'filter_nav_menu_attributes' ), 10, 2 );
+
 		// Allow users to change where this is placed in the WordPress admin
 		$this->parent_page = apply_filters( 'coauthors_guest_author_parent_page', $this->parent_page );
 
@@ -125,6 +128,7 @@ class CoAuthors_Guest_Authors {
 			'publicly_queryable'  => false,
 			'exclude_from_search' => true,
 			'show_in_menu'        => false,
+			'show_in_rest'        => true,
 			'supports'            => array(
 				'thumbnail',
 			),
@@ -928,7 +932,7 @@ class CoAuthors_Guest_Authors {
 				}
 				// Ensure we aren't doing the lookup by the prefixed value
 				if ( 'user_login' == $key ) {
-					$value = preg_replace( '#^cap\-#', '', $value );
+					$value = preg_replace( '#^cap\-#', '', sanitize_title_for_query( $value ) );
 				}
 				$query   = $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key=%s AND meta_value=%s;", $this->get_post_meta_key( $key ), $value );
 				$post_id = $wpdb->get_var( $query ); // phpcs:ignore
@@ -1214,7 +1218,7 @@ class CoAuthors_Guest_Authors {
 
 		// Delete the lookup cache associated with each old co-author value
 		$keys = wp_list_pluck( $this->get_guest_author_fields(), 'key' );
-		$keys = array_merge( $keys, array( 'login', 'post_name', 'user_nicename', 'ID' ) );
+		$keys = array_merge( $keys, array( 'login', 'post_name', 'user_nicename', 'ID', 'id' ) );
 		foreach ( $keys as $key ) {
 			$value_key = $key;
 
@@ -1222,6 +1226,8 @@ class CoAuthors_Guest_Authors {
 				$value_key = 'user_nicename';
 			} elseif ( 'login' == $key ) {
 				$value_key = 'user_login';
+			} elseif ( 'id' == $key ) {
+				$value_key = 'ID';
 			}
 
 			$cache_key = $this->get_cache_key( $key, $guest_author->$value_key );
@@ -1236,9 +1242,12 @@ class CoAuthors_Guest_Authors {
 
 
 	/**
-	 * Create a guest author
+	 * Create a guest author.
+	 *
+	 * @param $args array Author args. Required keys to create author: 'display_name' and 'user_email'.
 	 *
 	 * @since 3.0
+	 * @return int|WP_Error The ID of the created guest author, or a WP_Error object if the author could not be created.
 	 */
 	function create( $args ) {
 		global $coauthors_plus;
@@ -1628,5 +1637,30 @@ class CoAuthors_Guest_Authors {
 			'data' => $data_to_export,
 			'done' => true,
 		);
+	}
+
+	/**
+	 * Filters the guest author menu item attributes
+	 *
+	 * @param array   $atts {
+	 *       The HTML attributes applied to the menu item's `<a>` element, empty strings are ignored.
+	 *
+	 *     @type string $title        Title attribute.
+	 *     @type string $target       Target attribute.
+	 *     @type string $rel          The rel attribute.
+	 *     @type string $href         The href attribute.
+	 *     @type string $aria-current The aria-current attribute.
+	 * }
+	 * @param WP_Post $menu_item The current menu item object.
+	 * @return array
+	 */
+	public function filter_nav_menu_attributes( $atts, $menu_item ) {
+		if ( ! empty( $menu_item->object ) && 'guest-author' === $menu_item->object ) {
+			$author = $this->get_guest_author_by( 'ID', $menu_item->object_id );
+			if ( ! empty( $author->type ) && $author->type === 'guest-author' ) {
+				$atts['href'] = get_author_posts_url( $author->ID, $author->user_nicename );
+			}
+		}
+		return $atts;
 	}
 }

@@ -1,6 +1,27 @@
 CHANGES LOG (full version).
 ===========================
 
+= [4.63.2] 16.12.2022 =
+* Update: symbols '{}$' are removed from capability name before use it for internal purpose, to exclude cases like when one of plugins broke URE work adding capability like 'edit_{$type}s'.
+* Update: array_merge() function is replaced with wrapper ure_array_merge(), to exclude fatal error: Argument #2 must be of type array.
+
+= [4.63.1] 20.09.2022 =
+* Marked as compatible with WordPress version 6.0.2
+* Fix: PHP Warning: Attempt to read property “ID” on null in /wp-content/plugins/user-role-editor/includes/classes/user-role-editor.php on line 369
+* Fix: Deprecated: Automatic conversion of false to array is deprecated in ./includes/classes/base-lib.php on line 212
+
+= [4.63] 11.07.2022 =
+* Update: Marked as compatible with WordPress 6.1
+* Update: Few notices (e.g. "Constant FILTER_SANITIZE_STRING is deprecated") was fixed for better compatibility with PHP 8.1.
+* Update: URE does not try to deactivate itself in case another instance is active, just shows notice and stops execution. 
+
+= [4.62] 05.05.2022 =
+* Update: Marked as compatible with WordPress 6.0
+* New: It's possible to translate custom role names using [PolyLang](https://wordpress.org/plugins/polylang/) plugin.
+* Update: URE does not sort roles in WordPress dropdown lists. In order to sort roles by name return 'name' from 'ure_sort_wp_roles_list' filter.
+* Update: User capabilities view page minor CSS enhancements.
+* Update: Settings->About: "Donate" link was removed.
+
 = [4.61.2] 01.03.2022 =
 * Fix: "Users->Add New" page - other selected roles were not saved.
 * Update: URE uses WordPress notification styles for own operation result output.
