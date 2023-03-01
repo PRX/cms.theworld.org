@@ -14,6 +14,7 @@ if ( defined( 'WP_INSTALLING' ) && WP_INSTALLING ) {
 // Add mu-plugins here.
 $pantheon_mu_plugins = [
 	'pantheon-mu-plugin/pantheon.php',
+	'the-world-site-config/the-world-site-config.php'
 ];
 
 foreach ( $pantheon_mu_plugins as $file ) {
