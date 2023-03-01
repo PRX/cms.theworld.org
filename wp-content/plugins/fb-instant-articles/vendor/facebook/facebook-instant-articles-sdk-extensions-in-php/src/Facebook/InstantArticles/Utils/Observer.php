@@ -150,8 +150,9 @@ class Observer
         if (!isset($this->callbacks[$tag])) {
             return $value;
         }
-
+        
         // Uses this to be compatible with PHP < 5.6
+        // phpcs:ignore PHPCompatibility.FunctionUse.ArgumentFunctionsReportCurrentValue.NeedsInspection -- $tag wasn't changed.
         $args = func_get_args();
 
         // Removes the $tag, since this is not an expected parameter to callbacks.

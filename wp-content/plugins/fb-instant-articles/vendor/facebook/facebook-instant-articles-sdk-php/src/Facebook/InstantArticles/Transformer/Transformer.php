@@ -246,7 +246,7 @@ class Transformer
         $libxml_previous_state = libxml_use_internal_errors(true);
         $document = new \DOMDocument('1.0');
         if (function_exists('mb_convert_encoding')) {
-            $document->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', $encoding));
+	        $document->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', $encoding));
         } else {
             $this->addLog(
                 TransformerLog::DEBUG,
@@ -263,9 +263,6 @@ class Transformer
         libxml_clear_errors();
         libxml_use_internal_errors($libxml_previous_state);
         $result = $this->transform($context, $document);
-        if (Type::is($result, InstantArticle::getClassName())) {
-            $result = $this->handleTransformationSettings($result);
-        }
         $totalTime = round(microtime(true) - $start, 3)*1000;
         $totalWarnings = count($this->getWarnings());
         $this->addLog(
@@ -278,15 +275,16 @@ class Transformer
     /**
      * @param InstantArticle $context
      * @param \DOMNode $node
-     * @deprecated Use @see Transformer::transformString instead.
      *
      * @return mixed
      */
     public function transform($context, $node)
     {
-        if (Type::is($context, InstantArticle::getClassName())) {
+        $is_first_run = false;
+        if (Type::is($context, InstantArticle::getClassName()) && $context->getMetaProperty('op:generator:transformer') === null) {
             $context->addMetaProperty('op:generator:transformer', 'facebook-instant-articles-sdk-php');
             $context->addMetaProperty('op:generator:transformer:version', InstantArticle::CURRENT_VERSION);
+            $is_first_run = true;
             $this->instantArticle = $context;
         }
 
@@ -373,6 +371,10 @@ class Transformer
                     $this->addWarning(new UnrecognizedElement($current_context, $child));
                 }
             }
+        }
+
+        if ($is_first_run) {
+            $context = $this->handleTransformationSettings($context);
         }
 
         return $context;

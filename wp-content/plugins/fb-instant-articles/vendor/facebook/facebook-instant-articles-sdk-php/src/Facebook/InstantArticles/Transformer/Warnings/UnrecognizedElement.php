@@ -11,7 +11,7 @@ namespace Facebook\InstantArticles\Transformer\Warnings;
 use Facebook\InstantArticles\Elements\Element;
 use Facebook\InstantArticles\Validators\Type;
 
-class UnrecognizedElement
+class UnrecognizedElement extends Warning
 {
     /**
      * @var Element
@@ -19,20 +19,13 @@ class UnrecognizedElement
     private $context;
 
     /**
-     * @var \DOMNode
-     */
-    private $node;
-
-    /**
      * @param Element $context
      * @param \DOMNode $node
      */
     public function __construct($context, $node)
     {
+        parent::__construct($node ? $node->cloneNode() : null);
         $this->context = $context;
-        if ($node) {
-            $this->node = $node->cloneNode();
-        }
     }
 
     /**
@@ -67,13 +60,5 @@ class UnrecognizedElement
     public function getContext()
     {
         return $this->context;
-    }
-
-    /**
-     * @return \DOMNode
-     */
-    public function getNode()
-    {
-        return $this->node;
     }
 }

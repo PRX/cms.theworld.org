@@ -2,14 +2,22 @@
 # This file is distributed under the same license as the Plugins - Admin Columns - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-10-13 09:53:19+0000\n"
+"PO-Revision-Date: 2022-09-22 13:46:35+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: GlotPress/3.0.0-alpha.2\n"
+"X-Generator: GlotPress/4.0.0-alpha.3\n"
 "Language: nl\n"
 "Project-Id-Version: Plugins - Admin Columns - Stable (latest release)\n"
+
+#: classes/Integration/JetEngine.php:19
+msgid "Display, inline- and bulk-edit, export, smart filter and sort your JetEngine contents on any admin list table."
+msgstr "Toon, inline- en bulk-edit, export, slim filteren en sorteren van je JetEngine inhoud op elke beheer lijst tabel."
+
+#: classes/Integration/JetEngine.php:18
+msgid "Integrates JetEngine with Admin Columns."
+msgstr "Integreert JetEngine met beheer kolommen."
 
 #: templates/admin/page/settings-section-restore.php:4
 msgid "Restore settings"
@@ -341,7 +349,7 @@ msgstr "Diversen"
 
 #: templates/settings/setting-label-icons.php:50
 msgid "Notifications"
-msgstr "Berichten"
+msgstr "Meldingen"
 
 #: templates/settings/setting-label-icons.php:49
 msgid "Widgets"
@@ -650,7 +658,7 @@ msgstr "Beschermd met een wachtwoord"
 
 #: classes/Settings/Column/NumberFormat.php:100
 msgid "Number Format"
-msgstr "Nummer formaat"
+msgstr "Nummer format"
 
 #: classes/Settings/Column/NumberFormat.php:89
 msgid "Formatted"
@@ -676,9 +684,9 @@ msgstr "Term bewerken"
 msgid "Filter by Term"
 msgstr "Filteren op term"
 
-#: classes/Promo/BlackFriday.php:13
-msgid "30% Off from Black Friday until Cyber Monday"
-msgstr "30% korting van Black Friday tot Cyber ​​Monday"
+#: classes/Promo/BlackFriday.php:19
+msgid "%s Off from Black Friday to Cyber Monday"
+msgstr "%s korting van Black Friday tot Cyber ​​Monday"
 
 #: classes/Check/Promotion.php:73
 msgid "Get %s now"
@@ -837,7 +845,7 @@ msgstr "Dit bepaalt hoe de tijd getoond wordt."
 
 #: classes/Settings/Column/Time.php:12
 msgid "Time Format"
-msgstr "Tijdformaat"
+msgstr "Tijd format"
 
 #: classes/Settings/Column/StringLimit.php:35
 msgid "No limit"
@@ -1420,7 +1428,7 @@ msgstr "Breng Admin Columns naar een hoger niveau:"
 msgid "Upgrade to"
 msgstr "Upgraden naar"
 
-#: classes/Admin/Notice/ReadOnly.php:18
+#: classes/Admin/Notice/ReadOnlyListScreen.php:18
 msgid "The columns for %s are read only and can therefore not be edited."
 msgstr "De kolommen voor %s zijn 'alleen lezen', en kunnen daarom niet bewerkt worden."
 
@@ -1594,7 +1602,7 @@ msgstr "Waarschuwing. De kolomdata van %s wordt verwijderd. Dit kan niet ongedaa
 
 #: templates/admin/edit-actions.php:23 templates/admin/edit-columns.php:38
 msgid "Update"
-msgstr "Bijwerken"
+msgstr "Update"
 
 #: classes/Admin/Page/Columns.php:202
 msgid "Store settings"
@@ -1632,7 +1640,7 @@ msgstr "Herstel Instellingen"
 
 #: templates/admin/edit-actions.php:24 templates/admin/edit-columns.php:39
 msgid "Save"
-msgstr "Bewaar"
+msgstr "Opslaan"
 
 #: classes/Admin/Section/General.php:36
 #: classes/Settings/Column/DateTimeFormat.php:45
@@ -1729,7 +1737,7 @@ msgstr "Admin Columns forums op WordPress.org"
 
 #: classes/Check/Review.php:198
 msgid "You can also find help on the %s, and %s."
-msgstr "Je kunt ook hulp vinden op de %, en %s."
+msgstr "Je kunt ook hulp vinden op de %s, en %s."
 
 #: classes/Check/Review.php:194
 msgid "our forum"
@@ -2152,7 +2160,7 @@ msgstr "Afmetingen"
 
 #: classes/Column/Media/Caption.php:14 classes/Settings/Column/ExifData.php:75
 msgid "Caption"
-msgstr "Onderschrift"
+msgstr "Bijschrift"
 
 #: classes/Column/Media/AvailableSizes.php:17
 msgid "Available Sizes"

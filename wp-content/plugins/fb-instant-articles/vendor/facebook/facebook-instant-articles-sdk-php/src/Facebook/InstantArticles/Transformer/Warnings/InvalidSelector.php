@@ -14,7 +14,7 @@ use Facebook\InstantArticles\Transformer\Rules\ConfigurationSelectorRule;
 /**
  * Class InvalidSelector warning to show that an invalid selector for a required property was used
  */
-class InvalidSelector
+class InvalidSelector extends Warning
 {
     /**
      * @var string
@@ -25,11 +25,6 @@ class InvalidSelector
      * @var Element
      */
     private $context;
-
-    /**
-     * @var \DOMNode
-     */
-    private $node;
 
     /**
      * @var ConfigurationSelectorRule
@@ -44,9 +39,9 @@ class InvalidSelector
      */
     public function __construct($fields, $context, $node, $rule)
     {
+        parent::__construct($node);
         $this->fields = $fields;
         $this->context = $context;
-        $this->node = $node;
         $this->rule = $rule;
     }
 
@@ -95,12 +90,12 @@ class InvalidSelector
     {
         return $this->context;
     }
-
-    /**
-     * @return \DOMNode
-     */
-    public function getNode()
+    public function getFields()
     {
-        return $this->node;
+        return $this->fields;
+    }
+    public function getRule()
+    {
+        return $this->rule;
     }
 }

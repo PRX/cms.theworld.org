@@ -34,6 +34,18 @@ final class Newspack_Newsletters {
 	];
 
 	/**
+	 * List of the implemented Servide providers. Keys are providers slugs and values the providers class names
+	 *
+	 * @var array
+	 */
+	const REGISTERED_PROVIDERS = [
+		'mailchimp'        => 'Newspack_Newsletters_Mailchimp',
+		'constant_contact' => 'Newspack_Newsletters_Constant_Contact',
+		'campaign_monitor' => 'Newspack_Newsletters_Campaign_Monitor',
+		'active_campaign'  => 'Newspack_Newsletters_Active_Campaign',
+	];
+
+	/**
 	 * The single instance of the class.
 	 *
 	 * @var Newspack_Newsletters
@@ -81,6 +93,7 @@ final class Newspack_Newsletters {
 		add_filter( 'newspack_theme_featured_image_post_types', [ __CLASS__, 'support_featured_image_options' ] );
 		add_filter( 'gform_force_hooks_js_output', [ __CLASS__, 'suppress_gravityforms_js_on_newsletters' ] );
 		add_filter( 'render_block', [ __CLASS__, 'remove_email_only_block' ], 10, 2 );
+		add_action( 'pre_get_posts', [ __CLASS__, 'display_newsletters_in_archives' ] );
 		add_action( 'the_post', [ __CLASS__, 'fix_public_status' ] );
 		self::set_service_provider( self::service_provider() );
 
@@ -99,20 +112,27 @@ final class Newspack_Newsletters {
 	 */
 	public static function set_service_provider( $service_provider ) {
 		update_option( 'newspack_newsletters_service_provider', $service_provider );
-		switch ( $service_provider ) {
-			case 'mailchimp':
-				self::$provider = Newspack_Newsletters_Mailchimp::instance();
-				break;
-			case 'constant_contact':
-				self::$provider = Newspack_Newsletters_Constant_Contact::instance();
-				break;
-			case 'campaign_monitor':
-				self::$provider = Newspack_Newsletters_Campaign_Monitor::instance();
-				break;
-			case 'active_campaign':
-				self::$provider = Newspack_Newsletters_Active_Campaign::instance();
-				break;
+		self::$provider = self::get_service_provider_instance( $service_provider );
+	}
+
+	/**
+	 * Gets the Service provider instance
+	 *
+	 * @param string $provider_slug The provider slug.
+	 * @return ?Newspack_Newsletters_Service_Provider
+	 */
+	public static function get_service_provider_instance( $provider_slug ) {
+		if ( empty( self::REGISTERED_PROVIDERS[ $provider_slug ] ) ) {
+			return null;
 		}
+		return self::REGISTERED_PROVIDERS[ $provider_slug ]::instance();
+	}
+
+	/**
+	 * Get the current service provider instance.
+	 */
+	public static function get_service_provider() {
+		return self::$provider;
 	}
 
 	/**
@@ -954,7 +974,8 @@ final class Newspack_Newsletters {
 		$screen = get_current_screen();
 		if (
 			self::NEWSPACK_NEWSLETTERS_CPT !== $screen->post_type &&
-			Newspack_Newsletters_Ads::NEWSPACK_NEWSLETTERS_ADS_CPT !== $screen->post_type
+			Newspack_Newsletters_Ads::NEWSPACK_NEWSLETTERS_ADS_CPT !== $screen->post_type &&
+			Newspack\Newsletters\Subscription_Lists::CPT !== $screen->post_type
 		) {
 			return;
 		}
@@ -1132,25 +1153,6 @@ final class Newspack_Newsletters {
 	}
 
 	/**
-	 * Add contact to a mailing list of the configured ESP.
-	 *
-	 * @param array  $contact The contact to add to the list.
-	 * @param string $list_id ID of the list to add the contact to.
-	 */
-	public static function add_contact( $contact, $list_id ) {
-		if ( self::is_service_provider_configured() ) {
-			try {
-				return self::$provider->add_contact( $contact, $list_id );
-			} catch ( \Exception $e ) {
-				return new WP_Error(
-					'newspack_newsletters_get_lists',
-					$e->getMessage()
-				);
-			}
-		}
-	}
-
-	/**
 	 * Mark newsletter as sent.
 	 *
 	 * @param int $post_id Post ID.
@@ -1195,6 +1197,28 @@ final class Newspack_Newsletters {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Display newsletters in archive pages.
+	 *
+	 * @param WP_Query $query The query.
+	 */
+	public static function display_newsletters_in_archives( $query ) {
+		if ( is_admin() || ! $query->is_main_query() ) {
+			return;
+		}
+		if ( $query->is_archive() && ! $query->is_post_type_archive() ) {
+			$post_type = $query->get( 'post_type' );
+			if ( empty( $post_type ) ) {
+				$post_type = [ 'post' ];
+			}
+			if ( ! is_array( $post_type ) ) {
+				$post_type = [ $post_type ];
+			}
+			$post_type[] = self::NEWSPACK_NEWSLETTERS_CPT;
+			$query->set( 'post_type', $post_type );
+		}
 	}
 
 	/**

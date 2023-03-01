@@ -147,16 +147,52 @@ class Newspack_Newsletters_Constant_Contact_Controller extends Newspack_Newslett
 				],
 			]
 		);
+		\register_rest_route(
+			$this->service_provider::BASE_NAMESPACE . $this->service_provider->service,
+			'(?P<id>[\a-z]+)/segment/(?P<segment_id>[\a-z]+)',
+			[
+				'methods'             => \WP_REST_Server::EDITABLE,
+				'callback'            => [ $this, 'api_segment' ],
+				'permission_callback' => [ $this->service_provider, 'api_authoring_permissions_check' ],
+				'args'                => [
+					'id'         => [
+						'sanitize_callback' => 'absint',
+						'validate_callback' => [ 'Newspack_Newsletters', 'validate_newsletter_id' ],
+					],
+					'segment_id' => [
+						'sanitize_callback' => 'esc_attr',
+					],
+				],
+			]
+		);
+		\register_rest_route(
+			$this->service_provider::BASE_NAMESPACE . $this->service_provider->service,
+			'(?P<id>[\a-z]+)/segment/',
+			[
+				'methods'             => \WP_REST_Server::DELETABLE,
+				'callback'            => [ $this, 'api_segment' ],
+				'permission_callback' => [ $this->service_provider, 'api_authoring_permissions_check' ],
+				'args'                => [
+					'id'         => [
+						'sanitize_callback' => 'absint',
+						'validate_callback' => [ 'Newspack_Newsletters', 'validate_newsletter_id' ],
+					],
+					'segment_id' => [
+						'sanitize_callback' => 'esc_attr',
+					],
+				],
+			]
+		);
 	}
 
 	/**
 	 * Verify connection
-	 * 
+	 *
 	 * @return WP_REST_Response|mixed API response or error.
 	 */
 	public function verify_token() {
 		$response = $this->service_provider->verify_token();
-		return \rest_ensure_response( $response );
+		return self::get_api_response( $response );
 	}
 
 	/**
@@ -167,7 +203,7 @@ class Newspack_Newsletters_Constant_Contact_Controller extends Newspack_Newslett
 	 */
 	public function api_retrieve( $request ) {
 		$response = $this->service_provider->retrieve( $request['id'] );
-		return \rest_ensure_response( $response );
+		return self::get_api_response( $response );
 	}
 
 	/**
@@ -186,7 +222,7 @@ class Newspack_Newsletters_Constant_Contact_Controller extends Newspack_Newslett
 			$request['id'],
 			$emails
 		);
-		return \rest_ensure_response( $response );
+		return self::get_api_response( $response );
 	}
 
 	/**
@@ -201,7 +237,7 @@ class Newspack_Newsletters_Constant_Contact_Controller extends Newspack_Newslett
 			$request['from_name'],
 			$request['reply_to']
 		);
-		return \rest_ensure_response( $response );
+		return self::get_api_response( $response );
 	}
 
 	/**
@@ -222,6 +258,26 @@ class Newspack_Newsletters_Constant_Contact_Controller extends Newspack_Newslett
 				$request['list_id']
 			);
 		}
-		return \rest_ensure_response( $response );
+		return self::get_api_response( $response );
+	}
+
+	/**
+	 * Set segment for a campaign.
+	 *
+	 * @param WP_REST_Request $request API request object.
+	 * @return WP_REST_Response|mixed API response or error.
+	 */
+	public function api_segment( $request ) {
+		if ( 'DELETE' === $request->get_method() ) {
+			$response = $this->service_provider->unset_segment(
+				$request['id']
+			);
+		} else {
+			$response = $this->service_provider->set_segment(
+				$request['id'],
+				$request['segment_id']
+			);
+		}
+		return self::get_api_response( $response );
 	}
 }

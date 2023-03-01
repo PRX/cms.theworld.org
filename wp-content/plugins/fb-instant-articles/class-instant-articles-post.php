@@ -60,6 +60,19 @@ class Instant_Articles_Post {
 	public $transformer = null;
 
 	/**
+	 * Instant Article object.
+	 *
+	 * This is the object that will be used to build the Instant Article markup.
+	 *
+	 * It's public so that it can continue to be accessed by outside code.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @var InstantArticle The Instant Article object.
+	 */
+	public $instant_article;
+
+	/**
 	 * Setup data and build the content
 	 *
 	 * @since 0.1
@@ -187,7 +200,6 @@ class Instant_Articles_Post {
 	 * @return string  The excerpt.
 	 */
 	public function get_the_excerpt() {
-
 		$post = get_post( $this->get_the_id() );
 
 		// This should ideally not happen, but it may do so if someone tampers with the query.
@@ -201,12 +213,14 @@ class Instant_Articles_Post {
 
 		/**
 		 * Apply the default WP Filters for the post excerpt.
+		 * https://developer.wordpress.org/reference/hooks/get_the_excerpt/
 		 *
 		 * @since 0.1
 		 *
 		 * @param string  $post_excerpt  The post excerpt.
+		 * @param WP_Post $post          The post object.
 		 */
-		$excerpt = apply_filters( 'get_the_excerpt', $post->post_excerpt );
+		$excerpt = apply_filters( 'get_the_excerpt', $post->post_excerpt, $post );
 
 		/**
 		 * Filter the post excerpt for instant articles.
@@ -294,7 +308,8 @@ class Instant_Articles_Post {
 
 		// Try to get the content from a transient, but only if the cached version have the same modtime.
 		$cache_mod_time = get_transient( 'instantarticles_mod_' . $this->_post->ID );
-		if ( get_post_modified_time( 'Y-m-d H:i:s', true, $this->_post->ID ) === $cache_mod_time ) {
+		if ( apply_filters( 'instant_articles_cache_content', true, $this->_post->ID )
+			&& get_post_modified_time( 'Y-m-d H:i:s', true, $this->_post->ID ) === $cache_mod_time ) {
 			$content = get_transient( 'instantarticles_content_' . $this->_post->ID );
 			if ( false !== $content && strlen( $content ) ) {
 				return $content;
@@ -503,28 +518,22 @@ class Instant_Articles_Post {
 
 		$cover_media = Image::create();
 
-
-		// If someone else is handling this, let them. Otherwise fall back to us trying to use the featured image.
-		if ( has_filter( 'instant_articles_cover_media' ) ) {
-			/**
-			 * Filter the cover media.
-			 *
-			 * @since 0.1
-			 * @param Image     $cover_media  The cover media object.
-			 * @param int       $post_id      The current post ID.
-			 */
-			$cover_media = apply_filters( 'instant_articles_cover_media', $cover_media, $this->_post->ID );
-		} else {
-
-			$featured_image_data = $this->get_the_featured_image();
-			if ( isset( $featured_image_data['src'] ) && strlen( $featured_image_data['src'] ) ) {
-				$cover_media = Image::create()->withURL($featured_image_data['src']);
-				if( isset( $featured_image_data['caption'] ) && strlen( $featured_image_data['caption'] )) {
-					$cover_media->withCaption(Caption::create()->withTitle($featured_image_data['caption']));
-				}
+		$featured_image_data = $this->get_the_featured_image();
+		if ( isset( $featured_image_data['src'] ) && strlen( $featured_image_data['src'] ) ) {
+			$cover_media = Image::create()->withURL($featured_image_data['src']);
+			if( isset( $featured_image_data['caption'] ) && strlen( $featured_image_data['caption'] )) {
+				$cover_media->withCaption(Caption::create()->withTitle($featured_image_data['caption']));
 			}
 		}
 
+		/**
+		 * Filter the cover media
+		 *
+		 * @since 0.1
+		 * @param Image     $cover_media  The cover media object.
+		 * @param int       $post_id      The current post ID.
+		 */
+        $cover_media = apply_filters( 'instant_articles_cover_media', $cover_media, $this->_post->ID );
 		return $cover_media;
 	}
 
@@ -718,7 +727,7 @@ class Instant_Articles_Post {
 		$height = 250;
 
 		$dimensions_match = array();
-		$dimensions_raw = isset( $settings_ads['dimensions'] ) ? $settings_ads['dimensions'] : null;
+		$dimensions_raw = isset( $settings_ads['dimensions'] ) ? $settings_ads['dimensions'] : '';
 		if ( preg_match( '/^(?:\s)*(\d+)x(\d+)(?:\s)*$/', $dimensions_raw, $dimensions_match ) ) {
 			$width = intval( $dimensions_match[1] );
 			$height = intval( $dimensions_match[2] );

@@ -11,17 +11,12 @@ namespace Facebook\InstantArticles\Transformer\Warnings;
 use Facebook\InstantArticles\Elements\Element;
 use Facebook\InstantArticles\Validators\Type;
 
-class ValidatorWarning
+class ValidatorWarning extends Warning
 {
     /**
      * @var Element
      */
     private $element;
-
-    /**
-     * @var DOMNode
-     */
-    private $node;
 
     /**
      * @var array the configuration content
@@ -34,8 +29,8 @@ class ValidatorWarning
      */
     public function __construct($element, $node = null)
     {
+        parent::__construct($node);
         $this->element = $element;
-        $this->node = $node;
     }
 
     /**
@@ -52,14 +47,6 @@ class ValidatorWarning
     public function getElement()
     {
         return $this->element;
-    }
-
-    /**
-     * @return DOMNode
-     */
-    public function getNode()
-    {
-        return $this->node;
     }
 
     private function formatWarningMessage()
