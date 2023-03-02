@@ -23,8 +23,7 @@
 		"answer": {
 			"type": "string",
 			"source": "html",
-			"selector": ".qa-answer",
-			"multiline": "p"
+			"selector": ".qa-answer"
 		},
 		"bordered": {
 			"type": "boolean"

@@ -3,7 +3,12 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
-import { registerBlockType } from "@wordpress/blocks";
+import {
+	registerBlockType,
+	createBlock,
+	getBlockAttributes,
+} from "@wordpress/blocks";
+import { createElement } from "@wordpress/element";
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -36,4 +41,18 @@ registerBlockType(metadata.name, {
 	 * @see ./save.js
 	 */
 	save,
+
+	transforms: {
+		from: [
+			{
+				type: "raw",
+				selector: "div.qa-wrap",
+				transform: (node) => {
+					const attributes = getBlockAttributes("tw/qa-block", node);
+
+					return createBlock("tw/qa-block", attributes);
+				},
+			},
+		],
+	},
 });

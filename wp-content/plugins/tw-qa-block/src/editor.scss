@@ -3,11 +3,3 @@
  *
  * Replace them with your own styles or remove the file completely.
  */
-
-.wp-block-tw-qa-block {
-	transition: box-shadow 200ms ease-out;
-
-	&.is-selected {
-		box-shadow: 0 0 30px rgb(0 0 0 / 0.1), 2px 2px 10px rgb(0 0 0 / 0.3);
-	}
-}
