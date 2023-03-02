@@ -1,0 +1,35 @@
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-tw-qa-block,
+.qa-wrap {
+	padding: 1rem 2rem 0.5rem;
+	margin-bottom: 1.5rem;
+	margin-left: 3px;
+	box-shadow: -3px 0 0 0 #35719c;
+
+	& + & {
+		margin-top: 2rem;
+	}
+}
+
+.qa-question {
+	font-weight: bold;
+	font-size: 1.1rem;
+	margin: 0 0 1rem;
+	padding-bottom: 1.25rem;
+	border-bottom: 2px solid #eeeeef;
+}
+
+.qa-answer {
+	font-size: 1.2rem;
+}
+
+.qa-wrap--border-around {
+	border: 1px solid #eeeeef;
+	border-left: none;
+}

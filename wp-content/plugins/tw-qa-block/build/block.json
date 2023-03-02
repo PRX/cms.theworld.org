@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "tw/qa-block",
+  "version": "0.1.0",
+  "title": "Q&A Block",
+  "category": "widgets",
+  "icon": "format-chat",
+  "description": "Block for question-and-answer content.",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "tw-qa-block",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "attributes": {
+    "question": {
+      "type": "string",
+      "source": "html",
+      "selector": ".qa-question"
+    },
+    "answer": {
+      "type": "string",
+      "source": "html",
+      "selector": ".qa-answer",
+      "multiline": "p"
+    },
+    "bordered": {
+      "type": "boolean"
+    }
+  }
+}
