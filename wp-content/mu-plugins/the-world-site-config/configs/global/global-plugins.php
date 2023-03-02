@@ -29,6 +29,7 @@ define(
 		'tw-episodes/tw-episodes.php',
 		'tw-media/tw-media.php',
 		'tw-programs/tw-programs.php',
+		'tw-qa-block/tw-qa-block.php',
 		'tw-resource-development-tags/tw-resource-development-tags.php',
 		'tw-segments/tw-segments.php',
 		'tw-story-types/tw-story-types.php',
