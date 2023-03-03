@@ -37,6 +37,7 @@ define(
 		'wordpress-importer/wordpress-importer.php',
 		'wp-cfm-path/wp-cfm-path.php',
 		'wp-cfm/wp-cfm.php',
+		'wp-rest-menu/wp-rest-menus.php',
 		'xml-sitemap-feed/xml-sitemap.php',
 	)
 );
