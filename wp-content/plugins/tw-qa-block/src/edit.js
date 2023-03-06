@@ -2,6 +2,7 @@ import { __ } from "@wordpress/i18n";
 import {
 	useBlockProps,
 	RichText,
+	InnerBlocks,
 	InspectorControls,
 } from "@wordpress/block-editor";
 import {
@@ -92,7 +93,6 @@ export default function Edit(props) {
 					"core/strikethrough",
 					"core/link",
 				]}
-				multiline
 			/>
 		</div>
 	);
