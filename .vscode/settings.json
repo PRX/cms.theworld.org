@@ -25,7 +25,7 @@
 		"vendor"
 	],
 	"phpcs.composerJsonPath": "composer.json",
-	"phpcs.executablePath": "/usr/bin/phpcs",
+	"phpcs.executablePath": "./vendor/bin/phpcs",
 	"phpcs.standard": "WordPress",
 	"phpSniffer.autoDetect": true,
 	"phpSniffer.standard": "WordPress",
