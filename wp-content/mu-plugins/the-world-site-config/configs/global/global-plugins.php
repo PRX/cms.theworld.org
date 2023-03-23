@@ -34,9 +34,11 @@ define(
 		'tw-segments/tw-segments.php',
 		'tw-story-types/tw-story-types.php',
 		'wordpress-importer/wordpress-importer.php',
-		'wp-all-export-pro/wp-all-export-pro.php',
+		'wordpress-seo/wp-seo.php',
+    'wp-all-export-pro/wp-all-export-pro.php',
 		'wp-cfm-path/wp-cfm-path.php',
 		'wp-cfm/wp-cfm.php',
+		'wp-rest-menu/wp-rest-menus.php',
 		'xml-sitemap-feed/xml-sitemap.php',
 	)
 );
