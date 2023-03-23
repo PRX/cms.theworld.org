@@ -1,0 +1,66 @@
+name: Push to Pantheon Dev Environment
+
+on:
+  push:
+    branches: ["main"] # Change "main" to the branch you want to trigger the action.
+
+jobs:
+  push-to-pantheon:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get SSH Key from pantheon
+        id: ssh-key
+        shell: bash
+        # Pantheon server is the server name you get from SSH Clone URL when you click on Connection info in pantheon dashboard.
+        run: |
+          echo "sshkey=$(ssh-keyscan -t rsa -H ${{ secrets.PANTHEON_SERVER }})" >> $GITHUB_OUTPUT
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Fetch the full commit history
+
+      - name: Setup SSH
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.PANTHEON_GH_ACTIONS_KEY }} # Private Key generated with  ssh-keygen -t rsa -b 4096 -C "actions@github.com" -f pantheon_gh_actions_key
+          #Host *.drush.in
+          #    StrictHostKeyChecking no
+          config: ${{ vars.SSH_CONFIG }}
+          known_hosts: ${{ steps.ssh-key.outputs.sshkey }}
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.1" # Set the PHP version you're using
+
+      - name: Install Terminus
+        run: |
+          curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar && php installer.phar install
+          echo "$GITHUB_WORKSPACE/vendor/bin" >> $GITHUB_PATH
+
+      - name: Clone Pantheon repository
+        id: clone
+        run: |
+          terminus auth:login --machine-token=${{ secrets.PANTHEON_MACHINE_TOKEN }}
+          terminus connection:set ${{ vars.PANTHEON_SITE }}.dev git
+          terminus connection:info ${{ vars.PANTHEON_SITE }}.dev --field='git_url' > pantheon_repo_url.txt
+          export PANTHEON_REPO_URL=$(cat pantheon_repo_url.txt)
+
+          git clone $PANTHEON_REPO_URL pantheon_repo
+          cd pantheon_repo
+
+          git config user.name "The World GitHub Actions Bot"
+          git config user.email "ghactions@theworld.org"
+
+          git remote add github_repo $GITHUB_WORKSPACE
+          git fetch github_repo
+          git merge --allow-unrelated-histories -X theirs github_repo/main
+
+          git push origin master
+
+      - name: Clear Pantheon cache
+        if: steps.clone.outcome == 'success' && vars.PANTHEON_ENVIRONMENT != ''
+        run: |
+          terminus env:clear-cache ${{ vars.PANTHEON_SITE }}.${{ vars.PANTHEON_ENVIRONMENT }}
