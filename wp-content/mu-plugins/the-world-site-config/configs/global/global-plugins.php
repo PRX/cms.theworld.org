@@ -12,7 +12,6 @@ define(
 		'admin-taxonomy-filter/admin-taxonomy-filter.php',
 		'advanced-custom-fields-pro/acf.php',
 		'acf-to-rest-api/class-acf-to-rest-api.php',
-		'codepress-admin-columns/codepress-admin-columns.php',
 		'custom-post-type-ui/custom-post-type-ui.php',
 		'disable-comments/disable-comments.php',
 		'genesis-custom-blocks/genesis-custom-blocks.php',
