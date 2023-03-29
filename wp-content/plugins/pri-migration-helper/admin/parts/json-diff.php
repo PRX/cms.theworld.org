@@ -76,8 +76,8 @@
 
 										<tr>
 											<td><?php echo $json_diff_result['line']; ?></td>
-											<td><?php echo $json_diff_result['url_1']; ?></td>
-											<td><?php echo $json_diff_result['url_2']; ?></td>
+											<td><a href="<?php echo $json_diff_result['url_1']; ?>"><?php echo $json_diff_result['url_1']; ?></a></td>
+											<td><a href="<?php echo $json_diff_result['url_2']; ?>"><?php echo $json_diff_result['url_2']; ?></a></td>
 											<td><?php echo $json_diff_result['count_print']; ?></td>
 											<td><?php echo $json_diff_result['patch']; ?></td>
 										</tr>

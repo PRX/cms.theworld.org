@@ -89,18 +89,22 @@ class Peh_Alias_Object {
 					$prefix = 'pages';
 					break;
 				// bundle: taxonomies
+				// Post Tag
+				case 'post_tag':
+					$prefix = 'tags';
+					break;
 				// Category
+				case 'person':
+					$prefix = 'contributor';
+					break;
 				case 'category':
+					$prefix = 'categories';
+					break;
 				case 'city':
 				case 'continent':
 				case 'contributor':
 				case 'country':
 				case 'license':
-				case 'person':
-				// Post Tag
-				case 'post_tag':
-					$prefix = 'tags';
-					break;
 				case 'program':
 				case 'province_or_state':
 				case 'region':

@@ -20,6 +20,8 @@
  * Get includes.
  */
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-peh-alias-object.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-peh-url-to-query.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-peh-url-to-query-item.php';
 
 /**
  * Route definitions.
@@ -78,6 +80,22 @@ function peh_args_validation_callback( $value, $request, $key ) {
 }
 
 /**
+ * Resolve an url to an array of WP_Query.
+ *
+ * @param string $url       Url to resolve
+ * @param type $query_vars  Query variables to be added to the url
+ * @return array|\WP_Error  Resolved query or WP_Error is something goes wrong
+ * @staticvar \GM\UrlToQuery $resolver
+ */
+function peh_url_to_query( $url = '', Array $query_vars = [ ] ) {
+	static $resolver = NULL;
+	if ( is_null( $resolver ) ) {
+		$resolver = new GM\UrlToQuery( );
+	}
+	return $resolver->resolve( $url, $query_vars );
+}
+
+/**
  * Sanitize function.
  *
  * @param string $value
@@ -114,6 +132,7 @@ function peh_route_alias( WP_REST_Request $request ) {
 
 		// Check from redirect table.
 		$alias_object = _peh_get_object( $slug );
+
 		if ( $alias_object instanceof Peh_Alias_Object ) {
 
 			if ( $alias_object->is_external() ) {
@@ -124,6 +143,7 @@ function peh_route_alias( WP_REST_Request $request ) {
 
 				// Load entity.
 				$route = $alias_object->get_rest_route();
+
 				if ( $route ) {
 
 					try {
@@ -171,21 +191,6 @@ function _peh_get_object( $slug ) {
 
 	$alias_object = apply_filters( 'peh_get_object_filters', false, $slug );
 
-	// Check from redirect table.
-	// $object = _peh_get_object_by_redirect_db( $slug );
-
-	// if ( ! $object ) {
-
-	// 	// Check from posts.
-	// 	$object = _peh_get_object_by_slug( $slug );
-
-	// 	if ( ! $object ) {
-
-	// 		// Check from taxonomy.
-	// 		$object = _peh_get_object_by_taxonomy( $slug );
-	// 	}
-	// }
-
 	if ( isset( $alias_object->id, $alias_object->type ) ) {
 
 		$alias_object = new Peh_Alias_Object( $alias_object );
@@ -206,6 +211,19 @@ function peh_maybe_object_wp_migrated_legacy_redirect_db( $object, $slug ) {
 	return $object ? $object : _peh_get_object_by_wp_migrated_legacy_redirect_db( $slug );
 }
 add_filter( 'peh_get_object_filters', 'peh_maybe_object_wp_migrated_legacy_redirect_db', 0, 2 );
+
+/**
+ * Filter object.
+ *
+ * @param mixed $object
+ * @param string $slug
+ * @return mixed
+ */
+function peh_maybe_object_wp_migrated_legacy_alias_db( $object, $slug ) {
+
+	return $object ? $object : _peh_get_object_by_wp_migrated_legacy_alias_db( $slug );
+}
+add_filter( 'peh_get_object_filters', 'peh_maybe_object_wp_migrated_legacy_alias_db', 3, 2 );
 
 /**
  * Filter object.
@@ -276,6 +294,19 @@ function peh_maybe_post_moved_to_object_terms( $object ) {
 add_filter( 'peh_get_object_filters', 'peh_maybe_post_moved_to_object_terms', 20, 2 );
 
 /**
+ * Filter object.
+ *
+ * @param mixed $object
+ * @param string $slug
+ * @return mixed
+ */
+function peh_maybe_object_wild( $object, $slug ) {
+
+	return $object ? $object : _peh_get_object_wild( $slug );
+}
+add_filter( 'peh_get_object_filters', 'peh_maybe_object_wild', 25, 2 );
+
+/**
  * Get post id from wp_fg_redirect table.
  *
  * @param array $slug string
@@ -306,18 +337,120 @@ function _peh_get_object_by_wp_fg_redirect_db( $slug ) {
 }
 
 /**
+ * Get post id from wp_fg_redirect table.
+ *
+ * @param array $slug string
+ * @return bool|int
+ */
+function _peh_get_object_by_wp_migrated_legacy_alias_db( $slug ) {
+
+	global $wpdb;
+
+	$row = $wpdb->get_row( "SELECT `source`, `alias` FROM `wp_migrated_legacy_url_alias` WHERE `alias` = '$slug' LIMIT 1;" );
+
+	if (
+		isset( $row->source ) && $row->source
+		&&
+		isset( $row->alias ) && $row->alias
+	) {
+
+		$id   = '';
+		$type = '';
+		$wp_type = '';
+
+		// Check for node or taxonomy record type.
+		$type_checks = array(
+			array(
+				'name'    => 'node',
+				'replace' => 'node/',
+			),
+			array(
+				'name'    => 'taxonomy',
+				'replace' => 'taxonomy/term/',
+			),
+		);
+
+		foreach ( $type_checks as $check ) {
+
+			if ( str_contains( $row->source, $check['name'] ) ) {
+
+				// Search from start to the first occurence of "/".
+				preg_match( '/^.+?(?=\/)/', $row->alias, $matches );
+
+				$type = $matches ? $matches[0] : $row->alias;
+				$id   = str_replace( $check['replace'], '', $row->source );
+			}
+		}
+
+		// Return only if something is found.
+		if ( $id && $type ) {
+
+			$wp_id   = '';
+			$wp_type = '';
+
+			// Convert type from node to post_type if needed.
+			switch ( $type ) {
+
+				case 'people':
+					$wp_type = 'person';
+					break;
+
+				case 'stories':
+					$wp_type = 'post';
+					break;
+
+				default:
+					$wp_type = $type;
+					break;
+			}
+
+			// Get WP Posts by node id.
+			$s_args = array(
+					'post_type'  => $wp_type,
+					'meta_key'   => 'nid',
+					'meta_value' => $id,
+			);
+
+			$posts = get_posts( $s_args );
+
+			if ( $posts && ! is_wp_error( $posts ) ) {
+
+				$wp_id = $posts[0]->ID;
+			}
+
+			if ( $wp_id && $wp_type ) {
+
+				$object       = new stdClass();
+				$object->id   = $wp_id;
+				$object->type = $wp_type;
+
+				return $object;
+			}
+		}
+	}
+
+	return false;
+}
+
+/**
  * Get post by slug.
  *
  * @param string $slug
+ * @param array $extra_args
  * @return void
  */
-function _peh_get_object_by_slug( $slug ) {
+function _peh_get_object_by_slug( $slug, $extra_args = array() ) {
 
     $args = array(
         'name'           => $slug,
         'post_status'    => 'publish',
         'posts_per_page' => 1,
     );
+
+	if ( $extra_args ) {
+
+		$args = wp_parse_args( $extra_args, $args );
+	}
 
     $objects = get_posts( $args );
 
@@ -337,20 +470,78 @@ function _peh_get_object_by_slug( $slug ) {
  * Get tax by slug.
  *
  * @param string $slug
+ * @param string $taxonomy
  * @return void
  */
-function _peh_get_object_by_taxonomy( $slug ) {
+function _peh_get_object_by_taxonomy( $slug, $tax = '' ) {
 
 	$object = false;
 
-	// depending of the resource type, check in taxonomy.
-	if ( $term_id = term_exists( $slug ) ) {
+	$term_id = $tax ? term_exists( $slug, $tax ) : term_exists( $slug );
 
-		$taxonomy = get_term_field( 'taxonomy', $term_id );
+	// depending of the resource type, check in taxonomy.
+	if ( $term_id ) {
+
+		$taxonomy = $tax ? $tax : get_term_field( 'taxonomy', $term_id );
 		$object   = new stdClass();
 
-		$object->id   = $term_id;
+		$object->id   = $tax ? $term_id['term_id'] : $term_id;
 		$object->type = $taxonomy;
+	}
+
+	return $object;
+}
+
+/**
+ * Assume random object url structure.
+ *
+ * @param string $slug
+ * @return void
+ */
+function _peh_get_object_wild( $slug ) {
+
+	$object = false;
+
+	$url_query = peh_url_to_query( $slug );
+
+	if ( ! is_wp_error( $url_query ) ) {
+
+		// Maybe post?
+		if ( isset( $url_query['name'] ) ) {
+
+			$object = _peh_get_object_by_slug( $url_query['name'], $url_query );
+
+		} elseif ( isset( $url_query['category_name'] ) ) {
+
+			$term_slug = '';
+			$term_tax  = '';
+
+			if ( str_contains( $url_query['category_name'], '/' ) ) {
+
+				$slug_parts = explode( '/', $url_query['category_name'] );
+
+				if ( $slug_parts ) {
+
+					$term_slug = end( $slug_parts );
+					$term_tax  = 'category';
+				}
+			} else {
+
+				$term_slug = $url_query['category_name'];
+			}
+
+			if ( $term_slug ) {
+
+				$object = _peh_get_object_by_taxonomy( $term_slug, $term_tax );
+			}
+		} else {
+
+			$term_tax  = key( $url_query );
+			$term_slug = $url_query[ $term_tax ];
+
+			$object = _peh_get_object_by_taxonomy( $term_slug, $term_tax );
+
+		}
 	}
 
 	return $object;
@@ -373,7 +564,7 @@ function peh_get_response( array $response ) {
         500 => array( 'rest_internal_error', 'TW - 500 Internal Error.' ),
 	);
 
-    $error = isset( $errors[$status] ) ?? false;
+    $error = isset( $errors[$status] ) ? $errors[$status] : false;
 
     return $error
         ? new WP_Error( $error[0], __( $error[1], 'peh'), $response )

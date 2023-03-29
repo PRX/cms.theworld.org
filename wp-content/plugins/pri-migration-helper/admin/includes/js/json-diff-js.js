@@ -86,7 +86,7 @@ jQuery(document).ready(function ($) {
           row: row,
         },
         success: function (response) {
-          jQuery('#json-diff-ajax-return').prepend(response.html);
+          jQuery('#json-diff-ajax-return').append(response.html);
 
           var next_row = parseInt(response.next_row) + 1;
 
@@ -97,7 +97,7 @@ jQuery(document).ready(function ($) {
           } else {
             jQuery('#json_url_row').val(1);
             //jQuery('#json-diff-ajax-return').prepend($('<tr><td colspan=5 style="background-color: #ffa7a7;">End</td></tr>'));
-            jQuery('#json-diff-notice').prepend($('<div class="notice notice-success inline"><p>End</p></div>'));
+            jQuery('#json-diff-notice').append($('<div class="notice notice-success inline"><p>End</p></div>'));
             $('[name="input_json_url_submit"]').val('Compare');
           }
         },
