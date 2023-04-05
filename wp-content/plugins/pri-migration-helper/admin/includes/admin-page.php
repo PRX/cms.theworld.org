@@ -78,10 +78,6 @@ function pmh_admin_page_json_diff() {
 		$json_url_2 = $options['json_url_2'];
 	}
 
-	if ( $json_diff_results ) {
-		$json_diff_results = array_reverse( $json_diff_results );
-	}
-
 	echo wp_sprintf( '<h2>%s</h2>', __( 'JSON Diff' ) );
 
 	require_once PMH_ADMIN_DIR . '/parts/json-diff.php';
@@ -189,6 +185,20 @@ function pmh_admin_json_diff_process() {
       </div>
     </div>' : '<div class="dashicons-before dashicons-minus"></div>';
 
+
+	if ( ! $obj1 || ! $obj2 ) {
+
+		$patch = '';
+
+		if ( ! $obj1 ) {
+			$patch .= wp_sprintf( '<p>%s</p>', __( 'First URL is not responding.' ) );
+		}
+
+		if ( ! $obj2 ) {
+			$patch .= wp_sprintf( '<p>%s</p>', __( 'Second URL is not responding.' ) );
+		}
+	}
+
 	$json_diff_result = array(
 		'line'        => $next_row,
 		'url_1'       => $url_1,
@@ -212,8 +222,8 @@ function pmh_admin_json_diff_process() {
 	$html_response =
 	"<tr>
 		<td>{$json_diff_result['line']}</td>
-		<td>{$json_diff_result['url_1']}</td>
-		<td>{$json_diff_result['url_2']}</td>
+		<td><a href='{$url_1}' target='_blank'>{$url_1}</a></td>
+		<td><a href='{$url_2}' target='_blank'>{$url_2}</a></td>
 		<td>{$json_diff_result['count_print']}</td>
 		<td>{$json_diff_result['patch']}</td>
 	</tr>";
@@ -336,7 +346,7 @@ function pmh_post_worker_get_sample() {
 							$term_meta_key = '_fgd2wp_old_person_id';
 							$post_prefix = 'node';
 							break;
-						
+
 						default:
 							$term_meta_key = '_fgd2wp_old_taxonomy_id';
 							$post_prefix = 'taxonomy/term';
@@ -370,14 +380,14 @@ function pmh_post_worker_get_sample() {
 						$post_meta_key = 'fid';
 						$post_prefix = 'file';
 						break;
-					
+
 					default:
 						$post_meta_key = 'nid';
 						$post_prefix = 'node';
 						break;
 				}
 				foreach ( $_samples as $_sample ) {
-					
+
 					$samples[] = array(
 						'old_url'   => wp_sprintf( '%s/%s', $post_prefix, get_post_meta( $_sample->ID, $post_meta_key, true ) ),
 						'id'        => $_sample->ID,
@@ -443,13 +453,13 @@ function pmh_post_worker_run_process() {
 							$term_meta_key = '_fgd2wp_old_person_id';
 							$post_prefix = 'node';
 							break;
-						
+
 						default:
 							$term_meta_key = '_fgd2wp_old_taxonomy_id';
 							$post_prefix = 'taxonomy/term';
 							break;
 					}
-					
+
 					$nid     = get_term_meta( $term_id, $term_meta_key, true );
 					$old_url = "$post_prefix/$nid";
 					$result  = $wpdb->get_results( "SELECT * FROM wp_fg_redirect WHERE old_url = '$old_url'" );
@@ -485,23 +495,22 @@ function pmh_post_worker_run_process() {
 			break;
 
 		case 'post-type':
-			$_total = wp_count_posts( $object_name );
-			$total  = (int) $_total->publish + (int) $_total->draft;
 
 			$args     = array(
 				'post_status'    => 'all',
 				'post_type'      => $object_name,
-				'posts_per_page' => 50,
+				'posts_per_page' => 500,
 				'paged'          => $paged,
+				'fields'         => 'ids',
 			);
 			$posts = get_posts( $args );
 
 			if ( $posts ) {
 				foreach ( $posts as $post ) {
 
-					$post_id = $post->ID;
+					$post_id = $post;
 
-					$result = $wpdb->get_results( "SELECT * FROM wp_fg_redirect WHERE id = $post_id" );
+					$result = $wpdb->get_results( "SELECT * FROM wp_fg_redirect WHERE id = $post_id LIMIT 1" );
 
 					if ( ! $result ) {
 						switch ( $object_name ) {
@@ -509,7 +518,7 @@ function pmh_post_worker_run_process() {
 								$post_meta_key = 'fid';
 								$post_prefix = 'file';
 								break;
-							
+
 							default:
 								$post_meta_key = 'nid';
 								$post_prefix = 'node';
