@@ -11,48 +11,58 @@
  * @return void
  */
 function tw_social_tag_taxonomy() {
-	$labels = array(
-		'name'                       => _x( 'Social Tag', 'Taxonomy General Name', 'text_domain' ),
-		'singular_name'              => _x(
-			'Social Tag',
-			'Taxonomy Singular Name',
-			'text_domain'
-		),
-		'menu_name'                  => __( 'Social Tags', 'text_domain' ),
-		'all_items'                  => __( 'All Social Tags', 'text_domain' ),
-		'parent_item'                => __( 'Parent Item', 'text_domain' ),
-		'parent_item_colon'          => __( 'Parent Item:', 'text_domain' ),
-		'new_item_name'              => __( 'New Social Tag Name', 'text_domain' ),
-		'add_new_item'               => __( 'Add New Social Tag', 'text_domain' ),
-		'edit_item'                  => __( 'Edit Social Tag', 'text_domain' ),
-		'update_item'                => __( 'Update Social Tag', 'text_domain' ),
-		'view_item'                  => __( 'View Social Tag', 'text_domain' ),
-		'separate_items_with_commas' => __(
-			'Separate Cities with commas',
-			'text_domain'
-		),
-		'add_or_remove_items'        => __( 'Add or remove Cities', 'text_domain' ),
-		'choose_from_most_used'      => __(
-			'Choose from the most used',
-			'text_domain'
-		),
-		'popular_items'              => __( 'Popular Items', 'text_domain' ),
-		'search_items'               => __( 'Search Cities', 'text_domain' ),
-		'not_found'                  => __( 'Not Found', 'text_domain' ),
-		'no_terms'                   => __( 'No items', 'text_domain' ),
-		'items_list'                 => __( 'Items list', 'text_domain' ),
-		'items_list_navigation'      => __( 'Items list navigation', 'text_domain' ),
-	);
-	$args   = array(
-		'labels'            => $labels,
-		'hierarchical'      => false,
-		'public'            => true,
-		'show_ui'           => true,
-		'show_admin_column' => false,
-		'show_in_nav_menus' => false,
-		'show_tagcloud'     => false,
-		'show_in_rest'      => true,
-	);
-	register_taxonomy( 'social_tag', array( 'post' ), $args );
+	/**
+	 * Taxonomy: Social Tags.
+	 */
+
+	$labels = [
+		"name" => esc_html__( "Social Tags", "newspack" ),
+		"singular_name" => esc_html__( "Social Tag", "newspack" ),
+		"name" => esc_html__( "Social Tags", "newspack" ),
+		"singular_name" => esc_html__( "Social Tag", "newspack" ),
+		"search_items" => esc_html__( "Search Social Tags", "newspack" ),
+		"popular_items" => esc_html__( "Popular Social Tags", "newspack" ),
+		"all_items" => esc_html__( "All Social Tags", "newspack" ),
+		"parent_item" => esc_html__( "Parent Social Tag", "newspack" ),
+		"parent_item_colon" => esc_html__( "Parent Social Tag:", "newspack" ),
+		"edit_item" => esc_html__( "Edit Social Tag", "newspack" ),
+		"view_item" => esc_html__( "View Social Tag", "newspack" ),
+		"update_item" => esc_html__( "Update Social Tag", "newspack" ),
+		"add_new_item" => esc_html__( "Add New Social Tag", "newspack" ),
+		"new_item_name" => esc_html__( "New Social Tag Name", "newspack" ),
+		"separate_items_with_commas" => esc_html__( "Separate Social Tags with commas", "newspack" ),
+		"add_or_remove_items" => esc_html__( "Add or remove Social Tags", "newspack" ),
+		"choose_from_most_used" => esc_html__( "Choose from the most used Social Tags", "newspack" ),
+		"not_found" => esc_html__( "No Social Tags found.", "newspack" ),
+		"no_terms" => esc_html__( "No Social Tags", "newspack" ),
+		"items_list_navigation" => esc_html__( "Social Tags list navigation", "newspack" ),
+		"items_list" => esc_html__( "Social Tags list", "newspack" ),
+		"menu_name" => esc_html__( "Social Tags", "newspack" ),
+		"name_admin_bar" => esc_html__( "Social Tags", "newspack" ),
+	];
+
+
+	$args = [
+		"label" => esc_html__( "Social Tags", "newspack" ),
+		"labels" => $labels,
+		"public" => true,
+		"publicly_queryable" => true,
+		"hierarchical" => false,
+		"show_ui" => true,
+		"show_in_menu" => true,
+		"show_in_nav_menus" => false,
+		"query_var" => true,
+		"rewrite" => [ 'slug' => 'social_tags', 'with_front' => true,  'hierarchical' => true, ],
+		"show_admin_column" => false,
+		"show_in_rest" => true,
+		"show_tagcloud" => false,
+		"rest_base" => "social_tags",
+		"rest_controller_class" => "WP_REST_Terms_Controller",
+		"rest_namespace" => "wp/v2",
+		"show_in_quick_edit" => true,
+		"sort" => false,
+		"show_in_graphql" => false,
+	];
+	register_taxonomy( "social_tags", [ "post" ], $args );
 }
 add_action( 'init', 'tw_social_tag_taxonomy', 0 );

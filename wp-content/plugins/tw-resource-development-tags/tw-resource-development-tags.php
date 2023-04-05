@@ -12,40 +12,58 @@
  * @return void
  */
 function tw_resource_development_tags_taxonomy() {
+	/**
+	 * Taxonomy: Resource developments.
+	 */
 
-	$labels = array(
-		'name'                       => _x( 'Resource Development Tags', 'Taxonomy General Name', 'text_domain' ),
-		'singular_name'              => _x( 'Resource Development Tag', 'Taxonomy Singular Name', 'text_domain' ),
-		'menu_name'                  => __( 'Resource Development Tags', 'text_domain' ),
-		'all_items'                  => __( 'All Resource Development Tags', 'text_domain' ),
-		'parent_item'                => __( 'Parent Item', 'text_domain' ),
-		'parent_item_colon'          => __( 'Parent Item:', 'text_domain' ),
-		'new_item_name'              => __( 'New Resource Development Tag Name', 'text_domain' ),
-		'add_new_item'               => __( 'Add New Resource Development Tag', 'text_domain' ),
-		'edit_item'                  => __( 'Edit Resource Development Tag', 'text_domain' ),
-		'update_item'                => __( 'Update Resource Development Tag', 'text_domain' ),
-		'view_item'                  => __( 'View Resource Development Tag', 'text_domain' ),
-		'separate_items_with_commas' => __( 'Separate Resource Development Tags with commas', 'text_domain' ),
-		'add_or_remove_items'        => __( 'Add or remove Resource Development Tags', 'text_domain' ),
-		'choose_from_most_used'      => __( 'Choose from the most used', 'text_domain' ),
-		'popular_items'              => __( 'Popular Items', 'text_domain' ),
-		'search_items'               => __( 'Search Resource Development Tags', 'text_domain' ),
-		'not_found'                  => __( 'Not Found', 'text_domain' ),
-		'no_terms'                   => __( 'No items', 'text_domain' ),
-		'items_list'                 => __( 'Items list', 'text_domain' ),
-		'items_list_navigation'      => __( 'Items list navigation', 'text_domain' ),
-	);
-	$args   = array(
-		'labels'            => $labels,
-		'hierarchical'      => false,
-		'public'            => true,
-		'show_ui'           => true,
-		'show_admin_column' => true,
-		'show_in_nav_menus' => true,
-		'show_tagcloud'     => false,
-		'show_in_rest'      => true,
-	);
-	register_taxonomy( 'resource_development_tag', array( 'post' ), $args );
+	$labels = [
+		"name" => esc_html__( "Resource developments", "newspack" ),
+		"singular_name" => esc_html__( "Resource development", "newspack" ),
+		"name" => esc_html__( "Resource developments", "newspack" ),
+		"singular_name" => esc_html__( "Resource development", "newspack" ),
+		"search_items" => esc_html__( "Search Resource developments", "newspack" ),
+		"popular_items" => esc_html__( "Popular Resource developments", "newspack" ),
+		"all_items" => esc_html__( "All Resource developments", "newspack" ),
+		"parent_item" => esc_html__( "Parent Resource development", "newspack" ),
+		"parent_item_colon" => esc_html__( "Parent Resource development:", "newspack" ),
+		"edit_item" => esc_html__( "Edit Resource development", "newspack" ),
+		"view_item" => esc_html__( "View Resource development", "newspack" ),
+		"update_item" => esc_html__( "Update Resource development", "newspack" ),
+		"add_new_item" => esc_html__( "Add New Resource development", "newspack" ),
+		"new_item_name" => esc_html__( "New Resource development Name", "newspack" ),
+		"separate_items_with_commas" => esc_html__( "Separate Resource developments with commas", "newspack" ),
+		"add_or_remove_items" => esc_html__( "Add or remove Resource developments", "newspack" ),
+		"choose_from_most_used" => esc_html__( "Choose from the most used Resource developments", "newspack" ),
+		"not_found" => esc_html__( "No Resource developments found.", "newspack" ),
+		"no_terms" => esc_html__( "No Resource developments", "newspack" ),
+		"items_list_navigation" => esc_html__( "Resource developments list navigation", "newspack" ),
+		"items_list" => esc_html__( "Resource developments list", "newspack" ),
+		"menu_name" => esc_html__( "Resource developments", "newspack" ),
+		"name_admin_bar" => esc_html__( "Resource developments", "newspack" ),
+	];
 
+
+	$args = [
+		"label" => esc_html__( "Resource developments", "newspack" ),
+		"labels" => $labels,
+		"public" => true,
+		"publicly_queryable" => true,
+		"hierarchical" => false,
+		"show_ui" => true,
+		"show_in_menu" => true,
+		"show_in_nav_menus" => true,
+		"query_var" => true,
+		"rewrite" => [ 'slug' => 'resource_development', 'with_front' => true,  'hierarchical' => true, ],
+		"show_admin_column" => true,
+		"show_in_rest" => true,
+		"show_tagcloud" => false,
+		"rest_base" => "resource_development",
+		"rest_controller_class" => "WP_REST_Terms_Controller",
+		"rest_namespace" => "wp/v2",
+		"show_in_quick_edit" => true,
+		"sort" => false,
+		"show_in_graphql" => false,
+	];
+	register_taxonomy( "resource_development", [ "post" ], $args );
 }
 add_action( 'init', 'tw_resource_development_tags_taxonomy', 0 );

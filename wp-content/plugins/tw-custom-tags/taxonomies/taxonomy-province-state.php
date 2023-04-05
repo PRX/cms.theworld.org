@@ -11,52 +11,58 @@
  * @return void
  */
 function tw_province_state_taxonomy() {
-	$labels = array(
-		'name'                       => _x(
-			'Province or State',
-			'Taxonomy General Name',
-			'text_domain'
-		),
-		'singular_name'              => _x(
-			'Province or State',
-			'Taxonomy Singular Name',
-			'text_domain'
-		),
-		'menu_name'                  => __( 'Provinces or States', 'text_domain' ),
-		'all_items'                  => __( 'All Provinces or States', 'text_domain' ),
-		'parent_item'                => __( 'Parent Item', 'text_domain' ),
-		'parent_item_colon'          => __( 'Parent Item:', 'text_domain' ),
-		'new_item_name'              => __( 'New Province or State Name', 'text_domain' ),
-		'add_new_item'               => __( 'Add New Province or State', 'text_domain' ),
-		'edit_item'                  => __( 'Edit Province or State', 'text_domain' ),
-		'update_item'                => __( 'Update Province or State', 'text_domain' ),
-		'view_item'                  => __( 'View Province or State', 'text_domain' ),
-		'separate_items_with_commas' => __(
-			'Separate Cities with commas',
-			'text_domain'
-		),
-		'add_or_remove_items'        => __( 'Add or remove Cities', 'text_domain' ),
-		'choose_from_most_used'      => __(
-			'Choose from the most used',
-			'text_domain'
-		),
-		'popular_items'              => __( 'Popular Items', 'text_domain' ),
-		'search_items'               => __( 'Search Cities', 'text_domain' ),
-		'not_found'                  => __( 'Not Found', 'text_domain' ),
-		'no_terms'                   => __( 'No items', 'text_domain' ),
-		'items_list'                 => __( 'Items list', 'text_domain' ),
-		'items_list_navigation'      => __( 'Items list navigation', 'text_domain' ),
-	);
-	$args   = array(
-		'labels'            => $labels,
-		'hierarchical'      => false,
-		'public'            => true,
-		'show_ui'           => true,
-		'show_admin_column' => false,
-		'show_in_nav_menus' => false,
-		'show_tagcloud'     => false,
-		'show_in_rest'      => true,
-	);
-	register_taxonomy( 'province_state', array( 'post' ), $args );
+	/**
+	 * Taxonomy: Province Or States.
+	 */
+
+	$labels = [
+		"name" => esc_html__( "Province Or States", "newspack" ),
+		"singular_name" => esc_html__( "Province Or State", "newspack" ),
+		"name" => esc_html__( "Province Or States", "newspack" ),
+		"singular_name" => esc_html__( "Province Or State", "newspack" ),
+		"search_items" => esc_html__( "Search Province Or States", "newspack" ),
+		"popular_items" => esc_html__( "Popular Province Or States", "newspack" ),
+		"all_items" => esc_html__( "All Province Or States", "newspack" ),
+		"parent_item" => esc_html__( "Parent Province Or State", "newspack" ),
+		"parent_item_colon" => esc_html__( "Parent Province Or State:", "newspack" ),
+		"edit_item" => esc_html__( "Edit Province Or State", "newspack" ),
+		"view_item" => esc_html__( "View Province Or State", "newspack" ),
+		"update_item" => esc_html__( "Update Province Or State", "newspack" ),
+		"add_new_item" => esc_html__( "Add New Province Or State", "newspack" ),
+		"new_item_name" => esc_html__( "New Province Or State Name", "newspack" ),
+		"separate_items_with_commas" => esc_html__( "Separate Province Or States with commas", "newspack" ),
+		"add_or_remove_items" => esc_html__( "Add or remove Province Or States", "newspack" ),
+		"choose_from_most_used" => esc_html__( "Choose from the most used Province Or States", "newspack" ),
+		"not_found" => esc_html__( "No Province Or States found.", "newspack" ),
+		"no_terms" => esc_html__( "No Province Or States", "newspack" ),
+		"items_list_navigation" => esc_html__( "Province Or States list navigation", "newspack" ),
+		"items_list" => esc_html__( "Province Or States list", "newspack" ),
+		"menu_name" => esc_html__( "Province Or States", "newspack" ),
+		"name_admin_bar" => esc_html__( "Province Or States", "newspack" ),
+	];
+
+
+	$args = [
+		"label" => esc_html__( "Province Or States", "newspack" ),
+		"labels" => $labels,
+		"public" => true,
+		"publicly_queryable" => true,
+		"hierarchical" => false,
+		"show_ui" => true,
+		"show_in_menu" => true,
+		"show_in_nav_menus" => false,
+		"query_var" => true,
+		"rewrite" => [ 'slug' => 'province_or_state', 'with_front' => true,  'hierarchical' => true, ],
+		"show_admin_column" => false,
+		"show_in_rest" => true,
+		"show_tagcloud" => false,
+		"rest_base" => "province_or_state",
+		"rest_controller_class" => "WP_REST_Terms_Controller",
+		"rest_namespace" => "wp/v2",
+		"show_in_quick_edit" => true,
+		"sort" => false,
+		"show_in_graphql" => false,
+	];
+	register_taxonomy( "province_or_state", [ "post" ], $args );
 }
 add_action( 'init', 'tw_province_state_taxonomy', 0 );
