@@ -1,0 +1,14 @@
+https: //urlendpoint-the-world.pantheonsite.io/wp-json/tw/v2/alias?slug=people/marco-werman
+https: //urlendpoint-the-world.pantheonsite.io/wp-json/tw/v2/alias?slug=2019/11/29/tiktok-apologizes-after-removing-video-criticizing-china-uighur-internment-camps
+https: //urlendpoint-the-world.pantheonsite.io/wp-json/tw/v2/alias?slug=stories/2023-01-10/mexico-s-clean-energy-plan-could-run-trouble-leaders-summit
+https: //urlendpoint-the-world.pantheonsite.io/wp-json/tw/v2/alias?slug=category/arts-culture-media/culture
+https: //urlendpoint-the-world.pantheonsite.io/wp-json/tw/v2/alias?slug=categories/culture
+https: //urlendpoint-the-world.pantheonsite.io/wp-json/tw/v2/alias?slug=tags/10000-steps
+https: //urlendpoint-the-world.pantheonsite.io/wp-json/tw/v2/alias?slug=contributor/aaron-nelsen
+https: //urlendpoint-the-world.pantheonsite.io/wp-json/tw/v2/alias?slug=city/acara
+https: //urlendpoint-the-world.pantheonsite.io/wp-json/tw/v2/alias?slug=continent/america
+https: //urlendpoint-the-world.pantheonsite.io/wp-json/tw/v2/alias?slug=country/america
+https: //urlendpoint-the-world.pantheonsite.io/wp-json/tw/v2/alias?slug=region/alaska
+https: //urlendpoint-the-world.pantheonsite.io/wp-json/tw/v2/alias?slug=program/analysis
+https: //urlendpoint-the-world.pantheonsite.io/wp-json/tw/v2/alias?slug=episode/us-and-canada-add-restrictions-asylum-agreement
+https: //urlendpoint-the-world.pantheonsite.io/wp-json/tw/v2/alias?slug=segment/biden-visits-canada
