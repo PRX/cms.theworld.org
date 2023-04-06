@@ -11,7 +11,6 @@ define(
 		'wp-native-php-sessions/pantheon-sessions.php',
 		'advanced-custom-fields-pro/acf.php',
 		'acf-to-rest-api/class-acf-to-rest-api.php',
-		'custom-post-type-ui/custom-post-type-ui.php',
 		'disable-comments/disable-comments.php',
 		'genesis-custom-blocks/genesis-custom-blocks.php',
 		'PATCH-external-media-without-import/external-media-without-import.php',
