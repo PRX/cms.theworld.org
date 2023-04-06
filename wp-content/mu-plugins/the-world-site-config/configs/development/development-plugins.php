@@ -8,6 +8,7 @@
 define(
 	'DEVELOPMENT_PLUGINS',
 	array(
+		// 'custom-post-type-ui/custom-post-type-ui.php',
 		'fg-drupal-to-wp-premium/fg-drupal-to-wp-premium.php',
 		'fg-drupal-to-wp-premium-entityreference-module/fg-drupal-to-wp-entityreference.php',
 		'fg-drupal-to-wp-premium-fieldcollection-module/fg-drupal-to-wp-fieldcollection.php',
@@ -17,4 +18,3 @@ define(
 		'pri-external-attachment/pri-external-attachment.php',
 	)
 );
-
