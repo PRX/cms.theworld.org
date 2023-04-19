@@ -19,6 +19,7 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-sections.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-themes.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-preview.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-json.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-automation.php';
 
 // REST Includes.
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-delete.php';
@@ -47,7 +48,7 @@ class Admin_Apple_News extends Apple_News {
 	 */
 	public function __construct() {
 		// Register hooks.
-		add_action( 'admin_print_styles-toplevel_page_apple_news_index', array( $this, 'plugin_styles' ) );
+		add_action( 'admin_print_styles-toplevel_page_apple_news_index', [ $this, 'plugin_styles' ] );
 
 		/**
 		 * Admin_Settings builds the settings page for the plugin. Besides setting
@@ -89,54 +90,57 @@ class Admin_Apple_News extends Apple_News {
 		// Add JSON customization support.
 		new Admin_Apple_JSON();
 
+		// Add automation support.
+		Apple_News\Admin\Automation::init();
+
 		// Enhancements if the block editor is available.
 		if ( apple_news_block_editor_is_active() ) {
 			$post_types = self::$settings->post_types;
 
 			// Define custom postmeta fields to register.
 			$postmeta = [
-				'apple_news_api_created_at'     => [
+				'apple_news_api_created_at'      => [
 					'default' => '',
 				],
-				'apple_news_api_id'             => [
+				'apple_news_api_id'              => [
 					'default' => '',
 				],
-				'apple_news_api_modified_at'    => [
+				'apple_news_api_modified_at'     => [
 					'default' => '',
 				],
-				'apple_news_api_revision'       => [
+				'apple_news_api_revision'        => [
 					'default' => '',
 				],
-				'apple_news_api_share_url'      => [
+				'apple_news_api_share_url'       => [
 					'default' => '',
 				],
-				'apple_news_coverimage'         => [
+				'apple_news_coverimage'          => [
 					'default' => 0,
 					'type'    => 'integer',
 				],
-				'apple_news_coverimage_caption' => [
+				'apple_news_coverimage_caption'  => [
 					'default' => '',
 				],
-				'apple_news_is_hidden'          => [
+				'apple_news_is_hidden'           => [
 					'default' => false,
 					'type'    => 'boolean',
 				],
-				'apple_news_is_paid'            => [
+				'apple_news_is_paid'             => [
 					'default' => false,
 					'type'    => 'boolean',
 				],
-				'apple_news_is_preview'         => [
+				'apple_news_is_preview'          => [
 					'default' => false,
 					'type'    => 'boolean',
 				],
-				'apple_news_is_sponsored'       => [
+				'apple_news_is_sponsored'        => [
 					'default' => false,
 					'type'    => 'boolean',
 				],
-				'apple_news_maturity_rating'    => [
+				'apple_news_maturity_rating'     => [
 					'default' => '',
 				],
-				'apple_news_metadata'           => [
+				'apple_news_metadata'            => [
 					'default'           => '',
 					'sanitize_callback' => function ( $value ) {
 						return ! empty( $value ) && is_string( $value ) ? json_decode( $value, true ) : $value;
@@ -145,21 +149,29 @@ class Admin_Apple_News extends Apple_News {
 						'prepare_callback' => 'apple_news_json_encode',
 					],
 				],
-				'apple_news_pullquote'          => [
+				'apple_news_pullquote'           => [
 					'default' => '',
 				],
-				'apple_news_pullquote_position' => [
+				'apple_news_pullquote_position'  => [
 					'default' => '',
 				],
-				'apple_news_slug'               => [
+				'apple_news_slug'                => [
 					'default' => '',
 				],
-				'apple_news_sections'           => [
+				'apple_news_sections'            => [
 					'default'           => '',
 					'sanitize_callback' => 'apple_news_sanitize_selected_sections',
 					'show_in_rest'      => [
 						'prepare_callback' => 'apple_news_json_encode',
 					],
+				],
+				'apple_news_suppress_video_url'  => [
+					'default' => false,
+					'type'    => 'boolean',
+				],
+				'apple_news_use_image_component' => [
+					'default' => false,
+					'type'    => 'boolean',
 				],
 			];
 
@@ -167,6 +179,21 @@ class Admin_Apple_News extends Apple_News {
 			foreach ( $postmeta as $meta_key => $options ) {
 				apple_news_register_meta_helper( 'post', $post_types, $meta_key, $options );
 			}
+
+			// Prevent Yoast Duplicate Post plugin from cloning apple_news meta.
+			add_filter(
+				'duplicate_post_meta_keys_filter',
+				function( $meta_keys ) {
+					return is_array( $meta_keys ) ?
+					array_filter(
+						$meta_keys,
+						function( $key ) {
+							return substr( $key, 0, 11 ) !== 'apple_news_';
+						}
+					)
+					: $meta_keys;
+				} 
+			);
 
 			add_action(
 				'rest_api_init',
@@ -190,7 +217,9 @@ class Admin_Apple_News extends Apple_News {
 				foreach ( self::$settings->post_types as $post_type ) {
 					add_action(
 						'rest_insert_' . $post_type,
-						array( $this, 'action_rest_insert_post' )
+						[ $this, 'action_rest_insert_post' ],
+						10,
+						2
 					);
 				}
 			}
@@ -217,17 +246,13 @@ class Admin_Apple_News extends Apple_News {
 
 	/**
 	 * A callback function for the rest_insert_{$this->post_type} action hook.
+	 *
+	 * @param WP_Post         $post    Inserted or updated post object.
+	 * @param WP_REST_Request $request Request object.
 	 */
-	public function action_rest_insert_post() {
-		global $wp_rest_server;
-
-		// Ensure there is a last request. (There should be, at this point).
-		if ( empty( $wp_rest_server->last_request ) ) {
-			return;
-		}
-
+	public function action_rest_insert_post( $post, $request ) {
 		// Try to get the meta param.
-		$meta = $wp_rest_server->last_request->get_param( 'meta' );
+		$meta = $request->get_param( 'meta' );
 		if ( empty( $meta ) || ! is_array( $meta ) ) {
 			return;
 		}
@@ -241,7 +266,7 @@ class Admin_Apple_News extends Apple_News {
 		}
 
 		// Overwrite the meta property with the new value.
-		$wp_rest_server->last_request->set_param( 'meta', $new_meta );
+		$request->set_param( 'meta', $new_meta );
 	}
 
 	/**

@@ -60,104 +60,104 @@ class Image extends Component {
 		$this->register_spec(
 			'json-without-caption',
 			__( 'JSON without caption', 'apple-news' ),
-			array(
-				'role'   => 'photo',
+			[
+				'role'   => '#role#',
 				'URL'    => '#url#',
 				'layout' => '#layout#',
-			)
+			]
 		);
 
-		$conditional = array();
+		$conditional = [];
 		if ( ! empty( $theme->get_value( 'caption_color_dark' ) ) ) {
-			$conditional = array(
-				'conditional' => array(
+			$conditional = [
+				'conditional' => [
 					'textColor'  => '#caption_color_dark#',
-					'conditions' => array(
+					'conditions' => [
 						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
-					),
-				),
-			);
+					],
+				],
+			];
 		}
 
 		$this->register_spec(
 			'json-with-caption',
 			__( 'JSON with caption', 'apple-news' ),
-			array(
+			[
 				'role'       => 'container',
-				'components' => array(
-					array(
-						'role'    => 'photo',
+				'components' => [
+					[
+						'role'    => '#role#',
 						'URL'     => '#url#',
 						'layout'  => '#layout#',
-						'caption' => array(
+						'caption' => [
 							'format'    => 'html',
 							'text'      => '#caption#',
-							'textStyle' => array(
+							'textStyle' => [
 								'fontName' => '#caption_font#',
-							),
-						),
-					),
-					array(
+							],
+						],
+					],
+					[
 						'role'      => 'caption',
 						'text'      => '#caption_text#',
 						'format'    => 'html',
 						'textStyle' => array_merge(
-							array(
+							[
 								'textAlignment' => '#text_alignment#',
 								'fontName'      => '#caption_font#',
 								'fontSize'      => '#caption_size#',
 								'tracking'      => '#caption_tracking#',
 								'lineHeight'    => '#caption_line_height#',
 								'textColor'     => '#caption_color#',
-							),
+							],
 							$conditional
 						),
-						'layout'    => array(
+						'layout'    => [
 							'ignoreDocumentMargin' => '#full_bleed_images#',
-						),
-					),
-				),
-				'layout'     => array(
+						],
+					],
+				],
+				'layout'     => [
 					'ignoreDocumentMargin' => '#full_bleed_images#',
-				),
-			)
+				],
+			]
 		);
 
 		$this->register_spec(
 			'anchored-image',
 			__( 'Anchored Layout', 'apple-news' ),
-			array(
-				'margin' => array(
+			[
+				'margin' => [
 					'bottom' => 25,
 					'top'    => 25,
-				),
-			)
+				],
+			]
 		);
 
 		$this->register_spec(
 			'non-anchored-image',
 			__( 'Non Anchored Layout', 'apple-news' ),
-			array(
-				'margin'      => array(
+			[
+				'margin'      => [
 					'bottom' => 25,
 					'top'    => 25,
-				),
+				],
 				'columnSpan'  => '#layout_columns_minus_4#',
 				'columnStart' => 2,
-			)
+			]
 		);
 
 		$this->register_spec(
 			'non-anchored-full-bleed-image',
 			__( 'Non Anchored with Full Bleed Images Layout', 'apple-news' ),
-			array(
-				'margin'               => array(
+			[
+				'margin'               => [
 					'bottom' => 25,
 					'top'    => 25,
-				),
+				],
 				'ignoreDocumentMargin' => true,
-			)
+			]
 		);
 	}
 
@@ -189,9 +189,13 @@ class Image extends Component {
 
 		// Add the URL as a parameter for replacement.
 		$filename = preg_replace( '/\\?.*/', '', \Apple_News::get_filename( $url ) );
-		$values   = array(
+		$values   = [
 			'#url#' => $this->maybe_bundle_source( $url, $filename ),
-		);
+		];
+
+		// Use postmeta to determine if component role should be registered as 'image' or 'photo'.
+		$use_image        = get_post_meta( $this->workspace->content_id, 'apple_news_use_image_component', true );
+		$values['#role#'] = $use_image ? 'image' : 'photo';
 
 		// Determine image alignment.
 		if ( false !== stripos( $html, 'align="left"' )
@@ -210,10 +214,10 @@ class Image extends Component {
 		$caption_regex = $is_cover_block ? '#<div.*?>?\n(.*)#m' : '#<figcaption.*?>(.*?)</figcaption>#ms';
 		if ( preg_match( $caption_regex, $html, $matches ) ) {
 			$caption                  = trim( $matches[1] );
-			$values['#caption#']      = ! $is_cover_block ? $caption : array(
+			$values['#caption#']      = ! $is_cover_block ? $caption : [
 				'text'   => $caption,
 				'format' => 'html',
-			);
+			];
 			$values['#caption_text#'] = $caption;
 			$values                   = $this->group_component( $values['#caption#'], $values );
 			$spec_name                = 'json-with-caption';
@@ -266,7 +270,7 @@ class Image extends Component {
 		$theme = \Apple_Exporter\Theme::get_used();
 
 		// Set values to merge into the spec.
-		$layout_values = array();
+		$layout_values = [];
 
 		if ( 'yes' === $this->get_setting( 'full_bleed_images' ) ) {
 			$spec_name = 'non-anchored-full-bleed-image';
@@ -330,7 +334,7 @@ class Image extends Component {
 		// Roll up the image component into a container.
 		$values = array_merge(
 			$values,
-			array(
+			[
 				'#caption#'             => $caption,
 				'#text_alignment#'      => $this->find_caption_alignment(),
 				'#caption_font#'        => $theme->get_value( 'caption_font' ),
@@ -340,7 +344,7 @@ class Image extends Component {
 				'#caption_color#'       => $theme->get_value( 'caption_color' ),
 				'#caption_color_dark#'  => $theme->get_value( 'caption_color_dark' ),
 				'#full_bleed_images#'   => ( 'yes' === $this->get_setting( 'full_bleed_images' ) ),
-			)
+			]
 		);
 
 		return $values;

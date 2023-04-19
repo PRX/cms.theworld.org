@@ -40,53 +40,62 @@ class Link_Button extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
+			[
 				'role'      => 'link_button',
 				'text'      => '#text#',
 				'URL'       => '#url#',
 				'style'     => 'default-link-button',
 				'layout'    => 'link-button-layout',
 				'textStyle' => 'default-link-button-text-style',
-			)
+			]
 		);
 
 		// Register the JSON for the link button layout.
 		$this->register_spec(
 			'link-button-layout',
 			__( 'Button Layout', 'apple-news' ),
-			array(
-				'margin'  => array(
-					'bottom' => 20,
-				),
-				'padding' => array(
-					'top'    => 10,
-					'bottom' => 10,
+			[
+				'horizontalContentAlignment' => '#button_horizontal_alignment#',
+				'padding'                    => [
+					'top'    => 15,
+					'bottom' => 15,
 					'left'   => 15,
 					'right'  => 15,
-				),
-			)
+				],
+			]
 		);
 
 		// Register the JSON for the link button style.
 		$this->register_spec(
 			'default-link-button',
 			__( 'Link Button Style', 'apple-news' ),
-			array(
-				'backgroundColor' => '#DDD',
-				'mask'            => array(
+			[
+				'backgroundColor' => '#button_background_color#',
+				'border'          => [
+					'all' => [
+						'width' => '#button_border_width#',
+						'color' => '#button_border_color#',
+					],
+				],
+				'mask'            => [
 					'type'   => 'corners',
-					'radius' => 25,
-				),
-			)
+					'radius' => '#button_border_radius#',
+				],
+			]
 		);
 
 		// Register the JSON for the link button text style.
 		$this->register_spec(
 			'default-link-button-text-style',
 			__( 'Link Button Text Style', 'apple-news' ),
-			array(
-				'textColor' => '#000',
-			)
+			[
+				'fontName'      => '#button_font_face#',
+				'fontSize'      => '#button_font_size#',
+				'hyphenation'   => false,
+				'lineHeight'    => 18,
+				'textAlignment' => 'center',
+				'textColor'     => '#button_text_color#',
+			]
 		);
 	}
 
@@ -111,29 +120,68 @@ class Link_Button extends Component {
 			// Register JSON for this component.
 			$this->register_json(
 				'json',
-				array(
+				[
 					'#url#'  => $url,
 					'#text#' => $link_button_match[2],
-				)
+				]
 			);
 		} else {
 			// If, for some reason, the match failed, bail out.
 			return;
 		}
 
-		// Register the layout for the link button.
-		$this->register_layout( 'link-button-layout', 'link-button-layout' );
+		// Get information about the currently loaded theme.
+		$theme = \Apple_Exporter\Theme::get_used();
 
-		// Register the style for the link button.
+		$this->set_default_style( $theme );
+		$this->set_default_layout( $theme );
+	}
+
+	/**
+	 * Set the default style for the component.
+	 *
+	 * @param \Apple_Exporter\Theme $theme The currently loaded theme.
+	 */
+	private function set_default_style( $theme ) {
+		// Register component styles.
 		$this->register_component_style(
 			'default-link-button',
-			'default-link-button'
+			'default-link-button',
+			[
+				'#button_background_color#' => $theme->get_value( 'button_background_color' ),
+				'#button_border_color#'     => $theme->get_value( 'button_border_color' ),
+				'#button_border_radius#'    => (int) $theme->get_value( 'button_border_radius' ),
+				'#button_border_width#'     => (int) $theme->get_value( 'button_border_width' ),
+			]
 		);
 
-		// Register the style for the link button text.
+		// Register text styles.
 		$this->register_style(
 			'default-link-button-text-style',
-			'default-link-button-text-style'
+			'default-link-button-text-style',
+			[
+				'#button_font_face#'  => $theme->get_value( 'button_font_face' ),
+				'#button_font_size#'  => (int) $theme->get_value( 'button_font_size' ),
+				'#button_text_color#' => $theme->get_value( 'button_text_color' ),
+			],
+			'textStyle'
+		);
+	}
+
+	/**
+	 * Set the default layout for the component.
+	 *
+	 * @param \Apple_Exporter\Theme $theme The currently loaded theme.
+	 */
+	private function set_default_layout( $theme ) {
+		// Register layout styles.
+		$this->register_layout(
+			'link-button-layout',
+			'link-button-layout',
+			[
+				'#button_horizontal_alignment#' => $theme->get_value( 'button_horizontal_alignment' ),
+			],
+			'layout'
 		);
 	}
 }

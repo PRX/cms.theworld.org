@@ -87,7 +87,7 @@ class Push extends API_Action {
 			// Track this publish event as pending with the timestamp it was sent.
 			update_post_meta( $this->id, 'apple_news_api_pending', time() );
 
-			wp_schedule_single_event( time(), \Admin_Apple_Async::ASYNC_PUSH_HOOK, array( $this->id, get_current_user_id() ) );
+			wp_schedule_single_event( time(), \Admin_Apple_Async::ASYNC_PUSH_HOOK, [ $this->id, get_current_user_id() ] );
 		} else {
 			return $this->push( $user_id );
 		}
@@ -306,7 +306,7 @@ class Push extends API_Action {
 		if ( ! empty( $bundles ) && is_array( $bundles ) ) {
 			$bundles = array_map( 'esc_url_raw', $bundles );
 		} else {
-			$bundles = array();
+			$bundles = [];
 		}
 
 		// If there's an API ID, update, otherwise create.
@@ -321,14 +321,14 @@ class Push extends API_Action {
 		do_action( 'apple_news_before_push', $this->id );
 
 		// Populate optional metadata.
-		$meta = array(
-			'data' => array(),
-		);
+		$meta = [
+			'data' => [],
+		];
 
 		// Set sections.
 		if ( ! empty( $this->sections ) ) {
 			sort( $this->sections );
-			$meta['data']['links'] = array( 'sections' => $this->sections );
+			$meta['data']['links'] = [ 'sections' => $this->sections ];
 		}
 
 		// Get the isPreview setting.
@@ -377,6 +377,16 @@ class Push extends API_Action {
 				$meta['data'][ $metadata['key'] ] = $value;
 			}
 		}
+
+		/**
+		 * Allow article metadata to be filtered.
+		 *
+		 * @since 2.4.0
+		 *
+		 * @param array $metadata The article metadata to be filtered.
+		 * @param int   $post_id  The ID of the post being pushed to Apple News.
+		 */
+		$meta['data'] = apply_filters( 'apple_news_article_metadata', $meta['data'], $this->id );
 
 		// Ignore if the post is already in sync.
 		if ( $this->is_post_in_sync( $json, $meta, $bundles ) ) {
@@ -560,7 +570,7 @@ class Push extends API_Action {
 		$this->exporter->generate();
 		Export::set_exporting( false );
 
-		return array( $this->exporter->get_json(), $this->exporter->get_bundles(), $this->exporter->get_errors() );
+		return [ $this->exporter->get_json(), $this->exporter->get_bundles(), $this->exporter->get_errors() ];
 	}
 
 	/**

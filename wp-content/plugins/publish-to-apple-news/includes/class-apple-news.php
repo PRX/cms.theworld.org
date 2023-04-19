@@ -46,7 +46,7 @@ class Apple_News {
 	 * @var string
 	 * @access public
 	 */
-	public static $version = '2.3.3';
+	public static $version = '2.4.0';
 
 	/**
 	 * Link to support for the plugin on WordPress.org.
@@ -86,11 +86,11 @@ class Apple_News {
 	 * @var array
 	 * @access private
 	 */
-	private $contexts = array(
+	private $contexts = [
 		'post.php',
 		'post-new.php',
 		'toplevel_page_apple_news_index',
-	);
+	];
 
 	/**
 	 * Maturity ratings.
@@ -98,7 +98,7 @@ class Apple_News {
 	 * @var array
 	 * @access public
 	 */
-	public static $maturity_ratings = array( 'KIDS', 'MATURE', 'GENERAL' );
+	public static $maturity_ratings = [ 'KIDS', 'MATURE', 'GENERAL' ];
 
 	/**
 	 * A helper function for getting authors for a post, which supports native
@@ -410,7 +410,7 @@ class Apple_News {
 		wp_enqueue_script(
 			$this->plugin_slug . '_cover_image_js',
 			plugin_dir_url( __FILE__ ) . '../assets/js/cover-image.js',
-			array( 'jquery' ),
+			[ 'jquery' ],
 			self::$version,
 			true
 		);
@@ -485,6 +485,11 @@ class Apple_News {
 			if ( version_compare( $current_version, '1.4.0', '<' ) ) {
 				$this->upgrade_to_1_4_0();
 			}
+
+			// Handle upgrade to version 2.4.0.
+			if ( version_compare( $current_version, '2.4.0', '<' ) ) {
+				$this->upgrade_to_2_4_0();
+			}
 		}
 
 		// Ensure the default themes are created.
@@ -510,8 +515,8 @@ class Apple_News {
 		// Build the theme formatting settings from the base settings array.
 		$theme          = new \Apple_Exporter\Theme();
 		$options        = \Apple_Exporter\Theme::get_options();
-		$wp_settings    = get_option( self::$option_name, array() );
-		$theme_settings = array();
+		$wp_settings    = get_option( self::$option_name, [] );
+		$theme_settings = [];
 		foreach ( array_keys( $options ) as $option_key ) {
 			if ( isset( $wp_settings[ $option_key ] ) ) {
 				$theme_settings[ $option_key ] = $wp_settings[ $option_key ];
@@ -644,7 +649,7 @@ class Apple_News {
 		$wp_settings = get_option( self::$option_name );
 		if ( $this->all_keys_exist(
 			$wp_settings,
-			array(
+			[
 				'blockquote_background_color',
 				'blockquote_border_color',
 				'blockquote_border_style',
@@ -654,7 +659,7 @@ class Apple_News {
 				'blockquote_line_height',
 				'blockquote_size',
 				'blockquote_tracking',
-			)
+			]
 		) ) {
 			return;
 		}
@@ -694,7 +699,7 @@ class Apple_News {
 		// Clone settings, as necessary.
 		$wp_settings = $this->clone_settings(
 			$wp_settings,
-			array(
+			[
 				'blockquote_border_color' => 'pullquote_border_color',
 				'blockquote_border_style' => 'pullquote_border_style',
 				'blockquote_border_width' => 'pullquote_border_width',
@@ -703,7 +708,7 @@ class Apple_News {
 				'blockquote_line_height'  => 'body_line_height',
 				'blockquote_size'         => 'body_size',
 				'blockquote_tracking'     => 'body_tracking',
-			)
+			]
 		);
 
 		// Store the updated option to save the new setting names.
@@ -721,13 +726,13 @@ class Apple_News {
 		$wp_settings = get_option( self::$option_name );
 		if ( $this->all_keys_exist(
 			$wp_settings,
-			array(
+			[
 				'caption_color',
 				'caption_font',
 				'caption_line_height',
 				'caption_size',
 				'caption_tracking',
-			)
+			]
 		) ) {
 			return;
 		}
@@ -743,12 +748,12 @@ class Apple_News {
 		// Clone settings, as necessary.
 		$wp_settings = $this->clone_settings(
 			$wp_settings,
-			array(
+			[
 				'caption_color'       => 'body_color',
 				'caption_font'        => 'body_font',
 				'caption_line_height' => 'body_line_height',
 				'caption_tracking'    => 'body_tracking',
-			)
+			]
 		);
 
 		// Store the updated option to save the new setting names.
@@ -771,7 +776,7 @@ class Apple_News {
 		$components = $component_factory::get_components();
 
 		// Iterate over components and look for customized JSON for each.
-		$json_templates = array();
+		$json_templates = [];
 		foreach ( $components as $component_class ) {
 
 			// Negotiate the component key.
@@ -833,7 +838,7 @@ class Apple_News {
 		// Clone settings, as necessary.
 		$wp_settings = $this->clone_settings(
 			$wp_settings,
-			array(
+			[
 				'header1_color'       => 'header_color',
 				'header2_color'       => 'header_color',
 				'header3_color'       => 'header_color',
@@ -852,7 +857,7 @@ class Apple_News {
 				'header4_line_height' => 'header_line_height',
 				'header5_line_height' => 'header_line_height',
 				'header6_line_height' => 'header_line_height',
-			)
+			]
 		);
 
 		// Remove legacy settings.
@@ -882,7 +887,7 @@ class Apple_News {
 		// If it doesn't exist, just use the default value.
 		$settings          = new \Apple_Exporter\Settings();
 		$all_settings      = $settings->all();
-		$migrated_settings = array();
+		$migrated_settings = [];
 		foreach ( $all_settings as $key => $default ) {
 			$value                     = get_option( $key, $default );
 			$migrated_settings[ $key ] = $value;
@@ -904,7 +909,7 @@ class Apple_News {
 
 		// Loop through formatting settings and remove them from saved settings.
 		$formatting_settings = array_keys( \Apple_Exporter\Theme::get_options() );
-		$wp_settings         = get_option( self::$option_name, array() );
+		$wp_settings         = get_option( self::$option_name, [] );
 		foreach ( $formatting_settings as $setting_key ) {
 			if ( isset( $wp_settings[ $setting_key ] ) ) {
 				unset( $wp_settings[ $setting_key ] );
@@ -929,7 +934,7 @@ class Apple_News {
 		$theme->load();
 
 		// Establish mapping between old settings and new.
-		$settings_map = array(
+		$settings_map = [
 			'table_border_color'            => 'blockquote_border_color',
 			'table_border_style'            => 'blockquote_border_style',
 			'table_body_background_color'   => 'body_background_color',
@@ -944,7 +949,7 @@ class Apple_News {
 			'table_header_line_height'      => 'blockquote_line_height',
 			'table_header_size'             => 'blockquote_size',
 			'table_header_tracking'         => 'blockquote_tracking',
-		);
+		];
 
 		// Set the new values based on the old.
 		foreach ( $settings_map as $table_setting => $reference_setting ) {
@@ -1007,6 +1012,84 @@ class Apple_News {
 	}
 
 	/**
+	 * Upgrades settings and data formats to be compatible with version 2.4.0.
+	 */
+	public function upgrade_to_2_4_0() {
+		// Update author and byline theme formats to new convention.
+		$registry = \Apple_Exporter\Theme::get_registry();
+
+		foreach ( $registry as $theme_name ) {
+			$theme_object = Admin_Apple_Themes::get_theme_by_name( $theme_name );
+			$save_theme   = false;
+
+			// Update author_format.
+			if ( 'by #author#' === $theme_object->get_value( 'author_format' ) ) {
+				$theme_object->set_value( 'author_format', 'By #author#' );
+				$save_theme = true;
+			}
+			// Update byline_format.
+			if ( 'by #author# | #M j, Y | g:i A#' === $theme_object->get_value( 'byline_format' ) ) {
+				$theme_object->set_value( 'byline_format', 'By #author# | #M j, Y | g:i A#' );
+				$save_theme = true;
+			}
+			// If theme options have changed, write to db.
+			if ( $save_theme ) {
+				$theme_object->save();
+			}
+		}
+
+		$automation = [];
+
+		// Get legacy settings, if they exist.
+		$priority_mappings = get_option( 'apple_news_section_priority_mappings', [] );
+		$taxonomy_mappings = get_option( 'apple_news_section_taxonomy_mappings', [] );
+		$theme_mappings    = get_option( 'apple_news_section_theme_mappings', [] );
+		$mapping_taxonomy  = apply_filters( 'apple_news_section_taxonomy', 'category' );
+
+		// Get an ordered list of sections.
+		$sections = [];
+		if ( ! empty( $priority_mappings ) ) {
+			arsort( $priority_mappings );
+			$sections = array_keys( $priority_mappings );
+		} elseif ( ! empty( $taxonomy_mappings ) ) {
+			$sections = array_keys( $taxonomy_mappings );
+		} elseif ( ! empty( $theme_mappings ) ) {
+			$sections = array_keys( $theme_mappings );
+		} else {
+			return;
+		}
+
+		// Loop through sections, in priority order, and convert settings to Automation.
+		foreach ( $sections as $section_id ) {
+			foreach ( $taxonomy_mappings[ $section_id ] ?? [] as $term_id ) {
+				// Add the mapping for this term ID to the section ID.
+				$automation[] = [
+					'field'    => 'links.sections',
+					'taxonomy' => $mapping_taxonomy,
+					'term_id'  => $term_id,
+					'value'    => $section_id,
+				];
+
+				// Apply theme mapping, if set.
+				if ( ! empty( $theme_mappings[ $section_id ] ) ) {
+					$automation[] = [
+						'field'    => 'theme',
+						'taxonomy' => $mapping_taxonomy,
+						'term_id'  => $term_id,
+						'value'    => $theme_mappings[ $section_id ],
+					];
+				}
+			}
+		}
+
+		// Update Automation settings.
+		update_option( Apple_News\Admin\Automation::OPTION_KEY, $automation );
+		delete_option( 'apple_news_section_priority_mappings' );
+		delete_option( 'apple_news_section_taxonomy_mappings' );
+		delete_option( 'apple_news_section_theme_mappings' );
+	}
+
+	/**
 	 * Load example themes into the theme list.
 	 *
 	 * @access protected
@@ -1014,14 +1097,14 @@ class Apple_News {
 	protected function load_example_themes() {
 
 		// Set configuration for example themes.
-		$example_themes = array(
+		$example_themes = [
 			'classic'  => __( 'Classic', 'apple-news' ),
 			'colorful' => __( 'Colorful', 'apple-news' ),
 			'dark'     => __( 'Dark', 'apple-news' ),
 			'default'  => __( 'Default', 'apple-news' ),
 			'modern'   => __( 'Modern', 'apple-news' ),
 			'pastel'   => __( 'Pastel', 'apple-news' ),
-		);
+		];
 
 		// Loop over example theme configuration and load each.
 		foreach ( $example_themes as $slug => $name ) {
