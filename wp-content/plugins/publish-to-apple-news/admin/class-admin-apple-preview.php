@@ -18,7 +18,7 @@ class Admin_Apple_Preview extends Apple_News {
 	 * @access public
 	 */
 	public function __construct() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ] );
 	}
 
 	/**
@@ -89,7 +89,7 @@ class Admin_Apple_Preview extends Apple_News {
 			// Adds preview-only support for the unified (legacy) byline (would otherwise not display).
 			$meta_component_order = array_merge( $theme->get_value( 'meta_component_order' ), [ 'byline' ] );
 			if ( ! is_array( $meta_component_order ) ) {
-				$meta_component_order = array();
+				$meta_component_order = [];
 			}
 			foreach ( $meta_component_order as $component ) {
 				if ( isset( $$component ) ) {
@@ -115,6 +115,10 @@ class Admin_Apple_Preview extends Apple_News {
 			);
 			?>
 			<p>Maecenas tortor dui, pellentesque ac ullamcorper quis, malesuada sit amet turpis. Nunc in tellus et justo dapibus sollicitudin.</p>
+			<div class="apple-news-button-wrapper">
+				<button class="apple-news-link-button" type="button">Link Button</button>
+			</div>
+			<p>Odio euismod lacinia at quis risus. Leo vel orci porta non pulvinar. Malesuada fames ac turpis egestas integer eget aliquet.</p>
 			<h2>Quisque efficitur</h2>
 			<p>Quisque efficitur sit amet ex et venenatis. Morbi nisi nisi, ornare id iaculis eget, pulvinar ac dolor.</p>
 			<blockquote>Blockquote lorem ipsum dolor sit amet, efficitur sit amet aliquet id, aliquam placerat turpis.</blockquote>
@@ -174,7 +178,7 @@ class Admin_Apple_Preview extends Apple_News {
 		wp_enqueue_style(
 			'apple-news-preview-css',
 			plugin_dir_url( __FILE__ ) . '../assets/css/preview.css',
-			array(),
+			[],
 			self::$version
 		);
 
@@ -182,7 +186,7 @@ class Admin_Apple_Preview extends Apple_News {
 		wp_enqueue_script(
 			'apple-news-preview-js',
 			plugin_dir_url( __FILE__ ) . '../assets/js/preview.js',
-			array( 'jquery' ),
+			[ 'jquery' ],
 			self::$version,
 			false
 		);

@@ -118,12 +118,23 @@ function render_block( $attrs ) {
 	// phpcs:enable
 	ob_start();
 	?>
-	<div class="newspack-newsletters-subscribe <?php echo esc_attr( get_block_classes( $attrs ) ); ?>">
+	<div
+		class="newspack-newsletters-subscribe <?php echo esc_attr( get_block_classes( $attrs ) ); ?>"
+		data-success-message="<?php echo \esc_attr( $attrs['successMessage'] ); ?>"
+	>
 		<?php if ( $subscribed ) : ?>
-			<p class="message"><?php echo \esc_html( $message ); ?></p>
+			<p class="message"><?php echo \esc_html( $attrs['successMessage'] ); ?></p>
 		<?php else : ?>
 			<form id="<?php echo esc_attr( get_form_id() ); ?>">
 				<?php \wp_nonce_field( FORM_ACTION, FORM_ACTION ); ?>
+				<?php
+				/**
+				 * Action to add custom fields before the form fields of the Newsletter Subscription block.
+				 *
+				 * @param array $attrs Block attributes.
+				 */
+				do_action( 'newspack_newsletters_subscribe_block_before_form_fields', $attrs );
+				?>
 				<?php if ( 1 < count( $available_lists ) ) : ?>
 					<div class="newspack-newsletters-lists">
 						<ul>
@@ -239,27 +250,32 @@ function get_block_classes( $attrs = [] ) {
 function send_form_response( $data ) {
 	$is_error = \is_wp_error( $data );
 	if ( \wp_is_json_request() ) {
-		if ( ! $is_error ) {
-			$message = __( 'Thank you for subscribing!', 'newspack' );
-		} else {
+		if ( $is_error ) {
 			$message = $data->get_error_message();
+			\wp_send_json( compact( 'message', 'data' ), 400 );
+			exit;
+		} else {
+			$data['newspack_newsletters_subscribed'] = 1;
+			\wp_send_json( $data, 200 );
+			exit;
 		}
-		\wp_send_json( compact( 'message', 'data' ), \is_wp_error( $data ) ? 400 : 200 );
-		exit;
 	} elseif ( isset( $_SERVER['REQUEST_METHOD'] ) && 'GET' === $_SERVER['REQUEST_METHOD'] ) {
 		$args_to_remove = [
 			'_wp_http_referer',
 			FORM_ACTION,
 		];
-		if ( ! $is_error ) {
+
+		$args = [ 'newspack_newsletters_subscribed' => $is_error ? '0' : '1' ];
+
+		if ( $is_error ) {
+			$args['message'] = $data->get_error_code();
+		} else {
 			$args_to_remove = array_merge( $args_to_remove, [ 'email', 'lists' ] );
 		}
+
 		\wp_safe_redirect(
 			\add_query_arg(
-				[
-					'newspack_newsletters_subscribed' => $is_error ? '0' : '1',
-					'message'                         => $is_error ? $data->get_error_message() : __( 'Thank you for subscribing!', 'newspack' ),
-				],
+				$args,
 				\remove_query_arg( $args_to_remove )
 			)
 		);
@@ -308,29 +324,38 @@ function process_form() {
 	);
 	$email     = \sanitize_email( $_REQUEST['npe'] );
 	$lists     = array_map( 'sanitize_text_field', $_REQUEST['lists'] );
+	$popup_id  = isset( $_REQUEST['newspack_popup_id'] ) ? (int) $_REQUEST['newspack_popup_id'] : false;
+	$metadata  = [
+		'current_page_url'                => home_url( add_query_arg( array(), \wp_get_referer() ) ),
+		'newspack_popup_id'               => $popup_id,
+		'newsletters_subscription_method' => 'newsletters-subscription-block',
+	];
 
 	$result = \Newspack_Newsletters_Subscription::add_contact(
 		[
 			'name'     => $name ?? null,
 			'email'    => $email,
-			'metadata' => [
-				'current_page_url' => home_url( add_query_arg( array(), \wp_get_referer() ) ),
-			],
+			'metadata' => $metadata,
 		],
 		$lists
 	);
 
 	if ( ! \is_user_logged_in() && \class_exists( '\Newspack\Reader_Activation' ) && \Newspack\Reader_Activation::is_enabled() ) {
-		\Newspack\Reader_Activation::register_reader( $email, $name );
+		$metadata = array_merge( $metadata, [ 'registration_method' => 'newsletters-subscription' ] );
+		if ( $popup_id ) {
+			$metadata['registration_method'] = 'newsletters-subscription-popup';
+		}
+		\Newspack\Reader_Activation::register_reader( $email, $name, true, $metadata );
 	}
 
 	/**
 	 * Fires after subscribing a user to a list.
 	 *
 	 * @param string         $email  Email address of the reader.
-	 * @return array|WP_Error Contact data if it was added, or error otherwise.
+	 * @param array|WP_Error $result Contact data if it was added, or error otherwise.
+	 * @param array          $metadata Some metadata about the subscription. Always contains `current_page_url`, `newspack_popup_id` and `newsletters_subscription_method` keys.
 	 */
-	\do_action( 'newspack_newsletters_subscribe_form_processed', $email, $result );
+	\do_action( 'newspack_newsletters_subscribe_form_processed', $email, $result, $metadata );
 
 	return send_form_response( $result );
 }

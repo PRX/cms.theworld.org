@@ -2,7 +2,7 @@
 Contributors: gsayed786
 Tags: headless-cms, decoupled, graphql
 Requires at least: 4.6
-Tested up to: 6.0.1
+Tested up to: 6.1.0
 Stable tag: 4.9.2
 Requires PHP: 5.2.4
 License: GPLv2 or later
@@ -22,7 +22,7 @@ This plugin provides multiple features and you can use the one's that is relevan
 3. Image uploads for categories.
 4. Custom header and footer menus.
 5. Custom Widgets.
-6. Custom Header, Footer, Schema GraphQL fields when using [wp-graphql](https://github.com/wp-graphql/wp-graphql) plugin
+6. Custom Header and Footer GraphQL fields when using [wp-graphql](https://github.com/wp-graphql/wp-graphql) plugin
 
 == Feature Details ==
 
@@ -73,13 +73,12 @@ This section describes how to install the plugin and get it working.
 
 Please check the demo of an example React front-end application, where this plugin can be used.
 
-[2020-07-02] Demo 1.
+[2020-07-02] Demo.
 
 [youtube https://youtu.be/nYXL1KKjKrc]
 
-[2020-09-29] Demo 2.
-
-[youtube https://youtu.be/ygaE8ZdPEX8]
+Using This plugin with WordPress and GraphQl
+[youtube https://www.youtube.com/playlist?list=PLD8nQCAhR3tQSv-U_LNdiHEViB1kj6LrM]
 
 = Its not working.
 

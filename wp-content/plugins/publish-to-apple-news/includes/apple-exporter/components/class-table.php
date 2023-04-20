@@ -16,6 +16,13 @@ namespace Apple_Exporter\Components;
 class Table extends Component {
 
 	/**
+	 * Whether dark mode table colors exist.
+	 *
+	 * @var boolean
+	 */
+	private $dark_table_colors_exist;
+
+	/**
 	 * Look for node matches for this component.
 	 *
 	 * @param \DOMElement $node The node to examine for matches.
@@ -53,54 +60,6 @@ class Table extends Component {
 		// Get information about the currently loaded theme.
 		$theme = \Apple_Exporter\Theme::get_used();
 
-		// Register the JSON for the table itself.
-		$this->register_spec(
-			'json',
-			__( 'JSON', 'apple-news' ),
-			array(
-				'role'   => 'htmltable',
-				'html'   => '#html#',
-				'layout' => 'table-layout',
-				'style'  => 'default-table',
-			)
-		);
-		$this->register_spec(
-			'json-with-caption-text',
-			__( 'JSON With Caption Text', 'apple-news' ),
-			array(
-				'role'       => 'container',
-				// Table Component.
-				'components' => array(
-					array(
-						'role'   => 'htmltable',
-						'html'   => '#html#',
-						'layout' => 'table-layout',
-						'style'  => 'default-table',
-					),
-					// Caption Component.
-					array(
-						'role'   => 'caption',
-						'text'   => '#caption_text#',
-						'format' => 'html',
-					),
-				),
-			)
-		);
-
-		// Register the JSON for the table layout.
-		$this->register_spec(
-			'table-layout',
-			__( 'Table Layout', 'apple-news' ),
-			array(
-				'margin' => array(
-					'bottom' => '#table_body_line_height#',
-				),
-			)
-		);
-
-		// Register the JSON for the table style.
-		$table_cell_base_conditional    = array();
-		$table_row_col_base_conditional = array();
 		// Get Dark Table Colors.
 		$table_border_color_dark            = $theme->get_value( 'table_border_color_dark' );
 		$table_body_background_color_dark   = $theme->get_value( 'table_body_background_color_dark' );
@@ -108,202 +67,186 @@ class Table extends Component {
 		$table_header_background_color_dark = $theme->get_value( 'table_header_background_color_dark' );
 		$table_header_color_dark            = $theme->get_value( 'table_header_color_dark' );
 
-		// If all are empty, do not add conditional styles.
-		$dark_table_colors_exist =
+		// If all dark table styles are empty, do not add conditional styles.
+		$this->dark_table_colors_exist =
 			! empty( $table_border_color_dark ) ||
 			! empty( $table_body_background_color_dark ) ||
 			! empty( $table_body_color_dark ) ||
 			! empty( $table_header_background_color_dark ) ||
 			! empty( $table_header_color_dark );
-		if ( $dark_table_colors_exist ) {
-			$table_cell_base_conditional    = array(
-				array(
-					'selectors'  => array(
-						array( 'evenRows' => true ),
-						array( 'oddRows' => true ),
-					),
-					'conditions' => array(
+
+		$dark_table_conditional = $this->dark_table_colors_exist ? [
+			'conditional' => [
+				[
+					'style'      => 'dark-table',
+					'conditions' => [
 						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
+					],
+				],
+			],
+		] : [];
+
+		// Register the JSON for the table itself.
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
+			array_merge(
+				[
+					'role'   => 'htmltable',
+					'html'   => '#html#',
+					'layout' => 'table-layout',
+					'style'  => 'default-table',
+				],
+				$dark_table_conditional
+			)
+		);
+		$this->register_spec(
+			'json-with-caption-text',
+			__( 'JSON With Caption Text', 'apple-news' ),
+			[
+				'role'       => 'container',
+				'components' => [
+					// Table Component.
+					array_merge(
+						[
+							'role'   => 'htmltable',
+							'html'   => '#html#',
+							'layout' => 'table-layout',
+							'style'  => 'default-table',
+						],
+						$dark_table_conditional
 					),
-				),
-			);
-			$table_row_col_base_conditional = array(
-				array(
-					'selectors'  => array(
-						array( 'even' => true ),
-						array( 'odd' => true ),
-					),
-					'conditions' => array(
-						'minSpecVersion'       => '1.14',
-						'preferredColorScheme' => 'dark',
-					),
-				),
-			);
-		}
+					// Caption Component.
+					[
+						'role'   => 'caption',
+						'text'   => '#caption_text#',
+						'format' => 'html',
+					],
+				],
+			]
+		);
 
-		// The following block sets:
-		// Dark Background Color of Cells
-		// Dark Text Color of Cells.
-		$dark_bg_text_conditional = array();
-		if (
-			! empty( $table_body_background_color_dark ) ||
-			! empty( $table_body_color_dark )
-		) {
-			$dark_bg_text_conditional = array(
-				'conditional' => array( $table_cell_base_conditional[0] ),
-			);
-		}
+		// Register the JSON for the table layout.
+		$this->register_spec(
+			'table-layout',
+			__( 'Table Layout', 'apple-news' ),
+			[
+				'margin' => [
+					'bottom' => '#table_body_line_height#',
+				],
+			]
+		);
 
-		if ( ! empty( $table_body_background_color_dark ) ) {
-			$dark_bg_text_conditional['conditional'][0]['backgroundColor'] = '#table_body_background_color_dark#';
-		}
-
-		if ( ! empty( $table_body_color_dark ) ) {
-			$dark_bg_text_conditional['conditional'][0]['textStyle'] = array(
-				'textColor' => '#table_body_color_dark#',
-			);
-		}
-
-		// The following block sets:
-		// Dark Header Background Color of Cells
-		// Dark Header Text Color of Cells.
-		$dark_header_bg_text_conditional = array();
-		if (
-			! empty( $table_body_background_color_dark ) ||
-			! empty( $table_body_color_dark )
-		) {
-			$dark_header_bg_text_conditional = array(
-				'conditional' => array( $table_cell_base_conditional[0] ),
-			);
-		}
-
-		if ( ! empty( $table_header_background_color_dark ) ) {
-			$dark_header_bg_text_conditional['conditional'][0]['backgroundColor'] = '#table_header_background_color_dark#';
-		}
-
-		if ( ! empty( $table_header_color_dark ) ) {
-			$dark_header_bg_text_conditional['conditional'][0]['textStyle'] = array(
-				'textColor' => '#table_header_color_dark#',
-			);
-		}
-
-		// Set Dark Border for Columns.
-		$dark_inner_border_conditional = array();
-		if ( ! empty( $table_border_color_dark ) ) {
-			$dark_inner_border_conditional = array(
-				'conditional' => array(
-					$table_row_col_base_conditional[0] + array(
-						'divider' => array(
-							'color' => '#table_border_color_dark#',
-							'style' => '#table_border_style#',
-							'width' => '#table_border_width#',
-						),
-					),
-				),
-			);
-		}
-
-		// Set Dark Outer Border for Table.
-		$dark_outer_border_conditional = array();
-		if ( ! empty( $table_border_color_dark ) ) {
-			$dark_outer_border_conditional = array(
-				'conditional' => array(
-					'border'     => array(
-						'all' => array(
-							'color' => '#table_border_color_dark#',
-							'style' => '#table_border_style#',
-							'width' => '#table_border_width#',
-						),
-					),
-					'conditions' => array(
-						'minSpecVersion'       => '1.14',
-						'preferredColorScheme' => 'dark',
-					),
-				),
-			);
-		}
+		$default_table_styles = [
+			'border'     => [
+				'all' => [
+					'color' => '#table_border_color#',
+					'style' => '#table_border_style#',
+					'width' => '#table_border_width#',
+				],
+			],
+			'tableStyle' => [
+				'cells'       => [
+					'backgroundColor'     => '#table_body_background_color#',
+					'horizontalAlignment' => '#table_body_horizontal_alignment#',
+					'padding'             => '#table_body_padding#',
+					'textStyle'           => [
+						'fontName'   => '#table_body_font#',
+						'fontSize'   => '#table_body_size#',
+						'lineHeight' => '#table_body_line_height#',
+						'textColor'  => '#table_body_color#',
+						'tracking'   => '#table_body_tracking#',
+					],
+					'verticalAlignment'   => '#table_body_vertical_alignment#',
+				],
+				'columns'     => [
+					'divider' => [
+						'color' => '#table_border_color#',
+						'style' => '#table_border_style#',
+						'width' => '#table_border_width#',
+					],
+				],
+				'headerCells' => [
+					'backgroundColor'     => '#table_header_background_color#',
+					'horizontalAlignment' => '#table_header_horizontal_alignment#',
+					'padding'             => '#table_header_padding#',
+					'textStyle'           => [
+						'fontName'   => '#table_header_font#',
+						'fontSize'   => '#table_header_size#',
+						'lineHeight' => '#table_header_line_height#',
+						'textColor'  => '#table_header_color#',
+						'tracking'   => '#table_header_tracking#',
+					],
+					'verticalAlignment'   => '#table_header_vertical_alignment#',
+				],
+				'headerRows'  => [
+					'divider' => [
+						'color' => '#table_border_color#',
+						'style' => '#table_border_style#',
+						'width' => '#table_border_width#',
+					],
+				],
+				'rows'        => [
+					'divider' => [
+						'color' => '#table_border_color#',
+						'style' => '#table_border_style#',
+						'width' => '#table_border_width#',
+					],
+				],
+			],
+		];
 
 		$this->register_spec(
 			'default-table',
 			__( 'Table Style', 'apple-news' ),
-			array_merge(
-				array(
-					'border'     => array(
-						'all' => array(
-							'color' => '#table_border_color#',
-							'style' => '#table_border_style#',
-							'width' => '#table_border_width#',
-						),
-					),
-					'tableStyle' => array(
-						'cells'       => array_merge(
-							array(
-								'backgroundColor'     => '#table_body_background_color#',
-								'horizontalAlignment' => '#table_body_horizontal_alignment#',
-								'padding'             => '#table_body_padding#',
-								'textStyle'           => array(
-									'fontName'   => '#table_body_font#',
-									'fontSize'   => '#table_body_size#',
-									'lineHeight' => '#table_body_line_height#',
-									'textColor'  => '#table_body_color#',
-									'tracking'   => '#table_body_tracking#',
-								),
-								'verticalAlignment'   => '#table_body_vertical_alignment#',
-							),
-							$dark_bg_text_conditional
-						),
-						'columns'     => array_merge(
-							array(
-								'divider' => array(
-									'color' => '#table_border_color#',
-									'style' => '#table_border_style#',
-									'width' => '#table_border_width#',
-								),
-							),
-							$dark_inner_border_conditional
-						),
-						'headerCells' => array_merge(
-							array(
-								'backgroundColor'     => '#table_header_background_color#',
-								'horizontalAlignment' => '#table_header_horizontal_alignment#',
-								'padding'             => '#table_header_padding#',
-								'textStyle'           => array(
-									'fontName'   => '#table_header_font#',
-									'fontSize'   => '#table_header_size#',
-									'lineHeight' => '#table_header_line_height#',
-									'textColor'  => '#table_header_color#',
-									'tracking'   => '#table_header_tracking#',
-								),
-								'verticalAlignment'   => '#table_header_vertical_alignment#',
-							),
-							$dark_header_bg_text_conditional
-						),
-						'headerRows'  => array_merge(
-							array(
-								'divider' => array(
-									'color' => '#table_border_color#',
-									'style' => '#table_border_style#',
-									'width' => '#table_border_width#',
-								),
-							),
-							$dark_inner_border_conditional
-						),
-						'rows'        => array_merge(
-							array(
-								'divider' => array(
-									'color' => '#table_border_color#',
-									'style' => '#table_border_style#',
-									'width' => '#table_border_width#',
-								),
-							),
-							$dark_inner_border_conditional
-						),
-					),
-				),
-				$dark_outer_border_conditional
-			)
+			$default_table_styles
 		);
+
+		if ( $this->dark_table_colors_exist ) {
+
+			// Start with default-table styles as a base.
+			// Then modify dark styles where applicable.
+			$dark_table_styles = $default_table_styles;
+
+			// Set cell background color.
+			if ( ! empty( $table_body_background_color_dark ) ) {
+				$dark_table_styles['tableStyle']['cells']['backgroundColor'] = '#table_body_background_color_dark#';
+			}
+
+			// Set cell text color.
+			if ( ! empty( $table_body_color_dark ) ) {
+				$dark_table_styles['tableStyle']['cells']['textStyle']['textColor'] = '#table_body_color_dark#';
+			}
+
+			// Set header cell background color.
+			if ( ! empty( $table_header_background_color_dark ) ) {
+				$dark_table_styles['tableStyle']['headerCells']['backgroundColor'] = '#table_header_background_color_dark#';
+			}
+
+			// Set header text color.
+			if ( ! empty( $table_header_color_dark ) ) {
+				$dark_table_styles['tableStyle']['headerCells']['textStyle']['textColor'] = '#table_header_color_dark#';
+			}
+
+			// Set border colors.
+			if ( ! empty( $table_border_color_dark ) ) {
+				// Table outer border.
+				$dark_table_styles['border']['all']['color'] = '#table_border_color_dark#';
+				// Column borders.
+				$dark_table_styles['tableStyle']['columns']['divider']['color'] = '#table_border_color_dark#';
+				// Row borders.
+				$dark_table_styles['tableStyle']['rows']['divider']['color'] = '#table_border_color_dark#';
+				// Header row borders.
+				$dark_table_styles['tableStyle']['headerRows']['divider']['color'] = '#table_border_color_dark#';
+			}
+
+			$this->register_spec(
+				'dark-table',
+				__( 'Dark Table Style', 'apple-news' ),
+				$dark_table_styles
+			);
+		}
 	}
 
 	/**
@@ -342,10 +285,10 @@ class Table extends Component {
 			$table_caption = $caption_match[1];
 			$table_spec    = 'json-with-caption-text';
 		}
-		$values = array(
+		$values = [
 			'#html#'         => preg_replace( '/<\/table>.*/', '</table>', $table_html ),
 			'#caption_text#' => $table_caption,
-		);
+		];
 
 		// Add the JSON for this component.
 		$this->register_json( $table_spec, $values );
@@ -358,6 +301,14 @@ class Table extends Component {
 			'default-table',
 			'default-table'
 		);
+
+		// Register dark mode styles, if applicable.
+		if ( $this->dark_table_colors_exist ) {
+			$this->register_component_style(
+				'dark-table',
+				'dark-table'
+			);
+		}
 	}
 
 	/**

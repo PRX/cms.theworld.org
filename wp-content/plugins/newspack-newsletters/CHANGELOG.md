@@ -1,3 +1,134 @@
+# [1.62.0](https://github.com/Automattic/newspack-newsletters/compare/v1.61.1...v1.62.0) (2023-04-10)
+
+
+### Bug Fixes
+
+* editor title with selected header font ([#1119](https://github.com/Automattic/newspack-newsletters/issues/1119)) ([300180e](https://github.com/Automattic/newspack-newsletters/commit/300180eb1e58f86a85e221abf43e92a0630d26a6))
+* **posts-inserter:** preview styles for WP 6.2 ([#1123](https://github.com/Automattic/newspack-newsletters/issues/1123)) ([afffc61](https://github.com/Automattic/newspack-newsletters/commit/afffc61be4f2f282fb4628739651c546faf63dd3))
+
+
+### Features
+
+* add customizable success message ([#1129](https://github.com/Automattic/newspack-newsletters/issues/1129)) ([84a1121](https://github.com/Automattic/newspack-newsletters/commit/84a11216570e72c314db45085d4d49b3845e190d))
+* Change the default button label to Sign up ([#1125](https://github.com/Automattic/newspack-newsletters/issues/1125)) ([d1bd524](https://github.com/Automattic/newspack-newsletters/commit/d1bd524c294a051e5b0e6d8bd70c97a86805c658))
+
+# [1.62.0-alpha.2](https://github.com/Automattic/newspack-newsletters/compare/v1.62.0-alpha.1...v1.62.0-alpha.2) (2023-04-03)
+
+
+### Bug Fixes
+
+* **subscription-block:** use domReady for initializing block js ([#1136](https://github.com/Automattic/newspack-newsletters/issues/1136)) ([cae88f8](https://github.com/Automattic/newspack-newsletters/commit/cae88f8c51abd7a6d3f781c0c5c5c584dd301ca4))
+
+## [1.61.1](https://github.com/Automattic/newspack-newsletters/compare/v1.61.0...v1.61.1) (2023-04-03)
+
+
+### Bug Fixes
+
+* **subscription-block:** use domReady for initializing block js ([#1136](https://github.com/Automattic/newspack-newsletters/issues/1136)) ([cae88f8](https://github.com/Automattic/newspack-newsletters/commit/cae88f8c51abd7a6d3f781c0c5c5c584dd301ca4))
+
+# [1.61.0](https://github.com/Automattic/newspack-newsletters/compare/v1.60.1...v1.61.0) (2023-03-27)
+
+
+### Features
+
+* adjust data passed by subscription hooks ([#1109](https://github.com/Automattic/newspack-newsletters/issues/1109)) ([641e5bc](https://github.com/Automattic/newspack-newsletters/commit/641e5bcc461da68fc128f251397475c1cd641858))
+* update hook param ([#1111](https://github.com/Automattic/newspack-newsletters/issues/1111)) ([af6b7dd](https://github.com/Automattic/newspack-newsletters/commit/af6b7dde7288e2cc0df1203ca62480c56d61a833))
+
+# [1.61.0-alpha.2](https://github.com/Automattic/newspack-newsletters/compare/v1.61.0-alpha.1...v1.61.0-alpha.2) (2023-03-21)
+
+
+### Features
+
+* update hook param ([#1111](https://github.com/Automattic/newspack-newsletters/issues/1111)) ([af6b7dd](https://github.com/Automattic/newspack-newsletters/commit/af6b7dde7288e2cc0df1203ca62480c56d61a833))
+
+# [1.61.0-alpha.1](https://github.com/Automattic/newspack-newsletters/compare/v1.60.1...v1.61.0-alpha.1) (2023-03-16)
+
+
+### Features
+
+* adjust data passed by subscription hooks ([#1109](https://github.com/Automattic/newspack-newsletters/issues/1109)) ([641e5bc](https://github.com/Automattic/newspack-newsletters/commit/641e5bcc461da68fc128f251397475c1cd641858))
+
+## [1.60.1](https://github.com/Automattic/newspack-newsletters/compare/v1.60.0...v1.60.1) (2023-03-15)
+
+
+### Bug Fixes
+
+* date field types for custom ESP metadata fields ([#1117](https://github.com/Automattic/newspack-newsletters/issues/1117)) ([b9bbd9d](https://github.com/Automattic/newspack-newsletters/commit/b9bbd9dd7a8f5e7eb1acbee1127487c59a316261))
+
+# [1.60.0](https://github.com/Automattic/newspack-newsletters/compare/v1.59.2...v1.60.0) (2023-03-14)
+
+
+### Bug Fixes
+
+* disable JP Photon for newsletters ([#1085](https://github.com/Automattic/newspack-newsletters/issues/1085)) ([f443d99](https://github.com/Automattic/newspack-newsletters/commit/f443d9981ea496908419ad83171fa86da7cc0a40))
+* local list description being deleted ([#1104](https://github.com/Automattic/newspack-newsletters/issues/1104)) ([d9b0d41](https://github.com/Automattic/newspack-newsletters/commit/d9b0d419a1373fdc335b3e2d1bc4c88ad23464d3))
+* make Lists CPT menu item a sub-item of Newsletters CPT menu item ([271c916](https://github.com/Automattic/newspack-newsletters/commit/271c916b4d07a0d16bae3fa1edbf8e99ea9ac385))
+* remove list from settings when deleted ([7530f15](https://github.com/Automattic/newspack-newsletters/commit/7530f15fecbc7f0cc2824b0b283985a4f10bd5ed))
+* remove list from settings when deleted ([#1096](https://github.com/Automattic/newspack-newsletters/issues/1096)) ([e362c51](https://github.com/Automattic/newspack-newsletters/commit/e362c5153287880cc810822ea34ab50d6e96bcca))
+* typo ([d71973c](https://github.com/Automattic/newspack-newsletters/commit/d71973c7cf98c46e271efb617dee2b0ab977a681))
+
+
+### Features
+
+* add missing popup_id to listeners ([d43123d](https://github.com/Automattic/newspack-newsletters/commit/d43123dd15f1fcd7dcd2b91e8ca21547f48733a6))
+* add origin metadata to all contacts ([4eee238](https://github.com/Automattic/newspack-newsletters/commit/4eee23871365700538eb41413e5fbb8f205953c7))
+* add signature to update tag methods ([5b71ec0](https://github.com/Automattic/newspack-newsletters/commit/5b71ec08bda5584ecc99e7c32dbf04942726e431))
+* add support to campaign data event listeners ([bec03d2](https://github.com/Automattic/newspack-newsletters/commit/bec03d26aa34b113313ab3d4feab6254134cd0de))
+* add support to update tags in Active Campaign ([c6d7916](https://github.com/Automattic/newspack-newsletters/commit/c6d7916b5e033452559a96918e03b7709403f1a4))
+* add support to update tags in Constant Contact ([8105d74](https://github.com/Automattic/newspack-newsletters/commit/8105d744103b15696f7294a0d4efc89517d76922))
+* add support to update tags in Mailchimp ([3230fcc](https://github.com/Automattic/newspack-newsletters/commit/3230fccc3295109282246712bfbbf6c595021d26))
+* add tags support to constant contact ([ed4df72](https://github.com/Automattic/newspack-newsletters/commit/ed4df72cd8b0e097eae12f56b21467f9f79f6440))
+* add warning to mailchimp local lists ([6d3b33b](https://github.com/Automattic/newspack-newsletters/commit/6d3b33b0ca926dda7e3c924413fa38d4f4ea4707))
+* adjust class property ([0c0a0ce](https://github.com/Automattic/newspack-newsletters/commit/0c0a0ceb1b24ef9cfd3d6158d5aa6d51269aec92))
+* change meta key to avoid conflict ([4f4d15f](https://github.com/Automattic/newspack-newsletters/commit/4f4d15feb0d4fc379e19559d48feb0a96116d23d))
+* enable local lists and mailchimp groups ([6090937](https://github.com/Automattic/newspack-newsletters/commit/60909373db19906acab506cda14a2d6e85d0ce7c))
+* Two way sync tag name ([05a5602](https://github.com/Automattic/newspack-newsletters/commit/05a560254967a343b5b3d03be3458abd6a84aef2))
+* Two way sync tag names ([f8afb45](https://github.com/Automattic/newspack-newsletters/commit/f8afb45f1e53ff9ab197dcc9dd894596000f15a8))
+
+# [1.60.0-alpha.1](https://github.com/Automattic/newspack-newsletters/compare/v1.59.2...v1.60.0-alpha.1) (2023-03-03)
+
+
+### Bug Fixes
+
+* disable JP Photon for newsletters ([#1085](https://github.com/Automattic/newspack-newsletters/issues/1085)) ([f443d99](https://github.com/Automattic/newspack-newsletters/commit/f443d9981ea496908419ad83171fa86da7cc0a40))
+* local list description being deleted ([#1104](https://github.com/Automattic/newspack-newsletters/issues/1104)) ([d9b0d41](https://github.com/Automattic/newspack-newsletters/commit/d9b0d419a1373fdc335b3e2d1bc4c88ad23464d3))
+* make Lists CPT menu item a sub-item of Newsletters CPT menu item ([271c916](https://github.com/Automattic/newspack-newsletters/commit/271c916b4d07a0d16bae3fa1edbf8e99ea9ac385))
+* remove list from settings when deleted ([7530f15](https://github.com/Automattic/newspack-newsletters/commit/7530f15fecbc7f0cc2824b0b283985a4f10bd5ed))
+* remove list from settings when deleted ([#1096](https://github.com/Automattic/newspack-newsletters/issues/1096)) ([e362c51](https://github.com/Automattic/newspack-newsletters/commit/e362c5153287880cc810822ea34ab50d6e96bcca))
+* typo ([d71973c](https://github.com/Automattic/newspack-newsletters/commit/d71973c7cf98c46e271efb617dee2b0ab977a681))
+
+
+### Features
+
+* add missing popup_id to listeners ([d43123d](https://github.com/Automattic/newspack-newsletters/commit/d43123dd15f1fcd7dcd2b91e8ca21547f48733a6))
+* add origin metadata to all contacts ([4eee238](https://github.com/Automattic/newspack-newsletters/commit/4eee23871365700538eb41413e5fbb8f205953c7))
+* add signature to update tag methods ([5b71ec0](https://github.com/Automattic/newspack-newsletters/commit/5b71ec08bda5584ecc99e7c32dbf04942726e431))
+* add support to campaign data event listeners ([bec03d2](https://github.com/Automattic/newspack-newsletters/commit/bec03d26aa34b113313ab3d4feab6254134cd0de))
+* add support to update tags in Active Campaign ([c6d7916](https://github.com/Automattic/newspack-newsletters/commit/c6d7916b5e033452559a96918e03b7709403f1a4))
+* add support to update tags in Constant Contact ([8105d74](https://github.com/Automattic/newspack-newsletters/commit/8105d744103b15696f7294a0d4efc89517d76922))
+* add support to update tags in Mailchimp ([3230fcc](https://github.com/Automattic/newspack-newsletters/commit/3230fccc3295109282246712bfbbf6c595021d26))
+* add tags support to constant contact ([ed4df72](https://github.com/Automattic/newspack-newsletters/commit/ed4df72cd8b0e097eae12f56b21467f9f79f6440))
+* add warning to mailchimp local lists ([6d3b33b](https://github.com/Automattic/newspack-newsletters/commit/6d3b33b0ca926dda7e3c924413fa38d4f4ea4707))
+* adjust class property ([0c0a0ce](https://github.com/Automattic/newspack-newsletters/commit/0c0a0ceb1b24ef9cfd3d6158d5aa6d51269aec92))
+* change meta key to avoid conflict ([4f4d15f](https://github.com/Automattic/newspack-newsletters/commit/4f4d15feb0d4fc379e19559d48feb0a96116d23d))
+* enable local lists and mailchimp groups ([6090937](https://github.com/Automattic/newspack-newsletters/commit/60909373db19906acab506cda14a2d6e85d0ce7c))
+* Two way sync tag name ([05a5602](https://github.com/Automattic/newspack-newsletters/commit/05a560254967a343b5b3d03be3458abd6a84aef2))
+* Two way sync tag names ([f8afb45](https://github.com/Automattic/newspack-newsletters/commit/f8afb45f1e53ff9ab197dcc9dd894596000f15a8))
+
+## [1.59.2](https://github.com/Automattic/newspack-newsletters/compare/v1.59.1...v1.59.2) (2023-03-02)
+
+
+### Bug Fixes
+
+* typo causing fatal errors ([63b899d](https://github.com/Automattic/newspack-newsletters/commit/63b899d02297b1b5dec2ae1f78bc5fef98b0a7e5))
+
+## [1.59.1](https://github.com/Automattic/newspack-newsletters/compare/v1.59.0...v1.59.1) (2023-02-28)
+
+
+### Bug Fixes
+
+* Revert changes in editor ([460199f](https://github.com/Automattic/newspack-newsletters/commit/460199ff7d32adcc4a6d2f6cb361203f46850837))
+
 # [1.59.0](https://github.com/Automattic/newspack-newsletters/compare/v1.58.0...v1.59.0) (2023-02-28)
 
 

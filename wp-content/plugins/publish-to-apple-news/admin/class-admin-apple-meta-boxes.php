@@ -5,6 +5,8 @@
  * @package Apple_News
  */
 
+use Apple_News\Admin\Automation;
+
 /**
  * This class provides a meta box to publish posts to Apple News from the edit screen.
  *
@@ -44,19 +46,19 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			// Add the custom meta boxes to each post type.
 			$post_types = $settings->get( 'post_types' );
 			if ( ! is_array( $post_types ) ) {
-				$post_types = array( $post_types );
+				$post_types = [ $post_types ];
 			}
 
 			foreach ( $post_types as $post_type ) {
-				add_action( 'add_meta_boxes_' . $post_type, array( $this, 'add_meta_boxes' ) );
-				add_action( 'save_post_' . $post_type, array( $this, 'do_publish' ), 10, 2 );
+				add_action( 'add_meta_boxes_' . $post_type, [ $this, 'add_meta_boxes' ] );
+				add_action( 'save_post_' . $post_type, [ $this, 'do_publish' ], 10, 2 );
 			}
 
 			// Register assets used by the meta box.
-			add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
+			add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ] );
 
 			// Refresh the nonce after the user re-authenticates due to a wp_auth_check() to avoid failing check_admin_referrer().
-			add_action( 'wp_refresh_nonces', array( $this, 'refresh_nonce' ), 20, 1 );
+			add_action( 'wp_refresh_nonces', [ $this, 'refresh_nonce' ], 20, 1 );
 		}
 	}
 
@@ -86,7 +88,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		// Verify the post types.
 		$post_types = $this->settings->get( 'post_types' );
 		if ( ! is_array( $post_types ) ) {
-			$post_types = array( $post_types );
+			$post_types = [ $post_types ];
 		}
 
 		if ( ! empty( $post_types ) && ! in_array( get_post_type( $post ), $post_types, true ) ) {
@@ -169,15 +171,17 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 
 		// Save straightforward fields.
 		$fields = [
-			'apple_news_coverimage'         => 'integer',
-			'apple_news_coverimage_caption' => 'textarea',
-			'apple_news_is_hidden'          => 'boolean',
-			'apple_news_is_paid'            => 'boolean',
-			'apple_news_is_preview'         => 'boolean',
-			'apple_news_is_sponsored'       => 'boolean',
-			'apple_news_pullquote'          => 'string',
-			'apple_news_pullquote_position' => 'string',
-			'apple_news_slug'               => 'string',
+			'apple_news_coverimage'          => 'integer',
+			'apple_news_coverimage_caption'  => 'textarea',
+			'apple_news_is_hidden'           => 'boolean',
+			'apple_news_is_paid'             => 'boolean',
+			'apple_news_is_preview'          => 'boolean',
+			'apple_news_is_sponsored'        => 'boolean',
+			'apple_news_pullquote'           => 'string',
+			'apple_news_pullquote_position'  => 'string',
+			'apple_news_slug'                => 'string',
+			'apple_news_suppress_video_url'  => 'boolean',
+			'apple_news_use_image_component' => 'boolean',
 		];
 		foreach ( $fields as $meta_key => $type ) {
 			switch ( $type ) {
@@ -199,7 +203,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 
 		// Determine whether to save sections.
 		if ( empty( $_POST['apple_news_sections_by_taxonomy'] ) ) {
-			$sections = array();
+			$sections = [];
 			if ( ! empty( $_POST['apple_news_sections'] )
 				&& is_array( $_POST['apple_news_sections'] )
 			) {
@@ -293,7 +297,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		add_meta_box(
 			'apple_news_publish',
 			__( 'Apple News', 'apple-news' ),
-			array( $this, 'publish_meta_box' ),
+			[ $this, 'publish_meta_box' ],
 			$post->post_type,
 			/**
 			 * Changes the context (i.e. column) where the Apple News meta box
@@ -332,17 +336,19 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 
 		// Only show the publish feature if the user is authorized and auto sync is not enabled.
 		// Also check if the post has been previously published and/or deleted.
-		$api_id             = get_post_meta( $post->ID, 'apple_news_api_id', true );
-		$deleted            = get_post_meta( $post->ID, 'apple_news_api_deleted', true );
-		$pending            = get_post_meta( $post->ID, 'apple_news_api_pending', true );
-		$is_paid            = get_post_meta( $post->ID, 'apple_news_is_paid', true );
-		$is_preview         = get_post_meta( $post->ID, 'apple_news_is_preview', true );
-		$is_hidden          = get_post_meta( $post->ID, 'apple_news_is_hidden', true );
-		$maturity_rating    = get_post_meta( $post->ID, 'apple_news_maturity_rating', true );
-		$is_sponsored       = get_post_meta( $post->ID, 'apple_news_is_sponsored', true );
-		$pullquote          = get_post_meta( $post->ID, 'apple_news_pullquote', true );
-		$pullquote_position = get_post_meta( $post->ID, 'apple_news_pullquote_position', true );
-		$slug               = get_post_meta( $post->ID, 'apple_news_slug', true );
+		$api_id              = get_post_meta( $post->ID, 'apple_news_api_id', true );
+		$deleted             = get_post_meta( $post->ID, 'apple_news_api_deleted', true );
+		$pending             = get_post_meta( $post->ID, 'apple_news_api_pending', true );
+		$is_paid             = get_post_meta( $post->ID, 'apple_news_is_paid', true );
+		$is_preview          = get_post_meta( $post->ID, 'apple_news_is_preview', true );
+		$is_hidden           = get_post_meta( $post->ID, 'apple_news_is_hidden', true );
+		$maturity_rating     = get_post_meta( $post->ID, 'apple_news_maturity_rating', true );
+		$is_sponsored        = get_post_meta( $post->ID, 'apple_news_is_sponsored', true );
+		$pullquote           = get_post_meta( $post->ID, 'apple_news_pullquote', true );
+		$pullquote_position  = get_post_meta( $post->ID, 'apple_news_pullquote_position', true );
+		$slug                = get_post_meta( $post->ID, 'apple_news_slug', true );
+		$suppress_video_url  = get_post_meta( $post->ID, 'apple_news_suppress_video_url', true );
+		$use_image_component = get_post_meta( $post->ID, 'apple_news_use_image_component', true );
 
 		// Set default values.
 		if ( empty( $pullquote_position ) ) {
@@ -429,8 +435,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		}
 
 		// Determine whether to print the subheading for manual selection.
-		$mappings = get_option( Admin_Apple_Sections::TAXONOMY_MAPPING_KEY );
-		if ( ! empty( $mappings ) ) {
+		if ( ! empty( Automation::get_automation_rules() ) ) {
 			printf(
 				'<h4>%s</h4>',
 				esc_html__( 'Manual Section Selection', 'apple-news' )
@@ -461,20 +466,17 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	public static function build_sections_override( $post_id ) {
 
 		// Determine if there are section/taxonomy mappings set.
-		$mappings = get_option( Admin_Apple_Sections::TAXONOMY_MAPPING_KEY );
-		if ( empty( $mappings ) ) {
+		if ( empty( Automation::get_automation_rules() ) ) {
 			return;
 		}
 
 		// Add checkbox to allow override of automatic section assignment.
-		$mapping_taxonomy = Admin_Apple_Sections::get_mapping_taxonomy();
-		$sections         = get_post_meta( $post_id, 'apple_news_sections', true );
+		$sections = get_post_meta( $post_id, 'apple_news_sections', true );
 		?>
 		<div class="section-override">
 			<label for="apple-news-sections-by-taxonomy">
 			<input id="apple-news-sections-by-taxonomy" name="apple_news_sections_by_taxonomy" type="checkbox" <?php checked( ! is_array( $sections ) ); ?> />
-				<?php esc_html_e( 'Assign sections by', 'apple-news' ); ?>
-				<?php echo esc_html( strtolower( $mapping_taxonomy->labels->singular_name ) ); ?>
+				<?php esc_html_e( 'Assign sections via Apple News Automation rules', 'apple-news' ); ?>
 			</label>
 		</div>
 		<?php
@@ -517,7 +519,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		wp_enqueue_style(
 			$this->plugin_slug . '_meta_boxes_css',
 			plugin_dir_url( __FILE__ ) . '../assets/css/meta-boxes.css',
-			array(),
+			[],
 			self::$version
 		);
 
@@ -525,7 +527,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		wp_enqueue_script(
 			$this->plugin_slug . '_meta_boxes_js',
 			plugin_dir_url( __FILE__ ) . '../assets/js/meta-boxes.js',
-			array( 'jquery' ),
+			[ 'jquery' ],
 			self::$version,
 			true
 		);
@@ -534,9 +536,9 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		wp_localize_script(
 			$this->plugin_slug . '_meta_boxes_js',
 			'apple_news_meta_boxes',
-			array(
+			[
 				'publish_action' => self::PUBLISH_ACTION,
-			)
+			]
 		);
 	}
 }

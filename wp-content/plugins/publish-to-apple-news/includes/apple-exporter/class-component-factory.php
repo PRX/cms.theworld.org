@@ -22,7 +22,7 @@ class Component_Factory {
 	 * @var array
 	 * @access private
 	 */
-	private static $components = array();
+	private static $components = [];
 
 	/**
 	 * Current workspace.
@@ -92,7 +92,9 @@ class Component_Factory {
 		self::register_component( 'tweet', '\\Apple_Exporter\\Components\\Tweet' );
 		self::register_component( 'facebook', '\\Apple_Exporter\\Components\\Facebook' );
 		self::register_component( 'instagram', '\\Apple_Exporter\\Components\\Instagram' );
+		self::register_component( 'tiktok', '\\Apple_Exporter\\Components\\TikTok' );
 		self::register_component( 'table', '\\Apple_Exporter\\Components\\Table' );
+		self::register_component( 'podcast', '\\Apple_Exporter\\Components\\Podcast' );
 		self::register_component( 'iframe', '\\Apple_Exporter\\Components\\Embed_Web_Video' );
 		self::register_component( 'embed', '\\Apple_Exporter\\Components\\Embed_Generic' );
 		self::register_component( 'img', '\\Apple_Exporter\\Components\\Image' );
@@ -191,7 +193,7 @@ class Component_Factory {
 	 * @return array An array of components contained in the node.
 	 */
 	public static function get_components_from_node( $node ) {
-		$result = array();
+		$result = [];
 
 		foreach ( self::$components as $shortname => $class ) {
 
