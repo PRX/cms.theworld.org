@@ -1,0 +1,43 @@
+# Copyright (C) 2022 Phi Phan
+# This file is distributed under the same license as the SVG Block plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: SVG Block 1.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/svg-block\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2022-07-26T12:39:32+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.5.0\n"
+"X-Domain: svg-block\n"
+
+#. Plugin Name of the plugin
+msgid "SVG Block"
+msgstr ""
+
+#. Description of the plugin
+msgid "Display an SVG image as a block, which can be used for displaying icons, dividers, buttons..."
+msgstr ""
+
+#. Author of the plugin
+msgid "Phi Phan"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://boldblocks.net"
+msgstr ""
+
+#: build/block.json
+#: src/block.json
+msgctxt "block title"
+msgid "SVG Block"
+msgstr ""
+
+#: build/block.json
+#: src/block.json
+msgctxt "block description"
+msgid "Display an SVG image as a block, which can be used for displaying icons, dividers..."
+msgstr ""

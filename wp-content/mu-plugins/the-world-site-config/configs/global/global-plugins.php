@@ -31,13 +31,14 @@ define(
 		'tw-resource-development-tags/tw-resource-development-tags.php',
 		'tw-segments/tw-segments.php',
 		'tw-story-format/tw-story-format.php',
-		'tw-import-post-types/tw-import-post-types.php', # This is the plugin that creates the custom post types for the import. Can be removed after the import is complete.
+		'tw-import-post-types/tw-import-post-types.php', // This is the plugin that creates the custom post types for the import. Can be removed after the import is complete.
 		'wordpress-importer/wordpress-importer.php',
 		'wordpress-seo/wp-seo.php',
-    	'wp-all-export-pro/wp-all-export-pro.php',
+		'wp-all-export-pro/wp-all-export-pro.php',
 		'wp-cfm-path/wp-cfm-path.php',
 		'wp-cfm/wp-cfm.php',
 		'wp-rest-menu/wp-rest-menus.php',
 		'xml-sitemap-feed/xml-sitemap.php',
+		'svg-block/svg-block.php',
 	)
 );

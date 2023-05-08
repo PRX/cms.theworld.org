@@ -1,0 +1,89 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "boldblocks/svg-block",
+  "title": "SVG Block",
+  "category": "media",
+  "description": "Display an SVG image as a block, which can be used for displaying icons, dividers...",
+  "attributes": {
+    "blockId": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "preserveAspectRatio": {
+      "type": "string"
+    },
+    "linkUrl": {
+      "type": "string",
+      "source": "attribute",
+      "selector": "a",
+      "attribute": "href"
+    },
+    "linkTarget": {
+      "type": "string",
+      "source": "attribute",
+      "selector": "a",
+      "attribute": "target"
+    },
+    "linkRel": {
+      "type": "string",
+      "source": "attribute",
+      "selector": "a",
+      "attribute": "rel"
+    },
+    "fillColor": {
+      "type": "object"
+    },
+    "strokeColor": {
+      "type": "object"
+    },
+    "backgroundColor": {
+      "type": "object"
+    },
+    "flip": {
+      "type": "boolean",
+      "default": false
+    },
+    "invert": {
+      "type": "boolean",
+      "default": false
+    },
+    "useAsButton": {
+      "type": "boolean",
+      "default": false
+    },
+    "buttonText": {
+      "type": "string",
+      "default": ""
+    },
+    "iconPosition": {
+      "type": "string",
+      "default": "left"
+    },
+    "textColor": {
+      "type": "object"
+    },
+    "zIndex": {
+      "type": "string"
+    },
+    "boldblocks": {
+      "type": "object"
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": true
+  },
+  "textdomain": "svg-block",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css"
+}
