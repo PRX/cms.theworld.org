@@ -633,6 +633,12 @@ function f_pmh_get_media_ids( int $i_paged, int $i_perpage, $a_ids = array() ) {
 		'post_status'    => 'inherit',
 		'post_parent'    => null, // any parent
 		'fields'         => 'ids',
+		'meta_query'  => array(
+			array(
+				'key'     => s_pmh_get_fixed_flag_key(),
+				'compare' => 'NOT EXISTS',
+			),
+		),
 	);
 
 	if ( $a_ids ) {
@@ -662,6 +668,12 @@ function f_pmh_get_posts_ids( int $i_paged, int $i_perpage, $a_ids = array() ) {
 	$a_args = array(
         'post_type'      => 'post',
 		'fields'         => 'ids',
+		'meta_query'  => array(
+			array(
+				'key'     => s_pmh_get_fixed_flag_key(),
+				'compare' => 'NOT EXISTS',
+			),
+		),
 	);
 
 	if ( $a_ids ) {
@@ -921,6 +933,7 @@ function f_ajax_pmh_media_fix_run() {
 
 	// Query media.
 	$a_media_ids = f_pmh_get_media_ids( $i_paged_process, $i_perpage_process, $a_per_ids );
+	$i_media_ids = count( $a_media_ids );
 
 	if ( $a_media_ids ) {
 
@@ -974,9 +987,13 @@ function f_ajax_pmh_media_fix_run() {
 				$s_log .= "no update\n";
 			}
 
+			f_pmh_flag_object_corrected( $i_media_id, 'post' );
+
 			$s_log .= "\n- - - - - - - - -\n\n";
 		}
 	} else {
+
+		$s_log .= "No Media to process.\n\n";
 
 		$i_next_paged_process = false;
 	}
@@ -988,6 +1005,7 @@ function f_ajax_pmh_media_fix_run() {
 	$a_response = array(
 		'log'                => $s_log,
 		'next_paged_process' => $i_next_paged_process,
+		'count_processed'    => $i_media_ids,
 	);
 
 	wp_send_json( $a_response );
@@ -1006,8 +1024,9 @@ function pri_ajax_acf_fix_run() {
 	$s_per_ids         = sanitize_text_field( $_POST['s_per_ids'] );
 	$s_post_type       = sanitize_text_field( $_POST['s_post_type'] );
 	$s_field           = sanitize_text_field( $_POST['s_field'] );
+	$b_is_term         = in_array( $s_post_type, array( 'category', 'contributor', 'program' ) ) ? true : false;
 
-	if ( !$s_post_type || !$s_field ) {
+	if ( ! $s_post_type || ! $s_field ) {
 		return array(
 			'log'                => 'No post type or field provided',
 			'next_paged_process' => false,
@@ -1017,65 +1036,136 @@ function pri_ajax_acf_fix_run() {
 	switch ( $s_post_type ) {
 		case 'images':
 		case 'audio':
-			$post_type = 'attachment';
+			$s_query_type = 'attachment';
 			break;
 		default:
-			$post_type = $s_post_type;
+			$s_query_type = $s_post_type;
 			break;
 	}
 
 	$i_next_paged_process = $s_per_ids ? false : $i_paged_process + 1;
 
 	// Start Log.
-	$s_log = "ACF FIX RUNNING - {$post_type} - {$s_field} - PAGED {$i_paged_process}\n\n";
+	$s_log = "ACF FIX RUNNING - {$s_query_type} - {$s_field} - PAGED {$i_paged_process}\n\n";
 
 	// Query acf.
 	// 1. Get media elements without the "key_to_check" meta key
-	$args = array(
-		'post_type'      => $post_type,
-		'fields'         => 'ids',
-		'posts_per_page' => $i_perpage_process,
-		'paged'          => $i_paged_process,
-		'post_status'    => $post_type === 'attachment' ? 'inherit' : array( 'publish', 'draft', 'private' ),
-		'meta_query'     => array(
-			array(
-				'key'     => $s_field,
-				'compare' => 'NOT EXISTS',
+	if ( $b_is_term ) {
+
+		$i_term_paged_process = ( $i_paged_process - 1 ) * 10;
+
+		$a_query_args = array(
+			'taxonomy'    => $s_query_type,
+			'fields'      => 'ids',
+			'number'      => $i_perpage_process,
+			'offset'      => $i_term_paged_process,
+			'hide_empty'  => false,
+			'meta_query'  => array(
+				array(
+					'key'     => $s_field,
+					'compare' => 'NOT EXISTS',
+				),
 			),
-		),
-	);
+		);
+
+	} else {
+
+		$a_query_args = array(
+			'post_type'      => $s_query_type,
+			'fields'         => 'ids',
+			'posts_per_page' => $i_perpage_process,
+			'paged'          => $i_paged_process,
+			'post_status'    => $s_query_type === 'attachment' ? 'inherit' : array( 'publish', 'draft', 'private' ),
+			'meta_query'     => array(
+				array(
+					'key'     => $s_field,
+					'compare' => 'NOT EXISTS',
+				),
+			),
+		);
+	}
 
 	if( $s_per_ids ) {
-		$args['post__in'] = explode( ',', $s_per_ids );
+
+		if ( $b_is_term ) {
+
+			$a_query_args['include'] = explode( ',', $s_per_ids );
+
+		} else {
+
+			$a_query_args['post__in'] = explode( ',', $s_per_ids );
+		}
 	}
 
-	if( $s_post_type ) {
-		$args['post_mime_type'] = $s_post_type === 'images' ? 'image' : 'audio';
+	if( $s_post_type && ! $b_is_term ) {
+		$a_query_args['post_mime_type'] = $s_post_type === 'images' ? 'image' : 'audio';
 	}
 
-	$acf_post_query = new WP_Query( $args );
+	if ( $b_is_term ) {
 
-	// 2. Process each media element
-	if ( $acf_post_query->have_posts() ) {
-		if ( $acf_post_query->have_posts() ) {
-			foreach ( $acf_post_query->posts as $acf_post_id ) {
-				// Use a foreach loop to iterate through the post IDs
-				$mime_type = get_post_mime_type( $acf_post_id );
+		$wp_query_acf_items = new WP_Term_Query( $a_query_args );
 
-				$s_log .= "\n" . $acf_post_id . " - " . $mime_type . "\n- - - - - - - - -\n";
+		$a_query_term_ids = $wp_query_acf_items->get_terms();
 
-				$field_value = pri_get_post_meta_keys_and_values( $s_post_type, $s_field );
+		// 2. process each media element
+		if ( $a_query_term_ids ) {
 
-				if ( $field_value ) {
-					add_post_meta( $acf_post_id, $s_field, $field_value, true );
-					$s_log .= "\n" . $acf_post_id . " - " . $s_field . " - " . $field_value . " - field value inserted\n";
+			foreach ( $a_query_term_ids as $i_acf_term_id ) {
+
+				$s_log .= "\n" . $i_acf_term_id . " - " . $s_query_type . "\n- - - - - - - - -\n";
+
+				$s_field_value = pri_get_term_meta_keys_and_values( $s_post_type, $s_field );
+
+				if ( $s_field_value ) {
+
+					$m_add_term_meta = add_term_meta( $i_acf_term_id, $s_field, $s_field_value, true );
+
+					if ( $m_add_term_meta ) {
+
+						$s_log .= "\n" . $i_acf_term_id . " - " . $s_field . " - " . $s_field_value . " - field value inserted\n";
+
+					} elseif ( is_wp_error( $m_add_term_meta ) ) {
+
+						$s_log .= "\n" . $i_acf_term_id . " - " . $s_field . " - " . $s_field_value . " - ambiguous between taxonomies\n";
+
+					} else {
+
+						$s_log .= "\n" . $i_acf_term_id . " - " . $s_field . " - " . $s_field_value . " - failed to insert value\n";
+					}
 				} else {
-					$s_log .= "\n" . $acf_post_id . " - " . $mime_type . " - no field value\n";
+
+					$s_log .= "\n" . $i_acf_term_id . " - " . $s_query_type . " - no field value\n";
 				}
 			}
+		} else {
+			$i_next_paged_process = false;
 		}
 	} else {
-		$i_next_paged_process = false;
+
+		$wp_query_acf_items = new wp_query( $a_query_args );
+
+		// 2. process each media element
+		if ( $wp_query_acf_items->have_posts() ) {
+			if ( $wp_query_acf_items->have_posts() ) {
+				foreach ( $wp_query_acf_items->posts as $i_acf_post_id ) {
+					// use a foreach loop to iterate through the post ids
+					$s_mime_type = get_post_mime_type( $i_acf_post_id );
+
+					$s_log .= "\n" . $i_acf_post_id . " - " . $s_mime_type . "\n- - - - - - - - -\n";
+
+					$s_field_value = pri_get_post_meta_keys_and_values( $s_post_type, $s_field );
+
+					if ( $s_field_value ) {
+						add_post_meta( $i_acf_post_id, $s_field, $s_field_value, true );
+						$s_log .= "\n" . $i_acf_post_id . " - " . $s_field . " - " . $s_field_value . " - field value inserted\n";
+					} else {
+						$s_log .= "\n" . $i_acf_post_id . " - " . $s_mime_type . " - no field value\n";
+					}
+				}
+			}
+		} else {
+			$i_next_paged_process = false;
+		}
 	}
 
 	// Reset the global post data after the custom query
@@ -1093,6 +1183,7 @@ function pri_ajax_acf_fix_run() {
 	wp_send_json( $a_response );
 }
 add_action( 'wp_ajax_acf_fix_run', 'pri_ajax_acf_fix_run' );
+
 
 /**
  * Respond to ajax request.
@@ -1112,6 +1203,7 @@ function f_ajax_pmh_posts_fix_run() {
 	$s_log = "POSTS FIX RUNNING - PAGED {$i_paged_process}\n\n";
 
 	$a_posts_ids = f_pmh_get_posts_ids( $i_paged_process, $i_perpage_process, $a_per_ids );
+	$i_media_ids = count( $a_posts_ids );
 
 	if ( $a_posts_ids ) {
 
@@ -1134,6 +1226,8 @@ function f_ajax_pmh_posts_fix_run() {
 		}
 	} else {
 
+		$s_log .= "No Posts to process.\n\n";
+
 		$i_next_paged_process = false;
 	}
 
@@ -1144,6 +1238,7 @@ function f_ajax_pmh_posts_fix_run() {
 	$a_response = array(
 		'log'                => $s_log,
 		'next_paged_process' => $i_next_paged_process,
+		'count_processed'    => $i_media_ids,
 	);
 
 	wp_send_json( $a_response );
@@ -1207,6 +1302,7 @@ function f_pmh_process_posts_content( int $i_post_id ) {
 		}
 	}
 
+	f_pmh_flag_object_corrected( $i_post_id, 'post' );
 
 	/* Debug
 	echo "<pre>";
@@ -1221,7 +1317,7 @@ function f_pmh_process_posts_content( int $i_post_id ) {
 
 	 */
 	$a_update_post_args = array(
-		'post_id'      => $i_post_id,
+		'ID'           => $i_post_id,
 		'post_content' => $s_new_content,
 	);
 
@@ -1371,4 +1467,41 @@ function f_pmh_img_replacement_html( int $i_img_id, $a_drupal_media_data ) {
 	$s_img_html = ob_get_clean();
 
 	return $s_img_html;
+}
+
+/**
+ * Flag key for corrected object.
+ *
+ * @return string
+ */
+function s_pmh_get_fixed_flag_key() {
+
+	return apply_filters( 'tw_object_correct_flag_key', 'tw_obj_correct' );
+}
+
+/**
+ * Flag WordPress object as processed.
+ *
+ * @param integer $i_object_id
+ * @param string $s_object_type (post/term)
+ * @return void
+ */
+function f_pmh_flag_object_corrected( int $i_object_id, string $s_object_type ) {
+
+	$a_object_types = array( 'post', 'term' );
+	$s_flag_key     = s_pmh_get_fixed_flag_key();
+	$b_flag_value   = true;
+
+	if ( in_array( $s_object_type, $a_object_types ) ) {
+
+		if ( 'post' === $s_object_type ) {
+
+			update_post_meta( $i_object_id, $s_flag_key, $b_flag_value );
+		}
+
+		if ( 'term' === $s_object_type ) {
+
+			update_term_meta( $i_object_id, $s_flag_key, $b_flag_value );
+		}
+	}
 }

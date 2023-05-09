@@ -40,7 +40,7 @@ jQuery(document).ready(function ($) {
     $("#pmh-post-worker-logs").val(sTextAreaVal);
   };
 
-  const fRunAcfFix = function () {
+  const fRunAcfFix = function (callBack) {
     const ObjSettings = fGetObjSettings();
 
     $.ajax({
@@ -64,6 +64,10 @@ jQuery(document).ready(function ($) {
             response.next_paged_process
           );
           fRunAcfFix();
+        } else {
+          if (typeof callBack === 'function') {
+            callBack();
+          }
         }
       },
     });
@@ -71,9 +75,22 @@ jQuery(document).ready(function ($) {
 
   updateAcfFieldSelect();
 
+  $('#pmh-acf-fix-form').on('process-start', function (e) {
+    // $('#pmh-acf-fix-form [name="pmh-acf-fix-paged"]').attr('readonly', 'readonly');
+  });
+
+  $('#pmh-acf-fix-form').on('process-stop', function (e) {
+    // $('#pmh-acf-fix-form [name="pmh-acf-fix-paged"]').removeAttr('readonly');
+  });
+
   $("#pmh-post-worker-acf-fix").on("click", function (e) {
     e.preventDefault();
 
-    fRunAcfFix();
+    $('#pmh-acf-fix-form').trigger('process-start');
+
+    fRunAcfFix(function () {
+
+      $('#pmh-acf-fix-form').trigger('process-stop');
+    });
   });
 });

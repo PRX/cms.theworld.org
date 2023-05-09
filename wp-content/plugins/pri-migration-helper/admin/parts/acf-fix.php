@@ -1,14 +1,14 @@
 <?php
 
 ?>
-<p>Start ACF fix process.</p>
+<p>This tool will attempt to fix ACF fields in WP objects.</p>
 
 <table id="pmh-acf-fix-form" class="form-table">
 	<tbody>
 		<tr>
 			<th scope="row"><label for="pmh-acf-fix-paged"><?php esc_html_e( 'Paged', 'pmh' ); ?></label></th>
 			<td>
-				<input type="number" name="pmh-acf-fix-paged" value="1" min="1">
+				<input type="number" name="pmh-acf-fix-paged" value="1" min="1" readonly>
 			</td>
 		</tr>
 		<tr>
@@ -46,11 +46,18 @@
 			</select>
 			</td>
 		</tr>
+
+		<tr>
+			<th scope="row">Run Process</th>
+			<td>
+				<input type="submit" name="pmh-post-worker-acf-fix" id="pmh-post-worker-acf-fix" class="button button-primary" value="Fix ACF">
+				<p><i>Add ACF meta fields to selected objects. This will expose ACF fields correctly in REST.</i></p>
+			</td>
+		</tr>
 	</tbody>
 </table>
 
 <p class="submit">
-	<input type="submit" name="pmh-post-worker-acf-fix" id="pmh-post-worker-acf-fix" class="button button-primary" value="Fix ACF">
 </p>
 
 <table class="form-table">

@@ -1,14 +1,14 @@
 <?php
 
 ?>
-<p>Start media fix process.</p>
+<p>This tool will attempt to fix media sizes and image tags in posts.</p>
 
 <table id="pmh-media-fix-form" class="form-table">
 	<tbody>
 		<tr>
 			<th scope="row"><label for="pmh-media-fix-paged"><?php esc_html_e( 'Paged', 'pmh' ); ?></label></th>
 			<td>
-				<input type="number" name="pmh-media-fix-paged" value="1" min="1">
+				<input type="number" name="pmh-media-fix-paged" value="1" min="1" readonly>
 			</td>
 		</tr>
 		<tr>
@@ -24,14 +24,24 @@
 				<p><i>Separated by a newline. Leave empty to process all.</i></p>
 			</td>
 		</tr>
+
+		<tr>
+			<th scope="row">Run Process</th>
+			<td>
+				<!-- <input type="submit" name="pmh-post-worker-media-sample" id="pmh-post-worker-media-sample" class="button button-primary" value="View Sample"> -->
+				<input type="submit" name="pmh-post-worker-media-fix" id="pmh-post-worker-media-fix" class="button button-primary" value="Fix Media Size">
+				<p><i>Update media width and height metadata with Drupal media database.</i></p>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row"></th>
+			<td>
+				<input type="submit" name="pmh-post-worker-posts-fix" id="pmh-post-worker-posts-fix" class="button button-primary" value="Fix Image Tags Inside Posts" disabled>
+				<p><i>Update post content image tags. Warning: Run this only on posts with correct media sizes.</i></p>
+			</td>
+		</tr>
 	</tbody>
 </table>
-
-<p class="submit">
-	<input type="submit" name="pmh-post-worker-media-sample" id="pmh-post-worker-media-sample" class="button button-primary" value="View Sample">
-	<input type="submit" name="pmh-post-worker-media-fix" id="pmh-post-worker-media-fix" class="button button-primary" value="Fix Media Size">
-	<input type="submit" name="pmh-post-worker-posts-fix" id="pmh-post-worker-posts-fix" class="button button-primary" value="Fix Image Tags Inside Posts">
-</p>
 
 <table class="form-table">
 	<tbody>
