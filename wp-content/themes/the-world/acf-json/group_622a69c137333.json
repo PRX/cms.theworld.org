@@ -6,6 +6,7 @@
             "key": "field_622a69fd0dfdf",
             "label": "Audio type",
             "name": "audio_type",
+            "aria-label": "",
             "type": "select",
             "instructions": "",
             "required": 1,
@@ -32,6 +33,7 @@
             "key": "field_622a69ed0dfde",
             "label": "Audio Title",
             "name": "audio_title",
+            "aria-label": "",
             "type": "text",
             "instructions": "",
             "required": 0,
@@ -59,6 +61,7 @@
             "key": "field_623cd5687a201",
             "label": "Segments List",
             "name": "segments_list",
+            "aria-label": "",
             "type": "relationship",
             "instructions": "",
             "required": 0,
@@ -79,19 +82,21 @@
             "post_type": [
                 "segment"
             ],
+            "post_status": "",
             "taxonomy": "",
             "filters": [
                 "search"
             ],
-            "elements": "",
+            "return_format": "id",
             "min": "",
             "max": 20,
-            "return_format": "object"
+            "elements": ""
         },
         {
             "key": "field_622a6a5bbd407",
             "label": "Program",
             "name": "program",
+            "aria-label": "",
             "type": "taxonomy",
             "instructions": "",
             "required": 0,
@@ -110,18 +115,19 @@
                 "id": ""
             },
             "taxonomy": "program",
-            "field_type": "multi_select",
-            "allow_null": 1,
             "add_term": 0,
             "save_terms": 0,
             "load_terms": 0,
-            "return_format": "object",
+            "return_format": "id",
+            "field_type": "multi_select",
+            "allow_null": 1,
             "multiple": 0
         },
         {
             "key": "field_622a6a928a4f6",
             "label": "Broadcast Date",
             "name": "broadcast_date",
+            "aria-label": "",
             "type": "date_picker",
             "instructions": "",
             "required": 0,
@@ -147,6 +153,7 @@
             "key": "field_622a6ac11faf8",
             "label": "Expiration Date",
             "name": "expiration_date",
+            "aria-label": "",
             "type": "date_picker",
             "instructions": "",
             "required": 0,
@@ -172,6 +179,7 @@
             "key": "field_622a6ba1511d4",
             "label": "Transcript",
             "name": "transcript",
+            "aria-label": "",
             "type": "wysiwyg",
             "instructions": "",
             "required": 0,
@@ -206,5 +214,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1652888156
+    "modified": 1683830654
 }

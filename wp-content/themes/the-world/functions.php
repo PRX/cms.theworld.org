@@ -40,7 +40,7 @@ add_filter( 'allowed_redirect_hosts', 'tw_allowed_redirect_hosts' );
  * @uses is_user_logged_in() Is user logged in conditional tag
  * @uses wp_redirect() WP Redirect function
  */
-function tw_redirect_login_page() {
+function tw_redirect_logged_out_to_frontend() {
 	global $wp;
 
 	if ( ! is_user_logged_in() ) {
@@ -48,4 +48,4 @@ function tw_redirect_login_page() {
 		exit();
 	}
 }
-add_action( 'template_redirect', 'tw_redirect_login_page' );
+add_action( 'template_redirect', 'tw_redirect_logged_out_to_frontend' );

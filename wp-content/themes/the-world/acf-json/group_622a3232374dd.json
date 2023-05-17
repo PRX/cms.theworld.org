@@ -6,6 +6,7 @@
             "key": "field_622a32371632d",
             "label": "Editors",
             "name": "editors",
+            "aria-label": "",
             "type": "taxonomy",
             "instructions": "",
             "required": 0,
@@ -16,12 +17,12 @@
                 "id": ""
             },
             "taxonomy": "contributor",
-            "field_type": "multi_select",
-            "allow_null": 0,
             "add_term": 0,
             "save_terms": 0,
             "load_terms": 0,
-            "return_format": "object",
+            "return_format": "id",
+            "field_type": "multi_select",
+            "allow_null": 0,
             "multiple": 0
         }
     ],
@@ -43,5 +44,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1648500239
+    "modified": 1683830742
 }
