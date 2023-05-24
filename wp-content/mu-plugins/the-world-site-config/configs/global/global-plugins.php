@@ -40,5 +40,7 @@ define(
 		'wp-rest-menu/wp-rest-menus.php',
 		'xml-sitemap-feed/xml-sitemap.php',
 		'svg-block/svg-block.php',
+		'wp-graphql/wp-graphql.php',
+		'wp-graphql-acf/wp-graphql-acf.php',
 	)
 );
