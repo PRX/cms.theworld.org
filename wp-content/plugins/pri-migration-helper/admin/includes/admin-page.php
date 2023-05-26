@@ -61,6 +61,16 @@ function test_json_diff_option_menu() {
 		'pmh_acf_fix',
 		30
 	);
+
+	add_submenu_page(
+		'pmh-admin-test',
+		'Cron',
+		'Cron',
+		'manage_options',
+		'pmh-cron',
+		'pmh_cron',
+		30
+	);
 }
 add_action( 'admin_menu', 'test_json_diff_option_menu' );
 
@@ -174,6 +184,18 @@ function pmh_acf_fix() {
 	echo wp_sprintf( '<p>%s</p>', __( 'Fix the ACF meta keys to return information in the API' ) );
 
 	require_once PMH_ADMIN_DIR . '/parts/acf-fix.php';
+}
+
+/**
+ * Add admin option page.
+ *
+ * @return void
+ */
+function pmh_cron() {
+
+	echo wp_sprintf( '<h2>%s</h2>', __( 'Cron' ) );
+
+	require_once PMH_ADMIN_DIR . '/parts/cron.php';
 }
 
 add_action( 'admin_enqueue_scripts', 'pmh_admin_enqueue' );
@@ -622,9 +644,16 @@ add_action( 'wp_ajax_pmh_post_worker_run_process', 'pmh_post_worker_run_process'
  * @param integer $i_paged
  * @param integer $i_perpage
  * @param array $a_ids
+ * @param int $i_last_id
  * @return array
  */
-function f_pmh_get_media_ids( int $i_paged, int $i_perpage, $a_ids = array() ) {
+function f_pmh_get_media_ids( int $i_paged, int $i_perpage, $a_ids = array(), $i_last_id = 1 ) {
+
+	$_i_last_id = (int) get_option( 'pmh_last_mediafix_id', 1 );
+
+	if ( $i_last_id != $_i_last_id ) {
+		update_option( 'pmh_last_mediafix_id', $i_last_id );
+	}
 
 	// Query media.
 	$a_args = array(
@@ -633,13 +662,17 @@ function f_pmh_get_media_ids( int $i_paged, int $i_perpage, $a_ids = array() ) {
 		'post_status'    => 'inherit',
 		'post_parent'    => null, // any parent
 		'fields'         => 'ids',
-		'meta_query'  => array(
-			array(
-				'key'     => s_pmh_get_fixed_flag_key(),
-				'compare' => 'NOT EXISTS',
-			),
-		),
 	);
+
+	// if ( $b_maintenance ) {
+
+	// 	$a_args['meta_query'] = array(
+	// 		array(
+	// 			'key'     => s_pmh_get_fixed_flag_key(),
+	// 			'compare' => 'NOT EXISTS',
+	// 		),
+	// 	);
+	// }
 
 	if ( $a_ids ) {
 
@@ -649,9 +682,26 @@ function f_pmh_get_media_ids( int $i_paged, int $i_perpage, $a_ids = array() ) {
 
 		$a_args['paged']          = $i_paged;
 		$a_args['posts_per_page'] = $i_perpage;
+
+		add_filter( 'posts_where', 'f_pmh_filter_posts_by_id' );
+
+		$a_posts = get_posts( $a_args );
+
+		remove_filter( 'post_where', 'f_pmh_filter_posts_by_id' );
 	}
 
-	return get_posts( $a_args );
+	return $a_posts;
+}
+
+function f_pmh_filter_posts_by_id($where = '') {
+
+    // Set the minimum post ID
+    $min_id = get_option( 'pmh_last_mediafix_id', 1 );
+
+    // Append to the WHERE clause
+    $where .= " AND ID > " . $min_id;
+
+    return $where;
 }
 
 /**
@@ -810,6 +860,7 @@ function f_ajax_pmh_media_fix_sample() {
 	$i_paged_process   = (int) sanitize_text_field( $_POST['i_paged'] );
 	$i_perpage_process = (int) sanitize_text_field( $_POST['i_perpage'] );
 	$s_per_ids         = sanitize_text_field( $_POST['s_per_ids'] );
+	$i_last_id         = (int) sanitize_text_field( $_POST['i_last_id'] );
 
 	$i_next_paged_process = $s_per_ids ? false : $i_paged_process + 1;
 	$a_per_ids            = $s_per_ids ? explode( " ", $s_per_ids ) : false;
@@ -818,7 +869,7 @@ function f_ajax_pmh_media_fix_sample() {
 	$s_log = "MEDIA SAMPLE\n\n";
 
 	// Query media.
-	$a_media_ids = f_pmh_get_media_ids( $i_paged_process, $i_perpage_process, $a_per_ids );
+	$a_media_ids = f_pmh_get_media_ids( $i_paged_process, $i_perpage_process, $a_per_ids, $i_last_id );
 
 	if ( $a_media_ids ) {
 
@@ -921,9 +972,10 @@ add_action( 'wp_ajax_media_fix_sample', 'f_ajax_pmh_media_fix_sample' );
  */
 function f_ajax_pmh_media_fix_run() {
 
-	$i_paged_process   = (int) sanitize_text_field( $_POST['i_paged'] );
-	$i_perpage_process = (int) sanitize_text_field( $_POST['i_perpage'] );
-	$s_per_ids         = sanitize_text_field( $_POST['s_per_ids'] );
+	$i_paged_process   = isset( $_POST['i_paged'] ) ? (int) sanitize_text_field( $_POST['i_paged'] ) : 1;
+	$i_perpage_process = isset( $_POST['i_perpage'] ) ? (int) sanitize_text_field( $_POST['i_perpage'] ) : 50;
+	$s_per_ids         = isset( $_POST['s_per_ids'] ) ? sanitize_text_field( $_POST['s_per_ids'] ) : '';
+	$i_last_id         = (int) sanitize_text_field( $_POST['i_last_id'] );
 
 	$i_next_paged_process = $s_per_ids ? false : $i_paged_process + 1;
 	$a_per_ids            = $s_per_ids ? explode( " ", $s_per_ids ) : false;
@@ -932,7 +984,7 @@ function f_ajax_pmh_media_fix_run() {
 	$s_log = "MEDIA FIX RUNNING - PAGED {$i_paged_process}\n\n";
 
 	// Query media.
-	$a_media_ids = f_pmh_get_media_ids( $i_paged_process, $i_perpage_process, $a_per_ids );
+	$a_media_ids = f_pmh_get_media_ids( $i_paged_process, $i_perpage_process, $a_per_ids, $i_last_id );
 	$i_media_ids = count( $a_media_ids );
 
 	if ( $a_media_ids ) {
@@ -987,7 +1039,9 @@ function f_ajax_pmh_media_fix_run() {
 				$s_log .= "no update\n";
 			}
 
-			f_pmh_flag_object_corrected( $i_media_id, 'post' );
+			update_option( 'pmh_last_mediafix_id', $i_media_id );
+
+			// f_pmh_flag_object_corrected( $i_media_id, 'post' );
 
 			$s_log .= "\n- - - - - - - - -\n\n";
 		}
@@ -1006,6 +1060,7 @@ function f_ajax_pmh_media_fix_run() {
 		'log'                => $s_log,
 		'next_paged_process' => $i_next_paged_process,
 		'count_processed'    => $i_media_ids,
+		'last_media_id'      => $i_media_id,
 	);
 
 	wp_send_json( $a_response );
@@ -1192,9 +1247,9 @@ add_action( 'wp_ajax_acf_fix_run', 'pri_ajax_acf_fix_run' );
  */
 function f_ajax_pmh_posts_fix_run() {
 
-	$i_paged_process   = (int) sanitize_text_field( $_POST['i_paged'] );
-	$i_perpage_process = (int) sanitize_text_field( $_POST['i_perpage'] );
-	$s_per_ids         = sanitize_text_field( $_POST['s_per_ids'] );
+	$i_paged_process   = isset( $_POST['i_paged'] ) ? (int) sanitize_text_field( $_POST['i_paged'] ) : 1;
+	$i_perpage_process = isset( $_POST['i_perpage'] ) ? (int) sanitize_text_field( $_POST['i_perpage'] ) : 50;
+	$s_per_ids         = isset( $_POST['s_per_ids'] ) ? sanitize_text_field( $_POST['s_per_ids'] ) : '';
 
 	$i_next_paged_process = $s_per_ids ? false : $i_paged_process + 1;
 	$a_per_ids            = $s_per_ids ? explode( " ", $s_per_ids ) : false;
@@ -1203,9 +1258,10 @@ function f_ajax_pmh_posts_fix_run() {
 	$s_log = "POSTS FIX RUNNING - PAGED {$i_paged_process}\n\n";
 
 	$a_posts_ids = f_pmh_get_posts_ids( $i_paged_process, $i_perpage_process, $a_per_ids );
-	$i_media_ids = count( $a_posts_ids );
+	$a_media_ids = f_pmh_get_media_ids( $i_paged_process, $i_perpage_process, false, get_option( 'pmh_last_mediafix_id' ) );
+	$i_posts_ids = count( $a_posts_ids );
 
-	if ( $a_posts_ids ) {
+	if ( $a_posts_ids && ! $a_media_ids ) {
 
 		foreach ( $a_posts_ids as $i_post_id ) {
 
@@ -1226,7 +1282,14 @@ function f_ajax_pmh_posts_fix_run() {
 		}
 	} else {
 
-		$s_log .= "No Posts to process.\n\n";
+		$s_log .= "No Posts to process. ";
+
+		if ( $a_media_ids ) {
+
+			$s_log .= "There are still unfixed images. ";
+        }
+
+		$s_log .= "\n\n";
 
 		$i_next_paged_process = false;
 	}
@@ -1238,7 +1301,7 @@ function f_ajax_pmh_posts_fix_run() {
 	$a_response = array(
 		'log'                => $s_log,
 		'next_paged_process' => $i_next_paged_process,
-		'count_processed'    => $i_media_ids,
+		'count_processed'    => $i_posts_ids,
 	);
 
 	wp_send_json( $a_response );
@@ -1505,3 +1568,86 @@ function f_pmh_flag_object_corrected( int $i_object_id, string $s_object_type ) 
 		}
 	}
 }
+
+/**
+ * Cron name.
+ *
+ * @return void
+ */
+function s_pmh_get_cron_name() {
+
+	$s_cron_name = 'pmh_cron';
+
+	return $s_cron_name;
+}
+
+/**
+ * Handle form submission.
+ *
+ * @return void
+ */
+function f_pmh_save_settings_cron() {
+
+	$_a_enabled_crons = isset( $_GET['pmh-cron'] ) ? $_GET['pmh-cron'] : array();
+	$a_enabled_crons  = array();
+	$a_allowed_values = array( 'media', 'posts' );
+
+	foreach( $_a_enabled_crons as $i => $_s_enabled_cron ) {
+
+		if ( in_array( $_s_enabled_cron, $a_allowed_values ) ) {
+
+			$a_enabled_crons[] = $a_allowed_values[ array_search( $_s_enabled_cron, $a_allowed_values ) ];
+		}
+	}
+
+	update_option( 'pmh_enabled_crons', $a_enabled_crons );
+
+	$i_timestamp = wp_next_scheduled( s_pmh_get_cron_name() );
+
+	if ( $a_enabled_crons && ! $i_timestamp ) {
+
+		wp_schedule_event( time(), 'hourly', s_pmh_get_cron_name() );
+
+	} else {
+
+		wp_unschedule_event( $i_timestamp, s_pmh_get_cron_name() );
+	}
+
+	wp_redirect( admin_url( '/admin.php?page=pmh-cron' ) );
+
+	exit;
+}
+add_action( 'admin_post_pmh-save-settings-cron', 'f_pmh_save_settings_cron' );
+
+/**
+ * Run PMH cron.
+ *
+ * @return void
+ */
+function f_pmh_cron_run() {
+
+	$a_pmh_enabled_crons = get_option( 'pmh_enabled_crons' );
+
+	if ( in_array( 'media', $a_pmh_enabled_crons ) ) {
+
+		f_ajax_pmh_media_fix_run();
+	}
+
+	if ( in_array( 'posts', $a_pmh_enabled_crons ) ) {
+
+		f_ajax_pmh_posts_fix_run();
+	}
+}
+add_action( s_pmh_get_cron_name(), 'f_pmh_cron_run' );
+
+/**
+ * Performance helper.
+ * Use when post edit not loading.
+ *
+ * @return void
+ */
+function pmh_disable_post_type_support() {
+	remove_post_type_support( 'post', 'custom-fields' ); // DINKUM: Remove in production.
+	remove_post_type_support( 'episode', 'custom-fields' ); // DINKUM: Remove in production.
+}
+add_action( 'admin_init', 'pmh_disable_post_type_support' );
