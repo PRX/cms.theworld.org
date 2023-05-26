@@ -6,25 +6,37 @@
             "key": "field_62e3fc14d73ae",
             "label": "Amazon Items",
             "name": "amazon_items",
+            "aria-label": "",
             "type": "repeater",
             "instructions": "",
             "required": 0,
-            "conditional_logic": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_62e3fc2cd73af",
+                        "operator": "!=empty"
+                    }
+                ]
+            ],
             "wrapper": {
                 "width": "",
                 "class": "",
                 "id": ""
             },
-            "collapsed": "",
+            "show_in_graphql": 0,
+            "layout": "table",
+            "pagination": 0,
             "min": 0,
             "max": 0,
-            "layout": "table",
-            "button_label": "",
+            "collapsed": "",
+            "button_label": "Add Row",
+            "rows_per_page": 20,
             "sub_fields": [
                 {
                     "key": "field_62e3fc2cd73af",
                     "label": "Amazon Item",
                     "name": "amazon_item",
+                    "aria-label": "",
                     "type": "text",
                     "instructions": "",
                     "required": 0,
@@ -38,47 +50,8 @@
                     "placeholder": "",
                     "prepend": "",
                     "append": "",
-                    "maxlength": ""
-                }
-            ]
-        },
-        {
-            "key": "field_6328c949421fe",
-            "label": "Spotify Playlists",
-            "name": "spotify_playlists",
-            "type": "repeater",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "collapsed": "",
-            "min": 0,
-            "max": 0,
-            "layout": "table",
-            "button_label": "",
-            "sub_fields": [
-                {
-                    "key": "field_6328c949421ff",
-                    "label": "Spotify Playlist",
-                    "name": "spotify_playlist",
-                    "type": "text",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "default_value": "",
-                    "placeholder": "",
-                    "prepend": "",
-                    "append": "",
-                    "maxlength": ""
+                    "maxlength": "",
+                    "parent_repeater": "field_62e3fc14d73ae"
                 }
             ]
         },
@@ -86,15 +59,24 @@
             "key": "field_6328c9a242200",
             "label": "Music Heard On Air Body",
             "name": "music_heard_on_air",
+            "aria-label": "",
             "type": "wysiwyg",
             "instructions": "",
             "required": 0,
-            "conditional_logic": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6328c949421fe",
+                        "operator": "!=empty"
+                    }
+                ]
+            ],
             "wrapper": {
                 "width": "",
                 "class": "",
                 "id": ""
             },
+            "show_in_graphql": 0,
             "default_value": "",
             "tabs": "all",
             "toolbar": "full",
@@ -117,8 +99,12 @@
     "label_placement": "top",
     "instruction_placement": "label",
     "hide_on_screen": "",
-    "active": true,
+    "active": false,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1663617919
+    "show_in_graphql": 0,
+    "graphql_field_name": "episodesCustom",
+    "map_graphql_types_from_location_rules": 0,
+    "graphql_types": "",
+    "modified": 1685119330
 }

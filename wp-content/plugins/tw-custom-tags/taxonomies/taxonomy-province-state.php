@@ -64,7 +64,9 @@ function tw_province_state_taxonomy() {
 		'rest_namespace'        => 'wp/v2',
 		'show_in_quick_edit'    => true,
 		'sort'                  => false,
-		'show_in_graphql'       => false,
+		'show_in_graphql'       => true,
+		'graphql_single_name'   => 'provinceOrState',
+		'graphql_plural_name'   => 'provincesOrStates',
 	);
 	register_taxonomy( 'province_or_state', array( 'post' ), $args );
 }

@@ -36,17 +36,20 @@ function tw_contributors_taxonomy() {
 		'items_list_navigation'      => __( 'Items list navigation', 'text_domain' ),
 	);
 	$args   = array(
-		'labels'            => $labels,
-		'description'       => 'Biographical details of folks that work on content.',
-		'hierarchical'      => false,
-		'public'            => true,
-		'show_ui'           => true,
-		'show_admin_column' => true,
-		'show_in_nav_menus' => false,
-		'show_tagcloud'     => false,
-		'show_in_rest'      => true,
+		'labels'              => $labels,
+		'description'         => 'Biographical details of folks that work on content.',
+		'hierarchical'        => false,
+		'public'              => true,
+		'show_ui'             => true,
+		'show_admin_column'   => true,
+		'show_in_nav_menus'   => false,
+		'show_tagcloud'       => false,
+		'show_in_rest'        => true,
+		'show_in_graphql'     => true,
+		'graphql_single_name' => 'contributor',
+		'graphql_plural_name' => 'contributors',
 	);
 	register_taxonomy( 'contributor', array( 'post', 'attachment', 'segment' ), $args );
 
 }
-add_action('init', 'tw_contributors_taxonomy', 0);
+add_action( 'init', 'tw_contributors_taxonomy', 0 );

@@ -64,7 +64,9 @@ function tw_person_taxonomy() {
 		'rest_namespace'        => 'wp/v2',
 		'show_in_quick_edit'    => true,
 		'sort'                  => false,
-		'show_in_graphql'       => false,
+		'show_in_graphql'       => true,
+		'graphql_single_name'   => 'person',
+		'graphql_plural_name'   => 'people',
 	);
 	register_taxonomy( 'person', array( 'post' ), $args );
 }

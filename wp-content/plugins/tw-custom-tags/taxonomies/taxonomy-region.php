@@ -64,7 +64,9 @@ function tw_region_taxonomy() {
 		'rest_namespace'        => 'wp/v2',
 		'show_in_quick_edit'    => true,
 		'sort'                  => false,
-		'show_in_graphql'       => false,
+		'show_in_graphql'       => true,
+		'graphql_single_name'   => 'region',
+		'graphql_plural_name'   => 'regions',
 	);
 	register_taxonomy( 'region', array( 'post' ), $args );
 }

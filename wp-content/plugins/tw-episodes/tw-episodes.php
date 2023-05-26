@@ -61,6 +61,11 @@ function tw_episodes_post_type() {
 		'publicly_queryable'  => true,
 		'capability_type'     => 'page',
 		'show_in_rest'        => true,
+		'show_in_graphql'     => true,
+		'graphql_single_name' => 'episode',
+		'graphql_plural_name' => 'episodes',
+		'public'              => true,
+		'publicly_queryable'  => true,
 	);
 	register_post_type( 'episode', $args );
 

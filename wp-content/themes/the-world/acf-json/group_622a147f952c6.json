@@ -6,6 +6,7 @@
             "key": "field_622a148725289",
             "label": "Audio Explicit",
             "name": "audio_explicit",
+            "aria-label": "",
             "type": "select",
             "instructions": "",
             "required": 0,
@@ -31,6 +32,7 @@
             "key": "field_622a14f07d456",
             "label": "Season",
             "name": "season",
+            "aria-label": "",
             "type": "text",
             "instructions": "",
             "required": 0,
@@ -50,6 +52,7 @@
             "key": "field_622a15103d8a5",
             "label": "Episode Number",
             "name": "episode_number",
+            "aria-label": "",
             "type": "text",
             "instructions": "",
             "required": 0,
@@ -69,6 +72,7 @@
             "key": "field_622a151b7de6a",
             "label": "Episode Type",
             "name": "episode_type",
+            "aria-label": "",
             "type": "select",
             "instructions": "",
             "required": 0,
@@ -102,7 +106,7 @@
         ]
     ],
     "menu_order": 5,
-    "position": "acf_after_title",
+    "position": "side",
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
@@ -110,5 +114,9 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1646925207
+    "show_in_graphql": 1,
+    "graphql_field_name": "podcastMetadata",
+    "map_graphql_types_from_location_rules": 0,
+    "graphql_types": "",
+    "modified": 1685119772
 }

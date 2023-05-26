@@ -1,11 +1,12 @@
 {
     "key": "group_62c496d7b0534",
-    "title": "Additional Format",
+    "title": "Presentation",
     "fields": [
         {
             "key": "field_62c49707e35bc",
             "label": "Format",
             "name": "format",
+            "aria-label": "",
             "type": "select",
             "instructions": "",
             "required": 0,
@@ -39,13 +40,17 @@
         ]
     ],
     "menu_order": 0,
-    "position": "normal",
+    "position": "side",
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "show_in_rest": 0,
-    "modified": 1657050969
+    "show_in_rest": 1,
+    "show_in_graphql": 1,
+    "graphql_field_name": "presentation",
+    "map_graphql_types_from_location_rules": 0,
+    "graphql_types": "",
+    "modified": 1685030829
 }

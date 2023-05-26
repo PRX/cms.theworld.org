@@ -36,14 +36,17 @@ function tw_programs_taxonomy() {
 		'items_list_navigation'      => __( 'Items list navigation', 'text_domain' ),
 	);
 	$args   = array(
-		'labels'            => $labels,
-		'hierarchical'      => false,
-		'public'            => true,
-		'show_ui'           => true,
-		'show_admin_column' => true,
-		'show_in_nav_menus' => false,
-		'show_tagcloud'     => false,
-		'show_in_rest'      => true,
+		'labels'              => $labels,
+		'hierarchical'        => false,
+		'public'              => true,
+		'show_ui'             => true,
+		'show_admin_column'   => true,
+		'show_in_nav_menus'   => false,
+		'show_tagcloud'       => false,
+		'show_in_rest'        => true,
+		'show_in_graphql'     => true,
+		'graphql_single_name' => 'program',
+		'graphql_plural_name' => 'programs',
 	);
 	register_taxonomy( 'program', array( 'post', 'episode', 'segment' ), $args );
 

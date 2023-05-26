@@ -6,6 +6,7 @@
             "key": "field_622a2d7270816",
             "label": "Image Banner",
             "name": "image_banner",
+            "aria-label": "",
             "type": "image",
             "instructions": "",
             "required": 0,
@@ -15,8 +16,8 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array",
-            "preview_size": "medium",
+            "show_in_graphql": 1,
+            "return_format": "id",
             "library": "all",
             "min_width": "",
             "min_height": "",
@@ -24,12 +25,14 @@
             "max_width": "",
             "max_height": "",
             "max_size": "",
-            "mime_types": ""
+            "mime_types": "",
+            "preview_size": "medium"
         },
         {
             "key": "field_622a2dae46e20",
             "label": "Logo",
             "name": "logo",
+            "aria-label": "",
             "type": "image",
             "instructions": "",
             "required": 0,
@@ -39,8 +42,8 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array",
-            "preview_size": "medium",
+            "show_in_graphql": 1,
+            "return_format": "id",
             "library": "all",
             "min_width": "",
             "min_height": "",
@@ -48,7 +51,8 @@
             "max_width": "",
             "max_height": "",
             "max_size": "",
-            "mime_types": ""
+            "mime_types": "",
+            "preview_size": "medium"
         }
     ],
     "location": [
@@ -56,14 +60,7 @@
             {
                 "param": "taxonomy",
                 "operator": "==",
-                "value": "category"
-            }
-        ],
-        [
-            {
-                "param": "taxonomy",
-                "operator": "==",
-                "value": "program"
+                "value": "all"
             }
         ],
         [
@@ -83,5 +80,9 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1655916526
+    "show_in_graphql": 1,
+    "graphql_field_name": "taxonomyImages",
+    "map_graphql_types_from_location_rules": 0,
+    "graphql_types": "",
+    "modified": 1685120051
 }

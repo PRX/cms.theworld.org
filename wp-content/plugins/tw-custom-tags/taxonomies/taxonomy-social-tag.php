@@ -64,7 +64,9 @@ function tw_social_tag_taxonomy() {
 		'rest_namespace'        => 'wp/v2',
 		'show_in_quick_edit'    => true,
 		'sort'                  => false,
-		'show_in_graphql'       => false,
+		'show_in_graphql'       => true,
+		'graphql_single_name'   => 'socialTag',
+		'graphql_plural_name'   => 'socialTags',
 	);
 	register_taxonomy( 'social_tags', array( 'post' ), $args );
 }
