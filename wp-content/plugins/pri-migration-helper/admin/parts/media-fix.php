@@ -24,6 +24,13 @@
 				<p><i>Separated by a newline. Leave empty to process all.</i></p>
 			</td>
 		</tr>
+		<tr>
+			<th scope="row"><label for="pmh-media-last-id"><?php esc_html_e( 'Last ID', 'pmh' ); ?></label></th>
+			<td>
+				<input type="number" name="pmh-media-last-id" value="<?php echo get_option( 'pmh_last_mediafix_id', 1 ); ?>" min="1" readonly>
+				<p><i>The last media ID that was processed.</i></p>
+			</td>
+		</tr>
 
 		<tr>
 			<th scope="row">Run Process</th>
