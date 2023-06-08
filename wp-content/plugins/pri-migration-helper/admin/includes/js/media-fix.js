@@ -5,6 +5,7 @@ jQuery(document).ready(function ($) {
       iPaged: parseInt($('#pmh-media-fix-form [name="pmh-media-fix-paged"]').val()),
       iPerPage: parseInt($('#pmh-media-fix-form [name="pmh-media-fix-perpage"]').val()),
       sPerIds: $('#pmh-media-fix-form [name="pmh-media-fix-ids"]').val(),
+      iLastId: $('#pmh-media-fix-form [name="pmh-media-last-id"]').val(),
     }
   }
 
@@ -30,6 +31,7 @@ jQuery(document).ready(function ($) {
         i_paged: ObjSettings.iPaged,
         i_perpage: ObjSettings.iPerPage,
         s_per_ids: ObjSettings.sPerIds,
+        i_last_id: ObjSettings.iLastId,
       },
       dataType: "JSON",
       success: function (response) {
@@ -54,11 +56,16 @@ jQuery(document).ready(function ($) {
         i_paged: ObjSettings.iPaged,
         i_perpage: ObjSettings.iPerPage,
         s_per_ids: ObjSettings.sPerIds,
+        i_last_id: ObjSettings.iLastId,
       },
       dataType: "JSON",
       success: function (response) {
         console.log(arguments);
         fPrintLog(response.log);
+
+        if (response.last_media_id) {
+          $('#pmh-media-fix-form [name="pmh-media-last-id"]').val(response.last_media_id);
+        }
 
         if (response.next_paged_process) {
           $('#pmh-media-fix-form [name="pmh-media-fix-paged"]').val(response.next_paged_process);
