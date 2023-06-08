@@ -65,6 +65,7 @@ local-config.php
 # Composer Vendor Files #
 #########################
 vendor
+!/wp-content/plugins/**/vendor
 
 # Custom #
 ##########
