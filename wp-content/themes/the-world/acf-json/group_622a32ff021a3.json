@@ -1,11 +1,12 @@
 {
     "key": "group_622a32ff021a3",
-    "title": "Sponsor Links",
+    "title": "Sponsorship",
     "fields": [
         {
             "key": "field_622a3327b11a4",
             "label": "Sponsor Links",
             "name": "collection-sponsor_links",
+            "aria-label": "",
             "type": "repeater",
             "instructions": "",
             "required": 0,
@@ -19,12 +20,13 @@
             "min": 0,
             "max": 0,
             "layout": "table",
-            "button_label": "",
+            "button_label": "Add Row",
             "sub_fields": [
                 {
                     "key": "field_622a33c7bd044",
                     "label": "Sponsor Links",
                     "name": "sponsor_links",
+                    "aria-label": "",
                     "type": "link",
                     "instructions": "",
                     "required": 0,
@@ -34,9 +36,11 @@
                         "class": "",
                         "id": ""
                     },
-                    "return_format": "array"
+                    "return_format": "array",
+                    "parent_repeater": "field_622a3327b11a4"
                 }
-            ]
+            ],
+            "rows_per_page": 20
         }
     ],
     "location": [
@@ -78,5 +82,9 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1655990408
+    "show_in_graphql": 1,
+    "graphql_field_name": "sponsorship",
+    "map_graphql_types_from_location_rules": 0,
+    "graphql_types": "",
+    "modified": 1686588888
 }
