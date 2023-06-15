@@ -56,7 +56,7 @@ jQuery(document).ready(function ($) {
       },
       dataType: "JSON",
       success: function (response) {
-        console.log(arguments);
+        console.log("Next Page: ", response.next_paged_process);
         fPrintLog(response.log);
 
         if (response.next_paged_process) {
@@ -65,7 +65,7 @@ jQuery(document).ready(function ($) {
           );
           fRunAcfFix();
         } else {
-          if (typeof callBack === 'function') {
+          if (typeof callBack === "function") {
             callBack();
           }
         }
@@ -75,22 +75,21 @@ jQuery(document).ready(function ($) {
 
   updateAcfFieldSelect();
 
-  $('#pmh-acf-fix-form').on('process-start', function (e) {
+  $("#pmh-acf-fix-form").on("process-start", function (e) {
     // $('#pmh-acf-fix-form [name="pmh-acf-fix-paged"]').attr('readonly', 'readonly');
   });
 
-  $('#pmh-acf-fix-form').on('process-stop', function (e) {
+  $("#pmh-acf-fix-form").on("process-stop", function (e) {
     // $('#pmh-acf-fix-form [name="pmh-acf-fix-paged"]').removeAttr('readonly');
   });
 
   $("#pmh-post-worker-acf-fix").on("click", function (e) {
     e.preventDefault();
 
-    $('#pmh-acf-fix-form').trigger('process-start');
+    $("#pmh-acf-fix-form").trigger("process-start");
 
     fRunAcfFix(function () {
-
-      $('#pmh-acf-fix-form').trigger('process-stop');
+      $("#pmh-acf-fix-form").trigger("process-stop");
     });
   });
 });
