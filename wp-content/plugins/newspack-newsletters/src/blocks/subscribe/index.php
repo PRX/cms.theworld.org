@@ -97,6 +97,8 @@ function render_block( $attrs ) {
 		$available_lists = [ $lists[0] ];
 	}
 
+	$provider = \Newspack_Newsletters::get_service_provider();
+
 	// Enqueue scripts.
 	enqueue_scripts();
 
@@ -135,10 +137,9 @@ function render_block( $attrs ) {
 	<div
 		class="newspack-newsletters-subscribe <?php echo esc_attr( get_block_classes( $attrs ) ); ?>"
 		data-success-message="<?php echo \esc_attr( $attrs['successMessage'] ); ?>"
+		<?php echo $subscribed ? 'data-status="200"' : ''; ?>
 	>
-		<?php if ( $subscribed ) : ?>
-			<p class="message"><?php echo \esc_html( $attrs['successMessage'] ); ?></p>
-		<?php else : ?>
+		<?php if ( ! $subscribed ) : ?>
 			<form id="<?php echo esc_attr( get_form_id() ); ?>">
 				<?php \wp_nonce_field( FORM_ACTION, FORM_ACTION ); ?>
 				<?php
@@ -235,15 +236,21 @@ function render_block( $attrs ) {
 						placeholder="<?php echo \esc_attr( $attrs['placeholder'] ); ?>"
 						value=""
 					/>
+					<?php if ( $provider && 'mailchimp' === $provider->service && $attrs['mailchimpDoubleOptIn'] ) : ?>
+						<input type="hidden" name="double_optin" value="1" />
+					<?php endif; ?>
 					<input type="submit" value="<?php echo \esc_attr( $attrs['label'] ); ?>" />
 				</div>
 			</form>
-			<div class="newspack-newsletters-subscribe-response">
-				<?php if ( ! empty( $message ) ) : ?>
-					<p><?php echo \esc_html( $message ); ?></p>
+		<?php endif; ?>
+		<div class="newspack-newsletters-subscribe__response">
+			<div class="newspack-newsletters-subscribe__icon"></div>
+			<div class="newspack-newsletters-subscribe__message">
+				<?php if ( ! empty( $message ) || $subscribed ) : ?>
+					<p><?php echo $subscribed ? \wp_kses_post( $attrs['successMessage'] ) : \esc_html( $message ); ?></p>
 				<?php endif; ?>
 			</div>
-		<?php endif; ?>
+		</div>
 	</div>
 	<?php
 	return ob_get_clean();
@@ -358,6 +365,12 @@ function process_form() {
 		'newspack_popup_id'               => $popup_id,
 		'newsletters_subscription_method' => 'newsletters-subscription-block',
 	];
+
+	// Handle Mailchimp double opt-in option.
+	$provider = \Newspack_Newsletters::get_service_provider();
+	if ( $provider && 'mailchimp' === $provider->service && isset( $_REQUEST['double_optin'] ) && '1' === $_REQUEST['double_optin'] ) {
+		$metadata['status'] = 'pending';
+	}
 
 	$result = \Newspack_Newsletters_Subscription::add_contact(
 		[
