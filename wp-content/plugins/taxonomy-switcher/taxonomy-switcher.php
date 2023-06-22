@@ -3,7 +3,7 @@
 Plugin Name: Taxonomy Switcher
 Plugin URI: https://github.com/WebDevStudios/taxonomy-switcher
 Description: Switches the Taxonomy of terms to a different Taxonomy
-Version: 1.0.4
+Version: 1.0.5
 Author: WebDevStudios
 Author URI: http://webdevstudios.com
 */
@@ -48,7 +48,7 @@ class Taxonomy_Switcher_Init {
 		if (
 			! isset( $_GET[ 'taxonomy_switcher' ] )
 			|| 1 != $_GET[ 'taxonomy_switcher' ]
-			|| ! current_user_can( 'manage_categories' )
+			|| ! current_user_can( 'manage_options' )
 			|| ! isset( $_GET[ 'from_tax' ] )
 			|| empty( $_GET[ 'from_tax' ] )
 			|| ! isset( $_GET[ 'to_tax' ] )
