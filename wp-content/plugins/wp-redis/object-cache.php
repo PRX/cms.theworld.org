@@ -986,7 +986,7 @@ class WP_Object_Cache {
 			$out[] = '<li><strong>Group:</strong> ' . esc_html( $group ) . ' - ( ' . number_format( strlen( serialize( $cache ) ) / 1024, 2 ) . 'k )</li>';
 		}
 		$out[] = '</ul>';
-		echo implode( PHP_EOL, $out ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo implode( PHP_EOL, $out ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped,WordPressDotOrg.sniffs.OutputEscaping.UnescapedOutputParameter
 	}
 
 	/**
@@ -1238,29 +1238,37 @@ class WP_Object_Cache {
 	 *               with defaults applied.
 	 */
 	public function build_client_parameters( $redis_server ) {
+		// Default Redis port.
+		$port = 6379;
+		// Default Redis database number.
+		$database = 0;
+
 		if ( empty( $redis_server ) ) {
 			// Attempt to automatically load Pantheon's Redis config from the env.
 			if ( isset( $_SERVER['CACHE_HOST'] ) ) {
 				$redis_server = [
-					'host' => wp_strip_all_tags( $_SERVER['CACHE_HOST'] ),
-					'port' => isset( $_SERVER['CACHE_PORT'] ) ? wp_strip_all_tags( $_SERVER['CACHE_PORT'] ) : 0,
-					'auth' => isset( $_SERVER['CACHE_PASSWORD'] ) ? wp_strip_all_tags( $_SERVER['CACHE_PASSWORD'] ) : '',
-					'database' => isset( $_SERVER['CACHE_DB'] ) ? wp_strip_all_tags( $_SERVER['CACHE_DB'] ) : 0,
+					// Don't use WP methods to sanitize the host due to plugin loading issues with other caching methods.
+					// @phpcs:ignore WordPressVIPMinimum.Functions.StripTags.StripTagsOneParameter,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					'host' => strip_tags( $_SERVER['CACHE_HOST'] ),
+					'port' => ! empty( $_SERVER['CACHE_PORT'] ) ? intval( $_SERVER['CACHE_PORT'] ) : $port,
+					// Don't attempt to sanitize passwords as this can break authentication.
+					// @phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					'auth' => ! empty( $_SERVER['CACHE_PASSWORD'] ) ? $_SERVER['CACHE_PASSWORD'] : null,
+					'database' => ! empty( $_SERVER['CACHE_DB'] ) ? intval( $_SERVER['CACHE_DB'] ) : $database,
 				];
 			} else {
 				$redis_server = [
 					'host' => '127.0.0.1',
-					'port' => 6379,
-					'database' => 0,
+					'port' => $port,
+					'database' => $database,
 				];
 			}
 		}
 
 		if ( file_exists( $redis_server['host'] ) && 'socket' === filetype( $redis_server['host'] ) ) { // unix socket connection.
 			// port must be null or socket won't connect.
+			unset( $redis_server['port'] );
 			$port = null;
-		} else { // tcp connection.
-			$port = ! empty( $redis_server['port'] ) ? $redis_server['port'] : 6379;
 		}
 
 		$defaults = [
@@ -1272,7 +1280,7 @@ class WP_Object_Cache {
 		// 1s timeout, 100ms delay between reconnections.
 
 		// merging the defaults with the original $redis_server enables any custom parameters to get sent downstream to the redis client.
-		return array_replace_recursive( $redis_server, $defaults );
+		return array_replace_recursive( $defaults, $redis_server );
 	}
 
 	/**
@@ -1470,9 +1478,9 @@ class WP_Object_Cache {
 		try {
 			$this->last_triggered_error = 'WP Redis: ' . $exception->getMessage();
 			// Be friendly to developers debugging production servers by triggering an error.
-			
+
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error,WordPress.Security.EscapeOutput.OutputNotEscaped
-			trigger_error( $this->last_triggered_error, E_USER_WARNING ); 
+			trigger_error( $this->last_triggered_error, E_USER_WARNING );
 		} catch ( PHPUnit_Framework_Error_Warning $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
 			// PHPUnit throws an Exception when `trigger_error()` is called. To ensure our tests (which expect Exceptions to be caught) continue to run, we catch the PHPUnit exception and inspect the RedisException message.
 		}
