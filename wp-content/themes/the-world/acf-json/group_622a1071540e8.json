@@ -6,6 +6,7 @@
             "key": "field_622a10c4c8d87",
             "label": "Broadcast Date",
             "name": "broadcast_date",
+            "aria-label": "",
             "type": "date_picker",
             "instructions": "",
             "required": 0,
@@ -38,5 +39,9 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1647626626
+    "show_in_graphql": 1,
+    "graphql_field_name": "episodeDates",
+    "map_graphql_types_from_location_rules": 0,
+    "graphql_types": "",
+    "modified": 1686671854
 }

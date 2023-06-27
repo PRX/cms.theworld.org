@@ -25,6 +25,7 @@ define(
 		'tw-disable-yoast-indexables/tw-disable-yoast-indexables.php',
 		'tw-episodes/tw-episodes.php',
 		'tw-media/tw-media.php',
+		'tw-menus/tw-menus.php',
 		'tw-endpoint-helper/tw-endpoint-helper.php',
 		'tw-programs/tw-programs.php',
 		'tw-qa-block/tw-qa-block.php',
