@@ -39,5 +39,6 @@ define(
 		'wp-cfm/wp-cfm.php',
 		'wp-rest-menu/wp-rest-menus.php',
 		'xml-sitemap-feed/xml-sitemap.php',
+		'wp-redis/wp-redis.php',
 	)
 );
