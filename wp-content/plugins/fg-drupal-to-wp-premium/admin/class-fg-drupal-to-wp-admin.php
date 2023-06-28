@@ -1315,11 +1315,11 @@ SQL;
 					$this->taxonomy_term_hierarchy = $this->get_taxonomy_term_hierarchy();
 
 					// DINKUM: exclude categories.
-					if ( ! in_array( 'categories', $this->premium_options['taxonomies_to_skip'] ) ) {
+					if ( $this->premium_options['taxonomies_to_skip'] === null || ! in_array( 'categories', $this->premium_options['taxonomies_to_skip'] ) ) {
 						$cat_count = $this->import_taxonomies_terms( 'categories' );
 						$this->display_admin_notice( sprintf( _n( '%d category imported', '%d categories imported', $cat_count, 'fg-drupal-to-wp' ), $cat_count ) );
 					}
-					if ( ! in_array( 'tags', $this->premium_options['taxonomies_to_skip'] ) ) {
+					if ( $this->premium_options['taxonomies_to_skip'] === null || ! in_array( 'tags', $this->premium_options['taxonomies_to_skip'] ) ) {
 						$tags_count = $this->import_taxonomies_terms( 'tags' );
 						$this->display_admin_notice( sprintf( _n( '%d tag imported', '%d tags imported', $tags_count, 'fg-drupal-to-wp' ), $tags_count ) );
 					}
