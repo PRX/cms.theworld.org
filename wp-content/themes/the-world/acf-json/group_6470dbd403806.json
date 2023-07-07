@@ -1,7 +1,37 @@
 {
     "key": "group_6470dbd403806",
     "title": "Landing Page",
-    "fields": [],
+    "fields": [
+        {
+            "key": "field_64a853f71ad05",
+            "label": "Featured Posts",
+            "name": "featured_posts",
+            "aria-label": "",
+            "type": "relationship",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "post_type": [
+                "post"
+            ],
+            "post_status": "",
+            "taxonomy": "",
+            "filters": [
+                "search",
+                "taxonomy"
+            ],
+            "return_format": "id",
+            "min": 0,
+            "max": 0,
+            "elements": []
+        }
+    ],
     "location": [
         [
             {
@@ -24,5 +54,5 @@
     "graphql_field_name": "landingPage",
     "map_graphql_types_from_location_rules": 0,
     "graphql_types": "",
-    "modified": 1685118087
+    "modified": 1688753408
 }
