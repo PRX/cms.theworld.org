@@ -370,8 +370,9 @@ class FG_Drupal_to_WordPress_Premium {
 		/*
 		 * Parent pages
 		 */
-		$plugin_parent_pages = new FG_Drupal_to_WordPress_Parent_Pages( $plugin_admin );
-		$this->loader->add_action( 'fgd2wp_post_import', $plugin_parent_pages, 'set_parent_pages', 11 ); // After importing the URLs
+		// DINKUM: Disable this for now because we do not need it and it is causing memory issues.
+		// $plugin_parent_pages = new FG_Drupal_to_WordPress_Parent_Pages( $plugin_admin );
+		// $this->loader->add_action( 'fgd2wp_post_import', $plugin_parent_pages, 'set_parent_pages', 11 ); // After importing the URLs
 
 		/*
 		 * Video Embed field

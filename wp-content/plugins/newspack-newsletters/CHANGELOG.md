@@ -1,3 +1,133 @@
+# [1.67.0](https://github.com/Automattic/newspack-newsletters/compare/v1.66.0...v1.67.0) (2023-06-19)
+
+
+### Bug Fixes
+
+* remove important flag from font size rules ([#1185](https://github.com/Automattic/newspack-newsletters/issues/1185)) ([39031fd](https://github.com/Automattic/newspack-newsletters/commit/39031fd6a2bad728eb13a3b5dbb6d655887a640b))
+
+
+### Features
+
+* optional comments support ([#1170](https://github.com/Automattic/newspack-newsletters/issues/1170)) ([d0b7878](https://github.com/Automattic/newspack-newsletters/commit/d0b7878dca45cf3bb3ed6a98563d79b5866653df))
+* **subscribe-form:** improve success message ([#1184](https://github.com/Automattic/newspack-newsletters/issues/1184)) ([4d11566](https://github.com/Automattic/newspack-newsletters/commit/4d11566a48a9e379616b341ff638d75e0e7e6a8d))
+* support non-stacking on mobile ([#1178](https://github.com/Automattic/newspack-newsletters/issues/1178)) ([e68068e](https://github.com/Automattic/newspack-newsletters/commit/e68068e003e8f2d903d116ae9182384ce376bafc))
+
+# [1.67.0-alpha.1](https://github.com/Automattic/newspack-newsletters/compare/v1.66.0...v1.67.0-alpha.1) (2023-06-08)
+
+
+### Bug Fixes
+
+* remove important flag from font size rules ([#1185](https://github.com/Automattic/newspack-newsletters/issues/1185)) ([39031fd](https://github.com/Automattic/newspack-newsletters/commit/39031fd6a2bad728eb13a3b5dbb6d655887a640b))
+
+
+### Features
+
+* optional comments support ([#1170](https://github.com/Automattic/newspack-newsletters/issues/1170)) ([d0b7878](https://github.com/Automattic/newspack-newsletters/commit/d0b7878dca45cf3bb3ed6a98563d79b5866653df))
+* **subscribe-form:** improve success message ([#1184](https://github.com/Automattic/newspack-newsletters/issues/1184)) ([4d11566](https://github.com/Automattic/newspack-newsletters/commit/4d11566a48a9e379616b341ff638d75e0e7e6a8d))
+* support non-stacking on mobile ([#1178](https://github.com/Automattic/newspack-newsletters/issues/1178)) ([e68068e](https://github.com/Automattic/newspack-newsletters/commit/e68068e003e8f2d903d116ae9182384ce376bafc))
+
+# [1.66.0](https://github.com/Automattic/newspack-newsletters/compare/v1.65.0...v1.66.0) (2023-06-05)
+
+
+### Features
+
+* better feedback to the user about api error ([#1179](https://github.com/Automattic/newspack-newsletters/issues/1179)) ([43807e0](https://github.com/Automattic/newspack-newsletters/commit/43807e066180cec04da0b1641cb183c9cf543f26))
+
+# [1.66.0-alpha.1](https://github.com/Automattic/newspack-newsletters/compare/v1.65.0...v1.66.0-alpha.1) (2023-05-25)
+
+
+### Features
+
+* better feedback to the user about api error ([#1179](https://github.com/Automattic/newspack-newsletters/issues/1179)) ([43807e0](https://github.com/Automattic/newspack-newsletters/commit/43807e066180cec04da0b1641cb183c9cf543f26))
+
+# [1.65.0](https://github.com/Automattic/newspack-newsletters/compare/v1.64.0...v1.65.0) (2023-05-24)
+
+
+### Bug Fixes
+
+* **activecampaign:** prevent fatal error when fetching contact fields ([#1160](https://github.com/Automattic/newspack-newsletters/issues/1160)) ([4988fdd](https://github.com/Automattic/newspack-newsletters/commit/4988fdd7ac9fd14ff38cf362e595538d9382f4b4))
+* display only Audiences in list metabox ([#1167](https://github.com/Automattic/newspack-newsletters/issues/1167)) ([6bc78bc](https://github.com/Automattic/newspack-newsletters/commit/6bc78bced3579b927e71eaf166c4c10741f60d81))
+
+
+### Features
+
+* conditional content tags ([#1165](https://github.com/Automattic/newspack-newsletters/issues/1165)) ([4d8f67f](https://github.com/Automattic/newspack-newsletters/commit/4d8f67fc7633a3712c190ed71f5f302a8723f131))
+* fix SEND TO mailchimp audiences ([#1168](https://github.com/Automattic/newspack-newsletters/issues/1168)) ([6c0897b](https://github.com/Automattic/newspack-newsletters/commit/6c0897bd4e4de0ed5e30e2d73ca1dd67fa7ffae2))
+* **mailchimp:** support double opt-in subscription ([#1161](https://github.com/Automattic/newspack-newsletters/issues/1161)) ([8183278](https://github.com/Automattic/newspack-newsletters/commit/8183278d351bf663ef48e1649481056602219ff1))
+* offer groups as Subscription Lists ([#1156](https://github.com/Automattic/newspack-newsletters/issues/1156)) ([31e3969](https://github.com/Automattic/newspack-newsletters/commit/31e396981a95c42c3a264f18f4e99563971f8df3))
+
+# [1.65.0-alpha.1](https://github.com/Automattic/newspack-newsletters/compare/v1.64.0...v1.65.0-alpha.1) (2023-05-11)
+
+
+### Bug Fixes
+
+* **activecampaign:** prevent fatal error when fetching contact fields ([#1160](https://github.com/Automattic/newspack-newsletters/issues/1160)) ([4988fdd](https://github.com/Automattic/newspack-newsletters/commit/4988fdd7ac9fd14ff38cf362e595538d9382f4b4))
+* display only Audiences in list metabox ([#1167](https://github.com/Automattic/newspack-newsletters/issues/1167)) ([6bc78bc](https://github.com/Automattic/newspack-newsletters/commit/6bc78bced3579b927e71eaf166c4c10741f60d81))
+
+
+### Features
+
+* conditional content tags ([#1165](https://github.com/Automattic/newspack-newsletters/issues/1165)) ([4d8f67f](https://github.com/Automattic/newspack-newsletters/commit/4d8f67fc7633a3712c190ed71f5f302a8723f131))
+* fix SEND TO mailchimp audiences ([#1168](https://github.com/Automattic/newspack-newsletters/issues/1168)) ([6c0897b](https://github.com/Automattic/newspack-newsletters/commit/6c0897bd4e4de0ed5e30e2d73ca1dd67fa7ffae2))
+* **mailchimp:** support double opt-in subscription ([#1161](https://github.com/Automattic/newspack-newsletters/issues/1161)) ([8183278](https://github.com/Automattic/newspack-newsletters/commit/8183278d351bf663ef48e1649481056602219ff1))
+* offer groups as Subscription Lists ([#1156](https://github.com/Automattic/newspack-newsletters/issues/1156)) ([31e3969](https://github.com/Automattic/newspack-newsletters/commit/31e396981a95c42c3a264f18f4e99563971f8df3))
+
+# [1.64.0](https://github.com/Automattic/newspack-newsletters/compare/v1.63.0...v1.64.0) (2023-05-08)
+
+
+### Bug Fixes
+
+* avoid fatal error on Constant Contact ([155eb03](https://github.com/Automattic/newspack-newsletters/commit/155eb03a22d9bb584ea4754c57da585e850696d2))
+* **subscribe-block:** optimize js dependencies ([#1142](https://github.com/Automattic/newspack-newsletters/issues/1142)) ([6b7c82d](https://github.com/Automattic/newspack-newsletters/commit/6b7c82d3f9deffb6a481af26dc963040d40f01d3))
+
+
+### Features
+
+* **subscribe-block:** support input labels ([#1151](https://github.com/Automattic/newspack-newsletters/issues/1151)) ([40ac87d](https://github.com/Automattic/newspack-newsletters/commit/40ac87de9f32de6ed5dce56dae6933c15447628d))
+
+# [1.64.0-alpha.1](https://github.com/Automattic/newspack-newsletters/compare/v1.63.0...v1.64.0-alpha.1) (2023-04-28)
+
+
+### Bug Fixes
+
+* avoid fatal error on Constant Contact ([155eb03](https://github.com/Automattic/newspack-newsletters/commit/155eb03a22d9bb584ea4754c57da585e850696d2))
+* **subscribe-block:** optimize js dependencies ([#1142](https://github.com/Automattic/newspack-newsletters/issues/1142)) ([6b7c82d](https://github.com/Automattic/newspack-newsletters/commit/6b7c82d3f9deffb6a481af26dc963040d40f01d3))
+
+
+### Features
+
+* **subscribe-block:** support input labels ([#1151](https://github.com/Automattic/newspack-newsletters/issues/1151)) ([40ac87d](https://github.com/Automattic/newspack-newsletters/commit/40ac87de9f32de6ed5dce56dae6933c15447628d))
+
+# [1.63.0](https://github.com/Automattic/newspack-newsletters/compare/v1.62.0...v1.63.0) (2023-04-24)
+
+
+### Bug Fixes
+
+* commit hook and add pre push ([#1137](https://github.com/Automattic/newspack-newsletters/issues/1137)) ([94b20d2](https://github.com/Automattic/newspack-newsletters/commit/94b20d2dc191501fbc3a468e420978ad4c11c8b2))
+* only add newsletters to categories and tags archives queries ([#1138](https://github.com/Automattic/newspack-newsletters/issues/1138)) ([612125f](https://github.com/Automattic/newspack-newsletters/commit/612125f5c4ec1282969ceacd84793c5ae14ccb29))
+* restrict custom editor font sizes ([#1144](https://github.com/Automattic/newspack-newsletters/issues/1144)) ([3f53720](https://github.com/Automattic/newspack-newsletters/commit/3f53720fd7314f945ecda582c64f7c9b867f7215))
+* **subscription-block:** use domReady for initializing block js ([#1130](https://github.com/Automattic/newspack-newsletters/issues/1130)) ([9f58caf](https://github.com/Automattic/newspack-newsletters/commit/9f58cafb4e3716a786bd674b2cefc4dd422f1696))
+
+
+### Features
+
+* **subscription:** add recaptcha panel in the editor ([#1139](https://github.com/Automattic/newspack-newsletters/issues/1139)) ([cbae932](https://github.com/Automattic/newspack-newsletters/commit/cbae93244f7ad3fab1727de2105d18ebd0467c2a))
+
+# [1.63.0-alpha.1](https://github.com/Automattic/newspack-newsletters/compare/v1.62.0...v1.63.0-alpha.1) (2023-04-13)
+
+
+### Bug Fixes
+
+* commit hook and add pre push ([#1137](https://github.com/Automattic/newspack-newsletters/issues/1137)) ([94b20d2](https://github.com/Automattic/newspack-newsletters/commit/94b20d2dc191501fbc3a468e420978ad4c11c8b2))
+* only add newsletters to categories and tags archives queries ([#1138](https://github.com/Automattic/newspack-newsletters/issues/1138)) ([612125f](https://github.com/Automattic/newspack-newsletters/commit/612125f5c4ec1282969ceacd84793c5ae14ccb29))
+* restrict custom editor font sizes ([#1144](https://github.com/Automattic/newspack-newsletters/issues/1144)) ([3f53720](https://github.com/Automattic/newspack-newsletters/commit/3f53720fd7314f945ecda582c64f7c9b867f7215))
+* **subscription-block:** use domReady for initializing block js ([#1130](https://github.com/Automattic/newspack-newsletters/issues/1130)) ([9f58caf](https://github.com/Automattic/newspack-newsletters/commit/9f58cafb4e3716a786bd674b2cefc4dd422f1696))
+
+
+### Features
+
+* **subscription:** add recaptcha panel in the editor ([#1139](https://github.com/Automattic/newspack-newsletters/issues/1139)) ([cbae932](https://github.com/Automattic/newspack-newsletters/commit/cbae93244f7ad3fab1727de2105d18ebd0467c2a))
+
 # [1.62.0](https://github.com/Automattic/newspack-newsletters/compare/v1.61.1...v1.62.0) (2023-04-10)
 
 
