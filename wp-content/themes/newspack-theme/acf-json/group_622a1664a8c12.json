@@ -6,6 +6,7 @@
             "key": "field_622a166c5d7e1",
             "label": "Teaser",
             "name": "teaser",
+            "aria-label": "",
             "type": "textarea",
             "instructions": "",
             "required": 0,
@@ -23,13 +24,6 @@
         }
     ],
     "location": [
-        [
-            {
-                "param": "post_type",
-                "operator": "==",
-                "value": "episode"
-            }
-        ],
         [
             {
                 "param": "taxonomy",
@@ -68,5 +62,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 1,
-    "modified": 1655916487
+    "modified": 1689084102
 }
