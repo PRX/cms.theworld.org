@@ -16,8 +16,9 @@
                 "class": "",
                 "id": ""
             },
+            "show_in_graphql": 1,
             "display_format": "F j, Y",
-            "return_format": "m\/d\/Y",
+            "return_format": "Y-m-d",
             "first_day": 1
         }
     ],
@@ -43,5 +44,5 @@
     "graphql_field_name": "episodeDates",
     "map_graphql_types_from_location_rules": 0,
     "graphql_types": "",
-    "modified": 1686671854
+    "modified": 1689191572
 }
