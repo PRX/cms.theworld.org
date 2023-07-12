@@ -91,8 +91,7 @@ class PMH_Worker {
 			WP_CLI::log( 'Processing all images..' );
 
 			// Get total images count.
-			// $i_images_count = $this->get_images_count();
-			$i_images_count = 120771;
+			$i_images_count = $this->get_images_count();
 
 			// Create progress bar.
 			$s_message      = __( 'Fixing all images.', 'dinkuminteractive' );
@@ -271,21 +270,27 @@ class PMH_Worker {
 					$s_attachment_url = wp_get_attachment_url( $i_post_id );
 
 					// Get the image dimensions.
-					list( $i_width, $i_height ) = getimagesize( $s_attachment_url );
+					$a_image_sizes = $this->clean_url_get_imagesize( $s_attachment_url );
 
-					// Update the attachment metadata.
-					$a_attachment_metadata['width']  = $i_width;
-					$a_attachment_metadata['height'] = $i_height;
+					// If the image dimensions are found.
+					if ( $a_image_sizes ) {
 
-					// Update fullsize metadata.
-					if ( isset( $a_attachment_metadata['sizes']['full'] ) ) {
+						list( $i_width, $i_height ) = $a_image_sizes;
 
-						$a_attachment_metadata['sizes']['full']['width']  = $i_width;
-						$a_attachment_metadata['sizes']['full']['height'] = $i_height;
+						// Update the attachment metadata.
+						$a_attachment_metadata['width']  = $i_width;
+						$a_attachment_metadata['height'] = $i_height;
+
+						// Update fullsize metadata.
+						if ( isset( $a_attachment_metadata['sizes']['full'] ) ) {
+
+							$a_attachment_metadata['sizes']['full']['width']  = $i_width;
+							$a_attachment_metadata['sizes']['full']['height'] = $i_height;
+						}
+
+						// Update the attachment metadata.
+						wp_update_attachment_metadata( $i_post_id, $a_attachment_metadata );
 					}
-
-					// Update the attachment metadata.
-					wp_update_attachment_metadata( $i_post_id, $a_attachment_metadata );
 				}
 
 				f_pmh_flag_object_corrected( $i_post_id, 'post' );
@@ -293,5 +298,23 @@ class PMH_Worker {
 		}
 
 		return count( $post_ids );
+	}
+
+	/**
+	 * Escape URL and Get image size array.
+	 *
+	 * @param string $s_image_url Image URL.
+	 *
+	 * @return array|bool
+	 */
+	public function clean_url_get_imagesize( $s_image_url ) {
+
+		// Escape the URL.
+		$s_target_url    = esc_url( $s_image_url );
+		$s_file_name     = basename( $s_target_url );
+		$s_valid_url     = filter_var( $s_target_url, FILTER_VALIDATE_URL );
+		$s_clean_url	= $s_valid_url ? $s_target_url : str_replace( $s_file_name, urlencode( $s_file_name ), $s_image_url );
+
+		return getimagesize( $s_clean_url );
 	}
 }
