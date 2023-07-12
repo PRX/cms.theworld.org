@@ -1,0 +1,297 @@
+<?php
+// Use wpcli util.
+use WP_CLI\Utils;
+
+/**
+ * Class PMH_Worker
+ */
+class PMH_Worker {
+
+	/**
+	 * The last ID processed.
+	 *
+	 * @var int
+	 */
+	private $i_last_id = 0;
+
+	/**
+	 * Initialize the class and set its properties.
+	 */
+	public function __construct() {
+		ini_set( 'display_errors', true ); // Display the errors that may happen (ex: Allowed memory size exhausted)
+		if ( ! defined( 'WP_ADMIN' ) ) {
+			define( 'WP_ADMIN', true ); // To execute the actions done when is_admin() (ex: Register Types post types)
+		}
+	}
+
+	/**
+	 * Get unprocessed images.
+	 */
+	public function get_unprocessed_images() {
+
+		// Print start message.
+		WP_CLI::log( __( 'Getting total unprocessed images.', 'dinkuminteractive' ) );
+
+		$a_media_ids = f_pmh_get_media_ids( 1, 100 );
+		$i_media_ids = count( $a_media_ids );
+
+		WP_CLI::success( __( 'Total of 100 found unprocessed images: ', 'dinkuminteractive' ) . $i_media_ids );
+		WP_CLI::success( __( 'Unprocessed image IDs: ', 'dinkuminteractive' ) . implode( ', ', $a_media_ids ) );
+	}
+
+	/**
+	 * Get the images count.
+	 *
+	 * @return int
+	 */
+	public function get_images_count() {
+
+		// Print start message.
+		WP_CLI::log( __( 'Getting total images.', 'dinkuminteractive' ) );
+
+		// Get attachment array.
+		$a_attachment_counts = wp_count_attachments();
+
+		// Calculate all the total of all images.
+		$i_images_count = 0;
+
+		foreach ( $a_attachment_counts as $s_key => $i_count ) {
+
+			// Skip the non-image attachment counts.
+			if ( 'image' !== substr( $s_key, 0, 5 ) ) {
+				continue;
+			}
+
+			$i_images_count += (int) $i_count;
+		}
+
+		// Print the total of all images.
+		WP_CLI::log( wp_sprintf( 'Total Images: %s', $i_images_count ) );
+
+		// Also return the total of all images.
+		return $i_images_count;
+	}
+
+	/**
+	 * Process images. Fix sizes based on Drupal meta data.
+	 */
+	public function image_fix( $a_args ) {
+
+		// All or New.
+		$s_all_or_new = isset( $a_args[0] ) && 'all' === $a_args[0] ? 'all' : 'new';
+
+		// Per process limit. Default to 50. Check if argument is passed and an integer.
+		$i_per_process_limit = isset( $a_args[1] ) && intval( $a_args[1] ) ? (int) $a_args[1] : 50;
+
+		// Start from.
+		$i_start_from = isset( $a_args[2] ) && intval( $a_args[2] ) ? (int) $a_args[2] : 0;
+
+		if ( 'all' === $s_all_or_new ) {
+
+			WP_CLI::log( 'Processing all images..' );
+
+			// Get total images count.
+			// $i_images_count = $this->get_images_count();
+			$i_images_count = 120771;
+
+			// Create progress bar.
+			$s_message      = __( 'Fixing all images.', 'dinkuminteractive' );
+			$o_progress_cli = \WP_CLI\Utils\make_progress_bar( $s_message, $i_images_count );
+
+			// Set the minimum post ID
+			$this->i_last_id = $i_start_from;
+
+			// Process images in batches.
+			do {
+				// Query and process images.
+				$processed_count = $this->process_images_by_asc_id( $i_per_process_limit );
+
+				// Advance the progress bar.
+				$o_progress_cli->tick( $processed_count );
+
+			} while ( $processed_count > 0 );
+
+			// Finish the progress bar.
+			$o_progress_cli->finish();
+
+			// Print success message.
+			WP_CLI::success( __( 'All images fixed. Last ID is: ', 'dinkuminteractive' ) . $this->i_last_id );
+		}
+
+		if ( 'new' === $s_all_or_new ) {
+
+			WP_CLI::log( 'Processing new images..' );
+
+			// Set total images count.
+			$i_total_new_images_count = 0;
+
+			// Create progress bar.
+			$s_message      = __( 'Fixing new images.', 'dinkuminteractive' );
+			$o_progress_cli = \WP_CLI\Utils\make_progress_bar( $s_message, 100 );
+
+			// Process new images.
+			do {
+				// Query and process images.
+				$processed_count = $this->process_new_images( $i_per_process_limit );
+
+				// Increment total images count.
+				$i_total_new_images_count += $processed_count;
+
+				// Advance the progress bar.
+				$o_progress_cli->tick();
+
+			} while ( $processed_count > 0 );
+
+			// Finish the progress bar.
+			$o_progress_cli->finish();
+
+			// Print success message.
+			WP_CLI::success( __( 'All new images fixed. Total count: ', 'dinkuminteractive' ). $i_total_new_images_count );
+		}
+	}
+
+	/**
+	 * Process images in batches.
+	 *
+	 * @param int $per_process_limit The number of images to process in each batch.
+	 *
+	 * @return int The number of images processed in the batch.
+	 */
+	public function process_images_by_asc_id( $per_process_limit ) {
+
+		// Query all the images.
+		$args = array(
+			'post_type'      => 'attachment',
+			'post_mime_type' => 'image',
+			'post_status'    => 'inherit',
+			'post_parent'    => null,
+			'fields'         => 'ids',
+			'orderby'        => 'ID',
+			'order'          => 'ASC',
+			'posts_per_page' => $per_process_limit,
+			'no_found_rows'  => true,
+		);
+
+		// Add filter to query.
+		add_filter( 'posts_where', array( $this, 'image_fix_all_wp_query' ) );
+
+		// Do the query.
+		$query = new WP_Query($args);
+
+		// Get the posts.
+		$post_ids = $query->get_posts();
+
+		// Remove filter.
+		remove_filter( 'posts_where', array( $this, 'image_fix_all_wp_query' ) );
+
+		return $this->process_images( $post_ids );
+	}
+
+	/**
+	 * Support for image_fix_all wp query.
+	 */
+	public function image_fix_all_wp_query( $where ) {
+
+		// Set the minimum post ID
+		$min_id = $this->i_last_id;
+
+		// Append to the WHERE clause
+		$where .= " AND ID > " . $min_id;
+
+		return $where;
+	}
+
+	/**
+	 * Process new images.
+	 */
+	public function process_new_images( $i_limit ) {
+
+		$a_new_image_ids = f_pmh_get_media_ids( 1, $i_limit );
+
+		return $this->process_images( $a_new_image_ids );
+	}
+
+	/**
+	 * Process images.
+	 */
+	public function process_images( $post_ids ) {
+
+		// Process only if there are posts.
+		if ( $post_ids ) {
+
+			// Set the last ID.
+			$this->i_last_id = (int) $post_ids[ count( $post_ids ) - 1 ];
+
+			// Get Drupal Metadata.
+			$a_drupal_media_metadatas = f_pmh_get_drupal_file_metadata( $post_ids );
+
+			// Process the images here.
+			foreach ( $post_ids as $i_post_id ) {
+
+				// Get image metadata.
+				$a_attachment_metadata = wp_get_attachment_metadata( $i_post_id );
+
+				$a_keys_to_change = array( 'width', 'height' );
+
+				$b_updated = false;
+
+				foreach ( $a_keys_to_change as $s_key_to_change ) {
+
+					if (
+						isset( $a_drupal_media_metadatas[ $i_post_id ][ $s_key_to_change ] )
+						&&
+						$a_drupal_media_metadatas[ $i_post_id ][ $s_key_to_change ]
+						&&
+						$a_drupal_media_metadatas[ $i_post_id ][ $s_key_to_change ] != $a_attachment_metadata[ $s_key_to_change ]
+					) {
+
+						$b_updated = true;
+
+						// File metadata.
+						$a_attachment_metadata[ $s_key_to_change ] = $a_drupal_media_metadatas[ $i_post_id ][ $s_key_to_change ];
+
+						// File 'full' size metadata.
+						if ( isset( $a_attachment_metadata['sizes']['full'][ $s_key_to_change ] ) ) {
+
+							$a_attachment_metadata['sizes']['full'][ $s_key_to_change ] = $a_drupal_media_metadatas[ $i_post_id ][ $s_key_to_change ];
+						}
+					}
+				}
+
+				// Drupal file metadata found.
+				if ( $b_updated ) {
+
+					wp_update_attachment_metadata( $i_post_id, $a_attachment_metadata );
+				}
+
+				// Drupal file metadata not found and not corrected.
+				elseif ( ! $b_updated && ! isset( $a_drupal_media_metadatas[ $i_post_id ] ) ) {
+
+					// Get the attachment URL.
+					$s_attachment_url = wp_get_attachment_url( $i_post_id );
+
+					// Get the image dimensions.
+					list( $i_width, $i_height ) = getimagesize( $s_attachment_url );
+
+					// Update the attachment metadata.
+					$a_attachment_metadata['width']  = $i_width;
+					$a_attachment_metadata['height'] = $i_height;
+
+					// Update fullsize metadata.
+					if ( isset( $a_attachment_metadata['sizes']['full'] ) ) {
+
+						$a_attachment_metadata['sizes']['full']['width']  = $i_width;
+						$a_attachment_metadata['sizes']['full']['height'] = $i_height;
+					}
+
+					// Update the attachment metadata.
+					wp_update_attachment_metadata( $i_post_id, $a_attachment_metadata );
+				}
+
+				f_pmh_flag_object_corrected( $i_post_id, 'post' );
+			}
+		}
+
+		return count( $post_ids );
+	}
+}

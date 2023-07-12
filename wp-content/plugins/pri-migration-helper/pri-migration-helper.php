@@ -33,6 +33,7 @@ function pmh_define_constants() {
 	pmh_define_constant( 'PMH_ADMIN_DIR', plugin_dir_path( __FILE__ ) . '/admin' );
 	pmh_define_constant( 'PMH_MIGRATION_DIR', plugin_dir_path( __FILE__ ) . '/migration' );
 	pmh_define_constant( 'PMH_TEST_DIR', plugin_dir_path( __FILE__ ) . '/test' );
+	pmh_define_constant( 'PMH_CLI_DIR', plugin_dir_path( __FILE__ ) . '/cli' );
 }
 
 pmh_define_constants();
@@ -45,3 +46,6 @@ require_once plugin_dir_path( __FILE__ ) . 'migration/migration.php';
 
 // JSON tester.
 require_once plugin_dir_path( __FILE__ ) . 'test/test.php';
+
+// CLI Feature.
+require_once plugin_dir_path( __FILE__ ) . 'cli/cli.php';
