@@ -101,4 +101,4 @@
 	register_post_type( "program", $args );
 }
 
-add_action( 'init', 'cptui_register_my_cpts' );
+add_action( 'init', 'cptui_register_my_cpts', 0 );
