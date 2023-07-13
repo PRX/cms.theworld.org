@@ -52,8 +52,8 @@ function tw_region_taxonomy() {
 		'show_in_nav_menus'     => false,
 		'query_var'             => true,
 		'rewrite'               => array(
-			'slug'         => 'region',
-			'with_front'   => true,
+			'slug'         => '/tags/regions',
+			'with_front'   => false,
 			'hierarchical' => true,
 		),
 		'show_admin_column'     => false,

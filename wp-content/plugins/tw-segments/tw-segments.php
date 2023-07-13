@@ -54,6 +54,10 @@ function tw_segments_post_type() {
 		'labels'              => $labels,
 		'supports'            => array( 'title', 'editor', 'thumbnail', 'custom-fields' ),
 		'taxonomies'          => array( 'tw_contributors', 'tw_programs' ),
+		'rewrite'             => array(
+			'slug'       => 'segments',
+			'with_front' => false,
+		),
 		'hierarchical'        => false,
 		'public'              => true,
 		'show_ui'             => true,

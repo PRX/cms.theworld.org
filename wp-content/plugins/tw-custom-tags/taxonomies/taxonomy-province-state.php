@@ -52,8 +52,8 @@ function tw_province_state_taxonomy() {
 		'show_in_nav_menus'     => false,
 		'query_var'             => true,
 		'rewrite'               => array(
-			'slug'         => 'province_or_state',
-			'with_front'   => true,
+			'slug'         => 'tags/province_or_state',
+			'with_front'   => false,
 			'hierarchical' => true,
 		),
 		'show_admin_column'     => false,

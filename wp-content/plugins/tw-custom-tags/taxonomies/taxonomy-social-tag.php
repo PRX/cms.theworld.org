@@ -52,8 +52,8 @@ function tw_social_tag_taxonomy() {
 		'show_in_nav_menus'     => false,
 		'query_var'             => true,
 		'rewrite'               => array(
-			'slug'         => 'social_tags',
-			'with_front'   => true,
+			'slug'         => 'tags/social_tags',
+			'with_front'   => false,
 			'hierarchical' => true,
 		),
 		'show_admin_column'     => false,

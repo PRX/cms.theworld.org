@@ -37,6 +37,10 @@ function tw_programs_taxonomy() {
 	);
 	$args   = array(
 		'labels'              => $labels,
+		'rewrite'             => array(
+			'slug'       => 'programs',
+			'with_front' => false,
+		),
 		'hierarchical'        => false,
 		'public'              => true,
 		'show_ui'             => true,

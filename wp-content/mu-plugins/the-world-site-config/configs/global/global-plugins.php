@@ -45,5 +45,6 @@ define(
 		'wp-graphql/wp-graphql.php',
 		'wp-graphql-acf/wp-graphql-acf.php',
 		'add-wpgraphql-seo/wp-graphql-yoast-seo.php',
+		'custom-post-type-permalinks/custom-post-type-permalinks.php',
 	)
 );

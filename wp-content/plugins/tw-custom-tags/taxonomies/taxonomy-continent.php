@@ -52,8 +52,8 @@ function tw_continent_taxonomy() {
 		'show_in_nav_menus'     => false,
 		'query_var'             => true,
 		'rewrite'               => array(
-			'slug'         => 'continent',
-			'with_front'   => true,
+			'slug'         => 'tags/continents',
+			'with_front'   => false,
 			'hierarchical' => true,
 		),
 		'show_admin_column'     => false,

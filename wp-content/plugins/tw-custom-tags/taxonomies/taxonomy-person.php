@@ -52,8 +52,8 @@ function tw_person_taxonomy() {
 		'show_in_nav_menus'     => false,
 		'query_var'             => true,
 		'rewrite'               => array(
-			'slug'         => 'person',
-			'with_front'   => true,
+			'slug'         => 'tags/people',
+			'with_front'   => false,
 			'hierarchical' => true,
 		),
 		'show_admin_column'     => false,

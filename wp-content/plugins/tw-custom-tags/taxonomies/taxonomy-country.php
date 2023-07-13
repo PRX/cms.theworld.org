@@ -52,8 +52,8 @@ function tw_country_taxonomy() {
 		'show_in_nav_menus'     => false,
 		'query_var'             => true,
 		'rewrite'               => array(
-			'slug'         => 'country',
-			'with_front'   => true,
+			'slug'         => 'tags/countries',
+			'with_front'   => false,
 			'hierarchical' => true,
 		),
 		'show_admin_column'     => false,

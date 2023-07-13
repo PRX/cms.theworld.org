@@ -38,6 +38,10 @@ function tw_contributors_taxonomy() {
 	$args   = array(
 		'labels'              => $labels,
 		'description'         => 'Biographical details of folks that work on content.',
+		'rewrite'             => array(
+			'slug'       => 'contributors',
+			'with_front' => false,
+		),
 		'hierarchical'        => false,
 		'public'              => true,
 		'show_ui'             => true,

@@ -52,8 +52,8 @@ function tw_city_taxonomy() {
 		'show_in_nav_menus'     => false,
 		'query_var'             => true,
 		'rewrite'               => array(
-			'slug'         => 'city',
-			'with_front'   => true,
+			'slug'         => 'tags/cities',
+			'with_front'   => false,
 			'hierarchical' => true,
 		),
 		'show_admin_column'     => false,
