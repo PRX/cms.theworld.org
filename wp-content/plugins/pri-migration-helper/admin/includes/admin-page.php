@@ -644,16 +644,9 @@ add_action( 'wp_ajax_pmh_post_worker_run_process', 'pmh_post_worker_run_process'
  * @param integer $i_paged
  * @param integer $i_perpage
  * @param array $a_ids
- * @param int $i_last_id
  * @return array
  */
-function f_pmh_get_media_ids( int $i_paged, int $i_perpage, $a_ids = array(), $i_last_id = 1 ) {
-
-	$_i_last_id = (int) get_option( 'pmh_last_mediafix_id', 1 );
-
-	if ( $i_last_id != $_i_last_id ) {
-		update_option( 'pmh_last_mediafix_id', $i_last_id );
-	}
+function f_pmh_get_media_ids( int $i_paged, int $i_perpage, $a_ids = array() ) {
 
 	// Query media.
 	$a_args = array(
@@ -662,46 +655,30 @@ function f_pmh_get_media_ids( int $i_paged, int $i_perpage, $a_ids = array(), $i
 		'post_status'    => 'inherit',
 		'post_parent'    => null, // any parent
 		'fields'         => 'ids',
+		'meta_query'  => array(
+			array(
+				'key'     => s_pmh_get_fixed_flag_key(),
+				'compare' => 'NOT EXISTS',
+			),
+		),
+		'no_found_rows' => true,
+		'orderby'        => 'ID',
+        'order'          => 'ASC',
 	);
-
-	// if ( $b_maintenance ) {
-
-	// 	$a_args['meta_query'] = array(
-	// 		array(
-	// 			'key'     => s_pmh_get_fixed_flag_key(),
-	// 			'compare' => 'NOT EXISTS',
-	// 		),
-	// 	);
-	// }
-
 	if ( $a_ids ) {
 
 		$a_args['post__in'] = $a_ids;
 
 	} else {
 
-		$a_args['paged']          = $i_paged;
+		// MEMO: I commented this because the pagination won't be necessary since we are checking if the result has elements to process and then it runs again until the result is emtpy.
+		// $a_args['paged']          = $i_paged;
 		$a_args['posts_per_page'] = $i_perpage;
-
-		add_filter( 'posts_where', 'f_pmh_filter_posts_by_id' );
-
-		$a_posts = get_posts( $a_args );
-
-		remove_filter( 'post_where', 'f_pmh_filter_posts_by_id' );
 	}
+	$WP_Query_posts = new WP_Query( $a_args );
+	$a_posts = $WP_Query_posts->get_posts();
 
 	return $a_posts;
-}
-
-function f_pmh_filter_posts_by_id($where = '') {
-
-    // Set the minimum post ID
-    $min_id = get_option( 'pmh_last_mediafix_id', 1 );
-
-    // Append to the WHERE clause
-    $where .= " AND ID > " . $min_id;
-
-    return $where;
 }
 
 /**
@@ -724,6 +701,9 @@ function f_pmh_get_posts_ids( int $i_paged, int $i_perpage, $a_ids = array() ) {
 				'compare' => 'NOT EXISTS',
 			),
 		),
+		'orderby'        => 'ID',
+		'order'          => 'ASC',
+		'no_found_rows' => true,
 	);
 
 	if ( $a_ids ) {
@@ -731,12 +711,13 @@ function f_pmh_get_posts_ids( int $i_paged, int $i_perpage, $a_ids = array() ) {
 		$a_args['post__in'] = $a_ids;
 
 	} else {
-
-		$a_args['paged']          = $i_paged;
+		// MEMO: I commented this because the pagination won't be necessary since we are checking if the result has elements to process and then it runs again until the result is emtpy.
+		// $a_args['paged']          = $i_paged;
 		$a_args['posts_per_page'] = $i_perpage;
 	}
-
-	return get_posts( $a_args );
+	$WP_Query_posts = new WP_Query( $a_args );
+	$a_posts = $WP_Query_posts->get_posts();
+	return $a_posts;
 }
 
 /**
@@ -860,7 +841,6 @@ function f_ajax_pmh_media_fix_sample() {
 	$i_paged_process   = (int) sanitize_text_field( $_POST['i_paged'] );
 	$i_perpage_process = (int) sanitize_text_field( $_POST['i_perpage'] );
 	$s_per_ids         = sanitize_text_field( $_POST['s_per_ids'] );
-	$i_last_id         = (int) sanitize_text_field( $_POST['i_last_id'] );
 
 	$i_next_paged_process = $s_per_ids ? false : $i_paged_process + 1;
 	$a_per_ids            = $s_per_ids ? explode( " ", $s_per_ids ) : false;
@@ -869,7 +849,7 @@ function f_ajax_pmh_media_fix_sample() {
 	$s_log = "MEDIA SAMPLE\n\n";
 
 	// Query media.
-	$a_media_ids = f_pmh_get_media_ids( $i_paged_process, $i_perpage_process, $a_per_ids, $i_last_id );
+	$a_media_ids = f_pmh_get_media_ids( $i_paged_process, $i_perpage_process, $a_per_ids );
 
 	if ( $a_media_ids ) {
 
@@ -975,7 +955,6 @@ function f_ajax_pmh_media_fix_run() {
 	$i_paged_process   = isset( $_POST['i_paged'] ) ? (int) sanitize_text_field( $_POST['i_paged'] ) : 1;
 	$i_perpage_process = isset( $_POST['i_perpage'] ) ? (int) sanitize_text_field( $_POST['i_perpage'] ) : 50;
 	$s_per_ids         = isset( $_POST['s_per_ids'] ) ? sanitize_text_field( $_POST['s_per_ids'] ) : '';
-	$i_last_id         = (int) sanitize_text_field( $_POST['i_last_id'] );
 
 	$i_next_paged_process = $s_per_ids ? false : $i_paged_process + 1;
 	$a_per_ids            = $s_per_ids ? explode( " ", $s_per_ids ) : false;
@@ -984,7 +963,7 @@ function f_ajax_pmh_media_fix_run() {
 	$s_log = "MEDIA FIX RUNNING - PAGED {$i_paged_process}\n\n";
 
 	// Query media.
-	$a_media_ids = f_pmh_get_media_ids( $i_paged_process, $i_perpage_process, $a_per_ids, $i_last_id );
+	$a_media_ids = f_pmh_get_media_ids( $i_paged_process, $i_perpage_process, $a_per_ids );
 	$i_media_ids = count( $a_media_ids );
 
 	if ( $a_media_ids ) {
@@ -1039,9 +1018,7 @@ function f_ajax_pmh_media_fix_run() {
 				$s_log .= "no update\n";
 			}
 
-			update_option( 'pmh_last_mediafix_id', $i_media_id );
-
-			// f_pmh_flag_object_corrected( $i_media_id, 'post' );
+			f_pmh_flag_object_corrected( $i_media_id, 'post' );
 
 			$s_log .= "\n- - - - - - - - -\n\n";
 		}
@@ -1060,7 +1037,6 @@ function f_ajax_pmh_media_fix_run() {
 		'log'                => $s_log,
 		'next_paged_process' => $i_next_paged_process,
 		'count_processed'    => $i_media_ids,
-		'last_media_id'      => $i_media_id,
 	);
 
 	wp_send_json( $a_response );
@@ -1129,7 +1105,7 @@ function pri_ajax_acf_fix_run() {
 			'post_type'      => $s_query_type,
 			'fields'         => 'ids',
 			'posts_per_page' => $i_perpage_process,
-			'paged'          => $i_paged_process,
+			// 'paged'          => $i_paged_process, // Commented this as 1 because we removed the found rows functionality.
 			'post_status'    => $s_query_type === 'attachment' ? 'inherit' : array( 'publish', 'draft', 'private' ),
 			'meta_query'     => array(
 				array(
@@ -1137,6 +1113,11 @@ function pri_ajax_acf_fix_run() {
 					'compare' => 'NOT EXISTS',
 				),
 			),
+			'update_post_term_cache' => false,
+            'update_post_meta_cache' => false,
+            'no_found_rows' => true,
+            'order' => 'ASC',
+            'orderby' => 'ID',
 		);
 	}
 
@@ -1152,7 +1133,7 @@ function pri_ajax_acf_fix_run() {
 		}
 	}
 
-	if( $s_post_type && ! $b_is_term ) {
+	if( in_array( $s_post_type, array( 'images', 'audio' ) ) && ! $b_is_term ) {
 		$a_query_args['post_mime_type'] = $s_post_type === 'images' ? 'image' : 'audio';
 	}
 
@@ -1197,7 +1178,7 @@ function pri_ajax_acf_fix_run() {
 		}
 	} else {
 
-		$wp_query_acf_items = new wp_query( $a_query_args );
+		$wp_query_acf_items = new WP_Query( $a_query_args );
 
 		// 2. process each media element
 		if ( $wp_query_acf_items->have_posts() ) {
@@ -1211,7 +1192,7 @@ function pri_ajax_acf_fix_run() {
 					$s_field_value = pri_get_post_meta_keys_and_values( $s_post_type, $s_field );
 
 					if ( $s_field_value ) {
-						add_post_meta( $i_acf_post_id, $s_field, $s_field_value, true );
+						update_post_meta( $i_acf_post_id, $s_field, $s_field_value, true );
 						$s_log .= "\n" . $i_acf_post_id . " - " . $s_field . " - " . $s_field_value . " - field value inserted\n";
 					} else {
 						$s_log .= "\n" . $i_acf_post_id . " - " . $s_mime_type . " - no field value\n";
@@ -1258,8 +1239,9 @@ function f_ajax_pmh_posts_fix_run() {
 	$s_log = "POSTS FIX RUNNING - PAGED {$i_paged_process}\n\n";
 
 	$a_posts_ids = f_pmh_get_posts_ids( $i_paged_process, $i_perpage_process, $a_per_ids );
-	$a_media_ids = f_pmh_get_media_ids( $i_paged_process, $i_perpage_process, false, get_option( 'pmh_last_mediafix_id' ) );
 	$i_posts_ids = count( $a_posts_ids );
+	$a_media_ids = f_pmh_get_media_ids( 1, 1 );
+	$i_media_ids = count( $a_media_ids );
 
 	if ( $a_posts_ids && ! $a_media_ids ) {
 
@@ -1283,12 +1265,9 @@ function f_ajax_pmh_posts_fix_run() {
 	} else {
 
 		$s_log .= "No Posts to process. ";
-
 		if ( $a_media_ids ) {
-
 			$s_log .= "There are still unfixed images. ";
-        }
-
+		}
 		$s_log .= "\n\n";
 
 		$i_next_paged_process = false;

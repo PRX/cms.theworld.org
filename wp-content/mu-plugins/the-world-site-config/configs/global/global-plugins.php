@@ -37,9 +37,6 @@ define(
 		'wp-cfm/wp-cfm.php',
 		'wp-rest-menu/wp-rest-menus.php',
 		'xml-sitemap-feed/xml-sitemap.php',
-		'svg-block/svg-block.php',
-		'wp-graphql/wp-graphql.php',
-		'wp-graphql-acf/wp-graphql-acf.php',
-		'add-wpgraphql-seo/wp-graphql-yoast-seo.php',
+		'wp-redis/wp-redis.php',
 	)
 );
