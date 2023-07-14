@@ -49,7 +49,7 @@ function tw_episodes_post_type() {
 		'supports'            => array( 'title', 'editor', 'thumbnail', 'custom-fields', 'excerpt' ),
 		'taxonomies'          => array( 'category', 'post_tag', 'tw_programs' ),
 		'rewrite'             => array(
-			'slug'       => 'episode',
+			'slug'       => 'episodes',
 			'with_front' => false,
 		),
 		'hierarchical'        => false,
