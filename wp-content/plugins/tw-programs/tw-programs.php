@@ -55,7 +55,7 @@ function tw_programs_taxonomy() {
 	register_taxonomy( 'program', array( 'post', 'episode', 'segment' ), $args );
 
 }
-add_action( 'init', 'tw_programs_taxonomy', 0 );
+add_action( 'init', 'tw_programs_taxonomy', 1 );
 
 /**
  * Register GraphQL fields.

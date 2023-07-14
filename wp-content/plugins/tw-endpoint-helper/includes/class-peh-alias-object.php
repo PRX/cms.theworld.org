@@ -67,7 +67,6 @@ class Peh_Alias_Object {
 		$rest_route = '';
 
 		if ( $this->type && $this->id ) {
-
 			switch ( $this->type ) {
 				// bundle: audio or file
 				case 'media':
@@ -94,9 +93,6 @@ class Peh_Alias_Object {
 					$prefix = 'tags';
 					break;
 				// Category
-				case 'person':
-					$prefix = 'contributor';
-					break;
 				case 'category':
 					$prefix = 'categories';
 					break;
@@ -105,6 +101,7 @@ class Peh_Alias_Object {
 				case 'contributor':
 				case 'country':
 				case 'license':
+				case 'person':
 				case 'program':
 				case 'province_or_state':
 				case 'region':

@@ -70,4 +70,4 @@ function tw_person_taxonomy() {
 	);
 	register_taxonomy( 'person', array( 'post', 'episode', 'segment' ), $args );
 }
-add_action( 'init', 'tw_person_taxonomy', 0 );
+add_action( 'init', 'tw_person_taxonomy', 1 );
