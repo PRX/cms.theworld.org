@@ -92,10 +92,10 @@ add_filter(
 			// If the 'programNotIn' argument is provided, we add it to the tax_query.
 			// For more details, refer to the WP_Query class documentation at https://developer.wordpress.org/reference/classes/wp_query/.
 
-			// Convert id strings to numbers, decoding hashed ids.
+			// Decode hashed ids.
 			$ids = array_map(
 				function( $id ) {
-					if ( ! is_numeric( $id_str ) ) {
+					if ( ! is_numeric( $id ) ) {
 						// Decode hashed id.
 						$decoded_id  = base64_decode( $id );
 						list( , $id) = explode( ':', $decoded_id );
