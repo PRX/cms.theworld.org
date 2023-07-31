@@ -1,0 +1,594 @@
+{
+    "key": "group_6386785eb12a0",
+    "title": "Episode fields - Migration",
+    "fields": [
+        {
+            "key": "field_6386785f2b0a7",
+            "label": "Image",
+            "name": "image",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "return_format": "array",
+            "preview_size": "medium",
+            "library": "all",
+            "min_width": 0,
+            "min_height": 0,
+            "min_size": 0,
+            "max_width": 0,
+            "max_height": 0,
+            "max_size": 0,
+            "mime_types": ""
+        },
+        {
+            "key": "field_6386785eb6e96",
+            "label": "Broadcast Date",
+            "name": "date_broadcast",
+            "aria-label": "",
+            "type": "date_time_picker",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "display_format": "d\/m\/Y g:i a",
+            "return_format": "d\/m\/Y g:i a",
+            "first_day": 1
+        },
+        {
+            "key": "field_6386785ebd1fb",
+            "label": "Program",
+            "name": "ref_program",
+            "aria-label": "",
+            "type": "post_object",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "post_type": [
+                "program"
+            ],
+            "multiple": 0,
+            "taxonomy": [],
+            "allow_null": 0,
+            "return_format": "object",
+            "ui": 1
+        },
+        {
+            "key": "field_6386785ec2a92",
+            "label": "Teaser",
+            "name": "teaser",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_6386785f1643e",
+            "label": "Audio",
+            "name": "file_audio",
+            "aria-label": "",
+            "type": "file",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "return_format": "array",
+            "library": "all",
+            "min_size": 0,
+            "max_size": 0,
+            "mime_types": ""
+        },
+        {
+            "key": "field_6386785f1ca50",
+            "label": "Stories in this episode",
+            "name": "collection-ref_episode_stories",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Row",
+            "sub_fields": [
+                {
+                    "key": "field_6386785f24215",
+                    "label": "Stories in this episode",
+                    "name": "ref_episode_stories",
+                    "aria-label": "",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "Select stories that are in this episode\n",
+                    "multiple": 0,
+                    "post_type": [
+                        "blog",
+                        "post"
+                    ],
+                    "taxonomy": [],
+                    "allow_null": 0,
+                    "return_format": "object",
+                    "ui": 1,
+                    "parent_repeater": "field_6386785f1ca50"
+                }
+            ],
+            "rows_per_page": 20
+        },
+        {
+            "key": "field_6386785f313bb",
+            "label": "Audio Explicit",
+            "name": "audio_explicit",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "no",
+            "placeholder": "",
+            "choices": {
+                "no": "No",
+                "yes": "Yes"
+            },
+            "allow_null": 1,
+            "multiple": 0,
+            "ui": 0,
+            "ajax": 0,
+            "return_format": "value"
+        },
+        {
+            "key": "field_6386785f45099",
+            "label": "Season",
+            "name": "season",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "min": "",
+            "max": "",
+            "step": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_6386785f37ced",
+            "label": "Episode Number",
+            "name": "episode_number",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "min": "",
+            "max": "",
+            "step": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_6386785f3e9a7",
+            "label": "Episode Type",
+            "name": "episode_type",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "full",
+            "placeholder": "The type of episode you are submitting. More info: http:\/\/podcasts.apple.com\/resources\/spec\/ApplePodcastsSpecUpdatesiOS11.pdf",
+            "choices": {
+                "full": "full",
+                "trailer": "trailer",
+                "bonus": "bonus"
+            },
+            "allow_null": 1,
+            "multiple": 0,
+            "ui": 0,
+            "ajax": 0,
+            "return_format": "value"
+        },
+        {
+            "key": "field_6386785ee6410",
+            "label": "Hosts",
+            "name": "collection-ref_hosts",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Row",
+            "sub_fields": [
+                {
+                    "key": "field_6386785eed545",
+                    "label": "Hosts",
+                    "name": "ref_hosts",
+                    "aria-label": "",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "multiple": 0,
+                    "post_type": [
+                        "person"
+                    ],
+                    "taxonomy": [],
+                    "allow_null": 0,
+                    "return_format": "object",
+                    "ui": 1,
+                    "parent_repeater": "field_6386785ee6410"
+                }
+            ],
+            "rows_per_page": 20
+        },
+        {
+            "key": "field_6386785ec9b7c",
+            "label": "Producers",
+            "name": "collection-ref_producers",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Row",
+            "sub_fields": [
+                {
+                    "key": "field_6386785ecfcfb",
+                    "label": "Producers",
+                    "name": "ref_producers",
+                    "aria-label": "",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "multiple": 0,
+                    "post_type": [
+                        "person"
+                    ],
+                    "taxonomy": [],
+                    "allow_null": 0,
+                    "return_format": "object",
+                    "ui": 1,
+                    "parent_repeater": "field_6386785ec9b7c"
+                }
+            ],
+            "rows_per_page": 20
+        },
+        {
+            "key": "field_6386785ed638f",
+            "label": "Guests",
+            "name": "collection-ref_guests",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Row",
+            "sub_fields": [
+                {
+                    "key": "field_6386785eddba9",
+                    "label": "Guests",
+                    "name": "ref_guests",
+                    "aria-label": "",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "multiple": 0,
+                    "post_type": [
+                        "person"
+                    ],
+                    "taxonomy": [],
+                    "allow_null": 0,
+                    "return_format": "object",
+                    "ui": 1,
+                    "parent_repeater": "field_6386785ed638f"
+                }
+            ],
+            "rows_per_page": 20
+        },
+        {
+            "key": "field_6386785f03266",
+            "label": "Reporters",
+            "name": "collection-ref_reporters",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Row",
+            "sub_fields": [
+                {
+                    "key": "field_6386785f0f259",
+                    "label": "Reporters",
+                    "name": "ref_reporters",
+                    "aria-label": "",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "multiple": 0,
+                    "post_type": [
+                        "person"
+                    ],
+                    "taxonomy": [],
+                    "allow_null": 0,
+                    "return_format": "object",
+                    "ui": 1,
+                    "parent_repeater": "field_6386785f03266"
+                }
+            ],
+            "rows_per_page": 20
+        },
+        {
+            "key": "field_6386785f5d01f",
+            "label": "Spotify Playlist",
+            "name": "collection-spotify_playlist",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Row",
+            "sub_fields": [
+                {
+                    "key": "field_6386785f62a97",
+                    "label": "Spotify Playlist",
+                    "name": "spotify_playlist",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "This field needs the Spotify URI to work correctly. Here is an example (ignore quotes): 'spotify:track:1aWGJqQDKjppgaznKz81S3'.  Right-click any song, album, artist, playlist, podcast or episode in the Spotify player and select “Share”. Click on 'Copy Spotify URI' to copy the Spotify Link and then paste into this field. One track per field. ",
+                    "multiple": 1,
+                    "maxlength": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_6386785f5d01f"
+                }
+            ],
+            "rows_per_page": 20
+        },
+        {
+            "key": "field_6386785f4b7b1",
+            "label": "Amazon Item",
+            "name": "collection-amazon_item",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Row",
+            "sub_fields": [
+                {
+                    "key": "field_6386785f519b6",
+                    "label": "Amazon Item",
+                    "name": "amazon_item",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "Enter in the Amazon Product number for the individual track and all of the metadata will appear with it.",
+                    "multiple": 1,
+                    "maxlength": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_6386785f4b7b1"
+                }
+            ],
+            "rows_per_page": 20
+        },
+        {
+            "key": "field_6386785f57710",
+            "label": "Music Heard on Air Body",
+            "name": "music_heard_on_air_body",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "episode"
+            }
+        ]
+    ],
+    "menu_order": 999,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1684259598
+}

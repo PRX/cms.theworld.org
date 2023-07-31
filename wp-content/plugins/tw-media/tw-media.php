@@ -36,14 +36,17 @@ function tw_license_taxonomy() {
 		'items_list_navigation'      => __( 'Items list navigation', 'text_domain' ),
 	);
 	$args   = array(
-		'labels'            => $labels,
-		'hierarchical'      => false,
-		'public'            => true,
-		'show_ui'           => true,
-		'show_admin_column' => false,
-		'show_in_nav_menus' => true,
-		'show_tagcloud'     => false,
-		'show_in_rest'      => true,
+		'labels'              => $labels,
+		'hierarchical'        => false,
+		'public'              => true,
+		'show_ui'             => true,
+		'show_admin_column'   => false,
+		'show_in_nav_menus'   => true,
+		'show_tagcloud'       => false,
+		'show_in_rest'        => true,
+		'show_in_graphql'     => true,
+		'graphql_single_name' => 'license',
+		'graphql_plural_name' => 'licenses',
 	);
 	register_taxonomy( 'license', array( 'attachment' ), $args );
 

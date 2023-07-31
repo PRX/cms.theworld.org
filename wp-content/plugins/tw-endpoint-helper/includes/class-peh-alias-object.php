@@ -35,17 +35,17 @@ class Peh_Alias_Object {
 	 *
 	 * @param stdClass $alias_object
 	 */
-    public function __construct( $alias_object ) {
+	public function __construct( $alias_object ) {
 
-		$this->id          = $alias_object->id;
-		$this->type        = $alias_object->type;
+		$this->id   = $alias_object->id;
+		$this->type = $alias_object->type;
 
 		if ( isset( $alias_object->is_external ) ) {
 
 			$this->is_external  = $alias_object->is_external;
 			$this->external_url = $alias_object->redirect;
 		}
-    }
+	}
 
 	/**
 	 * @TODO: How to determine external links?
@@ -138,7 +138,7 @@ class Peh_Alias_Object {
 		}
 
 		$response = array(
-			'status' => 301,
+			'status' => 200,
 			'data'   => array(
 				'type'       => 'redirect--external',
 				'id'         => $this->id,

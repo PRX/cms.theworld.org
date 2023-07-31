@@ -22,20 +22,26 @@ define(
 		'tw-disable-yoast-indexables/tw-disable-yoast-indexables.php',
 		'tw-episodes/tw-episodes.php',
 		'tw-media/tw-media.php',
+		'tw-menus/tw-menus.php',
 		'tw-endpoint-helper/tw-endpoint-helper.php',
 		'tw-programs/tw-programs.php',
 		'tw-qa-block/tw-qa-block.php',
 		'tw-resource-development-tags/tw-resource-development-tags.php',
 		'tw-segments/tw-segments.php',
 		'tw-story-format/tw-story-format.php',
-		'tw-import-post-types/tw-import-post-types.php', # This is the plugin that creates the custom post types for the import. Can be removed after the import is complete.
+		'tw-import-post-types/tw-import-post-types.php', // This is the plugin that creates the custom post types for the import. Can be removed after the import is complete.
 		'wordpress-importer/wordpress-importer.php',
 		'wordpress-seo/wp-seo.php',
-    	'wp-all-export-pro/wp-all-export-pro.php',
+		'wp-all-export-pro/wp-all-export-pro.php',
 		'wp-cfm-path/wp-cfm-path.php',
 		'wp-cfm/wp-cfm.php',
 		'wp-rest-menu/wp-rest-menus.php',
 		'xml-sitemap-feed/xml-sitemap.php',
 		'wp-redis/wp-redis.php',
+		'svg-block/svg-block.php',
+		'wp-graphql/wp-graphql.php',
+		'wp-graphql-acf/wp-graphql-acf.php',
+		'add-wpgraphql-seo/wp-graphql-yoast-seo.php',
+		'custom-post-type-permalinks/custom-post-type-permalinks.php',
 	)
 );

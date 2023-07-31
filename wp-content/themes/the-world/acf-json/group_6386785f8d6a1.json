@@ -1,0 +1,415 @@
+{
+    "key": "group_6386785f8d6a1",
+    "title": "Person fields - Migration",
+    "fields": [
+        {
+            "key": "field_6386785fe1ca7",
+            "label": "Program",
+            "name": "ref_program",
+            "aria-label": "",
+            "type": "post_object",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "post_type": [
+                "program"
+            ],
+            "multiple": 0,
+            "taxonomy": [],
+            "allow_null": 0,
+            "return_format": "object",
+            "ui": 1
+        },
+        {
+            "key": "field_6386785fd4f2d",
+            "label": "Position",
+            "name": "position",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "What is the position or title the person holds (optional). Ex: Reporter, Africa Corespondent, Vice President of Digitial",
+            "maxlength": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_6386785fdb4c1",
+            "label": "Department(s)",
+            "name": "department",
+            "aria-label": "",
+            "type": "checkbox",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "Enter in as many departments as the Person belongs to. Skip if their department is not listed.",
+            "multiple": 1,
+            "choices": {
+                "pri_org_staff": "PRI.org Staff",
+                "pri_staff": "PRI Staff",
+                "the_world": "The World Staff",
+                "podcaster": "PRI Podcast Network Host",
+                "studio": "Studio 360 Staff"
+            },
+            "allow_null": 1,
+            "layout": "vertical",
+            "allow_custom": 0,
+            "save_custom": 0,
+            "toggle": 0,
+            "return_format": "value",
+            "custom_choice_button_text": "Add new choice"
+        },
+        {
+            "key": "field_6386785f9239d",
+            "label": "Image",
+            "name": "image",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "Upload an image to go with this person.",
+            "return_format": "array",
+            "preview_size": "medium",
+            "library": "all",
+            "min_width": 0,
+            "min_height": 0,
+            "min_size": 0,
+            "max_width": 0,
+            "max_height": 0,
+            "max_size": 0,
+            "mime_types": ""
+        },
+        {
+            "key": "field_6386785f97c00",
+            "label": "Teaser",
+            "name": "teaser",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "Add a short description which will be used when this person is listed somewhere. ",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        },
+        {
+            "key": "field_6412c8ea2214a",
+            "label": "fgd2wp_old_node_id",
+            "name": "fgd2wp_old_node_id",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_6386785f9d83c",
+            "label": "Social links",
+            "name": "collection-social_links",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Row",
+            "sub_fields": [
+                {
+                    "key": "field_6386785fa2db8",
+                    "label": "Blog",
+                    "name": "blog",
+                    "aria-label": "",
+                    "type": "link",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "return_format": "array",
+                    "parent_repeater": "field_6386785f9d83c"
+                },
+                {
+                    "key": "field_6386785fa908b",
+                    "label": "Facebook",
+                    "name": "facebook",
+                    "aria-label": "",
+                    "type": "link",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "return_format": "array",
+                    "parent_repeater": "field_6386785f9d83c"
+                },
+                {
+                    "key": "field_6386785fb011b",
+                    "label": "Get in touch",
+                    "name": "get_in_touch",
+                    "aria-label": "",
+                    "type": "link",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "return_format": "array",
+                    "parent_repeater": "field_6386785f9d83c"
+                },
+                {
+                    "key": "field_6386785fb627d",
+                    "label": "Tumblr",
+                    "name": "tumblr",
+                    "aria-label": "",
+                    "type": "link",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "return_format": "array",
+                    "parent_repeater": "field_6386785f9d83c"
+                },
+                {
+                    "key": "field_6386785fbb929",
+                    "label": "Twitter",
+                    "name": "twitter",
+                    "aria-label": "",
+                    "type": "link",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "return_format": "array",
+                    "parent_repeater": "field_6386785f9d83c"
+                },
+                {
+                    "key": "field_6386785fc10cc",
+                    "label": "Website",
+                    "name": "website",
+                    "aria-label": "",
+                    "type": "link",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "return_format": "array",
+                    "parent_repeater": "field_6386785f9d83c"
+                },
+                {
+                    "key": "field_6386785fc8003",
+                    "label": "RSS",
+                    "name": "rss",
+                    "aria-label": "",
+                    "type": "link",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "return_format": "array",
+                    "parent_repeater": "field_6386785f9d83c"
+                },
+                {
+                    "key": "field_6386785fce288",
+                    "label": "Podcast",
+                    "name": "podcast",
+                    "aria-label": "",
+                    "type": "link",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "return_format": "array",
+                    "parent_repeater": "field_6386785f9d83c"
+                }
+            ],
+            "rows_per_page": 20
+        },
+        {
+            "key": "field_6412c91b2214b",
+            "label": "nid",
+            "name": "nid",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_6386785fe7bb9",
+            "label": "Featured stories",
+            "name": "collection-featured_stories",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Row",
+            "sub_fields": [
+                {
+                    "key": "field_6386785fed17d",
+                    "label": "Featured stories",
+                    "name": "featured_stories",
+                    "aria-label": "",
+                    "type": "post_object",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": false,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "multiple": 0,
+                    "post_type": [
+                        "discussion",
+                        "post"
+                    ],
+                    "taxonomy": [],
+                    "allow_null": 0,
+                    "return_format": "object",
+                    "ui": 1,
+                    "parent_repeater": "field_6386785fe7bb9"
+                }
+            ],
+            "rows_per_page": 20
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "person"
+            }
+        ]
+    ],
+    "menu_order": 999,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1684260676
+}
