@@ -52,14 +52,14 @@ function tw_province_state_taxonomy() {
 		'show_in_nav_menus'     => false,
 		'query_var'             => true,
 		'rewrite'               => array(
-			'slug'         => 'tags/province_or_state',
+			'slug'         => 'tags/provinces_or_states',
 			'with_front'   => false,
 			'hierarchical' => true,
 		),
 		'show_admin_column'     => false,
 		'show_in_rest'          => true,
 		'show_tagcloud'         => false,
-		'rest_base'             => 'province_or_state',
+		'rest_base'             => 'tags/provinces_or_states',
 		'rest_controller_class' => 'WP_REST_Terms_Controller',
 		'rest_namespace'        => 'wp/v2',
 		'show_in_quick_edit'    => true,
@@ -68,6 +68,6 @@ function tw_province_state_taxonomy() {
 		'graphql_single_name'   => 'provinceOrState',
 		'graphql_plural_name'   => 'provincesOrStates',
 	);
-	register_taxonomy( 'province_or_state', array( 'post' ), $args );
+	register_taxonomy( 'province_or_state', array( 'post', 'episode', 'segment' ), $args );
 }
 add_action( 'init', 'tw_province_state_taxonomy', 0 );

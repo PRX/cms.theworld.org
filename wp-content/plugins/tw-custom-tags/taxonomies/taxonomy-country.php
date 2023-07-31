@@ -59,7 +59,7 @@ function tw_country_taxonomy() {
 		'show_admin_column'     => false,
 		'show_in_rest'          => true,
 		'show_tagcloud'         => false,
-		'rest_base'             => 'country',
+		'rest_base'             => 'tags/countries',
 		'rest_controller_class' => 'WP_REST_Terms_Controller',
 		'rest_namespace'        => 'wp/v2',
 		'show_in_quick_edit'    => true,
@@ -68,6 +68,6 @@ function tw_country_taxonomy() {
 		'graphql_single_name'   => 'country',
 		'graphql_plural_name'   => 'countries',
 	);
-	register_taxonomy( 'country', array( 'post' ), $args );
+	register_taxonomy( 'country', array( 'post', 'episode', 'segment' ), $args );
 }
 add_action( 'init', 'tw_country_taxonomy', 0 );

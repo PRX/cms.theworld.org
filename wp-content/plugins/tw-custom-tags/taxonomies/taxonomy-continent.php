@@ -59,7 +59,7 @@ function tw_continent_taxonomy() {
 		'show_admin_column'     => false,
 		'show_in_rest'          => true,
 		'show_tagcloud'         => false,
-		'rest_base'             => 'continent',
+		'rest_base'             => 'tags/continents',
 		'rest_controller_class' => 'WP_REST_Terms_Controller',
 		'rest_namespace'        => 'wp/v2',
 		'show_in_quick_edit'    => true,
@@ -68,6 +68,6 @@ function tw_continent_taxonomy() {
 		'graphql_single_name'   => 'continent',
 		'graphql_plural_name'   => 'continents',
 	);
-	register_taxonomy( 'continent', array( 'post' ), $args );
+	register_taxonomy( 'continent', array( 'post', 'episode', 'segment' ), $args );
 }
 add_action( 'init', 'tw_continent_taxonomy', 0 );

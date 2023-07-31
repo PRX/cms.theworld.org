@@ -59,7 +59,7 @@ function tw_region_taxonomy() {
 		'show_admin_column'     => false,
 		'show_in_rest'          => true,
 		'show_tagcloud'         => false,
-		'rest_base'             => 'region',
+		'rest_base'             => 'tags/regions',
 		'rest_controller_class' => 'WP_REST_Terms_Controller',
 		'rest_namespace'        => 'wp/v2',
 		'show_in_quick_edit'    => true,
@@ -68,6 +68,6 @@ function tw_region_taxonomy() {
 		'graphql_single_name'   => 'region',
 		'graphql_plural_name'   => 'regions',
 	);
-	register_taxonomy( 'region', array( 'post' ), $args );
+	register_taxonomy( 'region', array( 'post', 'episode', 'segment' ), $args );
 }
 add_action( 'init', 'tw_region_taxonomy', 0 );

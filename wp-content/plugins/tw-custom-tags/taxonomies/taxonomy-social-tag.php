@@ -59,7 +59,7 @@ function tw_social_tag_taxonomy() {
 		'show_admin_column'     => false,
 		'show_in_rest'          => true,
 		'show_tagcloud'         => false,
-		'rest_base'             => 'social_tags',
+		'rest_base'             => 'tags/social_tags',
 		'rest_controller_class' => 'WP_REST_Terms_Controller',
 		'rest_namespace'        => 'wp/v2',
 		'show_in_quick_edit'    => true,
@@ -68,6 +68,6 @@ function tw_social_tag_taxonomy() {
 		'graphql_single_name'   => 'socialTag',
 		'graphql_plural_name'   => 'socialTags',
 	);
-	register_taxonomy( 'social_tags', array( 'post' ), $args );
+	register_taxonomy( 'social_tags', array( 'post', 'episode', 'segment' ), $args );
 }
 add_action( 'init', 'tw_social_tag_taxonomy', 0 );
