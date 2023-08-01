@@ -53,7 +53,7 @@ function tw_segments_post_type() {
 		),
 		'labels'              => $labels,
 		'supports'            => array( 'title', 'editor', 'thumbnail', 'custom-fields' ),
-		'taxonomies'          => array( 'tw_contributors', 'tw_programs' ),
+		'taxonomies'          => array( 'category', 'post_tag' ),
 		'rewrite'             => array(
 			'slug'       => 'segments',
 			'with_front' => false,
