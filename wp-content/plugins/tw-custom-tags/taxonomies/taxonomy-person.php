@@ -59,7 +59,7 @@ function tw_person_taxonomy() {
 		'show_admin_column'     => false,
 		'show_in_rest'          => true,
 		'show_tagcloud'         => false,
-		'rest_base'             => 'person',
+		'rest_base'             => 'tags/people',
 		'rest_controller_class' => 'WP_REST_Terms_Controller',
 		'rest_namespace'        => 'wp/v2',
 		'show_in_quick_edit'    => true,
@@ -68,6 +68,6 @@ function tw_person_taxonomy() {
 		'graphql_single_name'   => 'person',
 		'graphql_plural_name'   => 'people',
 	);
-	register_taxonomy( 'person', array( 'post' ), $args );
+	register_taxonomy( 'person', array( 'post', 'episode', 'segment' ), $args );
 }
 add_action( 'init', 'tw_person_taxonomy', 0 );

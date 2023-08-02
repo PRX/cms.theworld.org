@@ -47,7 +47,7 @@ function tw_episodes_post_type() {
 		'description'         => __( 'Manages the Episode custom post type', 'text_domain' ),
 		'labels'              => $labels,
 		'supports'            => array( 'title', 'editor', 'thumbnail', 'custom-fields', 'excerpt' ),
-		'taxonomies'          => array( 'category', 'post_tag', 'tw_programs' ),
+		'taxonomies'          => array( 'category', 'post_tag' ),
 		'rewrite'             => array(
 			'slug'       => 'episodes',
 			'with_front' => false,

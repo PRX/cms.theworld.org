@@ -59,7 +59,7 @@ function tw_city_taxonomy() {
 		'show_admin_column'     => false,
 		'show_in_rest'          => true,
 		'show_tagcloud'         => false,
-		'rest_base'             => 'city',
+		'rest_base'             => 'tags/cities',
 		'rest_controller_class' => 'WP_REST_Terms_Controller',
 		'rest_namespace'        => 'wp/v2',
 		'show_in_quick_edit'    => true,
@@ -68,6 +68,6 @@ function tw_city_taxonomy() {
 		'graphql_single_name'   => 'city',
 		'graphql_plural_name'   => 'cities',
 	);
-	register_taxonomy( 'city', array( 'post' ), $args );
+	register_taxonomy( 'city', array( 'post', 'episode', 'segment' ), $args );
 }
 add_action( 'init', 'tw_city_taxonomy', 0 );

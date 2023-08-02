@@ -29,7 +29,7 @@ define(
 		'tw-resource-development-tags/tw-resource-development-tags.php',
 		'tw-segments/tw-segments.php',
 		'tw-story-format/tw-story-format.php',
-		'tw-import-post-types/tw-import-post-types.php', // This is the plugin that creates the custom post types for the import. Can be removed after the import is complete.
+		// 'tw-import-post-types/tw-import-post-types.php', // This is the plugin that creates the custom post types for the import. Can be removed after the import is complete.
 		'wordpress-importer/wordpress-importer.php',
 		'wordpress-seo/wp-seo.php',
 		'wp-all-export-pro/wp-all-export-pro.php',
