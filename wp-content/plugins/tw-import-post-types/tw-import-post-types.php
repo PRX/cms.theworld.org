@@ -102,3 +102,40 @@
 }
 
 add_action( 'init', 'cptui_register_my_cpts', 0 );
+
+/**
+ * This function is a filter that checks if the object is a Program or Person post type based on the URL query.
+ * If the URL query contains 'program', it will search for the term slug in the 'program' taxonomy and return the object.
+ * If the URL query contains 'person', it will search for the term slug in the 'person' taxonomy and return the object.
+ * If the object is not found, it will return false.
+ *
+ * @param mixed $object The object to be returned.
+ * @param array $url_query The URL query parameters.
+ * @return mixed The object if found, false otherwise.
+ */
+function peh_get_object_maybe_program_person( $object, $url_query ) {
+
+	// Maybe Program or Person post type?
+	if ( false === $object && isset( $url_query['program'] ) ) {
+
+		$term_slug = $url_query['program'];
+		$term_tax  = 'program';
+
+		if ( $term_slug ) {
+
+			$object = _peh_get_object_by_taxonomy( $term_slug, $term_tax );
+		}
+	} elseif ( false === $object && isset( $url_query['person'] ) ) {
+
+		$term_slug = $url_query['person'];
+		$term_tax  = 'person';
+
+		if ( $term_slug ) {
+
+			$object = _peh_get_object_by_taxonomy( $term_slug, $term_tax );
+		}
+	}
+
+	return $object;
+}
+add_filter( 'peh_get_object_wild', 'peh_get_object_maybe_program_person', 11, 2 );

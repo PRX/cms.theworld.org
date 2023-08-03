@@ -22,6 +22,7 @@
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-peh-alias-object.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-peh-url-to-query.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-peh-url-to-query-item.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/peh-get-object-wild.php';
 
 /**
  * Route definitions.
@@ -272,12 +273,14 @@ add_filter( 'peh_get_object_filters', 'peh_maybe_object_terms', 15, 2 );
  * @return mixed
  */
 function peh_maybe_post_moved_to_object_terms( $object ) {
-	if ( isset( $object->type ) && in_array( $object->type, array( 'program', 'contributor', 'person' ) ) ) {
+
+	if ( isset( $object->type ) && in_array( $object->type, array( 'program', 'contributor' ) ) ) {
+		$object_type = $object->type === 'contributor' ? 'person' : $object->type;
 		$args = array(
 			'hide_empty' => false, // also retrieve terms which are not used yet
 			'meta_query' => array(
 				array(
-				   'key'       => "_pri_old_wp_{$object->type}_id",
+				   'key'       => "_pri_old_wp_{$object_type}_id",
 				   'value'     => $object->id,
 				   'compare'   => '='
 				)
@@ -286,7 +289,7 @@ function peh_maybe_post_moved_to_object_terms( $object ) {
 		);
 		$terms = get_terms( $args );
 		if ( $terms ) {
-			$object->id   = $terms[0];
+			$object->id = $terms[0];
 		}
 	}
 	return $object;
@@ -503,49 +506,16 @@ function _peh_get_object_wild( $slug ) {
 	$object = false;
 
 	$url_query = peh_url_to_query( $slug );
-
 	if ( ! is_wp_error( $url_query ) ) {
 
-		// Maybe post?
-		if ( isset( $url_query['name'] ) ) {
-
-			$object = _peh_get_object_by_slug( $url_query['name'], $url_query );
-
-		} elseif ( isset( $url_query['category_name'] ) ) {
-
-			$term_slug = '';
-			$term_tax  = '';
-
-			if ( str_contains( $url_query['category_name'], '/' ) ) {
-
-				$slug_parts = explode( '/', $url_query['category_name'] );
-
-				if ( $slug_parts ) {
-
-					$term_slug = end( $slug_parts );
-					$term_tax  = 'category';
-				}
-			} else {
-
-				$term_slug = $url_query['category_name'];
-			}
-
-			if ( $term_slug ) {
-
-				$object = _peh_get_object_by_taxonomy( $term_slug, $term_tax );
-			}
-		} else {
-
-			$term_tax  = key( $url_query );
-			$term_slug = $url_query[ $term_tax ];
-
-			$object = _peh_get_object_by_taxonomy( $term_slug, $term_tax );
-
-		}
+		$object = apply_filters( 'peh_get_object_wild', $object, $url_query );
 	}
 
 	return $object;
 }
+
+
+
 
 /**
  * Function to get response array based on $response argument.
