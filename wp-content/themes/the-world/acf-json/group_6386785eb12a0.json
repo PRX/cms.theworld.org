@@ -3,6 +3,48 @@
     "title": "Episode fields - Migration",
     "fields": [
         {
+            "key": "field_6386785eb6e96",
+            "label": "Broadcast Date",
+            "name": "date_broadcast",
+            "aria-label": "",
+            "type": "date_time_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "display_format": "d\/m\/Y g:i a",
+            "return_format": "d\/m\/Y g:i a",
+            "first_day": 1
+        },
+        {
+            "key": "field_6386785ebd1fb",
+            "label": "Program",
+            "name": "ref_program",
+            "aria-label": "",
+            "type": "post_object",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "post_type": "",
+            "post_status": "",
+            "taxonomy": "",
+            "return_format": "object",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 1
+        },
+        {
             "key": "field_6386785f2b0a7",
             "label": "Image",
             "name": "image",
@@ -28,51 +70,6 @@
             "max_height": 0,
             "max_size": 0,
             "mime_types": ""
-        },
-        {
-            "key": "field_6386785eb6e96",
-            "label": "Broadcast Date",
-            "name": "date_broadcast",
-            "aria-label": "",
-            "type": "date_time_picker",
-            "instructions": "",
-            "required": 1,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "placeholder": "",
-            "display_format": "d\/m\/Y g:i a",
-            "return_format": "d\/m\/Y g:i a",
-            "first_day": 1
-        },
-        {
-            "key": "field_6386785ebd1fb",
-            "label": "Program",
-            "name": "ref_program",
-            "aria-label": "",
-            "type": "post_object",
-            "instructions": "",
-            "required": 1,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "placeholder": "",
-            "post_type": [
-                "program"
-            ],
-            "multiple": 0,
-            "taxonomy": [],
-            "allow_null": 0,
-            "return_format": "object",
-            "ui": 1
         },
         {
             "key": "field_6386785ec2a92",
@@ -590,5 +587,9 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1684259598
+    "show_in_graphql": 0,
+    "graphql_field_name": "episodeFieldsMigration",
+    "map_graphql_types_from_location_rules": 0,
+    "graphql_types": "",
+    "modified": 1691005527
 }
