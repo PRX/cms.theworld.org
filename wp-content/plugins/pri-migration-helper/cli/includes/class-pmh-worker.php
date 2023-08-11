@@ -317,4 +317,114 @@ class PMH_Worker {
 
 		return getimagesize( $s_clean_url );
 	}
+
+	/**
+	 * Run posts content media fix.
+	 *
+	 * @param array $a_args Arguments [limit, comma_ids]
+	 */
+	public function posts_content_media_fix( $a_args ) {
+
+		// Set limit and ids.
+		$i_perpage_process = isset( $a_args[0] ) ? (int) $a_args[0] : 50;
+		$a_per_ids         = isset( $a_args[1] ) ? explode( ',', $a_args[1] ) : array();
+
+		// Get posts and media ids.
+		$a_posts_ids = f_pmh_get_posts_ids( 1, $i_perpage_process, $a_per_ids );
+		$i_posts_ids = count( $a_posts_ids );
+		$a_media_ids = f_pmh_get_media_ids( 1, 1 );
+		$i_media_ids = count( $a_media_ids );
+
+		// Run only if $i_media_ids = 0.
+		if ( $i_media_ids ) {
+
+			WP_CLI::error( "Aborting. Unfixed media is still found." );
+
+		} else {
+
+			// Run only if $a_posts_ids is not empty.
+			if ( $i_posts_ids ) {
+
+				// Show log.
+				WP_CLI::log( "Processing {$i_posts_ids} posts." );
+
+				// Do while $a_posts_ids is not empty single_post_content_media_fix.
+				do {
+
+					// Loop through posts ids.
+					foreach ( $a_posts_ids as $i_post_id ) {
+
+						// Show log.
+						WP_CLI::log( "Processing post ID: {$i_post_id}." );
+
+						// Run single_post_content_media_fix.
+						$b_updated = $this->single_post_content_media_fix( array( $i_post_id ) );
+
+						// If updated echo success.
+						if ( $b_updated ) {
+
+							// Show log.
+							WP_CLI::success( "Post ID: {$i_post_id} updated." );
+
+						} else {
+
+							// Show log.
+							WP_CLI::log( "Post ID: {$i_post_id} not updated." );
+						}
+					}
+
+					$a_posts_ids = f_pmh_get_posts_ids( 1, $i_perpage_process );
+
+				} while ( $a_posts_ids );
+
+			} else {
+
+				// Show log.
+				WP_CLI::log( "No posts to process." );
+			}
+		}
+	}
+
+	/**
+	 * Run post content media fix.
+	 *
+	 * @param array $a_args Arguments [0] = Post ID.
+	 */
+	public function single_post_content_media_fix( $a_args ) {
+
+		/**
+		 * Post ID to check.
+		 * - 638516
+		 */
+
+		// Get target post ID.
+		$target_wp_post_id = $a_args[0];
+
+		// Try to get the post.
+		$o_post = get_post( $target_wp_post_id );
+
+		// Update status.
+		$updated = false;
+
+		// Check if post exists and post type is post.
+		if ( $o_post && 'post' === $o_post->post_type ) {
+
+			$updated = f_pmh_process_posts_content( $target_wp_post_id );
+
+			if ( $updated ) {
+
+				WP_CLI::success( "Post with ID: {$target_wp_post_id} is updated." );
+
+			} else {
+
+				WP_CLI::error( "Post with ID: {$target_wp_post_id} is not updated." );
+			}
+		} else {
+
+			WP_CLI::error( "Post with ID: {$target_wp_post_id} does not exist." );
+		}
+
+		// Return.
+		return $updated;
+	}
 }

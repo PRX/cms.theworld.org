@@ -695,15 +695,8 @@ function f_pmh_get_posts_ids( int $i_paged, int $i_perpage, $a_ids = array() ) {
 	$a_args = array(
         'post_type'      => 'post',
 		'fields'         => 'ids',
-		'meta_query'  => array(
-			array(
-				'key'     => s_pmh_get_fixed_flag_key(),
-				'compare' => 'NOT EXISTS',
-			),
-		),
 		'orderby'        => 'ID',
 		'order'          => 'ASC',
-		'no_found_rows' => true,
 	);
 
 	if ( $a_ids ) {
@@ -714,6 +707,17 @@ function f_pmh_get_posts_ids( int $i_paged, int $i_perpage, $a_ids = array() ) {
 		// MEMO: I commented this because the pagination won't be necessary since we are checking if the result has elements to process and then it runs again until the result is emtpy.
 		// $a_args['paged']          = $i_paged;
 		$a_args['posts_per_page'] = $i_perpage;
+
+		/**
+		 * Search by meta query.
+		 */
+		$a_args['no_found_rows']  = true;
+		$a_args['meta_query']     = array(
+			array(
+				'key'     => s_pmh_get_fixed_flag_key(),
+				'compare' => 'NOT EXISTS',
+			),
+		);
 	}
 	$WP_Query_posts = new WP_Query( $a_args );
 	$a_posts = $WP_Query_posts->get_posts();
@@ -1299,7 +1303,9 @@ function f_pmh_process_posts_content( int $i_post_id ) {
 
 	$s_content = get_the_content( null, false, $i_post_id );
 
-	$i_drupal_id = get_post_meta( $i_post_id, 'nid', true );
+	$m_updated = false;
+
+	$i_drupal_id = (int) get_post_meta( $i_post_id, 'nid', true );
 
 	$a_matches    = array();
 	$a_switches_1 = array();
@@ -1316,15 +1322,35 @@ function f_pmh_process_posts_content( int $i_post_id ) {
 
 			$s_img_tag   = $a_match[0];
 			$s_img_class = $a_match[3];
+			$s_src       = $a_match[7];
 
+			// Escape the source URL.
+			$s_target_url    = esc_url( $s_src );
+			$s_file_name     = basename( $s_target_url );
+			$s_valid_url     = filter_var( $s_target_url, FILTER_VALIDATE_URL );
+			$s_clean_url	 = $s_valid_url ? $s_target_url : str_replace( $s_file_name, urlencode( $s_file_name ), $s_src );
 
-			$i_img_id         = (int) str_replace( ' size-full wp-image-', '', $s_img_class );
-			$i_drupal_file_id = $i_img_id ? (int) get_post_meta( $i_img_id, 'fid', true ) : false;
+			// Get basename extension.
+			$s_file_ext = pathinfo( $s_file_name, PATHINFO_EXTENSION );
 
-			if ( $i_drupal_file_id && isset( $a_drupal_content_media_data[ $i_drupal_file_id ] ) ) {
+			// If mp3 file.
+			if ( $s_file_ext === 'mp3' ) {
 
 				$a_switches_1[] = $s_img_tag;
-				$a_switches_2[] = f_pmh_img_replacement_html( $i_img_id, $a_drupal_content_media_data[ $i_drupal_file_id ] );
+				$a_switches_2[] = "[audio src=\"{$s_clean_url}\"]";
+			}
+
+			// Image file.
+			else {
+
+				$i_img_id         = (int) str_replace( ' size-full wp-image-', '', $s_img_class );
+				$i_drupal_file_id = $i_img_id ? (int) get_post_meta( $i_img_id, 'fid', true ) : false;
+
+				if ( $i_drupal_file_id && isset( $a_drupal_content_media_data[ $i_drupal_file_id ] ) ) {
+
+					$a_switches_1[] = $s_img_tag;
+					$a_switches_2[] = f_pmh_img_replacement_html( $i_img_id, $a_drupal_content_media_data[ $i_drupal_file_id ] );
+				}
 			}
 		}
 
@@ -1346,25 +1372,19 @@ function f_pmh_process_posts_content( int $i_post_id ) {
 
 	f_pmh_flag_object_corrected( $i_post_id, 'post' );
 
-	/* Debug
-	echo "<pre>";
-	var_dump( $s_new_content );
-	echo "</pre>";
-	echo $s_new_content;
-	exit;
-	 */
+	// Check if new content has value.
+	if ( $s_new_content ) {
 
-	/**
-	 * Post updater.
+		/**
+		 * Post updater.
+		 */
+		$a_update_post_args = array(
+			'ID'           => $i_post_id,
+			'post_content' => $s_new_content,
+		);
 
-	 */
-	$a_update_post_args = array(
-		'ID'           => $i_post_id,
-		'post_content' => $s_new_content,
-	);
-
-	$m_updated = wp_update_post( $a_update_post_args );
-	// $m_updated = true;
+		$m_updated = wp_update_post( $a_update_post_args );
+	}
 
 	return $m_updated;
 }
