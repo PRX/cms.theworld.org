@@ -46,14 +46,14 @@ abstract class ComponentAbstract implements ComponentInterface {
 	public function __call( $name, $arguments ) {
 		$class         = get_class( $this );
 		$class_name    = strtolower( str_replace( '\\', '__', $class ) );
-		$function_name = "${class_name}__${name}";
+		$function_name = "{$class_name}__${name}";
 
 		if ( function_exists( $function_name ) ) {
 			return call_user_func_array( $function_name, $arguments );
 		}
 
 		// Intentionally untranslated, to match PHP's error message.
-		throw new \Error( "Call to undefined method $class::$name()" );
+		throw new \Error( esc_html( "Call to undefined method $class::$name()" ) );
 	}
 
 	/**

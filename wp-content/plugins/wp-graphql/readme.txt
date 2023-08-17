@@ -4,7 +4,7 @@ Tags: GraphQL, JSON, API, Gatsby, Faust, Headless, Decoupled, Svelte, React, Nex
 Requires at least: 5.0
 Tested up to: 6.2
 Requires PHP: 7.1
-Stable tag: 1.14.4
+Stable tag: 1.14.10
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -86,6 +86,14 @@ Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without
 Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
 == Upgrade Notice ==
+
+= 1.14.6 =
+
+This release includes a security patch. It's recommended to update as soon as possible.
+
+If you're unable to update to the latest version, we have a snippet you can add to your site.
+
+You can read more about it here: https://github.com/wp-graphql/wp-graphql/security/advisories/GHSA-cfh4-7wq9-6pgg
 
 = 1.13.0 =
 
@@ -231,6 +239,62 @@ The `uri` field was non-null on some Types in the Schema but has been changed to
 Composer dependencies are no longer versioned in Github. Recommended install source is WordPress.org or using Composer to get the code from Packagist.org or WPackagist.org.
 
 == Changelog ==
+
+= 1.14.10 =
+
+**Chores / Bugfixes**
+
+- [#2874](https://github.com/wp-graphql/wp-graphql/pull/2874): fix: improve PostObjectCursor support for meta queries. Thanks @kidunot89!
+- [#2880](https://github.com/wp-graphql/wp-graphql/pull/2880): fix: increase clarity of the description of "asPreview" argument
+
+= 1.14.9 =
+
+**Chores / Bugfixes**
+
+- [#2865](https://github.com/wp-graphql/wp-graphql/pull/2865): fix: user roles should return empty if user doesn't have roles. Thanks @j3ang!
+- [#2870](https://github.com/wp-graphql/wp-graphql/pull/2870): fix: Type Loader returns null when "graphql_single_name" value has underscores [regression]
+- [#2871](https://github.com/wp-graphql/wp-graphql/pull/2871): fix: update tests, follow-up to [#2865](https://github.com/wp-graphql/wp-graphql/pull/2865)
+
+
+= 1.14.8 =
+
+**Chores / Bugfixes**
+
+- [#2855](https://github.com/wp-graphql/wp-graphql/pull/2855): perf: enforce static closures when possible (PHPCS). Thanks @justlevine!
+- [#2857](https://github.com/wp-graphql/wp-graphql/pull/2857): fix: Prevent truncation of query name inside the GraphiQL Query composer explorer tab. Thanks @LarsEjaas!
+- [#2856](https://github.com/wp-graphql/wp-graphql/pull/2856): chore: add missing translator comments. Thanks @justlevine!
+- [#2862](https://github.com/wp-graphql/wp-graphql/pull/2862): chore(deps-dev): bump word-wrap from 1.2.3 to 1.2.4
+- [#2861](https://github.com/wp-graphql/wp-graphql/pull/2861): fix: output `list:$type` keys for Root fields that return a list of nodes
+
+
+= 1.14.7 =
+
+**Chores / Bugfixes**
+
+- [#2853](https://github.com/wp-graphql/wp-graphql/pull/2853): fix: internal server error when query max depth setting is left empty
+- [#2851](https://github.com/wp-graphql/wp-graphql/pull/2851): fix: querying posts by slug or uri with non-ascii characters
+- [#2849](https://github.com/wp-graphql/wp-graphql/pull/2849): ci: Indent WP 6.2 in workflow file. Fixes Docker deploys. Thanks @markkelnar!
+- [#2846](https://github.com/wp-graphql/wp-graphql/pull/2846): chore(deps): bump tough-cookie from 4.0.0 to 4.1.3
+
+
+= 1.14.6 =
+
+**Chores / Bugfixes**
+
+- [#2841](https://github.com/wp-graphql/wp-graphql/pull/2841): ci: support STEP_DEBUG in Code Quality workflow. Thanks @justlevine!
+- [#2840](https://github.com/wp-graphql/wp-graphql/pull/2840): fix: update createMediaItem mutation to have better validation of input.
+- [#2838](https://github.com/wp-graphql/wp-graphql/pull/2838): chore: update security.md
+
+
+= 1.14.5 =
+
+**Chores / Bugfixes**
+
+- [#2834](https://github.com/wp-graphql/wp-graphql/pull/2834): fix: improve how the Query Analyzer tracks list types, only tracking lists from the RootType and not nested lists.
+- [#2828](https://github.com/wp-graphql/wp-graphql/pull/2828): chore: update composer dev-deps to latest. Thanks @justlevine!
+- [#2835](https://github.com/wp-graphql/wp-graphql/pull/2835): ci: update docker deploy workflow to use latest docker actions.
+- [#2836](https://github.com/wp-graphql/wp-graphql/pull/2836): ci: update schema upload workflow to pin mariadb to 10.8.2
+
 
 = 1.14.4 =
 
