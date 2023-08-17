@@ -1,10 +1,19 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
-  "apiVersion": 2,
+  "apiVersion": 3,
   "name": "boldblocks/svg-block",
   "title": "SVG Block",
   "category": "media",
   "description": "Display an SVG image as a block, which can be used for displaying icons, dividers...",
+  "keywords": [
+    "svg",
+    "icon",
+    "image",
+    "divider",
+    "button",
+    "separator",
+    "link"
+  ],
   "attributes": {
     "blockId": {
       "type": "string"

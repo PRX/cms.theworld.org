@@ -527,7 +527,7 @@ class Post extends Model {
 					return ! empty( $this->data->ping_status ) ? $this->data->ping_status : null;
 				},
 				'slug'                      => function () {
-					return ! empty( $this->data->post_name ) ? $this->data->post_name : null;
+					return ! empty( $this->data->post_name ) ? urldecode( $this->data->post_name ) : null;
 				},
 				'template'                  => function () {
 
@@ -683,7 +683,7 @@ class Post extends Model {
 						$link = get_permalink( $this->data->ID );
 					}
 
-					return ! empty( $link ) ? $link : null;
+					return ! empty( $link ) ? urldecode( $link ) : null;
 				},
 				'uri'                       => function () {
 					$uri = $this->link;
@@ -727,7 +727,7 @@ class Post extends Model {
 					},
 					'capability' => isset( $this->post_type_object->cap->edit_others_posts ) ?: 'edit_others_posts',
 				],
-				'enqueuedScriptsQueue'      => function () {
+				'enqueuedScriptsQueue'      => static function () {
 					global $wp_scripts;
 					do_action( 'wp_enqueue_scripts' );
 					$queue = $wp_scripts->queue;
@@ -736,7 +736,7 @@ class Post extends Model {
 
 					return $queue;
 				},
-				'enqueuedStylesheetsQueue'  => function () {
+				'enqueuedStylesheetsQueue'  => static function () {
 					global $wp_styles;
 					do_action( 'wp_enqueue_scripts' );
 					$queue = $wp_styles->queue;
