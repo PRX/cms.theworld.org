@@ -57,3 +57,4 @@ endif;
 add_action( 'template_redirect', 'tw_redirect_logged_out_to_frontend' );
 
 // Remove Windows Live Writer manifest link
+remove_action('wp_head', 'wlwmanifest_link');
