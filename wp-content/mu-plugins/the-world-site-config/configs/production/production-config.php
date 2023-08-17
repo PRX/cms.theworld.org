@@ -16,6 +16,8 @@ add_filter( 'jetpack_development_mode', '__return_false' );
  * Load staging specific config now so it can override
  * production settings.
  */
-if ( defined('WP_ENVIRONMENT_TYPE') && WP_ENVIRONMENT_TYPE === 'staging' ) {
+/**
+ * if ( defined('WP_ENVIRONMENT_TYPE') && WP_ENVIRONMENT_TYPE === 'staging' ) {
 	require_once dirname( __FILE__ ) . '/staging-config.php';
-}
+ * }
+*/
