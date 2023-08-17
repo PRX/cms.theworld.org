@@ -3,8 +3,8 @@ Contributors:      Mr2P
 Tags:              Gutenberg, block, SVG, image, icon
 Requires PHP:      7.0.0
 Requires at least: 5.9.0
-Tested up to:      6.2
-Stable tag:        1.1.11
+Tested up to:      6.3
+Stable tag:        1.1.13
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -35,6 +35,8 @@ How to create a non-rectangular background section:
 How to create icon buttons:
 
 [youtube https://youtu.be/NJkJipoDT4g]
+
+Please take a look at [these custom block patterns](https://boldpatterns.net/keywords/svg?utm_source=wp.org&utm_campaign=readme&utm_medium=link&utm_content=SVG+Block) that use this block to see how it can be applied to real-world sites.
 
 If this plugin is useful for you, please do a quick review and [rate it](https://wordpress.org/support/plugin/svg-block/reviews/#new-post) on WordPress.org to help us spread the word. I would very much appreciate it.
 
@@ -93,6 +95,18 @@ Anyone can use this plugin.
 7. Block's placeholder
 
 == Changelog ==
+
+= 1.1.13 =
+*Release Date - 09 August 2023*
+
+* DEV - Update new style for the icon library popup in WP 6.3
+* DEV - Refactor code
+
+= 1.1.12 =
+*Release Date - 28 June 2023*
+
+* DEV - Use ToolsPanel for inspector controls
+* DEV - Improve performance
 
 = 1.1.11 =
 *Release Date - 11 March 2023*
