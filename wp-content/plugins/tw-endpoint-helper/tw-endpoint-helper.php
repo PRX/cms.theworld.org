@@ -505,10 +505,12 @@ function _peh_get_object_wild( $slug ) {
 
 	$object = false;
 
-	$url_query = peh_url_to_query( $slug );
-	if ( ! is_wp_error( $url_query ) ) {
+	if ( $slug ) {
+		$url_query = peh_url_to_query( $slug );
+		if ( ! is_wp_error( $url_query ) ) {
 
-		$object = apply_filters( 'peh_get_object_wild', $object, $url_query );
+			$object = apply_filters( 'peh_get_object_wild', $object, $url_query );
+		}
 	}
 
 	return $object;

@@ -67,59 +67,76 @@ class Peh_Alias_Object {
 		$rest_route = '';
 
 		if ( $this->type && $this->id ) {
-			switch ( $this->type ) {
+			// No duplicated post type and taxonomy type will be allowed.
+			// Priorityze taxonomy because we need to detect person and program taxonomy first because we are using them for the import.
+			// bundle: taxonomies
+				// Post Tag
+				// 'post_tag':
+				// Category
+				// 'category':
+				// Person
+				// 'person':
+				// 'city':
+				// 'continent':
+				// 'contributor':
+				// 'country':
+				// 'license':
+				// 'person':
+				// 'program':
+				// 'province_or_state':
+				// 'region':
+				// 'social_tags':
+				// 'story_format':
+				// 'resource_development':
+			$prefix = $this->get_taxonomy_rest_base( $this->type );
+			if ( ! $prefix ) {
 				// bundle: audio or file
-				case 'media':
-					$prefix = 'media';
-					break;
-				case 'episode':
-					$prefix = 'episode';
-					break;
-				case 'segment':
-					$prefix = 'segment';
-					break;
+				// 'media':
+				// 'episode':
+				// 'segment':
 				// bundle: story
 				// Post
-				case 'post':
-					$prefix = 'posts';
-					break;
+				// 'post':
 				// bundle: page
-				case 'page':
-					$prefix = 'pages';
-					break;
-				// bundle: taxonomies
-				// Post Tag
-				case 'post_tag':
-					$prefix = 'tags';
-					break;
-				// Category
-				case 'category':
-					$prefix = 'categories';
-					break;
-				case 'city':
-				case 'continent':
-				case 'contributor':
-				case 'country':
-				case 'license':
-				case 'person':
-				case 'program':
-				case 'province_or_state':
-				case 'region':
-				case 'social_tags':
-				case 'story_format':
-				case 'resource_development':
-					$prefix = $this->type;
-					break;
-
-				default:
-					$prefix = '';
-					break;
+				// 'page':
+				$prefix = $this->get_post_rest_base( $this->type );
 			}
-
 			$rest_route = $prefix ? "/wp/v2/{$prefix}/{$this->id}" : '';
 		}
 
 		return $rest_route;
+	}
+
+	/**
+	 * Get formatted route.
+	 *
+	 * @return string
+	 */
+	public function get_post_rest_base( $type ) {
+		$post_type = get_post_type_object( $type );
+		if ( null !== $post_type ) {
+			if ( ! empty( $post_type->rest_base ) ) {
+				return $post_type->rest_base;
+			}
+			return $type;
+		}
+		return null;
+	}
+
+	/**
+	 * Get formatted route.
+	 *
+	 * @return string
+	 */
+	public function get_taxonomy_rest_base( $taxonomy ) {
+		$taxonomy_object = get_taxonomy( $taxonomy );
+		if ( false !== $taxonomy_object ) {
+			if ( ! empty( $taxonomy_object->rest_base ) ) {
+				return $taxonomy_object->rest_base;
+			}
+			return $taxonomy;
+		}
+		return null;
 	}
 
 
