@@ -1,0 +1,92 @@
+{
+    "key": "group_64e4fb05c856a",
+    "title": "Newsletter Options",
+    "fields": [
+        {
+            "key": "field_64e4fb0f0739d",
+            "label": "List ID",
+            "name": "list_id",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "To get the ID of the list, in CM, go to <b>Lists & Subscribers<\/b>, choose the list you want and click on <b>change name\/type<\/b>.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_64e4fbd80739e",
+            "label": "Opt-in Text",
+            "name": "opt-in_text",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "Text to use as the label next to opt-in checkbox. Should include conformation of accepting privacy terms and include a link to a privacy policy page.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "default_value": "I have read and agree to your <a href=\"https:\/\/theworld.org\/privacy\" target=\"_blank\">Privacy Policy<\/a>.",
+            "tabs": "all",
+            "toolbar": "basic",
+            "media_upload": 0,
+            "delay": 0
+        },
+        {
+            "key": "field_64e4fd4c0739f",
+            "label": "Button Label",
+            "name": "button_label",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Text to use in sign up form's submit button.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "default_value": "Subscribe",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "newsletter"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "show_in_graphql": 1,
+    "graphql_field_name": "newsletterOptions",
+    "map_graphql_types_from_location_rules": 0,
+    "graphql_types": "",
+    "modified": 1692728705
+}
