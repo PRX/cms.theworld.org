@@ -56,5 +56,21 @@ if ( ! function_exists( 'tw_redirect_logged_out_to_frontend' ) ) :
 endif;
 add_action( 'template_redirect', 'tw_redirect_logged_out_to_frontend' );
 
+if ( ! function_exists( 'tw_admin_styles' ) ) :
+	/**
+	 * Add styles to admin.
+	 *
+	 * @return void
+	 */
+	function tw_admin_styles() {
+		// Fixes layout heights of some accordion containers after WP 6.3 update.
+		echo '<style>
+			.components-panel__body { display: grid; }
+			.wpseo-meta-section, .wpseo-meta-section-react { min-height: unset; }
+		</style>';
+	}
+endif;
+add_action( 'admin_head', 'tw_admin_styles' );
+
 // Remove Windows Live Writer manifest link
-remove_action('wp_head', 'wlwmanifest_link');
+remove_action( 'wp_head', 'wlwmanifest_link' );
