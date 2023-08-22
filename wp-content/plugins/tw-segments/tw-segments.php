@@ -60,6 +60,7 @@ function tw_segments_post_type() {
 		),
 		'hierarchical'        => false,
 		'public'              => true,
+		'publicly_queryable'  => true,
 		'show_ui'             => true,
 		'show_in_menu'        => true,
 		'menu_position'       => 5,
@@ -68,14 +69,11 @@ function tw_segments_post_type() {
 		'can_export'          => true,
 		'has_archive'         => true,
 		'exclude_from_search' => false,
-		'publicly_queryable'  => true,
 		'capability_type'     => 'page',
 		'show_in_rest'        => true,
 		'show_in_graphql'     => true,
 		'graphql_single_name' => 'segment',
 		'graphql_plural_name' => 'segments',
-		'public'              => true,
-		'publicly_queryable'  => true,
 	);
 	register_post_type( 'segment', $args );
 }
