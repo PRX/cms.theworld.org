@@ -15,7 +15,7 @@ function tw_episodes_post_type() {
 
 	$labels = array(
 		'name'                  => _x( 'Episodes', 'Post Type General Name', 'text_domain' ),
-		'singular_name'         => _x( 'Episodes', 'Post Type Singular Name', 'text_domain' ),
+		'singular_name'         => _x( 'Episode', 'Post Type Singular Name', 'text_domain' ),
 		'menu_name'             => __( 'Episodes', 'text_domain' ),
 		'name_admin_bar'        => __( 'Episodes', 'text_domain' ),
 		'archives'              => __( 'Item Archives', 'text_domain' ),
@@ -54,6 +54,7 @@ function tw_episodes_post_type() {
 		),
 		'hierarchical'        => false,
 		'public'              => true,
+		'publicly_queryable'  => true,
 		'show_ui'             => true,
 		'show_in_menu'        => true,
 		'menu_position'       => 5,
@@ -62,14 +63,11 @@ function tw_episodes_post_type() {
 		'can_export'          => true,
 		'has_archive'         => true,
 		'exclude_from_search' => false,
-		'publicly_queryable'  => true,
 		'capability_type'     => 'post',
 		'show_in_rest'        => true,
 		'show_in_graphql'     => true,
 		'graphql_single_name' => 'episode',
 		'graphql_plural_name' => 'episodes',
-		'public'              => true,
-		'publicly_queryable'  => true,
 	);
 	register_post_type( 'episode', $args );
 
