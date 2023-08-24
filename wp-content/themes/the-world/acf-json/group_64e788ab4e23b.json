@@ -1,0 +1,115 @@
+{
+    "key": "group_64e788ab4e23b",
+    "title": "CTA Targeting",
+    "fields": [
+        {
+            "key": "field_64e788ad098a1",
+            "label": "Categories",
+            "name": "target_categories",
+            "aria-label": "",
+            "type": "taxonomy",
+            "instructions": "Select which categories this CTA should appear on. CTA will be shown on the terms' landing pages, and content tagged by these terms.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "taxonomy": "category",
+            "add_term": 0,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "id",
+            "field_type": "multi_select",
+            "allow_null": 0,
+            "bidirectional": 0,
+            "multiple": 0,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_64e789ff54b78",
+            "label": "Programs",
+            "name": "target_programs",
+            "aria-label": "",
+            "type": "taxonomy",
+            "instructions": "Select which programs this CTA should appear on. CTA will be shown on the terms' landing pages, and content tagged by these terms.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "taxonomy": "program",
+            "add_term": 0,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "id",
+            "field_type": "multi_select",
+            "allow_null": 0,
+            "bidirectional": 0,
+            "multiple": 0,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_64e79b74aa8d2",
+            "label": "Content",
+            "name": "target_content",
+            "aria-label": "",
+            "type": "relationship",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "post_type": [
+                "post",
+                "episode"
+            ],
+            "post_status": [
+                "publish"
+            ],
+            "taxonomy": "",
+            "filters": [
+                "search",
+                "post_type"
+            ],
+            "return_format": "id",
+            "min": "",
+            "max": "",
+            "elements": "",
+            "bidirectional": 0,
+            "bidirectional_target": []
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "call_to_action"
+            }
+        ]
+    ],
+    "menu_order": 10,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "field",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Fields for targeting CTA's to content, either directly or by taxonomy.",
+    "show_in_rest": 0,
+    "show_in_graphql": 1,
+    "graphql_field_name": "ctaTargeting",
+    "map_graphql_types_from_location_rules": 0,
+    "graphql_types": "",
+    "modified": 1692902932
+}

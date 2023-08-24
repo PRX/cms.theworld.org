@@ -17,6 +17,7 @@ define(
 		'pwa/pwa.php',
 		'redirection/redirection.php',
 		'user-role-editor/user-role-editor.php',
+		'tw-call-to-actions/tw-call-to-actions.php',
 		'tw-contributors/tw-contributors.php',
 		'tw-custom-tags/tw-custom-tags.php',
 		'tw-disable-yoast-indexables/tw-disable-yoast-indexables.php',
