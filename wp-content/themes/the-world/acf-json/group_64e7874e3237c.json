@@ -1,0 +1,52 @@
+{
+    "key": "group_64e7874e3237c",
+    "title": "CTA Settings",
+    "fields": [
+        {
+            "key": "field_64e78750bcaa9",
+            "label": "Cookie Lifespan",
+            "name": "cookie_lifespan",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Dissed messages use cookies to determine the next time it should be shown to a user. Set the number of minutes the cookie should expire. Default is '0' which expires when the user closes the browser window or tab.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "default_value": "",
+            "min": "",
+            "max": "",
+            "placeholder": 0,
+            "step": "",
+            "prepend": "",
+            "append": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "call_to_action"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "side",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "field",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "show_in_graphql": 1,
+    "graphql_field_name": "ctaSettings",
+    "map_graphql_types_from_location_rules": 0,
+    "graphql_types": "",
+    "modified": 1692895702
+}
