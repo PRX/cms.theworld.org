@@ -1,0 +1,317 @@
+{
+    "key": "group_64e658ff75bf6",
+    "title": "CTA Options",
+    "fields": [
+        {
+            "key": "field_64e659020476a",
+            "label": "CTA Type",
+            "name": "cta_type",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "<p>Select the type of call to action you wish to use.<\/p>\r\n<ul>\r\n<li>Informational - General information.<\/li>\r\n<li>Donation - Similar to Informational, but will be themed for donating. (Additional donation settings will come later for in app donation form configuration.)\r\n<li>Opt-In - Prompt to opt into something, such as privacy policy. Checkbox will be provided to enable action button when checked.<\/li>\r\n<li>Newsletter - Show a newsletter subscription form. Mailing List can be customized from the default Top of The World newsletter list.<\/li>\r\n<\/ul>",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "choices": {
+                "info": "Informational",
+                "donation": "Donation",
+                "optin": "Opt-In",
+                "newsletter": "Newsletter"
+            },
+            "default_value": "info",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_64e6697f4ebba",
+            "label": "Content",
+            "name": "content",
+            "aria-label": "",
+            "type": "group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_64e65c060476c",
+                    "label": "Heading",
+                    "name": "heading",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "show_in_graphql": 1,
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                },
+                {
+                    "key": "field_64e65e590476d",
+                    "label": "Message",
+                    "name": "message",
+                    "aria-label": "",
+                    "type": "wysiwyg",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "show_in_graphql": 1,
+                    "default_value": "",
+                    "tabs": "all",
+                    "toolbar": "basic",
+                    "media_upload": 0,
+                    "delay": 0
+                }
+            ]
+        },
+        {
+            "key": "field_64e66d88acc6e",
+            "label": "Actions",
+            "name": "actions",
+            "aria-label": "",
+            "type": "group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_64e66dacacc6f",
+                    "label": "Action Button Label",
+                    "name": "action_button_label",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "Label used in action button. Will override the default label, or create an action button for CTA types that usually do not have an default action.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "show_in_graphql": 1,
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                },
+                {
+                    "key": "field_64e66eeeacc70",
+                    "label": "Action Button URL",
+                    "name": "action_button_url",
+                    "aria-label": "",
+                    "type": "url",
+                    "instructions": "URL the action button should link to. Action button will act as a dismiss button in dismissible regions when no URL is provided.",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_64e659020476a",
+                                "operator": "!=",
+                                "value": "optin"
+                            },
+                            {
+                                "field": "field_64e659020476a",
+                                "operator": "!=",
+                                "value": "newsletter"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "show_in_graphql": 1,
+                    "default_value": "",
+                    "placeholder": ""
+                },
+                {
+                    "key": "field_64e77d55664eb",
+                    "label": "Dismiss Button Label",
+                    "name": "dismiss_button_label",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "Customize the label of the dismiss button. Dismiss button will only be shown in dismissible regions.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "show_in_graphql": 1,
+                    "default_value": "",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                }
+            ]
+        },
+        {
+            "key": "field_64e77e3e664ec",
+            "label": "Opt-In Settings",
+            "name": "opt-in_settings",
+            "aria-label": "",
+            "type": "group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_64e659020476a",
+                        "operator": "==",
+                        "value": "optin"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_64e77e9a664ed",
+                    "label": "Opt-In Text",
+                    "name": "opt-in_text",
+                    "aria-label": "",
+                    "type": "wysiwyg",
+                    "instructions": "",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "show_in_graphql": 1,
+                    "default_value": "I have read and agree to your <a href=\"https:\/\/theworld.org\/terms\" target=\"_blank\">Terms of Use<\/a>.",
+                    "tabs": "all",
+                    "toolbar": "basic",
+                    "media_upload": 0,
+                    "delay": 0
+                }
+            ]
+        },
+        {
+            "key": "field_64e7818ca4fb1",
+            "label": "Newsletter Settings",
+            "name": "newsletter_settings",
+            "aria-label": "",
+            "type": "group",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_64e659020476a",
+                        "operator": "==",
+                        "value": "newsletter"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_64e781aea4fb2",
+                    "label": "Newsletter",
+                    "name": "newsletter",
+                    "aria-label": "",
+                    "type": "post_object",
+                    "instructions": "Select a Newsletter post to have sign up form settings pulled from. If a region wouldn't support a sign up form, a link to the newsletter page will be provided.",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "show_in_graphql": 1,
+                    "post_type": [
+                        "newsletter"
+                    ],
+                    "post_status": [
+                        "publish"
+                    ],
+                    "taxonomy": "",
+                    "return_format": "id",
+                    "multiple": 0,
+                    "allow_null": 0,
+                    "ui": 1,
+                    "bidirectional_target": []
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "call_to_action"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "acf_after_title",
+    "style": "seamless",
+    "label_placement": "top",
+    "instruction_placement": "field",
+    "hide_on_screen": [
+        "permalink",
+        "slug"
+    ],
+    "active": true,
+    "description": "Fields to configure Call To Action prompts.",
+    "show_in_rest": 0,
+    "show_in_graphql": 1,
+    "graphql_field_name": "ctaOptions",
+    "map_graphql_types_from_location_rules": 0,
+    "graphql_types": "",
+    "modified": 1692902088
+}

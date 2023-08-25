@@ -1,11 +1,11 @@
 {
-    "key": "group_6470dbd403806",
-    "title": "Landing Page",
+    "key": "group_64e6466148253",
+    "title": "CTA Region Content",
     "fields": [
         {
-            "key": "field_64a853f71ad05",
-            "label": "Featured Posts",
-            "name": "featured_posts",
+            "key": "field_64e649d155e32",
+            "label": "Call To Actions",
+            "name": "call_to_actions",
             "aria-label": "",
             "type": "relationship",
             "instructions": "",
@@ -18,13 +18,14 @@
             },
             "show_in_graphql": 1,
             "post_type": [
-                "post"
+                "call_to_action"
             ],
-            "post_status": "",
+            "post_status": [
+                "publish"
+            ],
             "taxonomy": "",
             "filters": [
-                "search",
-                "taxonomy"
+                "search"
             ],
             "return_format": "id",
             "min": 0,
@@ -36,14 +37,9 @@
     "location": [
         [
             {
-                "param": "taxonomy",
+                "param": "post_type",
                 "operator": "==",
-                "value": "all"
-            },
-            {
-                "param": "taxonomy",
-                "operator": "!=",
-                "value": "cta_region_type"
+                "value": "cta_region"
             }
         ]
     ],
@@ -54,23 +50,11 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "",
+    "description": "Fields to define CTA Region content.",
     "show_in_rest": 0,
     "show_in_graphql": 1,
-    "graphql_field_name": "landingPage",
-    "map_graphql_types_from_location_rules": 1,
-    "graphql_types": [
-        "Category",
-        "City",
-        "Continent",
-        "Contributor",
-        "Country",
-        "Person",
-        "Program",
-        "ProvinceOrState",
-        "Region",
-        "SocialTag",
-        "Tag"
-    ],
-    "modified": 1692816144
+    "graphql_field_name": "ctaRegionContent",
+    "map_graphql_types_from_location_rules": 0,
+    "graphql_types": "",
+    "modified": 1692813882
 }
