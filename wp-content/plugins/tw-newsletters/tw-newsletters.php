@@ -53,7 +53,7 @@ function tw_newsletters_post_type() {
 			'with_front' => false,
 		),
 		'hierarchical'        => false,
-		'public'              => false,
+		'public'              => true,
 		'publicly_queryable'  => true,
 		'show_ui'             => true,
 		'show_in_menu'        => true,
@@ -63,7 +63,7 @@ function tw_newsletters_post_type() {
 		'show_in_nav_menus'   => true,
 		'can_export'          => false,
 		'has_archive'         => false,
-		'exclude_from_search' => false,
+		'exclude_from_search' => true,
 		'capability_type'     => array( 'newsletter', 'newsletters' ),
 		'capabilities'        => array(
 			'create_posts' => 'create_newsletter',
