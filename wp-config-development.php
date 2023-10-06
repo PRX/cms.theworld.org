@@ -2,11 +2,15 @@
 /**
  * Development configuration.
  * !!! IMPORTANT: NEVER include wp-settings.php !!!
+ *
+ * @package tw
  */
 
 // Ensure debug mode is enabled.
 if ( ! defined( 'WP_DEBUG' ) ) {
-	define('WP_DEBUG', true);
+	define( 'WP_DEBUG', true );
+	define( 'WP_DEBUG_LOG', true );
+	define( 'WP_DEBUG_DISPLAY', false );
 }
 
 // Configure S3 Uploads.
