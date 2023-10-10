@@ -4,7 +4,7 @@ Tags:              Gutenberg, block, SVG, image, icon
 Requires PHP:      7.0.0
 Requires at least: 5.9.0
 Tested up to:      6.3
-Stable tag:        1.1.13
+Stable tag:        1.1.15
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -95,6 +95,17 @@ Anyone can use this plugin.
 7. Block's placeholder
 
 == Changelog ==
+
+= 1.1.15 =
+*Release Date - 08 September 2023*
+
+* FIX - Generate empty variables for margin
+
+= 1.1.14 =
+*Release Date - 03 September 2023*
+
+* DEV - Use the default control for border, spacing settings
+* DEV - Disable toggle off for width, icon width, gap between icon and text
 
 = 1.1.13 =
 *Release Date - 09 August 2023*
