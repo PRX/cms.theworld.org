@@ -4,7 +4,7 @@ Tags: GraphQL, JSON, API, Gatsby, Faust, Headless, Decoupled, Svelte, React, Nex
 Requires at least: 5.0
 Tested up to: 6.2
 Requires PHP: 7.1
-Stable tag: 1.14.10
+Stable tag: 1.16.0
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -86,6 +86,18 @@ Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without
 Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
 == Upgrade Notice ==
+
+= 1.16.0 =
+
+**WPGraphQL Smart Cache**
+For WPGraphQL Smart Cache users, you should update WPGraphQL Smart Cache to v1.2.0 when updating
+WPGraphQL to v1.16.0 to ensure caches continue to purge as expected.
+
+**Cursor Pagination Updates**
+This version fixes some behaviors of Cursor Pagination which _may_ lead to behavior changes in your application.
+
+As with any release, we recommend you test in staging environments. For this release, specifically any
+queries you have using pagination arguments (`first`, `last`, `after`, `before`).
 
 = 1.14.6 =
 
@@ -239,6 +251,35 @@ The `uri` field was non-null on some Types in the Schema but has been changed to
 Composer dependencies are no longer versioned in Github. Recommended install source is WordPress.org or using Composer to get the code from Packagist.org or WPackagist.org.
 
 == Changelog ==
+
+= 1.16.0 =
+
+### New Features
+
+- [#2918](https://github.com/wp-graphql/wp-graphql/pull/2918): feat: Use graphql endpoint without scheme in url header.
+- [#2882](https://github.com/wp-graphql/wp-graphql/pull/2882): feat: Config and Cursor Classes refactor
+
+
+= 1.15.0 =
+
+**New Features**
+
+- [#2908](https://github.com/wp-graphql/wp-graphql/pull/2908): feat: Skip param added to Utils::map_input(). Thanks @kidunot89!
+
+**Chores / Bugfixes**
+
+- [#2907](https://github.com/wp-graphql/wp-graphql/pull/2907): ci: Use WP 6.3 image, not the beta one
+- [#2902](https://github.com/wp-graphql/wp-graphql/pull/2902): chore: handle unused variables (phpcs). Thanks @justlevine!
+- [#2901](https://github.com/wp-graphql/wp-graphql/pull/2901): chore: remove useless ternaries (phpcs). Thanks @justlevine!
+- [#2898](https://github.com/wp-graphql/wp-graphql/pull/2898): chore: restore excluded PHPCS sniffs. Thanks @justlevine!
+- [#2899](https://github.com/wp-graphql/wp-graphql/pull/2899): chore: Configure PHPCS blank line check and autofix. Thanks @justlevine!
+- [#2900](https://github.com/wp-graphql/wp-graphql/pull/2900): chore: implement PHPCS sniffs from Slevomat Coding Standards. Thanks @justlevine!
+- [#2897](https://github.com/wp-graphql/wp-graphql/pull/2897): fix: default excerptRendered to empty string. Thanks @izzygld!
+- [#2890](https://github.com/wp-graphql/wp-graphql/pull/2890): fix: Use hostname for graphql cache header url for varnish
+- [#2892](https://github.com/wp-graphql/wp-graphql/pull/2889): chore: GitHub template tweaks. Thanks @justlevine!
+- [#2889](https://github.com/wp-graphql/wp-graphql/pull/2889): ci: update tests to test against WordPress 6.3, simplify the matrix
+- [#2891](https://github.com/wp-graphql/wp-graphql/pull/2891): chore: bump graphql-php to 14.11.10 and update Composer dev-deps. Thanks @justlevine!
+
 
 = 1.14.10 =
 
