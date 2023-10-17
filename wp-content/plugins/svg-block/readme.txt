@@ -2,9 +2,9 @@
 Contributors:      Mr2P
 Tags:              Gutenberg, block, SVG, image, icon
 Requires PHP:      7.0.0
-Requires at least: 5.9.0
+Requires at least: 6.3
 Tested up to:      6.3
-Stable tag:        1.1.15
+Stable tag:        1.1.16
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -14,7 +14,7 @@ Display an SVG image as a block, which can be used for displaying icons, divider
 
 This SVG block allows you to display SVG images as inline HTML markup. You can choose an icon from the icon library with more than 3000 icons or you can upload or input your custom SVG images directly in the block's setting.
 
-## Features
+=== Key Features ===
 
 * Accessibility ready with 'img' role, automatically generates title and description from settings.
 * Automatically sanitize SVG markup to make it safe and lightweight.
@@ -22,7 +22,7 @@ This SVG block allows you to display SVG images as inline HTML markup. You can c
 * Include a collection of common non-rectangular dividers.
 * An icon library included icons from "Bootstrap Icons", "Ionicons", "Dashicons" and new "WordPress Icons".
 
-## Video tutorials
+=== Video tutorials ===
 
 How to create an icon with custom styles using the icon library:
 
@@ -69,6 +69,7 @@ It helps to input inline SVG images as blocks easily and safely.
 - When you need to quickly input some icons. It bundles with more than 3000 icons from some popular icons library such as "WordPress", "Dashicons", "Ionicons", and "Bootstrap icons".
 - Or you need to use an SVG image as a divider, or separator. It also bundles with some common non-rectangular dividers like tilts, curves, triangles...
 - You can also use it as an image block but for SVG format only like images from undraw.co.
+- You can also use it as a button with an icon, and it can be nested inside the Query Loop with the 'Link to post' enabled.
 
 = Why needs this plugin? =
 
@@ -84,7 +85,7 @@ Anyone can use this plugin.
 
 2. Add an icon and add styling to it
 
-3. Create a curve background section
+3. Create a curved background section
 
 4. Use the responsive height feature
 
@@ -95,6 +96,13 @@ Anyone can use this plugin.
 7. Block's placeholder
 
 == Changelog ==
+
+= 1.1.16 =
+*Release Date - 22 September 2023*
+
+* Added   - New setting named `linkToPost`. The block now can be used in a Query Loop and acts like a link/button with an icon that links to the post
+* Updated - Update 'Requires at least' to 6.3 for the new HTML API, and new default size controls
+* Fixed   - Change border from BorderBoxControl to BorderControl
 
 = 1.1.15 =
 *Release Date - 08 September 2023*
