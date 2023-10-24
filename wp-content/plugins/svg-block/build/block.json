@@ -73,6 +73,10 @@
       "type": "string",
       "default": ""
     },
+    "linkToPost": {
+      "type": "boolean",
+      "default": false
+    },
     "iconPosition": {
       "type": "string",
       "default": "left"
@@ -91,6 +95,7 @@
     "html": false,
     "align": true
   },
+  "usesContext": ["postId", "postType"],
   "textdomain": "svg-block",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
