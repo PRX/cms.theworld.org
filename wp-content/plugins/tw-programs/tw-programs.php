@@ -6,6 +6,10 @@
  * @package tw_programs
  */
 
+ if (!defined('ABSPATH')) {
+    exit();
+}
+
 /**
  * Register Program Taxonomy
  *
@@ -56,67 +60,3 @@ function tw_programs_taxonomy() {
 
 }
 add_action( 'init', 'tw_programs_taxonomy', 1 );
-
-/**
- * Register GraphQL fields.
- */
-add_action(
-	'graphql_register_types',
-	function () {
-
-		$customposttype_graphql_single_name = 'Post'; // Replace this with your custom post type single name in PascalCase.
-
-		// Registering the 'categorySlug' argument in the 'where' clause.
-		// Feel free to change the name 'categorySlug' to something that suits your requirements.
-		register_graphql_field(
-			'RootQueryTo' . $customposttype_graphql_single_name . 'ConnectionWhereArgs',
-			'programNotIn',
-			array(
-				'type'        => array( 'list_of' => 'ID' ), // To accept multiple strings.
-				'description' => __( 'Filter by post objects that do not have the specified programs.', 'text_domain' ),
-			)
-		);
-	}
-);
-
-/**
- * Modify GraphQL queries too support registered fields.
- */
-add_filter(
-	'graphql_post_object_connection_query_args',
-	function ( $query_args, $source, $args, $context, $info ) {
-
-		$excluded_program_ids = $args['where']['programNotIn'];
-
-		if ( isset( $excluded_program_ids ) ) {
-			// If the 'programNotIn' argument is provided, we add it to the tax_query.
-			// For more details, refer to the WP_Query class documentation at https://developer.wordpress.org/reference/classes/wp_query/.
-
-			// Decode hashed ids.
-			$ids = array_map(
-				function( $id ) {
-					if ( ! is_numeric( $id ) ) {
-						// Decode hashed id.
-						$decoded_id  = base64_decode( $id );
-						list( , $id) = explode( ':', $decoded_id );
-					}
-					return $id;
-				},
-				$excluded_program_ids
-			);
-
-			$query_args['tax_query'] = array(
-				array(
-					'taxonomy' => 'program',
-					'field'    => 'term_id',
-					'terms'    => $ids,
-					'operator' => 'NOT IN',
-				),
-			);
-		}
-
-		return $query_args;
-	},
-	10,
-	5
-);
