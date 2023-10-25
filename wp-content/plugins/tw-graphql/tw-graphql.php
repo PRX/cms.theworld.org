@@ -37,18 +37,22 @@ add_action(
         $taxonomies = \WPGraphQL::get_allowed_taxonomies();
 
 		if (!empty($post_types) && is_array($post_types)) {
+			// Loop through each post type...
 			foreach ($post_types as $post_type) {
 				$post_type_object = get_post_type_object($post_type);
 
+				// Only add field to post types that are configured for graphql.
 				if (isset($post_type_object->graphql_single_name)) {
-					// Loop each taxonomy to register on the edge if a category is the primary one.
                     $taxonomiesPostObj = get_object_taxonomies($post_type, 'objects');
-
                     $postNameKey = wp_gql_seo_get_field_key($post_type_object->graphql_single_name);
 
+					// Loop through each taxomony...
                     foreach ($taxonomiesPostObj as $tax) {
-						$postTypeUsesTaxonomy = in_array($tax->name)
-                        if (isset($tax->hierarchical) && $tax->hierarchical && isset($tax->graphql_single_name)) {
+						$isHierarchicalTaxonomy = isset($tax->hierarchical) && $tax->hierarchical;
+						$postTypeUsesTaxonomy = in_array($post_type_object->name, $tax->object_type);
+
+						// Only add field for taxonomies that are configured for graphql, are hierachical, and are used by the post type.
+                        if ($isHierarchicalTaxonomy && $postTypeUsesTaxonomy && isset($tax->graphql_single_name)) {
 							$taxNameKey = wp_gql_seo_get_field_key($tax->graphql_single_name);
 
                             register_graphql_field(ucfirst($postNameKey), 'primary' . ucfirst($tax->graphql_single_name), [
