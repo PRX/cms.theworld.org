@@ -1292,6 +1292,69 @@ function f_ajax_pmh_posts_fix_run() {
 add_action( 'wp_ajax_posts_fix_run', 'f_ajax_pmh_posts_fix_run' );
 
 /**
+ * Check for existing file
+ *
+ * @param [string] $url
+ * @return bool
+ */
+function f_pmh_remote_file_exist( $url ) {
+
+    $response = wp_remote_head($url);
+
+    if (is_wp_error($response)) {
+        return false;  // The HTTP request failed for some reason
+    }
+
+    $status_code = wp_remote_retrieve_response_code($response);
+
+    // If the HTTP response code is 200, it's likely the image exists
+	$allowed_codes = array(
+		200,
+		301,
+		302,
+	);
+
+    return in_array($status_code, $allowed_codes);
+}
+
+/**
+ * Escape URL and Get image size array.
+ *
+ * @param string $s_image_url Image URL.
+ *
+ * @return array|bool
+ */
+function f_pmh_get_clean_url( $s_image_url ) {
+
+	// Escape the URL.
+	$s_target_url    = esc_url( $s_image_url );
+	$s_file_name     = basename( $s_target_url );
+	$s_valid_url     = filter_var( $s_target_url, FILTER_VALIDATE_URL );
+	$s_clean_url	= $s_valid_url ? $s_target_url : str_replace( $s_file_name, urlencode( $s_file_name ), $s_image_url );
+
+	// Get image size normally.
+	$b_image_exist = f_pmh_remote_file_exist( $s_clean_url );
+
+	if ( false === $b_image_exist ) {
+
+		$s_file_name = basename( $s_image_url );
+
+		// Get image size with urlencode.
+		$s_clean_url = str_replace( $s_file_name, urlencode( $s_file_name ), $s_image_url );
+
+		$b_image_exist = f_pmh_remote_file_exist( $s_clean_url );
+
+		if ( false === $b_image_exist ) {
+
+			// Get image size with rawurlencode.
+			$s_clean_url = str_replace( $s_file_name,rawurlencode( $s_file_name ), $s_image_url );
+		}
+	}
+
+	return $s_clean_url;
+}
+
+/**
  * Process posts ids.
  *
  * @param int $i_post_id
@@ -1324,11 +1387,9 @@ function f_pmh_process_posts_content( int $i_post_id ) {
 			$s_img_class = $a_match[3];
 			$s_src       = $a_match[7];
 
-			// Escape the source URL.
-			$s_target_url    = esc_url( $s_src );
-			$s_file_name     = basename( $s_target_url );
-			$s_valid_url     = filter_var( $s_target_url, FILTER_VALIDATE_URL );
-			$s_clean_url	 = $s_valid_url ? $s_target_url : str_replace( $s_file_name, urlencode( $s_file_name ), $s_src );
+			// Escape and get the source URL.
+			$s_clean_url = f_pmh_get_clean_url( $s_src );
+			$s_file_name = basename( $s_clean_url );
 
 			// Get basename extension.
 			$s_file_ext = pathinfo( $s_file_name, PATHINFO_EXTENSION );
