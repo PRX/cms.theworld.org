@@ -315,7 +315,26 @@ class PMH_Worker {
 		$s_valid_url     = filter_var( $s_target_url, FILTER_VALIDATE_URL );
 		$s_clean_url	= $s_valid_url ? $s_target_url : str_replace( $s_file_name, urlencode( $s_file_name ), $s_image_url );
 
-		return getimagesize( $s_clean_url );
+		// Get image size normally.
+		$a_image_res = @getimagesize( $s_clean_url );
+
+		if ( false === $a_image_res ) {
+
+			$s_file_name = basename( $s_image_url );
+
+			// Get image size with urlencode.
+			$s_clean_url = str_replace( $s_file_name, urlencode( $s_file_name ), $s_image_url );
+			$a_image_res = @getimagesize( $s_clean_url );
+
+			if ( false === $a_image_res ) {
+
+				// Get image size with rawurlencode.
+				$s_clean_url = str_replace( $s_file_name,rawurlencode( $s_file_name ), $s_image_url );
+				$a_image_res = @getimagesize( $s_clean_url );
+			}
+		}
+
+		return $a_image_res;
 	}
 
 	/**
