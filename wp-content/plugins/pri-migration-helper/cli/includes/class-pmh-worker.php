@@ -392,7 +392,9 @@ class PMH_Worker {
 						}
 					}
 
-					$a_posts_ids = f_pmh_get_posts_ids( 1, $i_perpage_process );
+					if ( ! $a_per_ids ) {
+						$a_posts_ids = f_pmh_get_posts_ids( 1, $i_perpage_process );
+					}
 
 				} while ( $a_posts_ids );
 
@@ -436,11 +438,11 @@ class PMH_Worker {
 
 			} else {
 
-				WP_CLI::error( "Post with ID: {$target_wp_post_id} is not updated." );
+				WP_CLI::log( "Post with ID: {$target_wp_post_id} is not updated." );
 			}
 		} else {
 
-			WP_CLI::error( "Post with ID: {$target_wp_post_id} does not exist." );
+			WP_CLI::log( "Post with ID: {$target_wp_post_id} does not exist." );
 		}
 
 		// Return.
