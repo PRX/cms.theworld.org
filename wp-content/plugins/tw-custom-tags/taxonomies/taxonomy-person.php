@@ -18,8 +18,6 @@ function tw_person_taxonomy() {
 	$labels = array(
 		'name'                       => esc_html__( 'Persons', 'newspack' ),
 		'singular_name'              => esc_html__( 'Person', 'newspack' ),
-		'name'                       => esc_html__( 'Persons', 'newspack' ),
-		'singular_name'              => esc_html__( 'Person', 'newspack' ),
 		'search_items'               => esc_html__( 'Search Persons', 'newspack' ),
 		'popular_items'              => esc_html__( 'Popular Persons', 'newspack' ),
 		'all_items'                  => esc_html__( 'All Persons', 'newspack' ),

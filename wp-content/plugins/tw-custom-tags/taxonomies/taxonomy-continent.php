@@ -18,8 +18,6 @@ function tw_continent_taxonomy() {
 	$labels = array(
 		'name'                       => esc_html__( 'Continents', 'newspack' ),
 		'singular_name'              => esc_html__( 'Continent', 'newspack' ),
-		'name'                       => esc_html__( 'Continents', 'newspack' ),
-		'singular_name'              => esc_html__( 'Continent', 'newspack' ),
 		'search_items'               => esc_html__( 'Search Continents', 'newspack' ),
 		'popular_items'              => esc_html__( 'Popular Continents', 'newspack' ),
 		'all_items'                  => esc_html__( 'All Continents', 'newspack' ),

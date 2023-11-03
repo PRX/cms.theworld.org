@@ -18,8 +18,6 @@ function tw_social_tag_taxonomy() {
 	$labels = array(
 		'name'                       => esc_html__( 'Social Tags', 'newspack' ),
 		'singular_name'              => esc_html__( 'Social Tag', 'newspack' ),
-		'name'                       => esc_html__( 'Social Tags', 'newspack' ),
-		'singular_name'              => esc_html__( 'Social Tag', 'newspack' ),
 		'search_items'               => esc_html__( 'Search Social Tags', 'newspack' ),
 		'popular_items'              => esc_html__( 'Popular Social Tags', 'newspack' ),
 		'all_items'                  => esc_html__( 'All Social Tags', 'newspack' ),

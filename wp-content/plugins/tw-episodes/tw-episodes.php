@@ -70,6 +70,5 @@ function tw_episodes_post_type() {
 		'graphql_plural_name' => 'episodes',
 	);
 	register_post_type( 'episode', $args );
-
 }
 add_action( 'init', 'tw_episodes_post_type', 0 );

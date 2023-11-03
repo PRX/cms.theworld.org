@@ -75,6 +75,5 @@ function tw_call_to_actions_post_type_cta() {
 		'graphql_plural_name' => 'callToActions',
 	);
 	register_post_type( 'call_to_action', $args );
-
 }
 add_action( 'init', 'tw_call_to_actions_post_type_cta', 0 );

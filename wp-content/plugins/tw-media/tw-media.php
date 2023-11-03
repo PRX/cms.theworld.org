@@ -49,6 +49,5 @@ function tw_license_taxonomy() {
 		'graphql_plural_name' => 'licenses',
 	);
 	register_taxonomy( 'license', array( 'attachment' ), $args );
-
 }
 add_action( 'init', 'tw_license_taxonomy', 0 );

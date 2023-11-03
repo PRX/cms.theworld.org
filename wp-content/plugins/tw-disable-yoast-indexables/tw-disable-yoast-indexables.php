@@ -3,9 +3,14 @@
  * Plugin Name: TW Disable Yoast Indexables
  * Description: Disabling Indexables completely to speed up the import process.
  *
+ * @package tw_disable_yoast_indexables
  */
 
-// Add submenu below the Yoast SEO menu item.
+/**
+ * Add submenu below the Yoast SEO menu item.
+ *
+ * @return void
+ */
 function tw_add_submenu_page() {
 	add_submenu_page(
 		'wpseo_dashboard',
@@ -18,21 +23,25 @@ function tw_add_submenu_page() {
 }
 add_action( 'admin_menu', 'tw_add_submenu_page' );
 
-// Disable Yoast SEO Indexables page. Show toggleable option.
+/**
+ * Disable Yoast SEO Indexables page. Show toggleable option.
+ *
+ * @return void
+ */
 function tw_disable_yoast_indexables_page() {
 
 	$i_option_disable_yoast_indexables = get_option( 'tw-disable-yoast-indexables', 1 );
 
 	?>
 	<div class="wrap">
-		<h1><?php _e( 'TW Disable Yoast Indexables', 'tw-disable-yoast-indexables' ); ?></h1>
+		<h1><?php esc_html_e( 'TW Disable Yoast Indexables', 'tw-disable-yoast-indexables' ); ?></h1>
 
-		<form action="<?php echo esc_url( admin_url('admin-post.php') ); ?>" method="post">
+		<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
 
 			<table class="form-table">
 
 				<tr>
-					<th scope="row"><?php _e( 'Disable Yoast Indexables' ); ?></th>
+					<th scope="row"><?php esc_html_e( 'Disable Yoast Indexables', 'tw-disable-yoast-indexables' ); ?></th>
 					<td>
 						<input
 							name="tw-disable-yoast-indexables"
@@ -57,20 +66,29 @@ function tw_disable_yoast_indexables_page() {
 	<?php
 }
 
-// Save the option.
+/**
+ * Save the option.
+ *
+ * @return void
+ */
 function tw_save_setting_disable_yoast_indexables() {
 
 	$i_option_disable_yoast_indexables = isset( $_POST['tw-disable-yoast-indexables'] ) ? 1 : 0;
 
 	update_option( 'tw-disable-yoast-indexables', $i_option_disable_yoast_indexables );
 
-	wp_redirect( admin_url( 'admin.php?page=tw-disable-yoast-indexables' ) );
+	wp_safe_redirect( admin_url( 'admin.php?page=tw-disable-yoast-indexables' ) );
 
 	exit;
 }
 add_action( 'admin_post_tw-save-setting-disable-yoast-indexables', 'tw_save_setting_disable_yoast_indexables' );
 
-// Apply the option.
+/**
+ * Apply the option.
+ *
+ * @param boolean $b_should_index_indexables Should indexables be indexed.
+ * @return boolean
+ */
 function tw_apply_option_yoast_disable_indexables( $b_should_index_indexables ) {
 
 	$i_option_disable_yoast_indexables = (int) get_option( 'tw-disable-yoast-indexables', 1 );
