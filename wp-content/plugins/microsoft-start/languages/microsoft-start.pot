@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Microsoft Start 2.7.10\n"
+"Project-Id-Version: Microsoft Start 2.7.11\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/__translate_cache\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-08-02T08:53:36+00:00\n"
+"POT-Creation-Date: 2023-08-18T07:52:09+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 
@@ -714,6 +714,16 @@ msgstr ""
 msgid "Informational"
 msgstr ""
 
+#. translators: Text on join button before click
+#: assets/js/dashboard.js:1
+msgid "Join now"
+msgstr ""
+
+#. translators: Text on button after click
+#: assets/js/dashboard.js:1
+msgid "Connecting"
+msgstr ""
+
 #. translators: Title of text inviting users to join
 #: assets/js/dashboard.js:1
 msgid "Grow your audience with Microsoft—and get paid"
@@ -724,14 +734,9 @@ msgstr ""
 msgid "You've been invited to join Microsoft Start Partner Hub. With this new program, you can make your WordPress posts available to the millions of people who use Microsoft Start."
 msgstr ""
 
-#. translators: Text on join button before click
+#. translators: Tooltip text for sign in hint under Edge browser
 #: assets/js/dashboard.js:1
-msgid "Join now"
-msgstr ""
-
-#. translators: Text on button after click
-#: assets/js/dashboard.js:1
-msgid "Connecting"
+msgid "Sign in with the same account you use for Edge"
 msgstr ""
 
 #. translators: Card title of onboarding transparency
