@@ -62,7 +62,6 @@ class User extends Model {
 	 * @param \WP_User $user The incoming WP_User object that needs modeling
 	 *
 	 * @return void
-	 * @throws \Exception
 	 */
 	public function __construct( WP_User $user ) {
 
@@ -81,6 +80,7 @@ class User extends Model {
 			'description',
 			'slug',
 			'uri',
+			'url',
 			'enqueuedScriptsQueue',
 			'enqueuedStylesheetsQueue',
 		];
@@ -89,9 +89,7 @@ class User extends Model {
 	}
 
 	/**
-	 * Setup the global data for the model to have proper context when resolving
-	 *
-	 * @return void
+	 * {@inheritDoc}
 	 */
 	public function setup() {
 		global $wp_query, $post, $authordata;
@@ -121,10 +119,7 @@ class User extends Model {
 	}
 
 	/**
-	 * Reset global state after the model fields
-	 * have been generated
-	 *
-	 * @return void
+	 * {@inheritDoc}
 	 */
 	public function tear_down() {
 		$GLOBALS['authordata'] = $this->global_authordata; // phpcs:ignore WordPress.WP.GlobalVariablesOverride
@@ -133,9 +128,7 @@ class User extends Model {
 	}
 
 	/**
-	 * Method for determining if the data should be considered private or not
-	 *
-	 * @return bool
+	 * {@inheritDoc}
 	 */
 	protected function is_private() {
 		/**
@@ -156,9 +149,7 @@ class User extends Model {
 	}
 
 	/**
-	 * Initialize the User object
-	 *
-	 * @return void
+	 * {@inheritDoc}
 	 */
 	protected function init() {
 		if ( empty( $this->fields ) ) {
