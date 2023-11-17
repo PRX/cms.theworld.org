@@ -70,3 +70,8 @@ vendor
 # Custom #
 ##########
 reference/
+
+
+# Node Dependencies #
+#####################
+node_modules
