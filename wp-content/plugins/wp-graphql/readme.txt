@@ -2,9 +2,9 @@
 Contributors: jasonbahl, tylerbarnes1, ryankanner, hughdevore, chopinbach, kidunot89
 Tags: GraphQL, JSON, API, Gatsby, Faust, Headless, Decoupled, Svelte, React, Nextjs, Vue, Apollo, REST, JSON, HTTP, Remote, Query Language
 Requires at least: 5.0
-Tested up to: 6.2
+Tested up to: 6.4.1
 Requires PHP: 7.1
-Stable tag: 1.17.0
+Stable tag: 1.19.0
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -251,6 +251,48 @@ The `uri` field was non-null on some Types in the Schema but has been changed to
 Composer dependencies are no longer versioned in Github. Recommended install source is WordPress.org or using Composer to get the code from Packagist.org or WPackagist.org.
 
 == Changelog ==
+
+= 1.19.0=
+
+**New Features**
+
+- [#2988](https://github.com/wp-graphql/wp-graphql/pull/2988): feat: add missing extra fields to `EnqueuedAsset`, `EnqueuedScript` and `EnqueuedStylesheet`
+
+**Chores / Bugfixes**
+
+- [#2989](https://github.com/wp-graphql/wp-graphql/pull/2989): fix: make User.url public
+- [#2990](https://github.com/wp-graphql/wp-graphql/pull/2990): chore: autolint tests with phpcbf
+- [#2992](https://github.com/wp-graphql/wp-graphql/pull/2992): fix: add polyfills for `str_starts_with()` and `str_ends_with()` to prevent fatal errors in `PHP < 8.0`
+
+
+= 1.18.2 =
+
+**Chores / Bugfixes**
+
+- ci: update tests to run against WordPress 6.4.1. Update Docker Deploy to include WP 6.4.1. Update README, plugin file's "tested up to" to reflect.
+
+= 1.18.1 =
+
+**Chores / Bugfixes**
+
+- [#2984](https://github.com/wp-graphql/wp-graphql/pull/2984): ci: update tests to run against WordPress 6.4. Update README, plugin file's "tested up to" to reflect.
+
+
+= 1.18.0 =
+
+**New Features**
+
+- [#2937](https://github.com/wp-graphql/wp-graphql/pull/2937): fix: Support asPreview by URI/SLUG Id Type (this is technically a bugfix, but introduces new functionality)
+
+**Chores / Bugfixes**
+
+- [#2972](https://github.com/wp-graphql/wp-graphql/pull/2972): chore(deps): bump @babel/traverse from 7.17.3 to 7.23.2
+- [#2930](https://github.com/wp-graphql/wp-graphql/pull/2930): fix: unstable term cursor identical names
+- [#2976](https://github.com/wp-graphql/wp-graphql/pull/2976): chore: restore commenting sniffs to PHPCS ruleset
+- [#2973](https://github.com/wp-graphql/wp-graphql/pull/2973): chore: update composer deps to latest
+- [#2975](https://github.com/wp-graphql/wp-graphql/pull/2975): chore: lint and remove useless variables [phpcs]
+- [#2977](https://github.com/wp-graphql/wp-graphql/pull/2977): chore: sort use statements alphabetically with SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses (autofix)
+- [#2978](https://github.com/wp-graphql/wp-graphql/pull/2978]): chore: implement stricter type hinting with SlevomatCodingStandard.TypeHints [phpcs]
 
 = 1.17.0 =
 
