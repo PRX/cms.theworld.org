@@ -6,11 +6,11 @@
  * Description: GraphQL API for WordPress
  * Author: WPGraphQL
  * Author URI: http://www.wpgraphql.com
- * Version: 1.17.0
+ * Version: 1.19.0
  * Text Domain: wp-graphql
  * Domain Path: /languages/
  * Requires at least: 5.0
- * Tested up to: 6.2
+ * Tested up to: 6.4.1
  * Requires PHP: 7.1
  * License: GPL-3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -18,7 +18,7 @@
  * @package  WPGraphQL
  * @category Core
  * @author   WPGraphQL
- * @version  1.17.0
+ * @version  1.19.0
  */
 
 // Exit if accessed directly.
@@ -34,8 +34,6 @@ if ( file_exists( __DIR__ . '/c3.php' ) ) {
 
 /**
  * Load files that are required even if the composer autoloader isn't installed
- *
- * @return void
  */
 function graphql_require_bootstrap_files(): void {
 	if ( file_exists( __DIR__ . '/constants.php' ) ) {
@@ -70,8 +68,6 @@ function graphql_require_bootstrap_files(): void {
  * Normal (.org repo install)
  * - WPGRAPHQL_AUTOLOAD: not defined
  * - composer deps installed INSIDE the plugin
- *
- * @return bool
  */
 function graphql_can_load_plugin(): bool {
 
@@ -143,8 +139,6 @@ register_activation_hook( __FILE__, 'graphql_activation_callback' );
 
 /**
  * Render an admin notice if the plugin cannot load
- *
- * @return void
  */
 function graphql_cannot_load_admin_notice_callback(): void {
 	if ( ! current_user_can( 'manage_options' ) ) {

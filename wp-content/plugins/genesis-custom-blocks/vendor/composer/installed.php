@@ -1,22 +1,22 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.5.2',
-        'version' => '1.5.2.0',
+        'pretty_version' => '1.6.0',
+        'version' => '1.6.0.0',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'd7b58815da17fd868c86f397db3cd55582b8e04b',
+        'reference' => '029a96f98dda62064909aeca8398d5ee87481122',
         'name' => 'studiopress/genesis-custom-blocks',
         'dev' => false,
     ),
     'versions' => array(
         'studiopress/genesis-custom-blocks' => array(
-            'pretty_version' => '1.5.2',
-            'version' => '1.5.2.0',
+            'pretty_version' => '1.6.0',
+            'version' => '1.6.0.0',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'd7b58815da17fd868c86f397db3cd55582b8e04b',
+            'reference' => '029a96f98dda62064909aeca8398d5ee87481122',
             'dev_requirement' => false,
         ),
     ),

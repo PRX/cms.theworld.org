@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit9722c19e535d86fc968bdbe1abcb61b0
+class ComposerStaticInite4233d9d1c831bf27939e187620292ff
 {
     public static $prefixLengthsPsr4 = array (
         'W' => 
@@ -364,6 +364,7 @@ class ComposerStaticInit9722c19e535d86fc968bdbe1abcb61b0
         'WPGraphQL\\Type\\Enum\\PostObjectsConnectionOrderbyEnum' => __DIR__ . '/../..' . '/src/Type/Enum/PostObjectsConnectionOrderbyEnum.php',
         'WPGraphQL\\Type\\Enum\\PostStatusEnum' => __DIR__ . '/../..' . '/src/Type/Enum/PostStatusEnum.php',
         'WPGraphQL\\Type\\Enum\\RelationEnum' => __DIR__ . '/../..' . '/src/Type/Enum/RelationEnum.php',
+        'WPGraphQL\\Type\\Enum\\ScriptLoadingStrategyEnum' => __DIR__ . '/../..' . '/src/Type/Enum/ScriptLoadingStrategyEnum.php',
         'WPGraphQL\\Type\\Enum\\TaxonomyEnum' => __DIR__ . '/../..' . '/src/Type/Enum/TaxonomyEnum.php',
         'WPGraphQL\\Type\\Enum\\TaxonomyIdTypeEnum' => __DIR__ . '/../..' . '/src/Type/Enum/TaxonomyIdTypeEnum.php',
         'WPGraphQL\\Type\\Enum\\TermNodeIdTypeEnum' => __DIR__ . '/../..' . '/src/Type/Enum/TermNodeIdTypeEnum.php',
@@ -453,9 +454,9 @@ class ComposerStaticInit9722c19e535d86fc968bdbe1abcb61b0
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit9722c19e535d86fc968bdbe1abcb61b0::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit9722c19e535d86fc968bdbe1abcb61b0::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit9722c19e535d86fc968bdbe1abcb61b0::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInite4233d9d1c831bf27939e187620292ff::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInite4233d9d1c831bf27939e187620292ff::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInite4233d9d1c831bf27939e187620292ff::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -3,8 +3,8 @@ Contributors:      Mr2P
 Tags:              Gutenberg, block, SVG, image, icon
 Requires PHP:      7.0.0
 Requires at least: 6.3
-Tested up to:      6.3
-Stable tag:        1.1.16
+Tested up to:      6.4
+Stable tag:        1.1.17
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -12,7 +12,8 @@ Display an SVG image as a block, which can be used for displaying icons, divider
 
 == Description ==
 
-This SVG block allows you to display SVG images as inline HTML markup. You can choose an icon from the icon library with more than 3000 icons or you can upload or input your custom SVG images directly in the block's setting.
+This SVG block allows you to display SVG images as inline HTML markup. You can either choose an icon from the icon library with more than 3000 icons or you can upload or input your custom SVG images directly in the block's setting.
+It also allows you to upload SVG images to your WordPress site, and load them into the icon library. Only SVG files that have XML declaration at the top like `<?xml version="1.0" encoding="utf-8"?>` can be uploaded to the WordPress media library.
 
 === Key Features ===
 
@@ -21,6 +22,8 @@ This SVG block allows you to display SVG images as inline HTML markup. You can c
 * Include almost all settings to customize the SVG image.
 * Include a collection of common non-rectangular dividers.
 * An icon library included icons from "Bootstrap Icons", "Ionicons", "Dashicons" and new "WordPress Icons".
+* Allow uploading SVG images to the WordPress media library
+* Automatically load SVG images from the media library into the icon library
 
 === Video tutorials ===
 
@@ -96,6 +99,13 @@ Anyone can use this plugin.
 7. Block's placeholder
 
 == Changelog ==
+
+= 1.1.17 =
+*Release Date - 31 October 2023*
+
+* Added   - Allow uploading SVG images to the WordPress media library and load those images into its icon library
+* Updated - Update icons from the latest version of third-party providers
+* Updated - Update SDK
 
 = 1.1.16 =
 *Release Date - 22 September 2023*
