@@ -2,7 +2,8 @@ import { Maybe, Post } from "../api/graphql";
 
 export type ApiAuthor = {
   name: string,
-  id: Maybe<number>
+  id: Maybe<number>,
+  image: Maybe<string>,
 }
 
 export type ApiEnclosure = {
@@ -31,7 +32,14 @@ export type ApiCategory = {
 }
 
 export type ApiEpisode = {
-  post: Post,
+  post?: {
+    guid: string,
+    databaseId: number,
+    audio: {
+      databaseId: number,
+      url: string
+    }
+  },
   wasImported: boolean,
   id: string,
   guid: string,
@@ -46,6 +54,9 @@ export type ApiEpisode = {
 }
 
 export type ApiData = {
+  hasImportableItems: boolean,
+  hasImportedItems: boolean,
+  hasUpdateableItems: boolean,
   episodes: ApiEpisode[],
   segments: ApiEpisode[]
 };

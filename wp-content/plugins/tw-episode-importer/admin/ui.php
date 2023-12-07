@@ -39,7 +39,7 @@ function tw_episode_importer_admin_page_html() {
 		array(
 			'appContainerId' => TW_EPISODE_IMPORTER_APP_CONTAINER_ID,
 			'apiUrl'         => home_url( '/wp-json/' . TW_API_ROUTE_BASE . '/' . TW_EPISODE_IMPORTER_API_ENDPOINT . '/' ),
-			'gqlUrl'         => home_url( 'graphql' ),
+			'gqlUrl'         => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
 			'nonce'          => wp_create_nonce( 'wp_rest' ),
 		)
 	);

@@ -3,14 +3,23 @@
  * Initialize Apollo GraphQL client.
  */
 
-import { ApolloClient, HttpLink, InMemoryCache, from } from '@apollo/client';
+import { ApolloClient, InMemoryCache, createHttpLink, from } from '@apollo/client';
+import { setContext }  from '@apollo/client/link/context';
 
-const httpLink = new HttpLink({
-  uri: `${window.appLocalizer.gqlUrl}`,
-  fetchOptions: {
-    method: 'GET'
-  }
+const httpLink = createHttpLink({
+  uri: `${window.appLocalizer.gqlUrl}`
 });
+
+const authLink = setContext((_, { headers }) => {
+  const nonce = window.appLocalizer.nonce;
+
+  return {
+    headers: {
+      ...headers,
+      'X-Wp-Nonce': nonce
+    }
+  }
+})
 
 export const gqlClient = new ApolloClient({
   cache: new InMemoryCache({
@@ -65,7 +74,7 @@ export const gqlClient = new ApolloClient({
       }
     }
   }),
-  link: from([httpLink]),
+  link: authLink.concat(httpLink),
   defaultOptions: {
     query: {
       fetchPolicy: 'no-cache'

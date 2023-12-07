@@ -1,5 +1,6 @@
 "use client"
 
+import type { DayPickerSingleProps } from "react-day-picker"
 import React, { useEffect } from "react"
 import { format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
@@ -13,17 +14,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-export type DatePickerProps = {
-  selected?: Date,
-  onSelect?(date: Date): void
-}
+export type DatePickerProps = Partial<DayPickerSingleProps>;
 
-export function DatePicker({ selected, onSelect }: DatePickerProps) {
-  const [date, setDate] = React.useState<Date>(selected)
-
-  useEffect(() => {
-    onSelect(date);
-  }, [date]);
+export function DatePicker(props: DatePickerProps) {
+  const { selected } = props;
 
   return (
     <Popover>
@@ -32,18 +26,17 @@ export function DatePicker({ selected, onSelect }: DatePickerProps) {
           variant={"outline"}
           className={cn(
             "w-[280px] justify-start text-left font-normal",
-            !date && "text-muted-foreground"
+            !selected && "text-muted-foreground"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
+          {selected ? format(selected, "PPP") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
         <Calendar
+          {...props}
           mode="single"
-          selected={date}
-          onSelect={setDate}
           initialFocus
         />
       </PopoverContent>

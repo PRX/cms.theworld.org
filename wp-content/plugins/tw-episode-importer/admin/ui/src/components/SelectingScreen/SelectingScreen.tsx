@@ -1,7 +1,7 @@
-import type { ApiData, ApiEpisode, ApiTerm } from '@/types/api/api';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import type { ApiData, ApiEpisode } from '@/types/api/api';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { FileQuestion, Loader2, Pause, Play } from 'lucide-react';
+import { ArrowRight, ArrowRightToLine, FileQuestion, Loader2 } from 'lucide-react';
 import { ContributorBadge } from '@/components/ContributorBadge';
 import { DatePicker } from '@/components/DatePicker';
 import { PlayButton } from '@/components/PlayButton';
@@ -15,6 +15,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { AppContext } from '@/lib/contexts/AppContext';
 import { cn, formatDuration, generateAudioUrl } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { ImportItemRow } from '@/components/ImportItemRow';
+import { isSameDay, isSameMonth } from 'date-fns';
 
 type TableTerm = {
   id: number,
@@ -42,10 +44,21 @@ type SelectingState = {
   }
 }
 
-async function getApiData(publishDate?: Date) {
+function formatDateKey(date: Date) {
+  const year = date.getFullYear();
+  const month = `0${date.getMonth() + 1}`.slice(-2);
+  const day = `0${date.getDate()}`.slice(-2);
+
+  return `${year}-${month}-${day}`;
+}
+
+async function getApiData(publishDate?: Date, beforeDate?: Date) {
   const date = (publishDate || new Date());
-  const params = new URLSearchParams({
-    d: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+  const params = new URLSearchParams( !beforeDate ? {
+    on: formatDateKey(date)
+  } : {
+    after: formatDateKey(date),
+    before: formatDateKey(beforeDate)
   })
   const apiUrlBase = window?.appLocalizer.apiUrl;
   const episodesApiUrl = new URL('episodes', apiUrlBase);
@@ -64,35 +77,119 @@ async function getApiData(publishDate?: Date) {
   return {
     episodes,
     segments
-  };
+  } as ApiData;
 }
 
 export function SelectingScreen() {
-  const { nextStage, playAudio, playingAudioUrl } = useContext(AppContext)
+  const { nextStage } = useContext(AppContext);
+  const today = new Date();
+  const maxMonthDate = new Date(today.getFullYear(), today.getMonth());
+  const [queryMonthDate, setQueryMonthDate] = useState(new Date(today.getFullYear(), today.getMonth()));
   const [publishDate, setPublishDate] = useState(new Date());
-  const [apiData, setApiData] = useState<ApiData>();
+  const [month, setMonth] = useState(today);
+  const publishDateKey = formatDateKey(publishDate);
+  const [apiData, setApiData] = useState(new Map<string, ApiData>());
   const [loading, setLoading] = useState(false);
   const [importEpisodeGuid, setImportEpisodeGuid] = useState<string>();
   const [importSegmentGuids, setImportSegmentGuids] = useState(new Set<string>());
-  const { episodes: apiEpisodes, segments: apiSegments } = apiData || {};
+  const { episodes, segments } = apiData.get(publishDateKey) || {};
+  const dateData = [...apiData.values()].map(({ episodes, segments }) => {
+    const allItems = [...episodes, ...segments];
+    const hasImportableItems = !!allItems.find(({ post }) => !post);
+    const hasExistingItems = !!allItems.find(({ post }) => !!post);
+    const hasImportedItems = !!allItems.find(({ wasImported }) => wasImported);
+    const hasUpdateableItems = !!allItems.find(({ post, enclosure }) => post?.audio && post.audio.url !== enclosure.href || !post?.audio);
 
-  const episodes = apiEpisodes?.map(parseApiEpisode)
-  const segments = apiSegments?.map(parseApiEpisode).sort((a, b) => a.filename < b.filename ? -1 : 1 )
+    return {
+      hasImportableItems,
+      hasExistingItems,
+      hasImportedItems,
+      hasUpdateableItems,
+      episodes,
+      segments
+    };
+  })
+  const importableDays = dateData
+    .filter((data) => !data.hasExistingItems )
+    .map((data) => new Date(data.episodes[0].datePublished));
+  const importableClassNames = 'border-2 border-primary';
+  const existsDays = dateData
+    .filter((data) => data.hasExistingItems && !data.hasImportableItems)
+    .map((data) => new Date(data.episodes[0].datePublished));
+  const existsClasNames = 'border-2 border-lime-500';
+  const importedDays = dateData
+    .filter((data) => data.hasImportedItems)
+    .map((data) => new Date(data.episodes[0].datePublished));
+  const importedClassNames = 'bg-lime-500';
+  const updatedDays = dateData
+    .filter((data) => data.hasUpdateableItems)
+    .map((data) => new Date(data.episodes[0].datePublished));
+  const updatedClassNames = 'border-2 border-orange-400';
+  const partialyImportedDays = dateData
+    .filter((data) => data.hasExistingItems && data.hasImportableItems)
+    .map((data) => new Date(data.episodes[0].datePublished));
+  const partialyImportedClassNames = 'border-2 border-dotted border-lime-500';
+
+  console.log(updatedDays, partialyImportedDays);
+
+  useEffect(() => {
+    const dateData = apiData.get(publishDateKey);
+
+    if (!dateData) return;
+
+    const importEpisode = dateData.episodes?.find(({ post, enclosure }) => !post || post.audio?.url !== enclosure.href);
+    if (importEpisode) {
+      setImportEpisodeGuid(importEpisode.guid);
+    }
+
+    setImportSegmentGuids((guids) => {
+      guids.clear();
+      const importSegments = dateData.segments?.filter(({ post, enclosure }) => !post || post.audio?.url !== enclosure.href);
+      console.log(importSegments);
+      importSegments?.map((segment) => guids.add(segment.guid));
+      return new Set(guids)
+    })
+  }, [publishDate, publishDateKey, apiData]);
 
   useEffect(() => {
     setLoading(true);
     (async () => {
-      const apiData = await getApiData(publishDate);
-      setApiData(apiData);
+      const data = await getApiData(queryMonthDate, new Date(queryMonthDate.getFullYear(), queryMonthDate.getMonth() + 1));
+      // TODO: fetch post data for audio url's.
+      const tempData = new Map<string, ApiData>(apiData);
+
+      console.log('fetched api data', data, queryMonthDate);
+
+      data.episodes?.forEach((episode) => {
+        const dateKey = formatDateKey(new Date(episode.datePublished));
+        const dateData = tempData.get(dateKey) || {} as ApiData;
+
+        dateData.episodes = dateData?.episodes || [];
+        if (!dateData.episodes.find((e) => e.guid === episode.guid)) {
+          dateData.episodes.push(episode);
+        }
+
+        tempData.set(dateKey, dateData);
+      });
+
+      data.segments?.forEach((segment) => {
+        const dateKey = formatDateKey(new Date(segment.datePublished));
+        const dateData = tempData.get(dateKey) || {} as ApiData;
+
+        dateData.segments = dateData?.segments || [];
+        if (!dateData.segments.find((s) => s.guid === segment.guid)) {
+          dateData.segments.push(segment);
+        }
+
+        tempData.set(dateKey, dateData);
+      });
+
+      console.log(tempData);
+
+      setApiData(tempData);
       setLoading(false);
-      setImportEpisodeGuid(apiData.episodes?.[0]?.guid);
-      setImportSegmentGuids((guids) => {
-        guids.clear();
-        apiData.segments?.map((segment) => guids.add(segment.guid));
-        return new Set(guids)
-      })
     })()
-  }, [publishDate]);
+  }, [queryMonthDate])
 
   function parseApiEpisode(episode: ApiEpisode) {
     return {
@@ -111,8 +208,24 @@ export function SelectingScreen() {
     };
   }
 
+  function parseDigitsOfFilename(href: string) {
+    return [...href.split('/').pop().split('.').shift().matchAll(/\d/g)].join('')
+  }
+
+  function sortByEnclosureFilename(ea: ApiEpisode, eb: ApiEpisode) {
+    const a = parseDigitsOfFilename(ea.enclosure.href);
+    const b = parseDigitsOfFilename(eb.enclosure.href);
+
+    return a < b ? -1 : 1
+  }
+
   function handleDateSelect(newDate: Date) {
     setPublishDate(newDate);
+  }
+
+  function handleMonthChange(newDate: Date) {
+    setMonth(newDate);
+    setQueryMonthDate(new Date(newDate.getFullYear(), newDate.getMonth()));
   }
 
   return (
@@ -126,7 +239,41 @@ export function SelectingScreen() {
       <CardContent>
 
         <div className='flex gap-4 items-center'>
-          <DatePicker selected={publishDate} onSelect={handleDateSelect} />
+          <DatePicker
+            disabled={loading}
+            defaultMonth={publishDate}
+            month={month}
+            selected={publishDate}
+            toMonth={maxMonthDate}
+            onSelect={handleDateSelect}
+            onMonthChange={handleMonthChange}
+            showOutsideDays={false}
+            modifiers={{
+              exists: existsDays,
+              imported: importedDays,
+              partialyImported: partialyImportedDays,
+              updated: updatedDays,
+              importable: importableDays,
+            }}
+            modifiersClassNames={{
+              exists: existsClasNames,
+              imported: importedClassNames,
+              partialyImported: partialyImportedClassNames,
+              updated: updatedClassNames,
+              importable: importableClassNames,
+            }}
+            footer={!isSameMonth(today, month) && (
+              <div className='flex justify-end pt-2'>
+                <Button
+                  size='sm'
+                  className='flex gap-2'
+                  onClick={() => {
+                    setMonth(today);
+                  }}
+                >Most Recent <ArrowRightToLine /></Button>
+              </div>
+            )}
+          />
           {loading && (
             <Badge variant='outline' className=' flex gap-2'>
               <Loader2 className='animate-spin text-primary' />
@@ -149,41 +296,20 @@ export function SelectingScreen() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {episodes ? (
-                !!episodes.length ? episodes.map(({guid, title, terms, contributors, filename, duration, audioUrl}, index) => (
-                  <TableRow key={guid}>
-                    <TableCell className='ps-6 leading-none'>
-                      <RadioGroupItem value={guid} id={`ep${index}`} checked={guid === importEpisodeGuid} />
-                    </TableCell>
-                    <TableCell>
-                      <div className='inline-grid content-start gap-2 text-wrap-balance'>
-                        <div className='font-bold'>{title}</div>
-                        {terms && (
-                          <div className='inline-flex flex-wrap content-start items-center gap-2'>
-                            {terms.filter((term) => !!term.taxonomy).map((term) => (
-                              <Badge variant='secondary' key={term.name}>{term.name} ({term.taxonomy.label})</Badge>
-                            ))}
-                            <Badge variant='outline'>{terms.filter((term) => !term.taxonomy).length} Ignored</Badge>
-                          </div>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className='inline-flex flex-wrap gap-2'>
-                        {contributors ? contributors.map((contributor) => (
-                          <ContributorBadge data={contributor} key={contributor.name} />
-                        )) : (
-                          <Badge variant='secondary' className='whitespace-nowrap'>No Contributors</Badge>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>{filename}</TableCell>
-                    <TableCell className='text-center'>{duration}</TableCell>
-                    <TableCell className='pe-6'>
-                      <PlayButton onClick={() => { playAudio(audioUrl) }} playing={playingAudioUrl === audioUrl} />
-                    </TableCell>
-                  </TableRow>
-                )) : (
+              {!loading || episodes ? (
+                !!episodes?.length ? episodes.map((episode) => {
+                  const selected = episode.guid === importEpisodeGuid;
+                  return (
+                    <ImportItemRow data={episode} importAs='episode'
+                      selectInputComponent={<RadioGroupItem value={episode.guid} checked={selected} />}
+                      selected={selected}
+                      onImportDataChange={(newData) => {
+                        console.log('onImportDataChange callback', newData)
+                      }}
+                      key={episode.guid}
+                    />
+                  )
+                }) : (
                   <TableRow>
                     <TableCell colSpan={6}>
                       <Alert>
@@ -197,26 +323,7 @@ export function SelectingScreen() {
                   </TableRow>
                 )
               ) : (
-                <TableRow>
-                  <TableCell className='ps-6 pr-0'>
-                    <Skeleton className='h-4 w-4 rounded-full' />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className='h-4 w-[50ch] rounded-full' />
-                  </TableCell>
-                  <TableCell>
-                    <ContributorBadge />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className='h-4 w-[12ch] rounded-full' />
-                  </TableCell>
-                  <TableCell className='text-center'>
-                    <Skeleton className='h-4 w-[6ch] rounded-full' />
-                  </TableCell>
-                  <TableCell className='pe-6'>
-                    <Skeleton className='h-[36px] w-[36px] rounded-full' />
-                  </TableCell>
-                </TableRow>
+                <ImportItemRow importAs='episode' />
               )}
             </TableBody>
           </Table>
@@ -235,54 +342,35 @@ export function SelectingScreen() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {segments ? (
-              !!segments.length ? segments.map(({guid, title, terms, contributors, filename, duration, audioUrl}, index) => (
-                <TableRow key={guid}>
-                  <TableCell className='ps-6 leading-none'>
-                    <Checkbox value={guid} checked={importSegmentGuids.has(guid)} onCheckedChange={(checked) => {
-                      console.log(checked, guid, importSegmentGuids);
-                      if (checked) {
-                        setImportSegmentGuids((guids) => {
-                          guids.add(guid);
-                          return new Set(guids);
-                        });
-                      } else {
-                        setImportSegmentGuids((guids) => {
-                          guids.delete(guid);
-                          return new Set(guids);
-                        });
-                      }
-                    }} />
-                  </TableCell>
-                  <TableCell>
-                    <div className='inline-grid content-start gap-2 text-wrap-balance'>
-                      <div className='font-bold'>{title}</div>
-                      {terms && (
-                        <div className='inline-flex flex-wrap content-start items-center gap-2'>
-                          {terms.filter((term) => !!term.taxonomy).map((term) => (
-                            <Badge variant='secondary' key={term.name}>{term.name} ({term.taxonomy.label})</Badge>
-                          ))}
-                          <Badge variant='outline'>{terms.filter((term) => !term.taxonomy).length} Ignored</Badge>
-                        </div>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className='inline-flex flex-wrap gap-2'>
-                      {contributors ? contributors.map((contributor) => (
-                        <ContributorBadge data={contributor} key={contributor.name} />
-                      )) : (
-                        <Badge variant='secondary' className='whitespace-nowrap'>No Contributors</Badge>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>{filename}</TableCell>
-                  <TableCell className='text-center'>{duration}</TableCell>
-                  <TableCell className='pe-6'>
-                    <PlayButton onClick={() => { playAudio(audioUrl) }} playing={playingAudioUrl === audioUrl} />
-                  </TableCell>
-                </TableRow>
-              )) : (
+            {!loading || segments ? (
+              !!segments?.length ? segments.sort(sortByEnclosureFilename).map((segment) => {
+                const selected = importSegmentGuids.has(segment.guid);
+                return (
+                  <ImportItemRow data={segment}
+                    importAs='segment'
+                    selectInputComponent={(
+                      <Checkbox value={segment.guid} checked={selected} onCheckedChange={(checked) => {
+                        if (checked) {
+                          setImportSegmentGuids((guids) => {
+                            guids.add(segment.guid);
+                            return new Set(guids);
+                          });
+                        } else {
+                          setImportSegmentGuids((guids) => {
+                            guids.delete(segment.guid);
+                            return new Set(guids);
+                          });
+                        }
+                      }} />
+                    )}
+                    selected={selected}
+                    onImportDataChange={(newData) => {
+                      console.log('onImportDataChange callback', newData)
+                    }}
+                    key={segment.guid}
+                  />
+                )
+              }) : (
                 <TableRow>
                   <TableCell colSpan={6}>
                     <Alert>
@@ -296,26 +384,7 @@ export function SelectingScreen() {
                 </TableRow>
               )
             ) : (
-              <TableRow>
-                <TableCell className='ps-6 pr-0'>
-                  <Skeleton className='h-4 w-4 rounded-full' />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className='h-4 w-[50ch] rounded-full' />
-                </TableCell>
-                <TableCell>
-                  <ContributorBadge />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className='h-4 w-[12ch] rounded-full' />
-                </TableCell>
-                <TableCell className='text-center'>
-                  <Skeleton className='h-4 w-[6ch] rounded-full' />
-                </TableCell>
-                <TableCell className='pe-6'>
-                  <Skeleton className='h-[36px] w-[36px] rounded-full' />
-                </TableCell>
-              </TableRow>
+              <ImportItemRow importAs='segment' />
             )}
           </TableBody>
         </Table>

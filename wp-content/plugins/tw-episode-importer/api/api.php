@@ -22,10 +22,22 @@ function tw_episode_importer_rest_api_init() {
 			'callback'            => 'tw_episode_importer_api_route_epsisodes',
 			'permission_callback' => '__return_true',
 			'args'                => array(
-				'd' => array(
+				'before' => array(
 					'validate_callback' => 'tw_episode_importer_args_date_validation_callback',
 					'type'              => 'string',
-					'required'          => true,
+					'required'          => false,
+					'sanitize_callback' => 'tw_episode_importer_args_date_sanitization_callback',
+				),
+				'after'  => array(
+					'validate_callback' => 'tw_episode_importer_args_date_validation_callback',
+					'type'              => 'string',
+					'required'          => false,
+					'sanitize_callback' => 'tw_episode_importer_args_date_sanitization_callback',
+				),
+				'on'     => array(
+					'validate_callback' => 'tw_episode_importer_args_date_validation_callback',
+					'type'              => 'string',
+					'required'          => false,
 					'sanitize_callback' => 'tw_episode_importer_args_date_sanitization_callback',
 				),
 			),
@@ -50,10 +62,22 @@ function tw_episode_importer_rest_api_init() {
 			'callback'            => 'tw_episode_importer_api_route_segments',
 			'permission_callback' => '__return_true',
 			'args'                => array(
-				'd' => array(
+				'before' => array(
 					'validate_callback' => 'tw_episode_importer_args_date_validation_callback',
 					'type'              => 'string',
-					'required'          => true,
+					'required'          => false,
+					'sanitize_callback' => 'tw_episode_importer_args_date_sanitization_callback',
+				),
+				'after'  => array(
+					'validate_callback' => 'tw_episode_importer_args_date_validation_callback',
+					'type'              => 'string',
+					'required'          => false,
+					'sanitize_callback' => 'tw_episode_importer_args_date_sanitization_callback',
+				),
+				'on'     => array(
+					'validate_callback' => 'tw_episode_importer_args_date_validation_callback',
+					'type'              => 'string',
+					'required'          => false,
 					'sanitize_callback' => 'tw_episode_importer_args_date_sanitization_callback',
 				),
 			),
@@ -116,15 +140,17 @@ function tw_episode_importer_args_date_sanitization_callback( $value, $request, 
 function tw_episode_importer_api_route_epsisodes( WP_REST_Request $request ) {
 
 	// Request API data.
-	$options      = get_option( TW_EPISODE_IMPORTER_SETTINGS_API );
-	$api_url      = $options[ TW_EPISODE_IMPORTER_EPISODES_API_URL_KEY ];
-	$date_string  = $request->get_param( 'd' );
-	$date         = new DateTime( $date_string );
-	$one_day      = new DateInterval( 'P1D' );
-	$after        = $date->format( 'Y-m-d' );
-	$before       = $date->add( $one_day )->format( 'Y-m-d' );
-	$api_response = wp_remote_get( $api_url . '?after=' . $after . '&before=' . $before );
-	$status       = wp_remote_retrieve_response_code( $api_response );
+	$options            = get_option( TW_EPISODE_IMPORTER_SETTINGS_API );
+	$api_url            = $options[ TW_EPISODE_IMPORTER_EPISODES_API_URL_KEY ];
+	$after_date_string  = $request->get_param( 'after' );
+	$before_date_string = $request->get_param( 'before' );
+	$on_date_string     = $request->get_param( 'on' );
+	$on_date            = $on_date_string ? new DateTime( $on_date_string ) : new DateTime();
+	$one_day            = new DateInterval( 'P1D' );
+	$after              = $after_date_string ? $after_date_string : $on_date->format( 'Y-m-d' );
+	$before             = $before_date_string ? $before_date_string : $on_date->add( $one_day )->format( 'Y-m-d' );
+	$api_response       = wp_remote_get( $api_url . '?after=' . $after . '&before=' . $before . '&per=365' );
+	$status             = wp_remote_retrieve_response_code( $api_response );
 
 	$response = array(
 		'status' => $status,
@@ -134,7 +160,7 @@ function tw_episode_importer_api_route_epsisodes( WP_REST_Request $request ) {
 	if ( 200 === $status ) {
 
 		$body     = json_decode( wp_remote_retrieve_body( $api_response ) );
-		$episodes = tw_episode_importer_parse_api_items( $body );
+		$episodes = tw_episode_importer_parse_api_items( $body, 'episode' );
 
 		$response['status'] = 200;
 		$response['data']   = $episodes ?? array();
@@ -166,7 +192,7 @@ function tw_episode_importer_api_route_epsisode( $request ) {
 
 	if ( 200 === $status ) {
 		$body    = json_decode( wp_remote_retrieve_body( $api_response ) );
-		$episode = tw_episode_importer_parse_api_item( $body );
+		$episode = tw_episode_importer_parse_api_item( $body, 'episode' );
 
 		$response['status'] = 200;
 		$response['data']   = $episode ?? array();
@@ -185,15 +211,17 @@ function tw_episode_importer_api_route_epsisode( $request ) {
 function tw_episode_importer_api_route_segments( WP_REST_Request $request ) {
 
 	// Request API data.
-	$options      = get_option( TW_EPISODE_IMPORTER_SETTINGS_API );
-	$api_url      = $options[ TW_EPISODE_IMPORTER_SEGMENTS_API_URL_KEY ];
-	$date_string  = $request->get_param( 'd' );
-	$date         = new DateTime( $date_string );
-	$one_day      = new DateInterval( 'P1D' );
-	$after        = $date->format( 'Y-m-d' );
-	$before       = $date->add( $one_day )->format( 'Y-m-d' );
-	$api_response = wp_remote_get( $api_url . '?after=' . $after . '&before=' . $before );
-	$status       = wp_remote_retrieve_response_code( $api_response );
+	$options            = get_option( TW_EPISODE_IMPORTER_SETTINGS_API );
+	$api_url            = $options[ TW_EPISODE_IMPORTER_SEGMENTS_API_URL_KEY ];
+	$after_date_string  = $request->get_param( 'after' );
+	$before_date_string = $request->get_param( 'before' );
+	$on_date_string     = $request->get_param( 'on' );
+	$on_date            = $on_date_string ? new DateTime( $on_date_string ) : new DateTime();
+	$one_day            = new DateInterval( 'P1D' );
+	$after              = $after_date_string ? $after_date_string : $on_date->format( 'Y-m-d' );
+	$before             = $before_date_string ? $before_date_string : $on_date->add( $one_day )->format( 'Y-m-d' );
+	$api_response       = wp_remote_get( $api_url . '?after=' . $after . '&before=' . $before . '&per=3650' );
+	$status             = wp_remote_retrieve_response_code( $api_response );
 
 	$response = array(
 		'status' => $status,
@@ -203,7 +231,7 @@ function tw_episode_importer_api_route_segments( WP_REST_Request $request ) {
 	if ( 200 === $status ) {
 
 		$body     = json_decode( wp_remote_retrieve_body( $api_response ) );
-		$segments = tw_episode_importer_parse_api_items( $body );
+		$segments = tw_episode_importer_parse_api_items( $body, 'segment' );
 
 		$response['status'] = 200;
 		$response['data']   = $segments ?? array();
@@ -235,7 +263,7 @@ function tw_episode_importer_api_route_segment( $request ) {
 
 	if ( 200 === $status ) {
 		$body    = json_decode( wp_remote_retrieve_body( $api_response ) );
-		$segment = tw_episode_importer_parse_api_item( $body );
+		$segment = tw_episode_importer_parse_api_item( $body, 'segment' );
 
 		$response['status'] = 200;
 		$response['data']   = $segment ?? array();
@@ -247,36 +275,46 @@ function tw_episode_importer_api_route_segment( $request ) {
 /**
  * Parse API item into normalized data.
  *
- * @param array $api_item Item from API request.
+ * @param array  $api_item Item from API request.
+ * @param string $post_type Post type to check for existing data.
  * @return array Normalized item data as associative array.
  */
-function tw_episode_importer_parse_api_item( $api_item ) {
+function tw_episode_importer_parse_api_item( $api_item, $post_type ) {
 
-	$guid  = $api_item->guid;
-	$title = $api_item->title;
-	$post  = tw_episode_importer_get_post( $guid, $title );
-	$item  = array(
+	$guid           = $api_item->guid;
+	$title          = $api_item->title;
+	$date_published = $api_item->publishedAt; // phpcs:ignore
+	$post  = tw_episode_importer_get_post( $post_type, $guid, $title, $date_published, $api_item->_links->enclosure->href ); // phpcs:ignore
+	$item           = array(
 		'post'          => $post,
-		'wasImported'   => $post && $post->guid === $guid,
+		'wasImported'   => $post ? $post['guid'] === $api_item->guid : false,
 		'id'            => $api_item->id,
 		'guid'          => $guid,
 		'title'         => $title,
 		'excerpt'       => $api_item->subtitle ?? null,
 		'content'       => $api_item->description ?? null,
-		'datePublished' => $api_item->publishedAt, // phpcs:ignore
+		'datePublished' => $date_published,
 		'dateUpdated'   => $api_item->updatedAt ?? null, // phpcs:ignore
-		'author'        => $api_item->author->name ? (array) $api_item->author : null,
+		'author'        => $api_item->author && property_exists( $api_item->author, 'name' ) ? (array) $api_item->author : null,
 		'enclosure'     => (array) $api_item->_links->enclosure ?? null,
 	);
 
 	if ( $item['author'] ) {
-		$contributor_term     = get_terms(
+		$contributor_terms = get_terms(
 			array(
 				'taxonomy' => 'contributor',
 				'name'     => $item['author']['name'],
 			)
 		);
-		$item['author']['id'] = $contributor_term && ! empty( $contributor_term ) ? $contributor_term[0]->term_id : null;
+		$contributor_term  = ! empty( $contributor_terms ) ? $contributor_terms[0] : null;
+
+		if ( $contributor_term ) {
+			$contributor_image    = get_field( 'image', 'contributor_' . $contributor_term->term_id );
+			$item['author']['id'] = $contributor_term->term_id;
+			if ( $contributor_image ) {
+				$item['author']['image'] = $contributor_image['url'];
+			}
+		}
 	}
 
 	$categories         = $api_item->categories;
@@ -315,10 +353,11 @@ function tw_episode_importer_parse_api_item( $api_item ) {
 /**
  * Parse API response body into normalized data.
  *
- * @param array $api_body Response body from API request.
+ * @param array  $api_body Response body from API request.
+ * @param string $post_type Post type to check for existing data.
  * @return array Normalized item data as associative arrays.
  */
-function tw_episode_importer_parse_api_items( $api_body ) {
+function tw_episode_importer_parse_api_items( $api_body, $post_type ) {
 
 	$items = $api_body->_embedded->{'prx:items'};
 
@@ -327,7 +366,9 @@ function tw_episode_importer_parse_api_items( $api_body ) {
 	}
 
 	$episodes = array_map(
-		'tw_episode_importer_parse_api_item',
+		function ( $item ) use ( $post_type ) {
+			return tw_episode_importer_parse_api_item( $item, $post_type );
+		},
 		$items
 	);
 
@@ -337,52 +378,68 @@ function tw_episode_importer_parse_api_items( $api_body ) {
 /**
  * Get post id using GUID.
  *
- * @param string $guid Post GUID to lookup ID for.
+ * @param string $post_type Post type to lookup ID for.
+ * @param string $guid Post guid to lookup ID for.
  * @param string $title Post title to lookup ID for.
+ * @param string $date_published_string Post publish date string to lookup ID for.
+ * @param string $audio_url Audio url to lookup ID for.
  * @return array|null
  */
-function tw_episode_importer_get_post( $guid, $title ) {
+function tw_episode_importer_get_post( $post_type, $guid, $title, $date_published_string, $audio_url ) {
 	global $wpdb;
 
-	$cache_key = 'post_id_for_guid:' . $guid;
+	$cache_key = 'post_id_for_guid:' . $audio_url;
 	$id        = wp_cache_get( $cache_key, TW_EPISODE_IMPORTER_CACHE_GROUP );
+	$post      = null;
+	$result    = null;
 
 	if ( ! $id ) {
+		$date_published = $date_published_string ? new DateTime( $date_published_string ) : new DateTime();
+		$one_day        = new DateInterval( 'P1D' );
+		$from_date      = gmdate( 'Y-m-d H:i:s', strtotime( $date_published->format( 'Y-m-d' ) ) );
+		$to_date        = gmdate( 'Y-m-d H:i:s', strtotime( $date_published->add( $one_day )->format( 'Y-m-d' ) ) );
+		$prepared_query = $wpdb->prepare(
+			"SELECT p.*
+			FROM {$wpdb->posts} p
+			LEFT JOIN {$wpdb->postmeta} pmbd ON pmbd.post_id = p.ID
+				AND pmbd.meta_key = 'broadcast_date'
+			LEFT JOIN {$wpdb->postmeta} pma ON pma.post_id = p.ID
+				AND pma.meta_key = 'audio'
+			LEFT JOIN {$wpdb->postmeta} pmaou ON pmaou.post_id = pma.meta_value
+				AND pmaou.meta_key = 'original_uri'
+			WHERE pmbd.meta_value BETWEEN %s AND %s
+			AND p.post_type = %s
+			AND (p.guid = %s OR p.post_title = %s OR pmaou.meta_value = %s);",
+			array( $from_date, $to_date, $post_type, $guid, $title, $audio_url )
+		);
 		// phpcs:ignore
-		$post = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE (guid=%s OR post_title='%s') AND post_type IN ('episode', 'segment');", array($guid, $title) ) );
-		if ( $post ) {
-			wp_cache_set( $cache_key, $post->ID, TW_EPISODE_IMPORTER_CACHE_GROUP );
+		$row = $wpdb->get_row( $prepared_query );
+		if ( $row ) {
+			error_log( $row->ID . ' >>> ' . $row->post_title );
+			$id = $row->ID;
+			wp_cache_set( $cache_key, $row->ID, TW_EPISODE_IMPORTER_CACHE_GROUP );
 		}
-	} else {
+	}
+
+	if ( $id ) {
 		$post = get_post( $id );
 	}
 
-	return ! $post ? null : array(
-		'guid'             => $post->guid,
-		'databaseId'       => $post->ID,
-		'title'            => $post->post_title,
-		'slug'             => $post->post_name,
-		'datePublished'    => $post->post_date,
-		'datePublishedGmt' => $post->post_date_gmt,
-	);
-}
+	if ( $post ) {
+		$audio_id       = get_field( 'audio', $post->ID );
+		$audio_post     = get_post( $audio_id );
+		$audio_metadata = get_metadata( 'post', $audio_id );
+		$result         = array(
+			'guid'       => $post->guid,
+			'databaseId' => $post->ID,
+			'audio'      => $audio_post ? array(
+				'databaseId' => $audio_post->ID,
+				'url'        => $audio_metadata['original_uri'][0],
+			) : null,
+		);
+	}
 
-/**
- * Get post id by title. Convert title to slug before query.
- *
- * @param string $title Title to query posts for.
- * @return integer|null
- */
-function tw_episode_importer_get_post_id_from_title( $title ) {
-	$slug = sanitize_title( $title );
-	$args = array(
-		'title'       => $title,
-		'post_type'   => array( 'episode', 'segment' ),
-		'numberposts' => 1,
-	);
-	$post = get_posts( $args );
-
-	return $posts ? $posts[0]->ID : null;
+	return $result;
 }
 
 /**
