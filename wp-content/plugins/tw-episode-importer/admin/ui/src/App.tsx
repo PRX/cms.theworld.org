@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useLayoutEffect, useReducer, useRef, use
 import { SelectingScreen } from './components/SelectingScreen';
 import { appStages, type AppAction, type AppState, type AppData } from './types/state/app';
 import { AppContext, AppContextValue } from '@/lib/contexts/AppContext';
+import axios from 'axios';
+import { ApiTaxonomies } from '@/types/api/api';
 
 export interface KeyboardEventWithTarget extends KeyboardEvent {
   target: HTMLElement;
@@ -30,6 +32,19 @@ function appStateReducer(state: AppState, action: AppAction) {
   }
 }
 
+async function getAppData() {
+  const apiUrlBase = window?.appLocalizer.apiUrl;
+  const taxonomiesApiUrl = new URL('taxonomies', apiUrlBase);
+
+  const [taxonomies] = await Promise.all([
+    axios.get<ApiTaxonomies>(taxonomiesApiUrl.toString()).then((res) => res.status === 200 ? res.data : null),
+  ]);
+
+  return {
+    taxonomies
+  } as AppData;
+}
+
 function App() {
   const audioElm = useRef<HTMLAudioElement>(new Audio());
   const [audioUrl, setAudioUrl] = useState<string>();
@@ -50,14 +65,16 @@ function App() {
     state,
     setAppData,
     nextStage,
+    audioElm: audioElm.current,
     playAudio,
-    ...(playing && { playingAudioUrl: audioUrl })
+    playing,
+    playingAudioUrl: audioUrl
   } as AppContextValue;
 
   console.log('App State', state);
 
   function setAppData(data: AppData) {
-    dispatch({ type: 'UPDATE_IMPORT_DATA', payload: data} as AppAction<AppData>);
+    dispatch({ type: 'SET_DATA', payload: data} as AppAction<AppData>);
   }
 
   function nextStage() {
@@ -146,6 +163,13 @@ function App() {
     },
     []
   );
+
+  useEffect(() => {
+    (async () => {
+      const data = await getAppData();
+      setAppData(data);
+    })()
+  }, [])
 
   useEffect(() => {
     // Setup event handlers on audio element.

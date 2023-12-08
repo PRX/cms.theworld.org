@@ -19,6 +19,10 @@ export type ApiTaxonomy = {
   label: string
 }
 
+export type ApiTaxonomies = {
+  [k: string]: ApiTaxonomy
+}
+
 export type ApiTerm = {
   id: number,
   name: string,

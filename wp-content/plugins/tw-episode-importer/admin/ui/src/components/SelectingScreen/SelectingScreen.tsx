@@ -1,5 +1,5 @@
-import type { ApiData, ApiEpisode } from '@/types/api/api';
-import React, { useContext, useEffect, useState } from 'react';
+import type { ApiData, ApiEpisode, ApiTaxonomies } from '@/types/api/api';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { ArrowRight, ArrowRightToLine, FileQuestion, Loader2 } from 'lucide-react';
 import { ContributorBadge } from '@/components/ContributorBadge';
@@ -15,7 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { AppContext } from '@/lib/contexts/AppContext';
 import { cn, formatDuration, generateAudioUrl } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { ImportItemRow } from '@/components/ImportItemRow';
+import { ImportItemRow, ItemRow } from '@/components/ImportItemRow';
 import { isSameDay, isSameMonth } from 'date-fns';
 
 type TableTerm = {
@@ -90,6 +90,7 @@ export function SelectingScreen() {
   const publishDateKey = formatDateKey(publishDate);
   const [apiData, setApiData] = useState(new Map<string, ApiData>());
   const [loading, setLoading] = useState(false);
+  const importData = useRef(new Map<string, ItemRow>());
   const [importEpisodeGuid, setImportEpisodeGuid] = useState<string>();
   const [importSegmentGuids, setImportSegmentGuids] = useState(new Set<string>());
   const { episodes, segments } = apiData.get(publishDateKey) || {};
@@ -228,6 +229,11 @@ export function SelectingScreen() {
     setQueryMonthDate(new Date(newDate.getFullYear(), newDate.getMonth()));
   }
 
+  function handleRowChange(newData: ItemRow) {
+    console.log('New row data', newData);
+    importData.current.set(newData.guid, newData);
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -287,12 +293,12 @@ export function SelectingScreen() {
           <Table className='mt-6 border'>
             <TableHeader>
               <TableRow>
-              <TableHead className='w-1' />
-              <TableHead>Episode</TableHead>
-              <TableHead>Contributors</TableHead>
-              <TableHead className='w-1'>Filename</TableHead>
-              <TableHead className='w-1'>Duration</TableHead>
-              <TableHead className='w-1' />
+                <TableHead className='w-1' />
+                <TableHead>Episode</TableHead>
+                <TableHead>Contributors</TableHead>
+                <TableHead className='w-1'>Filename</TableHead>
+                <TableHead className='w-1'>Duration</TableHead>
+                <TableHead className='w-1' />
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -300,12 +306,11 @@ export function SelectingScreen() {
                 !!episodes?.length ? episodes.map((episode) => {
                   const selected = episode.guid === importEpisodeGuid;
                   return (
-                    <ImportItemRow data={episode} importAs='episode'
+                    <ImportItemRow data={episode} rowData={importData.current.get(episode.guid)}
+                      importAs='episode'
                       selectInputComponent={<RadioGroupItem value={episode.guid} checked={selected} />}
                       selected={selected}
-                      onImportDataChange={(newData) => {
-                        console.log('onImportDataChange callback', newData)
-                      }}
+                      onImportDataChange={handleRowChange}
                       key={episode.guid}
                     />
                   )
@@ -346,7 +351,7 @@ export function SelectingScreen() {
               !!segments?.length ? segments.sort(sortByEnclosureFilename).map((segment) => {
                 const selected = importSegmentGuids.has(segment.guid);
                 return (
-                  <ImportItemRow data={segment}
+                  <ImportItemRow data={segment} rowData={importData.current.get(segment.guid)}
                     importAs='segment'
                     selectInputComponent={(
                       <Checkbox value={segment.guid} checked={selected} onCheckedChange={(checked) => {
@@ -364,9 +369,7 @@ export function SelectingScreen() {
                       }} />
                     )}
                     selected={selected}
-                    onImportDataChange={(newData) => {
-                      console.log('onImportDataChange callback', newData)
-                    }}
+                    onImportDataChange={handleRowChange}
                     key={segment.guid}
                   />
                 )

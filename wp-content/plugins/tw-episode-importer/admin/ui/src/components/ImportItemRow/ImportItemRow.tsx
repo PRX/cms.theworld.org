@@ -1,59 +1,109 @@
-import type { ApiEpisode } from '@/types/api/api';
-import type { Episode, Segment } from '@/types/api/graphql';
+import type { ApiAuthor, ApiEpisode, ApiTaxonomy, ApiTerm } from '@/types/api/api';
+import type { Episode, Maybe, Segment } from '@/types/api/graphql';
 import React, { useContext, useEffect, useState } from 'react';
 import { ContributorBadge } from '@/components/ContributorBadge';
 import { PlayButton } from '@/components/PlayButton';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { TableCell, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { AppContext } from '@/lib/contexts/AppContext';
 import { cn, formatDuration, generateAudioUrl } from '@/lib/utils';
-import { ArrowBigDown, ArrowBigRight, CheckCircle } from 'lucide-react';
+import { ArrowBigRight, CheckCircle, Edit } from 'lucide-react';
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-type ImportEpisodeRowProps = {
-  importAs: 'episode',
-  onImportDataChange?(data: Episode): void
+export type ItemRowTerm = {
+  name: string,
+  id?: number,
+  taxonomy?: ApiTaxonomy
 }
 
-type ImportSegmentRowProps = {
-  importAs: 'segment',
-  onImportDataChange?(data: Segment): void
+export type ItemRow = {
+  guid: string,
+  title: string,
+  terms: ItemRowTerm[],
+  contributors: Maybe<ApiAuthor[]>,
+  filename: string,
+  duration: string,
+  audioUrl: string,
+  data: ApiEpisode
 }
 
 type ImportItemRowProps = {
   data?: ApiEpisode,
+  rowData?: ItemRow,
+  importAs?: 'episode' | 'segment',
   selected?: boolean,
   selectInputComponent?: React.JSX.Element,
-} & (ImportEpisodeRowProps | ImportSegmentRowProps);
+  onImportDataChange?(data: ItemRow): void
+};
 
-function parseApiEpisode(episode: ApiEpisode) {
+function parseApiEpisode(episode: ApiEpisode): ItemRow {
   if (!episode) return null;
 
   return {
     guid: episode.guid,
     title: episode.title,
-    terms: episode.categories?.map((category) => ({
-      name: category.name,
-      taxonomy: category.existingTerms?.find((term) => term.taxonomy.name === 'country' )?.taxonomy
-    })),
+    terms: episode.categories?.map(({ name, existingTerms }) => {
+      const selectedTerm = existingTerms?.find((term) => term.taxonomy.name === 'country' );
+      return {
+        name,
+        ...(selectedTerm && {
+          id: selectedTerm.id,
+          taxonomy: selectedTerm.taxonomy
+        })
+      }
+    }),
     contributors: episode.author && [
       episode.author
     ],
     filename: episode.enclosure.href.split('/').pop(),
     duration: formatDuration(episode.enclosure.duration),
-    audioUrl: generateAudioUrl(episode.enclosure.href)
+    audioUrl: generateAudioUrl(episode.enclosure.href),
+    data: episode
   };
 }
 
-export function ImportItemRow({ data, importAs, selectInputComponent, selected }: ImportItemRowProps) {
-  const { playAudio, playingAudioUrl } = useContext(AppContext);
-  const [rowData, setRowData] = useState(parseApiEpisode(data));
-  const { post, enclosure, wasImported } = data || {};
+export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponent, selected, onImportDataChange }: ImportItemRowProps) {
+  const { playAudio, playingAudioUrl, state } = useContext(AppContext);
+  const [rowData, setRowData] = useState(rd || parseApiEpisode(data));
+  const { post, enclosure, wasImported, categories } = data || {};
+  const { data: appData } = state || {};
+  const { taxonomies } = appData || {};
+  const existingTermsMap = new Map<string, ApiTerm[]>();
   const hasPost = !!post;
   const existingAudioMatches = hasPost && !!(post.audio?.url === enclosure?.href);
   const completed = wasImported || existingAudioMatches;
   const fadeOutRow = !(wasImported || existingAudioMatches) && !selected;
   const hilightUpdatedRow = hasPost && !existingAudioMatches && selected;
+
+  console.log(playingAudioUrl);
+
+  categories?.map(({ name, existingTerms }) => {
+    if (existingTerms) {
+      existingTermsMap.set(name, existingTerms);
+    }
+  });
+
+  function updateTerm(name: string, newTerm: ItemRowTerm) {
+    if (!rowData) return;
+
+    const updatedRowData = {
+      ...rowData,
+      terms: terms.map((term) => term.name === name ? newTerm : term)
+    };
+
+    console.log(name, newTerm, rowData.terms, updatedRowData.terms);
+
+    setRowData(updatedRowData);
+  }
+
+  useEffect(() => {
+    if (onImportDataChange) {
+      onImportDataChange(rowData);
+    }
+  }, [rowData])
 
   function StatusIconOrInput() {
     if (completed) {
@@ -114,6 +164,7 @@ export function ImportItemRow({ data, importAs, selectInputComponent, selected }
     duration,
     audioUrl
   } = rowData;
+  const ignoredTermsCount = terms?.filter((term) => !term.taxonomy).length;
 
   return (
     <TableRow className={cn({ 'opacity-40': fadeOutRow, 'bg-orange-100/50 hover:bg-orange-100': hilightUpdatedRow })}>
@@ -128,7 +179,99 @@ export function ImportItemRow({ data, importAs, selectInputComponent, selected }
               {terms.filter((term) => !!term.taxonomy).map((term) => (
                 <Badge variant='secondary' key={term.name}>{term.name} ({term.taxonomy.label})</Badge>
               ))}
-              <Badge variant='outline'>{terms.filter((term) => !term.taxonomy).length} Ignored</Badge>
+              {!!ignoredTermsCount && (
+                  <Badge variant='outline'>
+                    {terms.filter((term) => !term.taxonomy).length} Ignored
+                  </Badge>
+              )}
+              {!completed && (
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant='ghost' size='icon' className='rounded-full hover:bg-secondary'>
+                      <Edit size={16} />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent className='top-8 bottom-0 h-auto flex flex-col gap-0 p-0'>
+                    <SheetHeader className='p-4 border-b'>
+                      <SheetTitle className='me-12'>Edit Terms For "{title}"</SheetTitle>
+                      <SheetDescription>Select a taxonomy for each term. Set to "Ignore" if the term should not be imported.</SheetDescription>
+                    </SheetHeader>
+                    <div className='p-4 overflow-y-auto'>
+                      <Table className='border'>
+                        <TableHeader className='sticky top-0'>
+                          <TableRow>
+                            <TableHead>Term</TableHead>
+                            <TableHead>Taxonomy</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {terms.map((term, index) => {
+                            const { name, id, taxonomy } = term;
+                            const selectedTaxonomy = taxonomy ? [taxonomy.name, id].filter((v) => !!v).join(':') : null;
+                            const existingTermKeys = new Map<string, string>();
+                            const existingTerms = existingTermsMap.get(name) || [];
+
+                            existingTerms.forEach(({ id, taxonomy }) => {
+                              existingTermKeys.set(taxonomy.name, `${taxonomy.name}:${id}`)
+                            });
+
+                            const options = Object.values(taxonomies).map(({name, label}) => {
+                              const existingTermKey = existingTermKeys.get(name);
+                              const value = existingTermKey || name;
+
+                              return {
+                                label,
+                                value
+                              };
+                            })
+
+                            function handleValueChange(value: string) {
+                              if (!value) {
+                                updateTerm(name, { name });
+                                return;
+                              }
+
+                              const [newTaxonomy, newId] = value.split(':');
+
+                              console.log(value);
+
+                              updateTerm(name, {
+                                name,
+                                id: newId && parseInt(newId, 10),
+                                taxonomy: taxonomies[newTaxonomy]
+                              })
+                            }
+
+                            return (
+                              <TableRow key={name}>
+                                <TableCell>{name}</TableCell>
+                                <TableCell>
+                                  <Select value={selectedTaxonomy} onValueChange={handleValueChange}>
+                                    <SelectTrigger>
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value={null}>(Ignored)</SelectItem>
+                                      {options.map(({label, value}) => (
+                                        <SelectItem value={value} key={value}>{label}</SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </TableCell>
+                              </TableRow>
+                            )
+                          })}
+                        </TableBody>
+                      </Table>
+                    </div>
+                    <SheetFooter className='p-4 border-t'>
+                      <SheetClose asChild>
+                        <Button>Done</Button>
+                      </SheetClose>
+                    </SheetFooter>
+                  </SheetContent>
+                </Sheet>
+              )}
             </div>
           )}
         </div>
@@ -147,7 +290,7 @@ export function ImportItemRow({ data, importAs, selectInputComponent, selected }
       </TableCell>
       <TableCell className='text-center'>{duration}</TableCell>
       <TableCell className='pe-6'>
-        <PlayButton onClick={() => { playAudio(audioUrl) }} playing={playingAudioUrl === audioUrl} />
+        <PlayButton audioUrl={audioUrl} />
       </TableCell>
     </TableRow>
   );

@@ -93,6 +93,17 @@ function tw_episode_importer_rest_api_init() {
 			'args'                => array(),
 		)
 	);
+
+	register_rest_route(
+		TW_API_ROUTE_BASE,
+		TW_EPISODE_IMPORTER_API_ENDPOINT . '/taxonomies',
+		array(
+			'methods'             => WP_REST_Server::READABLE,
+			'callback'            => 'tw_episode_importer_api_route_taxonomies',
+			'permission_callback' => '__return_true',
+			'args'                => array(),
+		)
+	);
 }
 add_action( 'rest_api_init', 'tw_episode_importer_rest_api_init' );
 
@@ -273,6 +284,41 @@ function tw_episode_importer_api_route_segment( $request ) {
 }
 
 /**
+ * Get taxonomies data.
+ *
+ * @return WP_REST_Response
+ */
+function tw_episode_importer_api_route_taxonomies() {
+
+	// Get taxonomies.
+	$taxonomies = get_taxonomies(
+		array(
+			'public' => true,
+		),
+		'objects'
+	);
+	$data       = array_map(
+		fn( $taxonomy ) => array(
+			'name'  => $taxonomy->name,
+			'label' => $taxonomy->label,
+		),
+		$taxonomies
+	);
+
+	unset( $data['post_format'] );
+	unset( $data['license'] );
+	unset( $data['resource_development'] );
+	unset( $data['story_format'] );
+
+	$response = array(
+		'status' => 200,
+		'data'   => $data,
+	);
+
+	return tw_episode_importer_get_response( $response );
+}
+
+/**
  * Parse API item into normalized data.
  *
  * @param array  $api_item Item from API request.
@@ -326,7 +372,7 @@ function tw_episode_importer_parse_api_item( $api_item, $post_type ) {
 
 			// Get existing terms by the same name.
 			$args  = array(
-				'name' => $term_name,
+				'name' => trim( $term_name ),
 			);
 			$terms = array_values( get_terms( $args ) );
 
@@ -344,7 +390,14 @@ function tw_episode_importer_parse_api_item( $api_item, $post_type ) {
 
 			return $result;
 		},
-		$categories
+		// Ensure terms with comma separated terms are broken out into separate terms.
+		array_unique(
+			array_reduce(
+				$categories,
+				fn( $carry, $term_name ) => array_merge( $carry, explode( ',', $term_name ) ),
+				array()
+			)
+		)
 	);
 
 	return $item;

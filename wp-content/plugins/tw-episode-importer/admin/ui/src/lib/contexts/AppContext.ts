@@ -10,6 +10,8 @@ export type AppContextValue = {
   state: AppState,
   setAppData(data: AppData): void,
   nextStage(): void,
+  audioElm: HTMLAudioElement | null,
+  playing: boolean,
   playingAudioUrl?: string,
   playAudio(url: string): void
 }

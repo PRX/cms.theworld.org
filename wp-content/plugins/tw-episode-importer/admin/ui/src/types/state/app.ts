@@ -2,14 +2,16 @@
  * Define App State Types.
  */
 
-import { Episode, Segment } from "../api/graphql";
+import { ApiTaxonomies } from "@/types/api/api";
+import { Episode, Segment } from "@/types/api/graphql";
 
 export const appStages = ['selecting', 'importing', 'summary'] as const;
 export type AppStage = (typeof appStages)[number];
 
 export type AppData = {
   episodes: Episode[],
-  segments: Segment[]
+  segments: Segment[],
+  taxonomies: ApiTaxonomies,
 };
 
 export type AppState = {
