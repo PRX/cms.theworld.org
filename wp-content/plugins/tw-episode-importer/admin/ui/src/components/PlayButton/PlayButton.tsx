@@ -15,11 +15,13 @@ export function PlayButton({ audioUrl }: PlayButtonProps) {
   const audioIsPlaying = playing && audioIsQueued;
   const [progress, setProgress] = useState( audioIsQueued ? calculateProgress() : 0);
   const percent = 100 * progress;
+  const showProgress = audioIsPlaying || !!progress && audioIsQueued && !playing;
   const className = cn(
-    'rounded-full border-2 border-white',
+    'rounded-full',
     {
       'bg-orange-500 hover:bg-orange-400': audioIsPlaying,
-      'text-primary hover:bg-primary hover:text-primary-foreground': !audioIsQueued
+      'text-primary hover:bg-primary hover:text-primary-foreground': !audioIsQueued,
+      'border-2 border-white': showProgress
     }
   );
   const progressClassName = cn(
@@ -30,7 +32,7 @@ export function PlayButton({ audioUrl }: PlayButtonProps) {
     }
   );
   const progressStyles = {
-    backgroundImage: `conic-gradient(from 0deg at 50% 50%, #FFFFFF00 ${percent}%, #FFFFFF88 ${percent}%, #FFFFFF88)`
+    backgroundImage: showProgress ? `conic-gradient(from 0deg at 50% 50%, #FFFFFF00 ${percent}%, #FFFFFF88 ${percent}%, #FFFFFF88)` : 'none'
   };
 
   function calculateProgress(seconds?: number) {
