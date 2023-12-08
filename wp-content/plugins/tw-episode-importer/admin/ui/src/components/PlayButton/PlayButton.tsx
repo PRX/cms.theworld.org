@@ -16,17 +16,17 @@ export function PlayButton({ audioUrl }: PlayButtonProps) {
   const [progress, setProgress] = useState( audioIsQueued ? calculateProgress() : 0);
   const percent = 100 * progress;
   const className = cn(
-    'rounded-full',
+    'rounded-full border-2 border-white',
     {
-      'bg-orange-500 hover:bg-orange-500/70': audioIsPlaying,
+      'bg-orange-500 hover:bg-orange-400': audioIsPlaying,
       'text-primary hover:bg-primary hover:text-primary-foreground': !audioIsQueued
     }
   );
   const progressClassName = cn(
     'p-1 rounded-full',
     {
-      'bg-orange-300': audioIsPlaying,
-      'bg-primary/50': !!progress && audioIsQueued && !playing
+      'bg-orange-500': audioIsPlaying,
+      'bg-primary': !!progress && audioIsQueued && !playing
     }
   );
   const progressStyles = {
