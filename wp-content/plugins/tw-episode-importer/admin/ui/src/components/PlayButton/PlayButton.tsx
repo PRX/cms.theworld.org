@@ -77,20 +77,36 @@ export function PlayButton({ audioUrl }: PlayButtonProps) {
     updateProgress();
   }, [updateProgress]);
 
+  function addEventListeners() {
+    audioElm?.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audioElm?.addEventListener('timeupdate', handleUpdate);
+    audioElm?.addEventListener('ended', handleEnded);
+  }
+
+  function removeEventListeners() {
+    audioElm?.removeEventListener('loadedmetadata', handleLoadedMetadata);
+    audioElm?.removeEventListener('timeupdate', handleUpdate);
+    audioElm?.removeEventListener('ended', handleEnded);
+  }
+
+  function handleClick(evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    playAudio(audioUrl);
+  }
+
   /**
    * Setup audio element event handlers.
    */
   useEffect(() => {
-    audioElm?.addEventListener('loadedmetadata', handleLoadedMetadata);
-    audioElm?.addEventListener('timeupdate', handleUpdate);
-    audioElm?.addEventListener('ended', handleEnded);
+    if (audioIsQueued) {
+      addEventListeners();
 
-    return () => {
-      audioElm?.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      audioElm?.removeEventListener('timeupdate', handleUpdate);
-      audioElm?.removeEventListener('ended', handleEnded);
-    };
-  }, [audioElm, handleLoadedMetadata, handleUpdate]);
+      return () => {
+        removeEventListeners();
+      };
+    } else {
+      removeEventListeners();
+    }
+  }, [audioElm, audioIsQueued, handleLoadedMetadata, handleUpdate, handleEnded]);
 
   useEffect(() => {
     const { currentTime: ct = 0 } = audioElm || {};
@@ -99,7 +115,7 @@ export function PlayButton({ audioUrl }: PlayButtonProps) {
 
   return (
     <div className={progressClassName} style={progressStyles}>
-      <Button className={className} variant={audioIsQueued ? 'default' : 'ghost'} size='icon' onClick={() => { playAudio(audioUrl) }}>
+      <Button className={className} variant={audioIsQueued ? 'default' : 'ghost'} size='icon' onClick={handleClick}>
         {audioIsPlaying ? (
           <Pause className='h-4 w-4' />
         ) : (

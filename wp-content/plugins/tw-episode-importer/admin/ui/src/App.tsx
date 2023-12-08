@@ -4,6 +4,8 @@ import { appStages, type AppAction, type AppState, type AppData } from './types/
 import { AppContext, AppContextValue } from '@/lib/contexts/AppContext';
 import axios from 'axios';
 import { ApiTaxonomies } from '@/types/api/api';
+import { Toaster } from '@/components/ui/toaster';
+import { generateAudioUrl } from '@/lib/utils';
 
 export interface KeyboardEventWithTarget extends KeyboardEvent {
   target: HTMLElement;
@@ -52,8 +54,6 @@ function App() {
   const [state, dispatch] = useReducer(appStateReducer, initialAppState);
   const { stage } = state;
   const playAudio = useCallback((url: string) => {
-    console.log('playAudio', url !== audioUrl, url, audioUrl);
-
     if (url !== audioUrl) {
       setPlaying(true);
       setAudioUrl(url);
@@ -82,10 +82,7 @@ function App() {
   }
 
   function togglePlayPause() {
-    console.log('togglePlayPause')
     setPlaying((isPlaying) => {
-      console.log(isPlaying);
-
       return !isPlaying
     });
   };
@@ -93,18 +90,20 @@ function App() {
   function loadAudio(src: string, isPlaying: boolean) {
     console.log('loading audio...', src, isPlaying);
 
-    if (audioElm.current && src !== audioElm.current.src) {
+    if (audioElm.current && !audioElm.current?.src.startsWith(src)) {
       audioElm.current.preload = isPlaying ? 'auto' : 'none';
-      audioElm.current.src = src;
+      audioElm.current.src = src ? generateAudioUrl(src) : null;
     }
   };
 
   function startPlaying() {
+    if (!audioElm.current?.src) return;
+
     audioElm.current
       ?.play()
       .catch((e) => {
         // eslint-disable-next-line no-console
-        console.error(e);
+        // console.error(e);
       });
   }
 
@@ -237,6 +236,7 @@ function App() {
       <h2 className='text-4xl font-bold mb-6'>Episode Importer</h2>
       <AppContext.Provider value={contextValue}>
         {renderStage()}
+        <Toaster />
       </AppContext.Provider>
     </div>
   )

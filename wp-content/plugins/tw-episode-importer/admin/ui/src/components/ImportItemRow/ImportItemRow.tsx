@@ -60,7 +60,7 @@ function parseApiEpisode(episode: ApiEpisode): ItemRow {
     ],
     filename: episode.enclosure.href.split('/').pop(),
     duration: formatDuration(episode.enclosure.duration),
-    audioUrl: generateAudioUrl(episode.enclosure.href),
+    audioUrl: episode.enclosure.href,
     data: episode
   };
 }
@@ -78,8 +78,6 @@ export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponen
   const fadeOutRow = !(wasImported || existingAudioMatches) && !selected;
   const hilightUpdatedRow = hasPost && !existingAudioMatches && selected;
 
-  console.log(playingAudioUrl);
-
   categories?.map(({ name, existingTerms }) => {
     if (existingTerms) {
       existingTermsMap.set(name, existingTerms);
@@ -93,8 +91,6 @@ export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponen
       ...rowData,
       terms: terms.map((term) => term.name === name ? newTerm : term)
     };
-
-    console.log(name, newTerm, rowData.terms, updatedRowData.terms);
 
     setRowData(updatedRowData);
   }
@@ -232,8 +228,6 @@ export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponen
                               }
 
                               const [newTaxonomy, newId] = value.split(':');
-
-                              console.log(value);
 
                               updateTerm(name, {
                                 name,

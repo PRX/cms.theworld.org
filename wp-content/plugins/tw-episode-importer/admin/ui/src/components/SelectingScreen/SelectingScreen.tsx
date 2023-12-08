@@ -17,6 +17,7 @@ import { cn, formatDuration, generateAudioUrl } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { ImportItemRow, ItemRow } from '@/components/ImportItemRow';
 import { isSameDay, isSameMonth } from 'date-fns';
+import { useToast } from '@/components/ui/use-toast';
 
 type TableTerm = {
   id: number,
@@ -67,8 +68,6 @@ async function getApiData(publishDate?: Date, beforeDate?: Date) {
   episodesApiUrl.search = params.toString();
   segmentsApiUrl.search = params.toString();
 
-  console.log(apiUrlBase, params.toString());
-
   const [episodes, segments] = await Promise.all([
     axios.get<ApiEpisode[]>(episodesApiUrl.toString()).then((res) => res.status === 200 ? res.data : null),
     axios.get<ApiEpisode[]>(segmentsApiUrl.toString()).then((res) => res.status === 200 ? res.data : null),
@@ -81,7 +80,9 @@ async function getApiData(publishDate?: Date, beforeDate?: Date) {
 }
 
 export function SelectingScreen() {
-  const { nextStage } = useContext(AppContext);
+  const { nextStage, playing, playingAudioUrl, audioElm } = useContext(AppContext);
+  const { toast, dismiss: dismissToast } = useToast();
+  const [audioPlayerToast, setAudioPlayerToast] = useState<ReturnType<typeof toast>>();
   const today = new Date();
   const maxMonthDate = new Date(today.getFullYear(), today.getMonth());
   const [queryMonthDate, setQueryMonthDate] = useState(new Date(today.getFullYear(), today.getMonth()));
@@ -94,18 +95,23 @@ export function SelectingScreen() {
   const [importEpisodeGuid, setImportEpisodeGuid] = useState<string>();
   const [importSegmentGuids, setImportSegmentGuids] = useState(new Set<string>());
   const { episodes, segments } = apiData.get(publishDateKey) || {};
+  const playingAudioUrlInView = !![...(episodes || []), ...(segments || [])].find(({ enclosure }) => playingAudioUrl === enclosure.href);
+  const playingAudioUrlItemRow = [...importData.current.values()].find((itemRow) => itemRow.audioUrl === playingAudioUrl);
+  const audioRemainingDuration = audioElm.duration ? audioElm.duration - audioElm.currentTime : 0;
   const dateData = [...apiData.values()].map(({ episodes, segments }) => {
     const allItems = [...episodes, ...segments];
     const hasImportableItems = !!allItems.find(({ post }) => !post);
     const hasExistingItems = !!allItems.find(({ post }) => !!post);
     const hasImportedItems = !!allItems.find(({ wasImported }) => wasImported);
     const hasUpdateableItems = !!allItems.find(({ post, enclosure }) => post?.audio && post.audio.url !== enclosure.href || !post?.audio);
+    const playingAudioInView = !!allItems.find(({ enclosure }) => playingAudioUrl?.startsWith(enclosure.href));
 
     return {
       hasImportableItems,
       hasExistingItems,
       hasImportedItems,
       hasUpdateableItems,
+      playingAudioInView,
       episodes,
       segments
     };
@@ -130,8 +136,29 @@ export function SelectingScreen() {
     .filter((data) => data.hasExistingItems && data.hasImportableItems)
     .map((data) => new Date(data.episodes[0].datePublished));
   const partialyImportedClassNames = 'border-2 border-dotted border-lime-500';
+  const playingAudioDays = playingAudioUrlItemRow ? [new Date(playingAudioUrlItemRow.data.datePublished)] : [];
+  const playingAudioClassName = 'ring-1 ring-offset-2 ring-orange-500 !rounded-full';
 
-  console.log(updatedDays, partialyImportedDays);
+  useEffect(() => {
+    if (playingAudioUrlItemRow && !playingAudioUrlInView && !audioPlayerToast) {
+      const { title, audioUrl, duration, data } = playingAudioUrlItemRow;
+      const filename = audioUrl.split('/').pop();
+
+      setAudioPlayerToast(toast({
+        title,
+        description: `${filename} | ${duration}`,
+        action: <PlayButton audioUrl={audioUrl} />,
+        className: 'cursor-pointer',
+        onClick: (evt) => {
+          if ((evt.target as Element).nodeName !== 'DIV') return;
+          setPublishDate(new Date(data.datePublished));
+        }
+      }))
+    } else if (!playingAudioUrlItemRow && audioPlayerToast || playingAudioUrlInView && audioPlayerToast) {
+      dismissToast();
+      setAudioPlayerToast(null);
+    }
+  }, [playingAudioUrlItemRow, playingAudioUrlInView, audioPlayerToast]);
 
   useEffect(() => {
     const dateData = apiData.get(publishDateKey);
@@ -146,7 +173,6 @@ export function SelectingScreen() {
     setImportSegmentGuids((guids) => {
       guids.clear();
       const importSegments = dateData.segments?.filter(({ post, enclosure }) => !post || post.audio?.url !== enclosure.href);
-      console.log(importSegments);
       importSegments?.map((segment) => guids.add(segment.guid));
       return new Set(guids)
     })
@@ -184,8 +210,6 @@ export function SelectingScreen() {
 
         tempData.set(dateKey, dateData);
       });
-
-      console.log(tempData);
 
       setApiData(tempData);
       setLoading(false);
@@ -260,6 +284,7 @@ export function SelectingScreen() {
               partialyImported: partialyImportedDays,
               updated: updatedDays,
               importable: importableDays,
+              playingAudio: playingAudioDays
             }}
             modifiersClassNames={{
               exists: existsClasNames,
@@ -267,6 +292,7 @@ export function SelectingScreen() {
               partialyImported: partialyImportedClassNames,
               updated: updatedClassNames,
               importable: importableClassNames,
+              playingAudio: playingAudioClassName
             }}
             footer={!isSameMonth(today, month) && (
               <div className='flex justify-end pt-2'>
