@@ -1,7 +1,7 @@
 import type { ApiData, ApiEpisode, ApiTaxonomies } from '@/types/api/api';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import { ArrowRight, ArrowRightToLine, FileQuestion, Loader2 } from 'lucide-react';
+import { ArrowRight, ArrowRightToLine, FileQuestion, Loader2, RefreshCw } from 'lucide-react';
 import { ContributorBadge } from '@/components/ContributorBadge';
 import { DatePicker } from '@/components/DatePicker';
 import { PlayButton } from '@/components/PlayButton';
@@ -53,7 +53,7 @@ function formatDateKey(date: Date) {
   return `${year}-${month}-${day}`;
 }
 
-async function getApiData(publishDate?: Date, beforeDate?: Date) {
+async function getApiData(publishDate?: Date, beforeDate?: Date, noCache?: boolean) {
   const date = (publishDate || new Date());
   const params = new URLSearchParams( !beforeDate ? {
     on: formatDateKey(date)
@@ -64,6 +64,10 @@ async function getApiData(publishDate?: Date, beforeDate?: Date) {
   const apiUrlBase = window?.appLocalizer.apiUrl;
   const episodesApiUrl = new URL('episodes', apiUrlBase);
   const segmentsApiUrl = new URL('segments', apiUrlBase);
+
+  if (noCache) {
+    params.set('cb', `${(new Date()).getUTCSeconds()}`);
+  }
 
   episodesApiUrl.search = params.toString();
   segmentsApiUrl.search = params.toString();
@@ -90,15 +94,16 @@ export function SelectingScreen() {
   const [month, setMonth] = useState(today);
   const publishDateKey = formatDateKey(publishDate);
   const [apiData, setApiData] = useState(new Map<string, ApiData>());
+  const publishDateData = apiData.get(publishDateKey);
+  const publishDateDataRefreshTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const { episodes, segments } = publishDateData || {};
   const [loading, setLoading] = useState(false);
   const importData = useRef(new Map<string, ItemRow>());
   const [importEpisodeGuid, setImportEpisodeGuid] = useState<string>();
   const [importSegmentGuids, setImportSegmentGuids] = useState(new Set<string>());
-  const { episodes, segments } = apiData.get(publishDateKey) || {};
   const playingAudioUrlInView = !![...(episodes || []), ...(segments || [])].find(({ enclosure }) => playingAudioUrl === enclosure.href);
   const playingAudioUrlItemRow = [...importData.current.values()].find((itemRow) => itemRow.audioUrl === playingAudioUrl);
-  const audioRemainingDuration = audioElm.duration ? audioElm.duration - audioElm.currentTime : 0;
-  const dateData = [...apiData.values()].map(({ episodes, segments }) => {
+  const datesData = [...apiData.values()].map(({ episodes, segments }) => {
     const allItems = [...episodes, ...segments];
     const hasImportableItems = !!allItems.find(({ post }) => !post);
     const hasExistingItems = !!allItems.find(({ post }) => !!post);
@@ -116,28 +121,41 @@ export function SelectingScreen() {
       segments
     };
   })
-  const importableDays = dateData
+  const importableDays = datesData
     .filter((data) => !data.hasExistingItems )
     .map((data) => new Date(data.episodes[0].datePublished));
   const importableClassNames = 'border-2 border-primary';
-  const existsDays = dateData
+  const existsDays = datesData
     .filter((data) => data.hasExistingItems && !data.hasImportableItems)
     .map((data) => new Date(data.episodes[0].datePublished));
   const existsClasNames = 'border-2 border-lime-500';
-  const importedDays = dateData
+  const importedDays = datesData
     .filter((data) => data.hasImportedItems)
     .map((data) => new Date(data.episodes[0].datePublished));
   const importedClassNames = 'bg-lime-500';
-  const updatedDays = dateData
+  const updatedDays = datesData
     .filter((data) => data.hasUpdateableItems)
     .map((data) => new Date(data.episodes[0].datePublished));
   const updatedClassNames = 'border-2 border-orange-400';
-  const partialyImportedDays = dateData
+  const partialyImportedDays = datesData
     .filter((data) => data.hasExistingItems && data.hasImportableItems)
     .map((data) => new Date(data.episodes[0].datePublished));
   const partialyImportedClassNames = 'border-2 border-dotted border-lime-500';
   const playingAudioDays = playingAudioUrlItemRow ? [new Date(playingAudioUrlItemRow.data.datePublished)] : [];
   const playingAudioClassName = 'ring-1 ring-offset-2 ring-orange-500 !rounded-full';
+
+  useEffect(() => {
+    if (apiData && !publishDateData) {
+
+      if (publishDateDataRefreshTimeout.current) {
+        clearTimeout(publishDateDataRefreshTimeout.current);
+      }
+
+      publishDateDataRefreshTimeout.current = setTimeout(() => {
+        fetchDateData(publishDate);
+      }, 60000)
+    }
+  }, [apiData, publishDateData, publishDate])
 
   useEffect(() => {
     if (playingAudioUrlItemRow && !playingAudioUrlInView && !audioPlayerToast) {
@@ -174,15 +192,19 @@ export function SelectingScreen() {
       guids.clear();
       const importSegments = dateData.segments?.filter(({ post, enclosure }) => !post || post.audio?.url !== enclosure.href);
       importSegments?.map((segment) => guids.add(segment.guid));
-      return new Set(guids)
+      return new Set(guids);
     })
   }, [publishDate, publishDateKey, apiData]);
 
   useEffect(() => {
     setLoading(true);
+
+    if (publishDateDataRefreshTimeout.current) {
+      clearTimeout(publishDateDataRefreshTimeout.current);
+    }
+
     (async () => {
       const data = await getApiData(queryMonthDate, new Date(queryMonthDate.getFullYear(), queryMonthDate.getMonth() + 1));
-      // TODO: fetch post data for audio url's.
       const tempData = new Map<string, ApiData>(apiData);
 
       console.log('fetched api data', data, queryMonthDate);
@@ -214,27 +236,28 @@ export function SelectingScreen() {
       setApiData(tempData);
       setLoading(false);
     })()
-  }, [queryMonthDate])
+  }, [queryMonthDate]);
 
-  function parseApiEpisode(episode: ApiEpisode) {
-    return {
-      guid: episode.guid,
-      title: episode.title,
-      terms: episode.categories?.map((category) => ({
-        name: category.name,
-        taxonomy: category.existingTerms?.find((term) => term.taxonomy.name === 'country' )?.taxonomy
-      })),
-      contributors: episode.author && [
-        episode.author
-      ],
-      filename: episode.enclosure.href.split('/').pop(),
-      duration: formatDuration(episode.enclosure.duration),
-      audioUrl: generateAudioUrl(episode.enclosure.href)
-    };
+  function fetchDateData(date: Date) {
+    setLoading(true);
+    (async () => {
+      const dateKey = formatDateKey(date);
+      const data = await getApiData(date, new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1), true);
+      const tempData = new Map<string, ApiData>(apiData);
+
+      console.log('fetched api data for date', date, data, queryMonthDate);
+
+      if (data?.episodes?.length) {
+        tempData.set(dateKey, data);
+        setApiData(tempData);
+      }
+
+      setLoading(false);
+    })()
   }
 
   function parseDigitsOfFilename(href: string) {
-    return [...href.split('/').pop().split('.').shift().matchAll(/\d/g)].join('')
+    return [...href.split('/').pop().split('.').shift().matchAll(/\d/g)].join('');
   }
 
   function sortByEnclosureFilename(ea: ApiEpisode, eb: ApiEpisode) {
@@ -268,7 +291,7 @@ export function SelectingScreen() {
       </CardHeader>
       <CardContent>
 
-        <div className='flex gap-4 items-center'>
+        <div className='flex gap-2 items-center'>
           <DatePicker
             disabled={loading}
             defaultMonth={publishDate}
@@ -306,9 +329,19 @@ export function SelectingScreen() {
               </div>
             )}
           />
+          <Button
+            size='icon'
+            variant='ghost'
+            className='rounded-full text-primary hover:bg-primary hover:text-primary-foreground'
+            title='Refresh Selected Date Data'
+            disabled={loading}
+            onClick={() => {
+            fetchDateData(publishDate);
+          }}>
+            <RefreshCw className={cn({ 'animate-spin': loading })} />
+          </Button>
           {loading && (
             <Badge variant='outline' className=' flex gap-2'>
-              <Loader2 className='animate-spin text-primary' />
               Loading episodes and segments from Dovetail...
             </Badge>
           )}

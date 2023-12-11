@@ -391,6 +391,7 @@ function tw_episode_importer_parse_api_item( $api_item, $post_type ) {
 			return $result;
 		},
 		// Ensure terms with comma separated terms are broken out into separate terms.
+		// TODO: Remove this split logic when feeder is updated to treat comma separated input as separate terms.
 		array_unique(
 			array_reduce(
 				$categories,
