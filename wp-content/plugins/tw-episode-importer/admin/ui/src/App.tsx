@@ -1,15 +1,13 @@
+import type { ApiTaxonomies } from '@/types/api/api';
+import type { KeyboardEventWithTarget } from '@/types/dom/events';
+import { appStages, type AppAction, type AppState, type AppData } from '@/types/state/app';
 import React, { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react';
-import { SelectingScreen } from './components/SelectingScreen';
-import { appStages, type AppAction, type AppState, type AppData } from './types/state/app';
-import { AppContext, AppContextValue } from '@/lib/contexts/AppContext';
 import axios from 'axios';
-import { ApiTaxonomies } from '@/types/api/api';
+import { SelectingScreen } from '@/components/SelectingScreen';
+import { ImportScreen } from '@/components/ImportScreen';
 import { Toaster } from '@/components/ui/toaster';
+import { AppContext, AppContextValue } from '@/lib/contexts/AppContext';
 import { generateAudioUrl } from '@/lib/utils';
-
-export interface KeyboardEventWithTarget extends KeyboardEvent {
-  target: HTMLElement;
-}
 
 const initialAppState = {
   stage: 'selecting',
@@ -17,16 +15,28 @@ const initialAppState = {
 } as AppState;
 
 function appStateReducer(state: AppState, action: AppAction) {
+  const { data } = state;
+
   switch (action.type) {
     case 'NEXT_STAGE':
       return {
         ...state,
         stage: appStages.at(appStages.findIndex((s) => s === state.stage) + 1)
       }
+
     case 'SET_DATA':
       return {
         ...state,
         data: (action as AppAction<AppData>).payload
+      }
+
+    case 'UPDATE_DATA':
+      return {
+        ...state,
+        data: {
+          ...data,
+          ...(action as AppAction<Partial<AppData>>).payload
+        }
       }
 
     default:
@@ -64,6 +74,7 @@ function App() {
   const contextValue = {
     state,
     setAppData,
+    updateAppData,
     nextStage,
     audioElm: audioElm.current,
     playAudio,
@@ -77,8 +88,13 @@ function App() {
     dispatch({ type: 'SET_DATA', payload: data} as AppAction<AppData>);
   }
 
+  function updateAppData(data: Partial<AppData>) {
+    dispatch({ type: 'SET_DATA', payload: data} as AppAction<Partial<AppData>>);
+  }
+
   function nextStage() {
     dispatch({type: 'NEXT_STAGE'});
+    window.scrollTo({ top: 0 });
   }
 
   function togglePlayPause() {
@@ -228,6 +244,14 @@ function App() {
         return (
           <SelectingScreen />
         );
+
+      case 'importing':
+        return (
+          <ImportScreen />
+        );
+
+        default:
+          return null;
     }
   }
 

@@ -33,7 +33,7 @@
 
     --ring: 215 20.2% 65.1%;
 
-    --radius: 0;
+    --radius: 0px;
   }
 
   .dark {
@@ -81,8 +81,21 @@
   }
 }
 
+
 @layer utilities {
   .text-wrap-balance {
     text-wrap: balance;
+  }
+}
+
+.rdp-dropdown_icon {
+  display: inline-block;
+}
+
+.rdp-caption_dropdowns {
+  @apply gap-2;
+  :has(.rdp-dropdown_icon) {
+    display: inline-flex;
+    align-items: center;
   }
 }

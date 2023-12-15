@@ -25,6 +25,7 @@ define( 'TW_EPISODE_IMPORTER_SETTINGS_SECTION', 'episode-importer-settings-secti
 define( 'TW_EPISODE_IMPORTER_SETTINGS_API', 'episode-importer-settings-api' );
 define( 'TW_EPISODE_IMPORTER_EPISODES_API_URL_KEY', 'episodes-api-url' );
 define( 'TW_EPISODE_IMPORTER_SEGMENTS_API_URL_KEY', 'segments-api-url' );
+define( 'TW_EPISODE_IMPORTER_AUTHOR_USER_ID', 'author-user-id' );
 
 // Setup settings page.
 // SEE: https://alazierplace.com/2018/06/how-to-save-custom-settings-for-your-wordpress-plugin/ .

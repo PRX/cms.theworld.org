@@ -1,49 +1,22 @@
-import type { ApiData, ApiEpisode, ApiTaxonomies } from '@/types/api/api';
+import type { ApiData, ApiEpisode } from '@/types/api/api';
+import type { ItemRow } from '@/types/state/itemRow';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import axios from 'axios';
-import { ArrowRight, ArrowRightToLine, FileQuestion, Loader2, RefreshCw } from 'lucide-react';
-import { ContributorBadge } from '@/components/ContributorBadge';
+import axios, { CanceledError } from 'axios';
+import { isSameMonth } from 'date-fns';
+import { ArrowRightToLine, FileQuestion, RefreshCw } from 'lucide-react';
 import { DatePicker } from '@/components/DatePicker';
+import { ImportItemRow } from '@/components/ImportItemRow';
 import { PlayButton } from '@/components/PlayButton';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { AppContext } from '@/lib/contexts/AppContext';
-import { cn, formatDuration, generateAudioUrl } from '@/lib/utils';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { ImportItemRow, ItemRow } from '@/components/ImportItemRow';
-import { isSameDay, isSameMonth } from 'date-fns';
 import { useToast } from '@/components/ui/use-toast';
-
-type TableTerm = {
-  id: number,
-  name: string,
-  taxononomy: {
-    name: string,
-    label: string
-  }
-}
-
-type TableEpisode = {
-  guid: string,
-  title: string,
-  terms: TableTerm[],
-}
-
-type SelectingState = {
-  episodes: TableEpisode[],
-  segments: TableEpisode[],
-  playing: boolean,
-  loading: boolean,
-  selected: {
-    episode: string,
-    segments: string[]
-  }
-}
+import { AppContext } from '@/lib/contexts/AppContext';
+import { cn } from '@/lib/utils';
 
 function formatDateKey(date: Date) {
   const year = date.getFullYear();
@@ -53,7 +26,7 @@ function formatDateKey(date: Date) {
   return `${year}-${month}-${day}`;
 }
 
-async function getApiData(publishDate?: Date, beforeDate?: Date, noCache?: boolean) {
+async function getApiData(publishDate?: Date, beforeDate?: Date, noCache?: boolean, controllers?: { [k: string]: AbortController }) {
   const date = (publishDate || new Date());
   const params = new URLSearchParams( !beforeDate ? {
     on: formatDateKey(date)
@@ -64,6 +37,19 @@ async function getApiData(publishDate?: Date, beforeDate?: Date, noCache?: boole
   const apiUrlBase = window?.appLocalizer.apiUrl;
   const episodesApiUrl = new URL('episodes', apiUrlBase);
   const segmentsApiUrl = new URL('segments', apiUrlBase);
+  const options = {
+    headers: {
+      'X-Wp-Nonce': window.appLocalizer.nonce
+    }
+  }
+  const episodesOptions = {
+    ...options,
+    ...(controllers?.episodes && { signal: controllers.episodes.signal })
+  }
+  const segmentsOptions = {
+    ...options,
+    ...(controllers?.episodes && { signal: controllers.episodes.signal })
+  }
 
   if (noCache) {
     params.set('cb', `${(new Date()).getUTCSeconds()}`);
@@ -72,23 +58,33 @@ async function getApiData(publishDate?: Date, beforeDate?: Date, noCache?: boole
   episodesApiUrl.search = params.toString();
   segmentsApiUrl.search = params.toString();
 
-  const [episodes, segments] = await Promise.all([
-    axios.get<ApiEpisode[]>(episodesApiUrl.toString()).then((res) => res.status === 200 ? res.data : null),
-    axios.get<ApiEpisode[]>(segmentsApiUrl.toString()).then((res) => res.status === 200 ? res.data : null),
-  ]);
+  async function fetchData(): Promise<ApiData> {
+    return await Promise.all([
+      axios.get<ApiEpisode[]>(episodesApiUrl.toString(), episodesOptions).then((res) => res.status === 200 ? res.data : null),
+      axios.get<ApiEpisode[]>(segmentsApiUrl.toString(), segmentsOptions).then((res) => res.status === 200 ? res.data : null),
+    ])
+    .then((res) => {
+      const [episodes, segments] = res;
+      return {
+        date,
+        episodes,
+        segments
+      }
+    })
+    .catch((res) => {
+      console.log('Data Fetch Failed. Retrying...', res);
+      return res instanceof CanceledError ? null : fetchData();
+    });
+  }
 
-  return {
-    episodes,
-    segments
-  } as ApiData;
+  return fetchData();
 }
 
 export function SelectingScreen() {
-  const { nextStage, playing, playingAudioUrl, audioElm } = useContext(AppContext);
+  const { updateAppData, nextStage, playingAudioUrl } = useContext(AppContext);
   const { toast, dismiss: dismissToast } = useToast();
   const [audioPlayerToast, setAudioPlayerToast] = useState<ReturnType<typeof toast>>();
   const today = new Date();
-  const maxMonthDate = new Date(today.getFullYear(), today.getMonth());
   const [queryMonthDate, setQueryMonthDate] = useState(new Date(today.getFullYear(), today.getMonth()));
   const [publishDate, setPublishDate] = useState(new Date());
   const [month, setMonth] = useState(today);
@@ -103,13 +99,13 @@ export function SelectingScreen() {
   const [importSegmentGuids, setImportSegmentGuids] = useState(new Set<string>());
   const playingAudioUrlInView = !![...(episodes || []), ...(segments || [])].find(({ enclosure }) => playingAudioUrl === enclosure.href);
   const playingAudioUrlItemRow = [...importData.current.values()].find((itemRow) => itemRow.audioUrl === playingAudioUrl);
-  const datesData = [...apiData.values()].map(({ episodes, segments }) => {
-    const allItems = [...episodes, ...segments];
-    const hasImportableItems = !!allItems.find(({ post }) => !post);
-    const hasExistingItems = !!allItems.find(({ post }) => !!post);
+  const datesData = [...apiData.values()].map(({ episodes, segments, date }) => {
+    const allItems = [...(episodes || []), ...(segments || [])];
+    const hasImportableItems = !!allItems.find(({ existingPost }) => !existingPost);
+    const hasExistingItems = !!allItems.find(({ existingPost }) => !!existingPost);
     const hasImportedItems = !!allItems.find(({ wasImported }) => wasImported);
-    const hasUpdateableItems = !!allItems.find(({ post, enclosure }) => post?.audio && post.audio.url !== enclosure.href || !post?.audio);
-    const playingAudioInView = !!allItems.find(({ enclosure }) => playingAudioUrl?.startsWith(enclosure.href));
+    const hasUpdateableItems = !!allItems.find(({ hasUpdatedAudio }) => hasUpdatedAudio);
+    const playingAudioInView = !!allItems.find(({ enclosure }) => playingAudioUrl === enclosure.href);
 
     return {
       hasImportableItems,
@@ -118,31 +114,34 @@ export function SelectingScreen() {
       hasUpdateableItems,
       playingAudioInView,
       episodes,
-      segments
+      segments,
+      date
     };
   })
   const importableDays = datesData
-    .filter((data) => !data.hasExistingItems )
-    .map((data) => new Date(data.episodes[0].datePublished));
+    .filter((data) => data.hasImportableItems )
+    .map(({ date }) => date );
   const importableClassNames = 'border-2 border-primary';
   const existsDays = datesData
     .filter((data) => data.hasExistingItems && !data.hasImportableItems)
-    .map((data) => new Date(data.episodes[0].datePublished));
+    .map(({ date }) => date );
   const existsClasNames = 'border-2 border-lime-500';
   const importedDays = datesData
     .filter((data) => data.hasImportedItems)
-    .map((data) => new Date(data.episodes[0].datePublished));
+    .map(({ date }) => date );
   const importedClassNames = 'bg-lime-500';
   const updatedDays = datesData
     .filter((data) => data.hasUpdateableItems)
-    .map((data) => new Date(data.episodes[0].datePublished));
+    .map(({ date }) => date );
   const updatedClassNames = 'border-2 border-orange-400';
   const partialyImportedDays = datesData
     .filter((data) => data.hasExistingItems && data.hasImportableItems)
-    .map((data) => new Date(data.episodes[0].datePublished));
-  const partialyImportedClassNames = 'border-2 border-dotted border-lime-500';
+    .map(({ date }) => date );
+  const partialyImportedClassNames = 'border-2 border-dotted';
   const playingAudioDays = playingAudioUrlItemRow ? [new Date(playingAudioUrlItemRow.data.datePublished)] : [];
   const playingAudioClassName = 'ring-1 ring-offset-2 ring-orange-500 !rounded-full';
+  const getEpisodesController = useRef<AbortController>();
+  const getSegmentController = useRef<AbortController>();
 
   useEffect(() => {
     if (apiData && !publishDateData) {
@@ -183,18 +182,33 @@ export function SelectingScreen() {
 
     if (!dateData) return;
 
-    const importEpisode = dateData.episodes?.find(({ post, enclosure }) => !post || post.audio?.url !== enclosure.href);
+    const importEpisode = dateData.episodes?.find(({ existingPost, hasUpdatedAudio, enclosure: { episodeKey } }) => {
+      const isImportingOrUpdated = !existingPost || hasUpdatedAudio;
+      const hasImportingSegment = !!dateData.segments?.find(({ enclosure, existingPost }) => enclosure.episodeKey === episodeKey && !existingPost);
+      return isImportingOrUpdated || hasImportingSegment;
+    });
     if (importEpisode) {
       setImportEpisodeGuid(importEpisode.guid);
     }
+  }, [publishDate, publishDateKey, apiData]);
+
+  useEffect(() => {
+    const dateData = apiData.get(publishDateKey);
+
+    if (!dateData) return;
+
+    const episode = dateData.episodes?.find(({ guid }) => guid === importEpisodeGuid);
 
     setImportSegmentGuids((guids) => {
       guids.clear();
-      const importSegments = dateData.segments?.filter(({ post, enclosure }) => !post || post.audio?.url !== enclosure.href);
+      const importSegments = dateData.segments?.filter(({ enclosure, existingPost, hasUpdatedAudio }) => {
+        const episodeIsSelected = !!episode && enclosure.episodeKey === episode.enclosure.episodeKey;
+        return episodeIsSelected || !existingPost || hasUpdatedAudio;
+      });
       importSegments?.map((segment) => guids.add(segment.guid));
       return new Set(guids);
     })
-  }, [publishDate, publishDateKey, apiData]);
+  }, [publishDate, publishDateKey, apiData, importEpisodeGuid]);
 
   useEffect(() => {
     setLoading(true);
@@ -203,15 +217,30 @@ export function SelectingScreen() {
       clearTimeout(publishDateDataRefreshTimeout.current);
     }
 
+    getEpisodesController.current?.abort();
+    getSegmentController.current?.abort();
+
     (async () => {
-      const data = await getApiData(queryMonthDate, new Date(queryMonthDate.getFullYear(), queryMonthDate.getMonth() + 1));
+      const queryAfterDate = new Date(queryMonthDate);
+      const queryBeforeDate = new Date(queryMonthDate.getFullYear(), queryMonthDate.getMonth() + 1);
+      const controllers = {
+        episodes: new AbortController(),
+        segments: new AbortController()
+      }
+
+      getEpisodesController.current = controllers.episodes;
+      getSegmentController.current = controllers.segments
+
+      const data = await getApiData(queryAfterDate, queryBeforeDate, false, controllers);
       const tempData = new Map<string, ApiData>(apiData);
 
       console.log('fetched api data', data, queryMonthDate);
 
-      data.episodes?.forEach((episode) => {
-        const dateKey = formatDateKey(new Date(episode.datePublished));
+      data?.episodes?.forEach((episode) => {
+        const dateKey = episode.dateKey || formatDateKey(new Date(episode.datePublished));
         const dateData = tempData.get(dateKey) || {} as ApiData;
+
+        dateData.date = new Date(`${dateKey}T12:00:00Z`);
 
         dateData.episodes = dateData?.episodes || [];
         if (!dateData.episodes.find((e) => e.guid === episode.guid)) {
@@ -221,9 +250,11 @@ export function SelectingScreen() {
         tempData.set(dateKey, dateData);
       });
 
-      data.segments?.forEach((segment) => {
-        const dateKey = formatDateKey(new Date(segment.datePublished));
+      data?.segments?.forEach((segment) => {
+        const dateKey = segment.dateKey || formatDateKey(new Date(segment.datePublished));
         const dateData = tempData.get(dateKey) || {} as ApiData;
+
+        dateData.date = new Date(`${dateKey}T12:00:00Z`);
 
         dateData.segments = dateData?.segments || [];
         if (!dateData.segments.find((s) => s.guid === segment.guid)) {
@@ -233,19 +264,22 @@ export function SelectingScreen() {
         tempData.set(dateKey, dateData);
       });
 
+      console.log(controllers.episodes.signal.aborted, controllers.segments.signal.aborted)
+
       setApiData(tempData);
-      setLoading(false);
+      setLoading(!data && controllers.episodes.signal.aborted || controllers.segments.signal.aborted);
     })()
   }, [queryMonthDate]);
 
   function fetchDateData(date: Date) {
     setLoading(true);
+
     (async () => {
       const dateKey = formatDateKey(date);
-      const data = await getApiData(date, new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1), true);
+      const data = await getApiData(date, undefined, true);
       const tempData = new Map<string, ApiData>(apiData);
 
-      console.log('fetched api data for date', date, data, queryMonthDate);
+      console.log('fetched api data for date', date, dateKey, data, queryMonthDate);
 
       if (data?.episodes?.length) {
         tempData.set(dateKey, data);
@@ -256,18 +290,15 @@ export function SelectingScreen() {
     })()
   }
 
-  function parseDigitsOfFilename(href: string) {
-    return [...href.split('/').pop().split('.').shift().matchAll(/\d/g)].join('');
-  }
-
   function sortByEnclosureFilename(ea: ApiEpisode, eb: ApiEpisode) {
-    const a = parseDigitsOfFilename(ea.enclosure.href);
-    const b = parseDigitsOfFilename(eb.enclosure.href);
+    const a = ea.enclosure.segment;
+    const b = eb.enclosure.segment;
 
     return a < b ? -1 : 1
   }
 
   function handleDateSelect(newDate: Date) {
+    if (!newDate) return;
     setPublishDate(newDate);
   }
 
@@ -279,6 +310,16 @@ export function SelectingScreen() {
   function handleRowChange(newData: ItemRow) {
     console.log('New row data', newData);
     importData.current.set(newData.guid, newData);
+  }
+
+  function handleImportClick() {
+    updateAppData({
+      importData: {
+        episode: importData.current.get(importEpisodeGuid),
+        segments: [...importSegmentGuids].map((guid) => importData.current.get(guid))
+      }
+    });
+    nextStage();
   }
 
   return (
@@ -297,8 +338,10 @@ export function SelectingScreen() {
             defaultMonth={publishDate}
             month={month}
             selected={publishDate}
-            toMonth={maxMonthDate}
+            fromMonth={new Date(2020, 0)}
+            toDate={today}
             onSelect={handleDateSelect}
+            captionLayout='dropdown-buttons'
             onMonthChange={handleMonthChange}
             showOutsideDays={false}
             modifiers={{
@@ -310,6 +353,7 @@ export function SelectingScreen() {
               playingAudio: playingAudioDays
             }}
             modifiersClassNames={{
+              selected: 'bg-primary text-primary-foreground hover:!bg-primary/80 hover:!text-primary-foreground',
               exists: existsClasNames,
               imported: importedClassNames,
               partialyImported: partialyImportedClassNames,
@@ -452,7 +496,7 @@ export function SelectingScreen() {
         </Table>
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Button size="lg" onClick={() => { nextStage(); }}>Button</Button>
+        <Button size="lg" onClick={handleImportClick}>Button</Button>
       </CardFooter>
     </Card>
   )

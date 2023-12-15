@@ -1,4 +1,4 @@
-import { Maybe, Post } from "../api/graphql";
+import { Maybe } from "../api/graphql";
 
 export type ApiAuthor = {
   name: string,
@@ -11,7 +11,11 @@ export type ApiEnclosure = {
   type: string,
   size: number,
   duration: number,
-  status: string
+  status: string,
+  episodeKey: string,
+  audioKey: Maybe<string>,
+  segment: Maybe<number>,
+  version: string
 }
 
 export type ApiTaxonomy = {
@@ -35,16 +39,27 @@ export type ApiCategory = {
   existingTerms: ApiTerm[]
 }
 
+export type ApiAudio = {
+  guid: string,
+  databaseId: number,
+  editLink: string,
+  url: string
+}
+
+export type ApiPost = {
+  guid: string,
+  databaseId: number,
+  editLink: string,
+  type: string,
+  audio: Maybe<ApiAudio>
+}
+
 export type ApiEpisode = {
-  post?: {
-    guid: string,
-    databaseId: number,
-    audio: {
-      databaseId: number,
-      url: string
-    }
-  },
+  existingPosts?: ApiPost[],
+  existingPost: Maybe<ApiPost>,
+  existingAudio: Maybe<ApiAudio>,
   wasImported: boolean,
+  hasUpdatedAudio: boolean,
   id: string,
   guid: string,
   title: string,
@@ -52,15 +67,15 @@ export type ApiEpisode = {
   content: string,
   datePublished: string,
   dateUpdated: Maybe<string>,
+  dateBroadcast: Maybe<string>,
+  dateKey: Maybe<string>,
   author: Maybe<ApiAuthor>
   enclosure: ApiEnclosure,
   categories: ApiCategory[]
 }
 
 export type ApiData = {
-  hasImportableItems: boolean,
-  hasImportedItems: boolean,
-  hasUpdateableItems: boolean,
+  date: Date,
   episodes: ApiEpisode[],
   segments: ApiEpisode[]
 };

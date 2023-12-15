@@ -57,6 +57,13 @@ function tw_episode_importer_settings_init() {
 		TW_EPISODE_IMPORTER_SETTINGS_PAGE, // page on which settings display.
 		TW_EPISODE_IMPORTER_SETTINGS_SECTION // section on which to show settings.
 	);
+	add_settings_field(
+		TW_EPISODE_IMPORTER_SETTINGS_API . '-' . TW_EPISODE_IMPORTER_AUTHOR_USER_ID, // id of the settings field.
+		'Author of Created Posts', // title of the settings field.
+		'tw_episode_importer_settings_author_user_id_cb', // callback function.
+		TW_EPISODE_IMPORTER_SETTINGS_PAGE, // page on which settings display.
+		TW_EPISODE_IMPORTER_SETTINGS_SECTION // section on which to show settings.
+	);
 }
 
 /**
@@ -74,6 +81,9 @@ function tw_episode_importer_sanitize_api_settings( $input ) {
 	// Sanitize episode API URL.
 	$sanitized_input[ TW_EPISODE_IMPORTER_EPISODES_API_URL_KEY ] = wp_http_validate_url( $sanitized_input[ TW_EPISODE_IMPORTER_EPISODES_API_URL_KEY ] );
 	$sanitized_input[ TW_EPISODE_IMPORTER_SEGMENTS_API_URL_KEY ] = wp_http_validate_url( $sanitized_input[ TW_EPISODE_IMPORTER_SEGMENTS_API_URL_KEY ] );
+
+	// Sanitize Author User ID.
+	$sanitized_input[ TW_EPISODE_IMPORTER_AUTHOR_USER_ID ] = $input[ TW_EPISODE_IMPORTER_AUTHOR_USER_ID ];
 
 	if ( ! $sanitized_input[ TW_EPISODE_IMPORTER_EPISODES_API_URL_KEY ] ) {
 		$sanitized_input[ TW_EPISODE_IMPORTER_EPISODES_API_URL_KEY ] = '';
@@ -105,6 +115,15 @@ function tw_episode_importer_settings_segments_api_url_cb() {
 }
 
 /**
+ * Render Author User ID setting value.
+ *
+ * @return void
+ */
+function tw_episode_importer_settings_author_user_id_cb() {
+	tw_episode_importer_settings_render_user_field_input( TW_EPISODE_IMPORTER_AUTHOR_USER_ID );
+}
+
+/**
  * Render field input HTML.
  *
  * @param string $option_key Key name to store value under.
@@ -116,6 +135,29 @@ function tw_episode_importer_settings_render_field_input( $option_key ) {
 	$value   = $options[ $option_key ];
 
 	echo '<input type="url" id="' . esc_attr( $id ) . '" name="' . esc_attr( TW_EPISODE_IMPORTER_SETTINGS_API . '[' . $option_key . ']' ) . '" value="' . esc_attr( $value ) . '" style="width: 100%" />';
+}
+
+/**
+ * Render user input HTML.
+ *
+ * @param string $option_key Key name to store value under.
+ * @return void
+ */
+function tw_episode_importer_settings_render_user_field_input( $option_key ) {
+	$options = get_option( TW_EPISODE_IMPORTER_SETTINGS_API );
+	$id      = TW_EPISODE_IMPORTER_SETTINGS_API . '-' . $option_key;
+	$value   = $options[ $option_key ];
+
+	wp_dropdown_users(
+		array(
+			'name'             => TW_EPISODE_IMPORTER_SETTINGS_API . '[' . $option_key . ']',
+			'id'               => $id,
+			'role'             => array( 'editor' ),
+			'selected'         => $value,
+			'include_selected' => true,
+			'show_option_none' => 'Select a user...',
+		)
+	);
 }
 
 /**

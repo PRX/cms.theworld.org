@@ -22,7 +22,6 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        exclude: /node_modules/,
         use: [
           // Creates `style` nodes from JS strings
           "style-loader",

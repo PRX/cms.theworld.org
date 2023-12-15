@@ -9,6 +9,7 @@ import { createContext } from "react";
 export type AppContextValue = {
   state: AppState,
   setAppData(data: AppData): void,
+  updateAppData(data: Partial<AppData>): void,
   nextStage(): void,
   audioElm: HTMLAudioElement | null,
   playing: boolean,

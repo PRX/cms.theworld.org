@@ -1,5 +1,5 @@
-import type { ApiAuthor, ApiEpisode, ApiTaxonomy, ApiTerm } from '@/types/api/api';
-import type { Episode, Maybe, Segment } from '@/types/api/graphql';
+import type { ApiAudio, ApiEpisode, ApiTerm } from '@/types/api/api';
+import type { ItemRow, ItemRowTerm } from '@/types/state/itemRow';
 import React, { useContext, useEffect, useState } from 'react';
 import { ContributorBadge } from '@/components/ContributorBadge';
 import { PlayButton } from '@/components/PlayButton';
@@ -7,28 +7,11 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { AppContext } from '@/lib/contexts/AppContext';
-import { cn, formatDuration, generateAudioUrl } from '@/lib/utils';
-import { ArrowBigRight, CheckCircle, Edit } from 'lucide-react';
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetOverlay, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { cn, formatDuration } from '@/lib/utils';
+import { ArrowBigRight, CheckCircle, Edit, ExternalLink } from 'lucide-react';
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-
-export type ItemRowTerm = {
-  name: string,
-  id?: number,
-  taxonomy?: ApiTaxonomy
-}
-
-export type ItemRow = {
-  guid: string,
-  title: string,
-  terms: ItemRowTerm[],
-  contributors: Maybe<ApiAuthor[]>,
-  filename: string,
-  duration: string,
-  audioUrl: string,
-  data: ApiEpisode
-}
 
 type ImportItemRowProps = {
   data?: ApiEpisode,
@@ -65,18 +48,33 @@ function parseApiEpisode(episode: ApiEpisode): ItemRow {
   };
 }
 
+type AudioEditLinkProps = {
+  audio: ApiAudio
+};
+
+function AudioEditLink({ audio }: AudioEditLinkProps) {
+  const editLink = audio?.editLink;
+  const audioFilename = audio?.url?.split('/').pop();
+
+  return (
+    <a className='inline-flex gap-2 text-primary' href={editLink} target={`edit:${audio.databaseId}`}>{audioFilename} <ExternalLink size={16} /></a>
+  )
+}
+
 export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponent, selected, onImportDataChange }: ImportItemRowProps) {
-  const { playAudio, playingAudioUrl, state } = useContext(AppContext);
+  const { state } = useContext(AppContext);
   const [rowData, setRowData] = useState(rd || parseApiEpisode(data));
-  const { post, enclosure, wasImported, categories } = data || {};
+  const { existingPosts, existingPost, existingAudio, enclosure, wasImported, categories } = rowData?.data || data || {};
   const { data: appData } = state || {};
   const { taxonomies } = appData || {};
   const existingTermsMap = new Map<string, ApiTerm[]>();
-  const hasPost = !!post;
-  const existingAudioMatches = hasPost && !!(post.audio?.url === enclosure?.href);
-  const completed = wasImported || existingAudioMatches;
-  const fadeOutRow = !(wasImported || existingAudioMatches) && !selected;
-  const hilightUpdatedRow = hasPost && !existingAudioMatches && selected;
+  const hasExisitingPosts = !!existingPosts;
+  const hasExisitingPost = !!existingPost;
+  const hasExistingAudio = !!existingAudio;
+  const existingAudioMatches = hasExistingAudio && existingAudio.url === enclosure?.href;
+  const completed = hasExisitingPost && existingAudioMatches;
+  const fadeOutRow = !(completed) && !selected;
+  const hilightUpdatedRow = hasExisitingPost && !existingAudioMatches && selected;
 
   categories?.map(({ name, existingTerms }) => {
     if (existingTerms) {
@@ -109,22 +107,53 @@ export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponen
   }
 
   function Filename() {
-    if (!existingAudioMatches && post) {
-      const postFilename = post.audio?.url?.split('/').pop();
-      const importFilename = enclosure.href.split('/').pop();
-
+    if (!existingAudioMatches && existingPosts) {
       return (
-        <div className='flex gap-1'>
-          {postFilename ? (
-            <span className='opacity-50'>{postFilename}</span>
-          ) : (
-            <Badge variant='secondary' className='whitespace-nowrap'>No Audio</Badge>
-          )}
-          <ArrowBigRight className='text-orange-400' />
-          <span>{importFilename}</span>
+        <div className='grid gap-2'>
+          {existingPosts.map(({ audio, type, databaseId }) => {
+            const isAudioUpdated = audio?.url !== enclosure.href;
+
+            return (
+              <div className='flex gap-1' key={databaseId}>
+                {existingPosts.length > 1 && (
+                    <Badge variant='outline' className='capitalize'>{type}</Badge>
+                )}
+                {isAudioUpdated && (
+                  <>
+                    {audio?.url ? (
+                      <AudioEditLink audio={audio} />
+                    ) : (
+                      <>
+                        <Badge variant='secondary' className='whitespace-nowrap capitalize'>No Audio</Badge>
+                      </>
+                    )}
+                    <ArrowBigRight className='text-orange-400' />
+                  </>
+                )}
+                <span>{filename}</span>
+              </div>
+            )
+          })}
         </div>
       )
     }
+
+    if (existingPosts) {
+      const postsAudioMap = new Map<number, ApiAudio>();
+
+      existingPosts.forEach(({ audio }) => {
+        postsAudioMap.set(audio.databaseId, audio);
+      })
+
+      return (
+        <div className='grid gap-2'>
+          {[...postsAudioMap.values()].map((audio) => (
+            <AudioEditLink audio={audio} key={audio.databaseId} />
+          ))}
+        </div>
+      )
+    }
+
     return filename;
   }
 
@@ -168,19 +197,22 @@ export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponen
         <StatusIconOrInput />
       </TableCell>
       <TableCell>
-        <div className='inline-grid content-start gap-2 text-wrap-balance'>
-          <div className='font-bold'>{title}</div>
-          {terms && (
+        <div className='inline-grid content-start gap-2'>
+          <div className='font-bold text-wrap-balance'>{title}</div>
+          {(terms || existingPosts) && (
             <div className='inline-flex flex-wrap content-start items-center gap-2'>
-              {terms.filter((term) => !!term.taxonomy).map((term) => (
-                <Badge variant='secondary' key={term.name}>{term.name} ({term.taxonomy.label})</Badge>
+              {existingPosts?.map(({ databaseId, editLink, type }) => (
+                <a href={editLink} target={`edit:${databaseId}`} key={databaseId}><Badge className='capitalize inline-flex gap-2'>{type} <ExternalLink className='inline-block' size={16} /></Badge></a>
+              ))}
+              {terms?.filter((term) => !!term.taxonomy).map((term) => (
+                <Badge variant='secondary' className='capitalize' key={term.name}>{term.name} ({term.taxonomy.label})</Badge>
               ))}
               {!!ignoredTermsCount && (
                   <Badge variant='outline'>
                     {terms.filter((term) => !term.taxonomy).length} Ignored
                   </Badge>
               )}
-              {!completed && (
+              {!hasExisitingPost && (
                 <Sheet>
                   <SheetTrigger asChild>
                     <Button variant='ghost' size='icon' className='rounded-full hover:bg-secondary'>
@@ -279,7 +311,7 @@ export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponen
           )}
         </div>
       </TableCell>
-      <TableCell>
+      <TableCell className='whitespace-nowrap'>
         <Filename />
       </TableCell>
       <TableCell className='text-center'>{duration}</TableCell>

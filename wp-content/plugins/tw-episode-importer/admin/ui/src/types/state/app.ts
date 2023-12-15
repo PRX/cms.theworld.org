@@ -4,13 +4,18 @@
 
 import { ApiTaxonomies } from "@/types/api/api";
 import { Episode, Segment } from "@/types/api/graphql";
+import { ItemRow } from "@/types/state/itemRow";
 
 export const appStages = ['selecting', 'importing', 'summary'] as const;
 export type AppStage = (typeof appStages)[number];
 
+export type  AppImportData = {
+  episode: ItemRow,
+  segments: ItemRow[]
+}
+
 export type AppData = {
-  episodes: Episode[],
-  segments: Segment[],
+  importData?: AppImportData
   taxonomies: ApiTaxonomies,
 };
 

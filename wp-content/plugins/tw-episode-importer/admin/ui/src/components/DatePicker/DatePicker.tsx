@@ -1,9 +1,10 @@
 "use client"
 
 import type { DayPickerSingleProps } from "react-day-picker"
-import React, { useEffect } from "react"
+import React from "react"
 import { format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
+import 'react-day-picker/dist/style.css'
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
