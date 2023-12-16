@@ -293,7 +293,8 @@ function tw_episode_importer_api_route_taxonomies() {
 	// Get taxonomies.
 	$taxonomies = get_taxonomies(
 		array(
-			'public' => true,
+			'public'       => true,
+			'hierarchical' => false,
 		),
 		'objects'
 	);
@@ -305,10 +306,9 @@ function tw_episode_importer_api_route_taxonomies() {
 		$taxonomies
 	);
 
+	// Unset this taxonomy since we want to keep `post_tags` and
+	// quering for `'_builtin' = false` would not include it in the results.
 	unset( $data['post_format'] );
-	unset( $data['license'] );
-	unset( $data['resource_development'] );
-	unset( $data['story_format'] );
 
 	$response = array(
 		'status' => 200,

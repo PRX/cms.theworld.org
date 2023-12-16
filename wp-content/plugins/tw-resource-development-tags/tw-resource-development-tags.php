@@ -43,7 +43,7 @@ function tw_resource_development_tags_taxonomy() {
 	$args = array(
 		'label'                 => esc_html__( 'Resource developments', 'newspack' ),
 		'labels'                => $labels,
-		'public'                => true,
+		'public'                => false,
 		'publicly_queryable'    => true,
 		'hierarchical'          => false,
 		'show_ui'               => true,

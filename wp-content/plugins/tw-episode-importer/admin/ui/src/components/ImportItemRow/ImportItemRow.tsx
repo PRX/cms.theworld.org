@@ -212,7 +212,7 @@ export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponen
                     {terms.filter((term) => !term.taxonomy).length} Ignored
                   </Badge>
               )}
-              {!hasExisitingPost && (
+              {!hasExisitingPost && !!onImportDataChange && (
                 <Sheet>
                   <SheetTrigger asChild>
                     <Button variant='ghost' size='icon' className='rounded-full hover:bg-secondary'>

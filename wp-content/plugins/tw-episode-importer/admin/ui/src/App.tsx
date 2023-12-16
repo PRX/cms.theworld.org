@@ -89,7 +89,7 @@ function App() {
   }
 
   function updateAppData(data: Partial<AppData>) {
-    dispatch({ type: 'SET_DATA', payload: data} as AppAction<Partial<AppData>>);
+    dispatch({ type: 'UPDATE_DATA', payload: data} as AppAction<Partial<AppData>>);
   }
 
   function nextStage() {

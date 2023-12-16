@@ -43,7 +43,7 @@ function tw_story_types_taxonomy() {
 	$args = array(
 		'label'                 => esc_html__( 'Story Formats', 'newspack' ),
 		'labels'                => $labels,
-		'public'                => true,
+		'public'                => false,
 		'publicly_queryable'    => true,
 		'hierarchical'          => false,
 		'show_ui'               => true,

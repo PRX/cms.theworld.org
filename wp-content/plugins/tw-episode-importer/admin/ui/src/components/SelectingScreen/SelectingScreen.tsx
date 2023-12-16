@@ -3,7 +3,7 @@ import type { ItemRow } from '@/types/state/itemRow';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios, { CanceledError } from 'axios';
 import { isSameMonth } from 'date-fns';
-import { ArrowRightToLine, FileQuestion, RefreshCw } from 'lucide-react';
+import { ArrowRight, ArrowRightToLine, FileQuestion, RefreshCw } from 'lucide-react';
 import { DatePicker } from '@/components/DatePicker';
 import { ImportItemRow } from '@/components/ImportItemRow';
 import { PlayButton } from '@/components/PlayButton';
@@ -94,11 +94,21 @@ export function SelectingScreen() {
   const publishDateDataRefreshTimeout = useRef<ReturnType<typeof setTimeout>>();
   const { episodes, segments } = publishDateData || {};
   const [loading, setLoading] = useState(false);
-  const importData = useRef(new Map<string, ItemRow>());
+  const [importRowsMap, setImportRowsMap] = useState(new Map<string, ItemRow>());
   const [importEpisodeGuid, setImportEpisodeGuid] = useState<string>();
   const [importSegmentGuids, setImportSegmentGuids] = useState(new Set<string>());
+  const importEpisode = importRowsMap.get(importEpisodeGuid);
+  const importSegments = [...importSegmentGuids].map((guid) => importRowsMap.get(guid));
+  const allImports = [
+    ...(importEpisode ? [importEpisode] : []),
+    ...importSegments
+  ];
+  const haveImports = allImports.find(({ data: { existingPost } }) => !existingPost);
+  const haveUpdates = allImports.find(({ data: { hasUpdatedAudio } }) => hasUpdatedAudio);
+  const buttonLabel = (haveImports && haveUpdates && 'Import & Update') || (haveImports && 'Import') || (haveUpdates && 'Update') || null;
+  console.log('Button Label', buttonLabel, haveImports, haveUpdates, [...allImports]);
   const playingAudioUrlInView = !![...(episodes || []), ...(segments || [])].find(({ enclosure }) => playingAudioUrl === enclosure.href);
-  const playingAudioUrlItemRow = [...importData.current.values()].find((itemRow) => itemRow.audioUrl === playingAudioUrl);
+  const playingAudioUrlItemRow = [...importRowsMap.values()].find((itemRow) => itemRow.audioUrl === playingAudioUrl);
   const datesData = [...apiData.values()].map(({ episodes, segments, date }) => {
     const allItems = [...(episodes || []), ...(segments || [])];
     const hasImportableItems = !!allItems.find(({ existingPost }) => !existingPost);
@@ -142,6 +152,20 @@ export function SelectingScreen() {
   const playingAudioClassName = 'ring-1 ring-offset-2 ring-orange-500 !rounded-full';
   const getEpisodesController = useRef<AbortController>();
   const getSegmentController = useRef<AbortController>();
+
+  /**
+   * Clean up stuff.
+   */
+  useEffect(() => () => {
+    // Clear refresh timeout.
+    if (publishDateDataRefreshTimeout.current) {
+      clearTimeout(publishDateDataRefreshTimeout.current);
+    }
+
+    // Abort data fetches.
+    getEpisodesController.current?.abort();
+    getSegmentController.current?.abort();
+  }, []);
 
   useEffect(() => {
     if (apiData && !publishDateData) {
@@ -309,29 +333,31 @@ export function SelectingScreen() {
 
   function handleRowChange(newData: ItemRow) {
     console.log('New row data', newData);
-    importData.current.set(newData.guid, newData);
+    setImportRowsMap((currentMap) => {
+      currentMap.set(newData.guid, newData);
+      return currentMap;
+    });
   }
 
   function handleImportClick() {
     updateAppData({
       importData: {
-        episode: importData.current.get(importEpisodeGuid),
-        segments: [...importSegmentGuids].map((guid) => importData.current.get(guid))
+        episode: importEpisode,
+        segments: importSegments
       }
     });
     nextStage();
   }
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className='overflow-clip'>
+      <CardHeader className='pb-0'>
         <CardTitle>Select Epsiode and Segments</CardTitle>
         <CardDescription className='max-w-[120ch]'>
             Select the Dovetail Publish Date of the episode and segments you want to import. If multiple episodes were publish on the date, select which episode to import. Deselect any segments that should not be imported for the selected episode.
         </CardDescription>
       </CardHeader>
-      <CardContent>
-
+      <CardContent className="flex justify-between sticky top-8 z-10 p-6 bg-card/60 backdrop-blur-md border-b shadow">
         <div className='flex gap-2 items-center'>
           <DatePicker
             disabled={loading}
@@ -390,10 +416,15 @@ export function SelectingScreen() {
             </Badge>
           )}
         </div>
+        {(haveImports || haveUpdates) && (
+          <Button size="lg" onClick={handleImportClick}> {buttonLabel} <ArrowRight /></Button>
+        )}
+      </CardContent>
+      <CardContent className='pt-6'>
 
         <RadioGroup defaultValue={importEpisodeGuid} onValueChange={(guid) => setImportEpisodeGuid(guid) }>
 
-          <Table className='mt-6 border'>
+          <Table className='border'>
             <TableHeader>
               <TableRow>
                 <TableHead className='w-1' />
@@ -409,7 +440,7 @@ export function SelectingScreen() {
                 !!episodes?.length ? episodes.map((episode) => {
                   const selected = episode.guid === importEpisodeGuid;
                   return (
-                    <ImportItemRow data={episode} rowData={importData.current.get(episode.guid)}
+                    <ImportItemRow data={episode} rowData={importRowsMap.get(episode.guid)}
                       importAs='episode'
                       selectInputComponent={<RadioGroupItem value={episode.guid} checked={selected} />}
                       selected={selected}
@@ -454,7 +485,7 @@ export function SelectingScreen() {
               !!segments?.length ? segments.sort(sortByEnclosureFilename).map((segment) => {
                 const selected = importSegmentGuids.has(segment.guid);
                 return (
-                  <ImportItemRow data={segment} rowData={importData.current.get(segment.guid)}
+                  <ImportItemRow data={segment} rowData={importRowsMap.get(segment.guid)}
                     importAs='segment'
                     selectInputComponent={(
                       <Checkbox value={segment.guid} checked={selected} onCheckedChange={(checked) => {
@@ -495,9 +526,6 @@ export function SelectingScreen() {
           </TableBody>
         </Table>
       </CardContent>
-      <CardFooter className="flex justify-end">
-        <Button size="lg" onClick={handleImportClick}>Button</Button>
-      </CardFooter>
     </Card>
   )
 }

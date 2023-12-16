@@ -38,7 +38,7 @@ function tw_license_taxonomy() {
 	$args   = array(
 		'labels'              => $labels,
 		'hierarchical'        => false,
-		'public'              => true,
+		'public'              => false,
 		'show_ui'             => true,
 		'show_admin_column'   => false,
 		'show_in_nav_menus'   => true,
