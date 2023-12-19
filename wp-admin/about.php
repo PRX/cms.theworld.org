@@ -49,36 +49,11 @@ require_once ABSPATH . 'wp-admin/admin-header.php';
 				<p>
 					<?php
 					printf(
-						/* translators: 1: WordPress version number, 2: Plural number of bugs. More than one security issue. */
-						_n(
-							'<strong>Version %1$s</strong> addressed some security issues and fixed %2$s bug.',
-							'<strong>Version %1$s</strong> addressed some security issues and fixed %2$s bugs.',
-							41
-						),
-						'6.3.2',
-						'41'
-					);
-					?>
-					<?php
-					printf(
-						/* translators: %s: HelpHub URL. */
-						__( 'For more information, see <a href="%s">the release notes</a>.' ),
-						sprintf(
-							/* translators: %s: WordPress version. */
-							esc_url( __( 'https://wordpress.org/support/wordpress-version/version-%s/' ) ),
-							sanitize_title( '6.3.2' )
-						)
-					);
-					?>
-				</p>
-				<p>
-					<?php
-					printf(
 						/* translators: 1: WordPress version number, 2: Plural number of bugs. */
 						_n(
 							'<strong>Version %1$s</strong> addressed %2$s bug.',
 							'<strong>Version %1$s</strong> addressed %2$s bugs.',
-							10
+							4
 						),
 						'6.4.1',
 						'4'
@@ -92,6 +67,31 @@ require_once ABSPATH . 'wp-admin/admin-header.php';
 							/* translators: %s: WordPress version. */
 							esc_url( __( 'https://wordpress.org/support/wordpress-version/version-%s/' ) ),
 							sanitize_title( '6.4.1' )
+						)
+					);
+					?>
+				</p>
+				<p>
+					<?php
+					printf(
+						/* translators: 1: WordPress version number, 2: Plural number of bugs. */
+						_n(
+							'<strong>Version %1$s</strong> addressed a security issue and fixed %2$s bug.',
+							'<strong>Version %1$s</strong> addressed a security issue and fixed %2$s bugs.',
+							7
+						),
+						'6.4.2',
+						'7'
+					);
+					?>
+					<?php
+					printf(
+						/* translators: %s: HelpHub URL. */
+						__( 'For more information, see <a href="%s">the release notes</a>.' ),
+						sprintf(
+							/* translators: %s: WordPress version. */
+							esc_url( __( 'https://wordpress.org/support/wordpress-version/version-%s/' ) ),
+							sanitize_title( '6.4.2' )
 						)
 					);
 					?>
@@ -297,7 +297,7 @@ require_once ABSPATH . 'wp-admin/admin-header.php';
 				<p style="margin-top:calc(var(--gap) / 2);">
 					<?php
 					printf(
-						/* translators: %s: WordPress Field Guide link. */
+						/* translators: 1: WordPress Field Guide link, 2: WordPress version number. */
 						__( 'Explore the <a href="%1$s">WordPress %2$s Field Guide</a>. Learn about the changes in this release with detailed developer notes to help you build with WordPress.' ),
 						__( 'https://make.wordpress.org/core/2023/10/23/wordpress-6-4-field-guide/' ),
 						'6.4'
