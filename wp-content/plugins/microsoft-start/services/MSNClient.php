@@ -14,7 +14,7 @@ class MSNClient
 
     static function filter_empty_notification($item)
     {
-        $signal_arr = ['Signal_423', 'Signal_424', 'Signal_425', 'Signal_426', 'Signal_427', 'Signal_454', 'Signal_508', 'Signal_482', 'Signal_428', 'Signal_429', 'Signal_430', 'Signal_431', 'Signal_432', 'Signal_483', 'Signal_433', 'Signal_455', 'Signal_456', 'Signal_474', 'Signal_475', 'Signal_489', 'Signal_582', 'Signal_583'];
+        $signal_arr = ['Signal_423', 'Signal_424', 'Signal_425', 'Signal_426', 'Signal_427', 'Signal_454', 'Signal_508', 'Signal_482', 'Signal_428', 'Signal_429', 'Signal_430', 'Signal_431', 'Signal_432', 'Signal_483', 'Signal_433', 'Signal_455', 'Signal_456', 'Signal_474', 'Signal_475', 'Signal_489', 'Signal_582', 'Signal_583', 'Signal_653', 'Signal_654'];
         return isset($item['notificationTypeId']) ? array_search($item['notificationTypeId'], $signal_arr) : false;
     }
 
@@ -53,15 +53,29 @@ class MSNClient
         return static::BaseRequest("thirdparty/feeds?handler=suspend", $config);
     }
 
-    static function account_settings()
+    static function account_settings($source)
     {
-
+        if (Options::get_auth_token() == null) {
+            return null;
+        }
+        if ($source == "set_client" || $source == "set_token") {
+            // if the last request is within 60 seconds, return the cached settings
+            // but if the request is come from dashboard page, we don't want to return cached settings
+            $lastSettings = json_decode(Options::get_profile());
+            if (isset($lastSettings->timeStamp) && (time() - $lastSettings->timeStamp < 60)) {
+                return $lastSettings;
+            }
+        }
+        LogService::add_log(LoggerTelemetryType::Log, LoggerFeatureSet::PartnerOnboarding, "request account/settings", array(
+            'source' => $source
+        ));
         $response = static::BaseRequest("account/settings?applicationVersion=" . MSPH_PLUGIN_VERSION);
         if (!$response || $response['response']['code'] != 200) {
             return null;
         }
 
         $settings = json_decode($response['body']);
+        $settings->timeStamp = time();
         if ($settings) {
             Options::set_profile(json_encode($settings));
             $lifeCycleStatus = $settings->lifeCycleStatus;
@@ -197,7 +211,9 @@ class MSNClient
                 ));
             }
         }
-        if (Options::get_status() === 'active' && Options::get_publishOption() === 'editor' && !Options::get_dismissed_publish_to_MSPH_notification() && ($profileFromDb->partnerMetadata->paymentStatus->stripeAccountStatus ?? null) === 1) {
+        $accountSettings = json_decode(Options::get_profile());
+        $suspended = $accountSettings->lifeCycleStatus === 1 || $accountSettings->partnerStatus === 4;
+        if (!$suspended && Options::get_status() === 'active' && Options::get_publishOption() === 'editor' && !Options::get_dismissed_publish_to_MSPH_notification() && ($profileFromDb->partnerMetadata->paymentStatus->stripeAccountStatus ?? null) === 1) {
             // Only show notification when there is new article have not been publish to MSPH and the publish artile notification have not been dismissed.
             $posts = get_posts([
                 'post_type' => 'post',

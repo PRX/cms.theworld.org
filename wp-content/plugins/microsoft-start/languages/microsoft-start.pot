@@ -2,16 +2,16 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Microsoft Start 2.7.11\n"
+"Project-Id-Version: Microsoft Start 2.7.13\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/__translate_cache\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-08-18T07:52:09+00:00\n"
+"POT-Creation-Date: 2023-11-22T10:27:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.6.0\n"
+"X-Generator: WP-CLI 2.8.1\n"
 
 #. Plugin Name of the plugin
 #. translators: Name of plugin, appears in menu bar and edit bar, or in connection page when user tries to connect
@@ -51,38 +51,38 @@ msgid "Partner Hub"
 msgstr ""
 
 #. translators: Notification of update plugin
-#: services/MSNClient.php:194
+#: services/MSNClient.php:208
 msgid "A new version of Microsoft Start is available."
 msgstr ""
 
 #. translators: Update button in banner
-#: services/MSNClient.php:195
+#: services/MSNClient.php:209
 msgid "Update Now"
 msgstr ""
 
 #. translators: Notification of publish post
-#: services/MSNClient.php:219
+#: services/MSNClient.php:235
 msgid "Some of your posts haven't been submitted to Microsoft Start yet."
 msgstr ""
 
 #. translators: Batch submit button
-#: services/MSNClient.php:220
+#: services/MSNClient.php:236
 #: assets/js/dashboard.js:1
 msgid "Submit all"
 msgstr ""
 
 #. translators: Submit button in banner
-#: services/MSNClient.php:220
+#: services/MSNClient.php:236
 msgid "Edit and submit one by one"
 msgstr ""
 
 #. translators: Notification of batch submit completed
-#: services/MSNClient.php:232
+#: services/MSNClient.php:248
 msgid "Batch submission completed!"
 msgstr ""
 
 #. translators: View details button in banner
-#: services/MSNClient.php:233
+#: services/MSNClient.php:249
 msgid "View details"
 msgstr ""
 
@@ -185,6 +185,12 @@ msgstr ""
 #: assets/js/callback.js:1
 #: assets/js/dashboard.js:1
 msgid "Account didn’t pass review:{delimiter} There seems to be an error in the information submitted. To proceed with next steps, please check the data submitted."
+msgstr ""
+
+#. translators: Detail display info about notification for partner account be suspended.
+#: assets/js/callback.js:1
+#: assets/js/dashboard.js:1
+msgid "This brand is currently suspended by Microsoft Start.{delimiter} Content, settings, and feed can still be viewed, but can't be changed."
 msgstr ""
 
 #. translators: Notification button
@@ -427,6 +433,12 @@ msgstr ""
 msgid "{current} of {total}"
 msgstr ""
 
+#. translators: Tooltip when brand or partner status is suspended
+#: assets/js/dashboard.js:1
+#: assets/js/status.js:1
+msgid "Access denied"
+msgstr ""
+
 #. translators: Empty post text
 #: assets/js/dashboard.js:1
 msgid "Nothing to see here right now"
@@ -470,6 +482,26 @@ msgstr ""
 #. translators: Post's publish time in wordpress in batch submission table
 #: assets/js/dashboard.js:1
 msgid "Originally published"
+msgstr ""
+
+#. translators: Notice title when unable to submit posts
+#: assets/js/dashboard.js:1
+msgid "Unable to submit posts"
+msgstr ""
+
+#. translators: Alert message in batch submission page
+#: assets/js/dashboard.js:1
+msgid "Your brand is currently suspended by Microsoft Start. You can't publish content to Microsoft Start."
+msgstr ""
+
+#. translators: Notice description when user use the feed mode but open the batch submission page
+#: assets/js/dashboard.js:1
+msgid "You're currently using 'Publish by feed'. Go to 'Settings' then select 'Publish by editor' to use batch submission."
+msgstr ""
+
+#. translators: Text in toast when user click the submit button but don't select any post
+#: assets/js/dashboard.js:1
+msgid "You don't have any posts to be submitted to Microsoft Start"
 msgstr ""
 
 #. translators: Title of Batch submission
@@ -517,21 +549,6 @@ msgstr ""
 #. translators: Title in batch all dialog
 #: assets/js/dashboard.js:1
 msgid "Submit $1 post(s) to Microsoft Start?"
-msgstr ""
-
-#. translators: Text in toast when user click the submit button but don't select any post
-#: assets/js/dashboard.js:1
-msgid "You don't have any posts to be submitted to Microsoft Start"
-msgstr ""
-
-#. translators: Notice title when unable to submit posts
-#: assets/js/dashboard.js:1
-msgid "Unable to submit posts"
-msgstr ""
-
-#. translators: Notice description when user use the feed mode but open the batch submission page
-#: assets/js/dashboard.js:1
-msgid "You're currently using 'Publish by feed'. Go to 'Settings' then select 'Publish by editor' to use batch submission."
 msgstr ""
 
 #. translators: Submission progress
@@ -950,14 +967,14 @@ msgstr ""
 msgid "Disconnect"
 msgstr ""
 
-#. translators: text on editor mode toggle
+#. translators: status message appearing when user click save in feed mode
 #: assets/js/dashboard.js:1
-msgid "Publish by editor"
+msgid "Success"
 msgstr ""
 
-#. translators: text on feed mode toggle
+#. translators: status message appearing when user click save in feed mode
 #: assets/js/dashboard.js:1
-msgid "Publish by feed"
+msgid "Processing"
 msgstr ""
 
 #. translators: message indicating save result
@@ -968,6 +985,33 @@ msgstr ""
 #. translators: message indicating save result
 #: assets/js/dashboard.js:1
 msgid "Something went wrong."
+msgstr ""
+
+#. translators: Error message on changing feed settings when feed is suspended
+#: assets/js/dashboard.js:1
+msgid "This feed is suspended by Microsoft Start for not meeting our {publishingGuideline}. You can't make any changes. Contact MSPH support for more information."
+msgstr ""
+
+#. translators: Error message on changing feed settings when feed is deleted
+#: assets/js/dashboard.js:1
+msgid "This feed has been deleted by Microsoft Start for not meeting our {publishingGuideline}. You can't make changes. Contact MSPH support for more information."
+msgstr ""
+
+#. translators: text on editor mode toggle
+#: assets/js/dashboard.js:1
+msgid "Publish by editor"
+msgstr ""
+
+#. translators: text on feed mode toggle
+#: assets/js/dashboard.js:1
+msgid "Publish by feed"
+msgstr ""
+
+#. translators: Link text for publishing guidelines
+#: assets/js/dashboard.js:1
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "publishing guidelines"
 msgstr ""
 
 #. translators: settings title
@@ -993,16 +1037,6 @@ msgstr ""
 #. translators: text about setting publish methods
 #: assets/js/dashboard.js:1
 msgid "Automatically publish new posts to Microsoft"
-msgstr ""
-
-#. translators: status message appearing when user click save in feed mode
-#: assets/js/dashboard.js:1
-msgid "Processing"
-msgstr ""
-
-#. translators: status message appearing when user click save in feed mode
-#: assets/js/dashboard.js:1
-msgid "Success"
 msgstr ""
 
 #. translators: text on save button
@@ -1260,12 +1294,6 @@ msgstr ""
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
 msgid "The following does not meet our %s."
-msgstr ""
-
-#. translators: Link text for publishing guidelines
-#: assets/js/editorSidebar.js:1
-#: assets/js/status.js:1
-msgid "publishing guidelines"
 msgstr ""
 
 #. translators: message for failed moderation
@@ -1588,6 +1616,36 @@ msgstr ""
 msgid "Video processing has timed out. Resubmit or contact us for help."
 msgstr ""
 
+#. translators: one of reject content published reason message.
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "At least one image depicts suicide or self-harm."
+msgstr ""
+
+#. translators: one of reject content published reason message.
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "Content did not pass review."
+msgstr ""
+
+#. translators: one of reject content published reason message.
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "Content is a duplicate of a previously published version."
+msgstr ""
+
+#. translators: one of reject content published reason message.
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "Content contains invalid HTML encoding."
+msgstr ""
+
+#. translators: one of reject content published reason message.
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "Each image side must be at least 400px in length."
+msgstr ""
+
 #. translators: post status
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
@@ -1646,6 +1704,12 @@ msgstr ""
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
 msgid "To use Microsoft Start Partner Hub, connect your WordPress website"
+msgstr ""
+
+#. translators: Alert message in editor sidebar
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "Your brand was suspended by Microsoft Start and content can't be published."
 msgstr ""
 
 #. translators: Account not approved description in editor sidebar

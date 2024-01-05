@@ -45,7 +45,7 @@ class Dashboard extends Page
                     MSPH_PLUGIN_VERSION
                 );
 
-                $accountSettings = MSNClient::account_settings();
+                $accountSettings = MSNClient::account_settings("dashboardPage");
                 wp_localize_script(
                     $page,
                     'msn_dashboard_render_status',

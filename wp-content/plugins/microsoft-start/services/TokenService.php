@@ -14,7 +14,7 @@ class TokenService
         Options::set_status('pending');
         Options::set_auth_token(null);
         Options::set_CID(null);
-        $settings = MSNClient::account_settings();
+        $settings = MSNClient::account_settings("set_client");
         LogService::add_log(LoggerTelemetryType::Log, LoggerFeatureSet::PartnerOnboarding, "Connect", array(
             'appId' => $appId
         ));
@@ -83,7 +83,7 @@ class TokenService
         // fetch latest account setting to see if the account passed review / account has added payment
         $profileFromDb = json_decode(Options::get_profile());
         if (Options::get_status() == 'pending' || ($profileFromDb->partnerMetadata->paymentStatus->stripeAccountStatus ?? null) === 0) {
-            $accountSettings = MSNClient::account_settings();
+            $accountSettings = MSNClient::account_settings("set_token");
         }
     }
 

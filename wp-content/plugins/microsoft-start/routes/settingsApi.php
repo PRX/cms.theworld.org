@@ -47,19 +47,19 @@ class settingsApi extends ApiController
                 if($parameters['option']){
                     if($parameters['publishOption'] === "feed"){
                         $response = MSNClient::upsert_feed($this->getPayload($parameters['feedConfig']));
-                        if (!$response || !$this->isRequestSuccess($response)) return new WP_REST_Response(['status' => 'error'], 500);
+                        if (!$response || !$this->isRequestSuccess($response)) return new WP_REST_Response(['status' => 'error', 'message' => 'upsert_feed error', 'body' => json_decode($response['body'])], 500);
                         Options::set_hasFeed(true);
                         Options::set_feedConfig($parameters['feedConfig']);
                     }else{
                         if ($hasFeed) {
                             //suspend current feed
                             $response = MSNClient::suspend_feed();
-                            if (!$response || !$this->isRequestSuccess($response)) return new WP_REST_Response(['status' => 'error'], 500);
+                            if (!$response || !$this->isRequestSuccess($response)) return new WP_REST_Response(['status' => 'error', 'message' => 'suspend_feed error', 'body' => json_decode($response['body'])], 500);
                         }
                         if (array_key_exists("editorConfig",$parameters)){
                             Options::set_category($parameters['editorConfig']['category']);
                         } else {
-                            return new WP_REST_Response(['status' => 'error'], 500);
+                            return new WP_REST_Response(['status' => 'error', 'message' => 'set editorConfig error'], 500);
                         }
                     }
                     $this->setValueInDatabse($parameters);
@@ -67,7 +67,7 @@ class settingsApi extends ApiController
                     if ($hasFeed) {
                         //suspend current feed
                         $response = MSNClient::suspend_feed();
-                        if (!$response || !$this->isRequestSuccess($response)) return new WP_REST_Response(['status' => 'error'], 500);
+                        if (!$response || !$this->isRequestSuccess($response)) return new WP_REST_Response(['status' => 'error', 'message' => 'suspend_feed error', 'body' => json_decode($response['body'])], 500);
                     }
                     Options::set_enable($parameters['option']);
                 }
