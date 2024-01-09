@@ -1,15 +1,73 @@
 import type { ItemRow } from '@/types/state/itemRow';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { AppContext } from '@/lib/contexts/AppContext';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import ConfettiExplosion from 'react-confetti-explosion';
+import axios, { AxiosResponse } from 'axios';
+import { RotateCw } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { AlertTriangle, RotateCw } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ImportItemRow } from '@/components/ImportItemRow';
 import { Progress } from '@/components/ui/progress';
-import ConfettiExplosion from 'react-confetti-explosion';
+import { AppContext } from '@/lib/contexts/AppContext';
+import { cn } from '@/lib/utils';
+import { ApiEpisode } from '@/types/api/api';
+import { Maybe } from '@/types/api/graphql';
 
 type ImportDataMap = Map<string, ItemRow>;
+
+type TaxonomiesProps = {
+  [k: string]: (number | string)[]
+};
+
+async function postApiData(endPoint: string, body: object): Promise<Maybe<ApiEpisode>> {
+  const apiUrlBase = window?.appLocalizer.apiUrl;
+  const apiUrl = new URL(endPoint, apiUrlBase);
+  const options = {
+    headers: {
+      'X-Wp-Nonce': window.appLocalizer.nonce
+    }
+  };
+
+  return axios.post<ApiEpisode>(apiUrl.toString(), body, options)
+    .then((res) => {
+
+      console.log('POST OK', res);
+
+      return res.data || null;
+    })
+    .catch((res) => {
+      console.log('POST ERROR', res);
+      return null;
+    });
+}
+
+function getTaxonomiesProps(row: ItemRow) {
+  const { terms, contributors } = row;
+  const props = {} as TaxonomiesProps;
+
+  for (const term of (terms || [])) {
+    if (!term.taxonomy) continue;
+
+    const {id, name} = term;
+
+    props[term.taxonomy.name] = [
+      ...(props[term.taxonomy.name] || []),
+      id || name
+    ]
+  }
+
+  for (const contributor of (contributors || [])) {
+    const taxonomyName = 'contributor';
+    const {id, name} = contributor;
+
+    props[taxonomyName] = [
+      ...(props[taxonomyName] || []),
+      id || name
+    ]
+  }
+
+  return props;
+}
 
 export function ImportScreen() {
   const importIsRunning = useRef(false);
@@ -35,167 +93,101 @@ export function ImportScreen() {
   const [progress, setProgress] = useState(0);
   const stages: ((data: ImportDataMap, imported: ImportDataMap) => Promise<ImportDataMap>)[] = [];
 
-  console.log(episode, segments);
-
-  if (segments?.length) {
-    // Add stages to import or update segments.
-    segments.forEach(({ data }) => {
-      const doAudioImport = !data.existingAudio;
-      const doAudioUpdate = !doAudioImport && data.hasUpdatedAudio;
-      const doSegmentImport = !data.existingPost;
-
-      if (doAudioImport) {
-        stages.push(((guid) => async (dataMap, imported) => {
-          console.log()
-          const segment = dataMap.get(guid);
-          const message = `Importing Segment Audio: ${segment.filename}`;
-
-          console.log(message, segment, dataMap);
-
-          setImportMessage(() => message);
-          setImportingGuid(() => guid);
-
-          await new Promise<void>((resolve) => {
-            setTimeout(() => {
-              resolve();
-            }, 2000);
-          });
-
-          // imported.set(guid, segment);
-
-          return imported;
-        })(data.guid))
-      } else if (doAudioUpdate) {
-        stages.push(((guid) => async (dataMap, imported) => {
-          const segment = dataMap.get(guid);
-          const message = `Updating Segment Audio: ${segment.filename}`;
-
-          console.log(message, segment, dataMap);
-
-          setImportMessage(() => message);
-          setImportingGuid(() => guid);
-
-          await new Promise<void>((resolve) => {
-            setTimeout(() => {
-              resolve();
-            }, 2000);
-          });
-
-          // imported.set(guid, segment);
-
-          return imported;
-        })(data.guid))
-      }
-
-      if (doSegmentImport) {
-        stages.push(((guid) => async (dataMap, imported) => {
-          const segment = dataMap.get(guid);
-          const message = `Importing Segment: "${segment.title}"`;
-
-          console.log(message, segment, dataMap);
-
-          setImportMessage(() => message);
-          setImportingGuid(() => guid);
-
-          await new Promise<void>((resolve) => {
-            setTimeout(() => {
-              resolve();
-            }, 2000);
-          });
-
-          imported.set(guid, segment);
-
-          return imported;
-        })(data.guid))
-      }
-    });
-  }
-
-  if (episode) {
-    const { data } = episode;
-    const doAudioImport = !data.existingAudio;
-    const doAudioUpdate = !doAudioImport && data.hasUpdatedAudio;
-    const doEpisodeImport = !data.existingPost;
-
-    if (doAudioImport) {
-      stages.push(((guid) => async (dataMap, imported) => {
-        const episode = dataMap.get(guid);
-        const message = `Importing Episode Audio: "${episode.filename}"`;
-
-        console.log(message, episode, dataMap);
-
-        setImportMessage(() => message);
-        setImportingGuid(() => guid);
-
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            resolve();
-          }, 2000);
-        });
-
-        // imported.set(guid, episode);
-
-        return imported;
-      })(data.guid))
-    } else if (doAudioUpdate) {
-      stages.push(((guid) => async (dataMap, imported) => {
-        const episode = dataMap.get(guid);
-        const message = `Updating Episode Audio: "${episode.filename}"`;
-
-        console.log(message, episode, dataMap);
-
-        setImportMessage(() => message);
-        setImportingGuid(() => guid);
-
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            resolve();
-          }, 2000);
-        });
-
-        // imported.set(guid, episode);
-
-        return imported;
-      })(data.guid))
-    }
-
-    if (doEpisodeImport) {
-      stages.push(((guid) => async (dataMap, imported) => {
-        const episode = dataMap.get(guid);
-        const message = `Importing Episode: "${episode.title}"`;
-
-        console.log(message, episode, dataMap);
-
-        setImportMessage(() => message);
-        setImportingGuid(() => guid);
-
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            resolve();
-          }, 2000);
-        });
-
-        imported.set(guid, episode);
-
-        return imported;
-      })(data.guid))
-    }
-
-    // Add stage to attach update audio to attach it to the episode.
-  }
-
   function LoadingIcon({ guid }: { guid: string }) {
-    const isLoading = !importedMap?.get(guid);
+    const isLoading = !importedMap?.get(guid)?.data.existingPost;
+    const className = cn('text-primary', {
+      'animate-spin': importingGuid === guid
+    })
 
     if (!isLoading) return null;
 
     return (
-      <RotateCw className='text-primary animate-spin' />
+      <RotateCw className={className} />
     );
   }
 
   useEffect(() => {
     if (importIsRunning.current) return;
+
+    console.log('Queueing stages...', episode, segments);
+
+    // Add stages to import or update segments.
+    if (segments?.length) {
+      segments.forEach(({ guid: segmentGuid }) => {
+          stages.push(((guid) => (dataMap, imported) => {
+            const segment = dataMap.get(guid);
+            const { data, title } = segment;
+            const doEpisodeImport = !data.existingPost;
+            const message = `${doEpisodeImport ? 'Importing' : 'Updating'} Segment: "${title}"`;
+
+            console.log(message, segment, dataMap, imported);
+
+            setImportMessage(() => message);
+            setImportingGuid(() => guid);
+
+            const promise = new Promise<ImportDataMap>(async (resolve) => {
+              const body = {
+                terms: getTaxonomiesProps(segment)
+              };
+              const { id } = segment.data;
+              const data = await postApiData(`segments/${id}/import`, body);
+
+              if (data) {
+                imported.set(guid, {
+                  ...segment,
+                  data: data || segment.data
+                });
+
+                console.log('updated imported map', imported);
+              }
+
+              resolve(imported);
+            });
+
+            return promise;
+          })(segmentGuid))
+      });
+    }
+
+    // Add stage to import or update episode.
+    if (episode) {
+      stages.push(((guid) => (dataMap, imported) => {
+        const episode = dataMap.get(guid);
+        const { data, title } = episode;
+        const doEpisodeImport = !data.existingPost;
+        const message = `${doEpisodeImport ? 'Importing' : 'Updating'} Episode: "${title}"`;
+
+        console.log(message, episode, dataMap);
+
+        setImportMessage(() => message);
+        setImportingGuid(() => guid);
+
+        const promise = new Promise<ImportDataMap>(async (resolve) => {
+          const importedSegments = segments.map(({guid: segmentGuid}) => imported.get(segmentGuid) || dataMap.get(segmentGuid))
+            .filter((segment) => !!segment?.data.existingPost)
+            .map(({ data: { existingPost: { databaseId } } }) => databaseId);
+          const body = {
+            terms: getTaxonomiesProps(episode),
+            segments: importedSegments
+          };
+          const { id } = episode.data;
+          const data = await postApiData(`episodes/${id}/import`, body)
+
+          if (data) {
+            imported.set(guid, {
+              ...episode,
+              data: data || episode.data
+            });
+
+            console.log('updated imported map', imported);
+          }
+
+          resolve(imported);
+        });
+
+        return promise;
+      })(episode.guid))
+    }
 
     importIsRunning.current = true;
 
@@ -210,11 +202,12 @@ export function ImportScreen() {
         const newImportedMap = await fn(importingDataMap, prevImportedMap);
         console.log('storing new data...', newImportedMap)
         current++;
-        setImportedMap(() => newImportedMap);
-        setProgress(() => current / max * 100);
+        setImportedMap(new Map(newImportedMap));
+        setProgress(current / max * 100);
         prevImportedMap = newImportedMap;
       }
       console.log('import complete...', prevImportedMap);
+      importIsRunning.current = false;
       setImportMessage(() => 'Import Complete! 🥳')
     })()
   }, []);
@@ -242,9 +235,9 @@ export function ImportScreen() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              <ImportItemRow data={(importedMap.get(episode.guid) || episode).data} rowData={episode}
+              <ImportItemRow rowData={importedMap.get(episode.guid) || episode}
                 importAs='episode'
-                selected
+                selected={importingGuid === episode.guid}
                 selectInputComponent={<LoadingIcon guid={episode.guid} />}
                 key={episode.guid}
               />
@@ -266,9 +259,9 @@ export function ImportScreen() {
             </TableHeader>
             <TableBody>
               {segments.map((segment) => (
-                <ImportItemRow data={(importedMap.get(segment.guid) || segment).data} rowData={segment}
-                  importAs='episode'
-                  selected
+                <ImportItemRow rowData={importedMap.get(segment.guid) || segment}
+                  importAs='segment'
+                  selected={importingGuid === segment.guid}
                   selectInputComponent={<LoadingIcon guid={segment.guid} />}
                   key={segment.guid}
                 />

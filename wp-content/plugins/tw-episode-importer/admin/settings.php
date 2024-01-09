@@ -58,9 +58,16 @@ function tw_episode_importer_settings_init() {
 		TW_EPISODE_IMPORTER_SETTINGS_SECTION // section on which to show settings.
 	);
 	add_settings_field(
-		TW_EPISODE_IMPORTER_SETTINGS_API . '-' . TW_EPISODE_IMPORTER_AUTHOR_USER_ID, // id of the settings field.
-		'Author of Created Posts', // title of the settings field.
+		TW_EPISODE_IMPORTER_SETTINGS_API . '-' . TW_EPISODE_IMPORTER_AUTHOR_USER_ID_KEY, // id of the settings field.
+		'Author of Created Content', // title of the settings field.
 		'tw_episode_importer_settings_author_user_id_cb', // callback function.
+		TW_EPISODE_IMPORTER_SETTINGS_PAGE, // page on which settings display.
+		TW_EPISODE_IMPORTER_SETTINGS_SECTION // section on which to show settings.
+	);
+	add_settings_field(
+		TW_EPISODE_IMPORTER_SETTINGS_API . '-' . TW_EPISODE_IMPORTER_PROGRAM_ID_KEY, // id of the settings field.
+		'Program of Created Content', // title of the settings field.
+		'tw_episode_importer_settings_program_id_cb', // callback function.
 		TW_EPISODE_IMPORTER_SETTINGS_PAGE, // page on which settings display.
 		TW_EPISODE_IMPORTER_SETTINGS_SECTION // section on which to show settings.
 	);
@@ -83,7 +90,10 @@ function tw_episode_importer_sanitize_api_settings( $input ) {
 	$sanitized_input[ TW_EPISODE_IMPORTER_SEGMENTS_API_URL_KEY ] = wp_http_validate_url( $sanitized_input[ TW_EPISODE_IMPORTER_SEGMENTS_API_URL_KEY ] );
 
 	// Sanitize Author User ID.
-	$sanitized_input[ TW_EPISODE_IMPORTER_AUTHOR_USER_ID ] = $input[ TW_EPISODE_IMPORTER_AUTHOR_USER_ID ];
+	$sanitized_input[ TW_EPISODE_IMPORTER_AUTHOR_USER_ID_KEY ] = $input[ TW_EPISODE_IMPORTER_AUTHOR_USER_ID_KEY ];
+
+	// Sanitize Program ID.
+	$sanitized_input[ TW_EPISODE_IMPORTER_PROGRAM_ID_KEY ] = $input[ TW_EPISODE_IMPORTER_PROGRAM_ID_KEY ];
 
 	if ( ! $sanitized_input[ TW_EPISODE_IMPORTER_EPISODES_API_URL_KEY ] ) {
 		$sanitized_input[ TW_EPISODE_IMPORTER_EPISODES_API_URL_KEY ] = '';
@@ -120,7 +130,16 @@ function tw_episode_importer_settings_segments_api_url_cb() {
  * @return void
  */
 function tw_episode_importer_settings_author_user_id_cb() {
-	tw_episode_importer_settings_render_user_field_input( TW_EPISODE_IMPORTER_AUTHOR_USER_ID );
+	tw_episode_importer_settings_render_user_field_input( TW_EPISODE_IMPORTER_AUTHOR_USER_ID_KEY );
+}
+
+/**
+ * Render Program ID setting value.
+ *
+ * @return void
+ */
+function tw_episode_importer_settings_program_id_cb() {
+	tw_episode_importer_settings_render_taxonomy_field_input( TW_EPISODE_IMPORTER_PROGRAM_ID_KEY, 'program' );
 }
 
 /**
@@ -156,6 +175,31 @@ function tw_episode_importer_settings_render_user_field_input( $option_key ) {
 			'selected'         => $value,
 			'include_selected' => true,
 			'show_option_none' => 'Select a user...',
+		)
+	);
+}
+
+/**
+ * Render taxonomy input HTML.
+ *
+ * @param string $option_key Key name to store value under.
+ * @param string $taxonomy Name of taxonomy.
+ * @return void
+ */
+function tw_episode_importer_settings_render_taxonomy_field_input( $option_key, $taxonomy = 'category' ) {
+	$options = get_option( TW_EPISODE_IMPORTER_SETTINGS_API );
+	$id      = TW_EPISODE_IMPORTER_SETTINGS_API . '-' . $option_key;
+	$value   = $options[ $option_key ];
+
+	wp_dropdown_categories(
+		array(
+			'id'               => $id,
+			'name'             => TW_EPISODE_IMPORTER_SETTINGS_API . '[' . $option_key . ']',
+			'taxonomy'         => $taxonomy,
+			'orderby'          => 'name',
+			'selected'         => $value,
+			'include_selected' => true,
+			'show_option_none' => "Select a {$taxonomy}...",
 		)
 	);
 }

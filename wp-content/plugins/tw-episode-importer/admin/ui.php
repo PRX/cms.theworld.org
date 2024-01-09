@@ -31,16 +31,21 @@ add_action( 'admin_menu', 'tw_episode_importer_admin_page' );
  * @return void
  */
 function tw_episode_importer_admin_page_html() {
+	$options = get_option( TW_EPISODE_IMPORTER_SETTINGS_API );
+
 	wp_enqueue_style( 'tw-episode-importer-admin-ui', TW_EPISODE_IMPORTER_URL . 'admin/ui/ui.css', array(), wp_rand() );
 	wp_enqueue_script( 'tw-episode-importer-admin-ui', TW_EPISODE_IMPORTER_URL . 'admin/ui/dist/bundle.js', array(), wp_rand(), true );
 	wp_localize_script(
 		'tw-episode-importer-admin-ui',
 		'appLocalizer',
 		array(
-			'appContainerId' => TW_EPISODE_IMPORTER_APP_CONTAINER_ID,
-			'apiUrl'         => home_url( '/wp-json/' . TW_API_ROUTE_BASE . '/' . TW_EPISODE_IMPORTER_API_ENDPOINT . '/' ),
-			'gqlUrl'         => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
-			'nonce'          => wp_create_nonce( 'wp_rest' ),
+			'appContainerId'  => TW_EPISODE_IMPORTER_APP_CONTAINER_ID,
+			'apiUrl'          => home_url( '/wp-json/' . TW_API_ROUTE_BASE . '/' . TW_EPISODE_IMPORTER_API_ENDPOINT . '/' ),
+			'restUrl'         => home_url( '/wp-json/wp/v2/' ),
+			'gqlUrl'          => trailingslashit( site_url() ) . 'index.php?' . \WPGraphQL\Router::$route,
+			'nonce'           => wp_create_nonce( 'wp_rest' ),
+			'importAuthorId'  => $options[ TW_EPISODE_IMPORTER_AUTHOR_USER_ID_KEY ],
+			'importProgramId' => $options[ TW_EPISODE_IMPORTER_PROGRAM_ID_KEY ],
 		)
 	);
 

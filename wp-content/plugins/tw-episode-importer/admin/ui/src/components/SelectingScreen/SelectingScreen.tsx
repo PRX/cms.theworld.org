@@ -2,7 +2,7 @@ import type { ApiData, ApiEpisode } from '@/types/api/api';
 import type { ItemRow } from '@/types/state/itemRow';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios, { CanceledError } from 'axios';
-import { isSameMonth } from 'date-fns';
+import { isSameMonth, isSameDay } from 'date-fns';
 import { ArrowRight, ArrowRightToLine, FileQuestion, RefreshCw } from 'lucide-react';
 import { DatePicker } from '@/components/DatePicker';
 import { ImportItemRow } from '@/components/ImportItemRow';
@@ -41,15 +41,15 @@ async function getApiData(publishDate?: Date, beforeDate?: Date, noCache?: boole
     headers: {
       'X-Wp-Nonce': window.appLocalizer.nonce
     }
-  }
+  };
   const episodesOptions = {
     ...options,
     ...(controllers?.episodes && { signal: controllers.episodes.signal })
-  }
+  };
   const segmentsOptions = {
     ...options,
     ...(controllers?.episodes && { signal: controllers.episodes.signal })
-  }
+  };
 
   if (noCache) {
     params.set('cb', `${(new Date()).getUTCSeconds()}`);
@@ -89,8 +89,8 @@ export function SelectingScreen() {
   const [publishDate, setPublishDate] = useState(new Date());
   const [month, setMonth] = useState(today);
   const publishDateKey = formatDateKey(publishDate);
-  const [apiData, setApiData] = useState(new Map<string, ApiData>());
-  const publishDateData = apiData.get(publishDateKey);
+  const [apiData, setApiData] = useState<Map<string, ApiData>>();
+  const publishDateData = apiData?.get(publishDateKey);
   const publishDateDataRefreshTimeout = useRef<ReturnType<typeof setTimeout>>();
   const { episodes, segments } = publishDateData || {};
   const [loading, setLoading] = useState(false);
@@ -109,7 +109,7 @@ export function SelectingScreen() {
   console.log('Button Label', buttonLabel, haveImports, haveUpdates, [...allImports]);
   const playingAudioUrlInView = !![...(episodes || []), ...(segments || [])].find(({ enclosure }) => playingAudioUrl === enclosure.href);
   const playingAudioUrlItemRow = [...importRowsMap.values()].find((itemRow) => itemRow.audioUrl === playingAudioUrl);
-  const datesData = [...apiData.values()].map(({ episodes, segments, date }) => {
+  const datesData = [...(apiData?.values() || [])].map(({ episodes, segments, date }) => {
     const allItems = [...(episodes || []), ...(segments || [])];
     const hasImportableItems = !!allItems.find(({ existingPost }) => !existingPost);
     const hasExistingItems = !!allItems.find(({ existingPost }) => !!existingPost);
@@ -168,19 +168,6 @@ export function SelectingScreen() {
   }, []);
 
   useEffect(() => {
-    if (apiData && !publishDateData) {
-
-      if (publishDateDataRefreshTimeout.current) {
-        clearTimeout(publishDateDataRefreshTimeout.current);
-      }
-
-      publishDateDataRefreshTimeout.current = setTimeout(() => {
-        fetchDateData(publishDate);
-      }, 60000)
-    }
-  }, [apiData, publishDateData, publishDate])
-
-  useEffect(() => {
     if (playingAudioUrlItemRow && !playingAudioUrlInView && !audioPlayerToast) {
       const { title, audioUrl, duration, data } = playingAudioUrlItemRow;
       const filename = audioUrl.split('/').pop();
@@ -202,7 +189,7 @@ export function SelectingScreen() {
   }, [playingAudioUrlItemRow, playingAudioUrlInView, audioPlayerToast]);
 
   useEffect(() => {
-    const dateData = apiData.get(publishDateKey);
+    const dateData = apiData?.get(publishDateKey);
 
     if (!dateData) return;
 
@@ -211,13 +198,13 @@ export function SelectingScreen() {
       const hasImportingSegment = !!dateData.segments?.find(({ enclosure, existingPost }) => enclosure.episodeKey === episodeKey && !existingPost);
       return isImportingOrUpdated || hasImportingSegment;
     });
-    if (importEpisode) {
-      setImportEpisodeGuid(importEpisode.guid);
-    }
+
+    setImportEpisodeGuid(importEpisode?.guid || null);
+
   }, [publishDate, publishDateKey, apiData]);
 
   useEffect(() => {
-    const dateData = apiData.get(publishDateKey);
+    const dateData = apiData?.get(publishDateKey);
 
     if (!dateData) return;
 
@@ -290,10 +277,28 @@ export function SelectingScreen() {
 
       console.log(controllers.episodes.signal.aborted, controllers.segments.signal.aborted)
 
-      setApiData(tempData);
+      if (tempData.size) {
+        setApiData(tempData);
+      }
+
       setLoading(!data && controllers.episodes.signal.aborted || controllers.segments.signal.aborted);
     })()
   }, [queryMonthDate]);
+
+  useEffect(() => {
+    console.log('set timeout?', publishDate, today, isSameDay(publishDate, today));
+
+    if (isSameDay(publishDate, today)) {
+
+      if (publishDateDataRefreshTimeout.current) {
+        clearTimeout(publishDateDataRefreshTimeout.current);
+      }
+
+      publishDateDataRefreshTimeout.current = setTimeout(() => {
+        fetchDateData(publishDate);
+      }, 60000)
+    }
+  }, [apiData, publishDateData, publishDate]);
 
   function fetchDateData(date: Date) {
     setLoading(true);
@@ -301,13 +306,14 @@ export function SelectingScreen() {
     (async () => {
       const dateKey = formatDateKey(date);
       const data = await getApiData(date, undefined, true);
-      const tempData = new Map<string, ApiData>(apiData);
 
       console.log('fetched api data for date', date, dateKey, data, queryMonthDate);
 
       if (data?.episodes?.length) {
-        tempData.set(dateKey, data);
-        setApiData(tempData);
+        setApiData((currentApiData) => {
+          currentApiData.set(dateKey, data);
+          return new Map(currentApiData);
+        });
       }
 
       setLoading(false);
@@ -357,7 +363,7 @@ export function SelectingScreen() {
             Select the Dovetail Publish Date of the episode and segments you want to import. If multiple episodes were publish on the date, select which episode to import. Deselect any segments that should not be imported for the selected episode.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex justify-between sticky top-8 z-10 p-6 bg-card/60 backdrop-blur-md border-b shadow">
+      <CardContent className="flex justify-between sticky top-8 z-10 p-6 bg-card/60 backdrop-blur-md shadow">
         <div className='flex gap-2 items-center'>
           <DatePicker
             disabled={loading}
@@ -422,7 +428,10 @@ export function SelectingScreen() {
       </CardContent>
       <CardContent className='pt-6'>
 
-        <RadioGroup defaultValue={importEpisodeGuid} onValueChange={(guid) => setImportEpisodeGuid(guid) }>
+        <RadioGroup defaultValue={importEpisodeGuid} onValueChange={(guid) => {
+          console.log('EPISODE RADIO CHANGED', guid);
+          setImportEpisodeGuid(guid);
+        } }>
 
           <Table className='border'>
             <TableHeader>

@@ -38,9 +38,7 @@ function parseApiEpisode(episode: ApiEpisode): ItemRow {
         })
       }
     }),
-    contributors: episode.author && [
-      episode.author
-    ],
+    contributors: episode.author,
     filename: episode.enclosure.href.split('/').pop(),
     duration: formatDuration(episode.enclosure.duration),
     audioUrl: episode.enclosure.href,
@@ -97,7 +95,13 @@ export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponen
     if (onImportDataChange) {
       onImportDataChange(rowData);
     }
-  }, [rowData])
+  }, [rowData]);
+
+  useEffect(() => {
+    if (rd) {
+      setRowData(rd);
+    }
+  }, [rd]);
 
   function StatusIconOrInput() {
     if (completed) {
@@ -152,6 +156,10 @@ export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponen
           ))}
         </div>
       )
+    }
+
+    if (existingAudio) {
+      return <AudioEditLink audio={existingAudio} key={existingAudio.databaseId} />
     }
 
     return filename;

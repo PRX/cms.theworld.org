@@ -69,7 +69,7 @@ export type ApiEpisode = {
   dateUpdated: Maybe<string>,
   dateBroadcast: Maybe<string>,
   dateKey: Maybe<string>,
-  author: Maybe<ApiAuthor>
+  author: Maybe<ApiAuthor[]>
   enclosure: ApiEnclosure,
   categories: ApiCategory[]
 }
