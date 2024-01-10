@@ -6,8 +6,8 @@
  * @package tw_programs
  */
 
- if (!defined('ABSPATH')) {
-    exit();
+if ( ! defined( 'ABSPATH' ) ) {
+	exit();
 }
 
 /**
@@ -57,6 +57,5 @@ function tw_programs_taxonomy() {
 		'graphql_plural_name' => 'programs',
 	);
 	register_taxonomy( 'program', array( 'post', 'episode', 'segment' ), $args );
-
 }
 add_action( 'init', 'tw_programs_taxonomy', 1 );

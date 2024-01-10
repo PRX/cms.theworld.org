@@ -38,5 +38,17 @@
 	},
   "[html]": {
     "editor.defaultFormatter": "co6x0.vscode-wp-block-html"
-  }
+  },
+  "files.associations": {
+    "*.{c,sc}ss": "tailwindcss"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+	"editor.defaultFormatter": null,
+  "eslint.format.enable": true,
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "typescript.preferences.importModuleSpecifier": "non-relative"
 }

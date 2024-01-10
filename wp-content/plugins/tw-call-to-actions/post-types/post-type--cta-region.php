@@ -75,6 +75,5 @@ function tw_call_to_actions_post_type_cta_region() {
 		'graphql_plural_name' => 'ctaRegions',
 	);
 	register_post_type( 'cta_region', $args );
-
 }
 add_action( 'init', 'tw_call_to_actions_post_type_cta_region', 0 );

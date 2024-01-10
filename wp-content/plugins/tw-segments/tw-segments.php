@@ -52,7 +52,7 @@ function tw_segments_post_type() {
 			'text_domain'
 		),
 		'labels'              => $labels,
-		'supports'            => array( 'title', 'editor', 'thumbnail', 'custom-fields' ),
+		'supports'            => array( 'author', 'title', 'editor', 'thumbnail', 'custom-fields' ),
 		'taxonomies'          => array( 'category', 'post_tag' ),
 		'rewrite'             => array(
 			'slug'       => 'segments',

@@ -44,6 +44,7 @@ if ( ! function_exists( 'tw_menus_graphql_resolve_field_menuitem_url' ) ) :
 	 * @param mixed           $field_resolver The Field Definition for the resolving field.
 	 * @return mixed
 	 */
+	// phpcs:ignore
 	function tw_menus_graphql_resolve_field_menuitem_url( $result, $source, $args, $context, $info, $type_name, $field_key, $field, $field_resolver ) {
 
 		if ( 'menuitem' === strtolower( $type_name ) && 'url' === $field_key ) {
@@ -52,7 +53,6 @@ if ( ! function_exists( 'tw_menus_graphql_resolve_field_menuitem_url' ) ) :
 		}
 
 		return $result;
-
 	}
 endif;
 add_filter( 'graphql_resolve_field', 'tw_menus_graphql_resolve_field_menuitem_url', 10, 9 );

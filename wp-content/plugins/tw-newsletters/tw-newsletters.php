@@ -75,6 +75,5 @@ function tw_newsletters_post_type() {
 		'graphql_plural_name' => 'newsletters',
 	);
 	register_post_type( 'newsletter', $args );
-
 }
 add_action( 'init', 'tw_newsletters_post_type', 0 );

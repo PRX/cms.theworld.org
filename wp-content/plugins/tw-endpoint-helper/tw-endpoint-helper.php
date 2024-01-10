@@ -49,7 +49,7 @@ function peh_rest_api_init() {
 				'required'          => true,
 				'sanitize_callback' => 'peh_data_arg_sanitize_callback',
 			),
-        ),
+		),
 	);
 
 	register_rest_route(
@@ -73,9 +73,9 @@ function peh_args_validation_callback( $value, $request, $key ) {
 	$value = sanitize_text_field( $value );
 
 	// If the 'filter' argument is not a string return an error.
-    if ( ! is_string( $value ) || ! $value ) {
-        return new WP_Error( 'rest_invalid_param', esc_html__( 'TW - Alias or type supplied is required or invalid.', 'peh' ), array( 'status' => 400 ) );
-    }
+	if ( ! is_string( $value ) || ! $value ) {
+		return new WP_Error( 'rest_invalid_param', esc_html__( 'TW - Alias or type supplied is required or invalid.', 'peh' ), array( 'status' => 400 ) );
+	}
 
 	return true;
 }
@@ -105,8 +105,8 @@ function peh_url_to_query( $url = '', Array $query_vars = [ ] ) {
  * @return void
  */
 function peh_data_arg_sanitize_callback( $value, $request, $param ) {
-    // It is as simple as returning the sanitized value.
-    return sanitize_text_field( $value );
+	// It is as simple as returning the sanitized value.
+	return sanitize_text_field( $value );
 }
 
 /**
@@ -197,7 +197,7 @@ function _peh_get_object( $slug ) {
 		$alias_object = new Peh_Alias_Object( $alias_object );
 	}
 
-   return $alias_object;
+	return $alias_object;
 }
 
 /**
@@ -444,29 +444,29 @@ function _peh_get_object_by_wp_migrated_legacy_alias_db( $slug ) {
  */
 function _peh_get_object_by_slug( $slug, $extra_args = array() ) {
 
-    $args = array(
-        'name'           => $slug,
-        'post_status'    => 'publish',
-        'posts_per_page' => 1,
-    );
+	$args = array(
+		'name'           => $slug,
+		'post_status'    => 'publish',
+		'posts_per_page' => 1,
+	);
 
 	if ( $extra_args ) {
 
 		$args = wp_parse_args( $extra_args, $args );
 	}
 
-    $objects = get_posts( $args );
+	$objects = get_posts( $args );
 
-    if ( $objects ) {
+	if ( $objects ) {
 
 		$object       = new stdClass();
 		$object->id   = $objects[ 0 ]->ID;
 		$object->type = $objects[ 0 ]->post_type;
 
-        return $object;
-    }
+		return $object;
+	}
 
-    return false;
+	return false;
 }
 
 /**
@@ -527,18 +527,18 @@ function _peh_get_object_wild( $slug ) {
  */
 function peh_get_response( array $response ) {
 
-    $status = $response['status'];
+	$status = $response['status'];
 
-    $errors = array(
-        400 => array( 'rest_no_route', 'TW - No argument supplied.' ),
-        403 => array( 'rest_no_route', 'TW - Resource not found or forbiden.' ),
-        404 => array( 'rest_no_route', 'TW - No route was found matching the URL and request method.' ),
-        500 => array( 'rest_internal_error', 'TW - 500 Internal Error.' ),
+	$errors = array(
+		400 => array( 'rest_no_route', 'TW - No argument supplied.' ),
+		403 => array( 'rest_no_route', 'TW - Resource not found or forbiden.' ),
+		404 => array( 'rest_no_route', 'TW - No route was found matching the URL and request method.' ),
+		500 => array( 'rest_internal_error', 'TW - 500 Internal Error.' ),
 	);
 
-    $error = isset( $errors[$status] ) ? $errors[$status] : false;
+	$error = isset( $errors[$status] ) ? $errors[$status] : false;
 
-    return $error
-        ? new WP_Error( $error[0], __( $error[1], 'peh'), $response )
-        : new WP_REST_Response( $response['data'], $status );
+	return $error
+		? new WP_Error( $error[0], __( $error[1], 'peh'), $response )
+		: new WP_REST_Response( $response['data'], $status );
 }
