@@ -229,7 +229,7 @@ function tw_episode_importer_api_route_epsisode( $request ) {
 			if ( ! $episode['existingAudio'] ) {
 				tw_episode_importer_audio_create( $episode, 'program-episode', $request );
 			} elseif ( $episode['hasUpdatedAudio'] ) {
-				tw_episode_importer_audio_update( $episode, $request );
+				tw_episode_importer_audio_update( $episode, 'program-episode', $request );
 			}
 
 			if ( ! $episode['existingPost'] ) {
@@ -311,7 +311,7 @@ function tw_episode_importer_api_route_segment( WP_REST_Request $request ) {
 			if ( ! $segment['existingAudio'] ) {
 				tw_episode_importer_audio_create( $segment, 'program-segment', $request );
 			} elseif ( $segment['hasUpdatedAudio'] ) {
-				tw_episode_importer_audio_update( $segment, $request );
+				tw_episode_importer_audio_update( $segment, 'program-segment', $request );
 			}
 
 			if ( ! $segment['existingPost'] ) {
@@ -452,7 +452,7 @@ function tw_episode_importer_audio_update( &$item, $audio_type, $request ) {
 		$args['meta_input']['segments_list'] = $segment_ids;
 	}
 
-	wp_insert_attachment( $args );
+	wp_update_post( $args );
 
 	$audio_metadata = get_metadata( 'post', $audio_id );
 
@@ -509,8 +509,12 @@ function tw_episode_importer_segment_create( &$item, $request ) {
 		$post_ids_cache_key = TW_EPISODE_IMPORTER_CACHE_POST_IDS_KEY_PREFIX . ':' . $item['guid'];
 		$ids                = wp_cache_get( $post_ids_cache_key, TW_EPISODE_IMPORTER_CACHE_GROUP );
 
-		$ids[] = $segment_id;
-		wp_cache_set( $post_ids_cache_key, array_unique( $ids ), TW_EPISODE_IMPORTER_CACHE_GROUP );
+		if ( ! $ids ) {
+			$ids = array();
+		}
+
+		array_unshift( $ids, $segment_id );
+		wp_cache_set( $post_ids_cache_key, $ids, TW_EPISODE_IMPORTER_CACHE_GROUP );
 
 		// Update item authors with created contributor ids.
 		if ( is_array( $item['author'] ) ) {
@@ -542,6 +546,7 @@ function tw_episode_importer_segment_create( &$item, $request ) {
 			'guid'          => $post->guid,
 			'databaseId'    => $post->ID,
 			'type'          => $post->post_type,
+			'status'        => $post->post_status,
 			'editLink'      => get_edit_post_link( $post, 'link' ),
 			'datePublished' => $post->post_date,
 			'dateUpdated'   => $post->post_modified,
@@ -592,8 +597,12 @@ function tw_episode_importer_episode_create( &$item, $request ) {
 		$post_ids_cache_key = TW_EPISODE_IMPORTER_CACHE_POST_IDS_KEY_PREFIX . ':' . $item['guid'];
 		$ids                = wp_cache_get( $post_ids_cache_key, TW_EPISODE_IMPORTER_CACHE_GROUP );
 
-		$ids[] = $episode_id;
-		wp_cache_set( $post_ids_cache_key, array_unique( $ids ), TW_EPISODE_IMPORTER_CACHE_GROUP );
+		if ( ! $ids ) {
+			$ids = array();
+		}
+
+		array_unshift( $ids, $episode_id );
+		wp_cache_set( $post_ids_cache_key, $ids, TW_EPISODE_IMPORTER_CACHE_GROUP );
 
 		// Set episode as audio attachment parent.
 		wp_update_post(
@@ -633,6 +642,7 @@ function tw_episode_importer_episode_create( &$item, $request ) {
 			'guid'          => $post->guid,
 			'databaseId'    => $post->ID,
 			'type'          => $post->post_type,
+			'status'        => $post->post_status,
 			'editLink'      => get_edit_post_link( $post, 'link' ),
 			'datePublished' => $post->post_date,
 			'dateUpdated'   => $post->post_modified,
@@ -786,7 +796,7 @@ function tw_episode_importer_parse_api_item( $api_item, $post_type ) {
 			array(
 				'filename'   => $audio_filename,
 				'episodeKey' => $episode_key,
-				'audioKey'   => $audio_key,
+				'audioKey'   => $audio_key ? $audio_key : $audio_name,
 				'segment'    => (int) $audio_segment,
 				'version'    => $audio_version,
 			)
@@ -925,7 +935,7 @@ function tw_episode_importer_get_existing_post_data( $post_type, $guid, $audio_k
 		$audio_post  = $audio_query->have_posts() ? reset( $audio_query->posts ) : null;
 	}
 
-	// Attempt to get existing audio by guid or using audio key derived from filename.
+	// Attempt to get existing audio by using audio key derived from filename.
 	if ( is_null( $audio_post ) && $audio_key ) {
 			$row        = $wpdb->get_row(
 				$wpdb->prepare(
@@ -941,7 +951,7 @@ function tw_episode_importer_get_existing_post_data( $post_type, $guid, $audio_k
 	if ( ! is_null( $audio_post ) ) {
 		$audio_metadata  = get_metadata( 'post', $audio_post->ID );
 		$result['audio'] = array(
-			'guid'          => preg_replace( '~^https?://~', '', $audio_post->guid ),
+			'guid'          => $audio_post->guid,
 			'databaseId'    => $audio_post->ID,
 			'editLink'      => get_edit_post_link( $audio_post, 'link' ),
 			'datePublished' => $audio_post->post_date,
@@ -957,11 +967,12 @@ function tw_episode_importer_get_existing_post_data( $post_type, $guid, $audio_k
 			array(
 				// Audio will always be attached to the episode or segment post,
 				// but may also be attached to a story post.
-				'post_type'  => array( $post_type, 'post' ),
-				'meta_key'   => 'audio',
-				'meta_value' => $audio_post->ID,
-				'fields'     => 'ids',
-				'orderby'    => 'type',
+				'post_type'   => array( $post_type, 'post' ),
+				'post_status' => 'any',
+				'meta_key'    => 'audio',
+				'meta_value'  => $audio_post->ID,
+				'fields'      => 'ids',
+				'orderby'     => 'type',
 			)
 		);
 
@@ -984,6 +995,7 @@ function tw_episode_importer_get_existing_post_data( $post_type, $guid, $audio_k
 					'guid'          => $post->guid,
 					'databaseId'    => $post->ID,
 					'type'          => $post->post_type,
+					'status'        => $post->post_status,
 					'editLink'      => get_edit_post_link( $post, 'link' ),
 					'datePublished' => $post->post_date,
 					'dateUpdated'   => $post->post_modified,

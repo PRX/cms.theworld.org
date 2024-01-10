@@ -1,5 +1,4 @@
-import { ApiAuthor, ApiEpisode, ApiTaxonomy } from "@/types/api/api"
-import { Maybe } from "@/types/api/graphql"
+import { ApiAuthor, ApiEpisode, ApiTaxonomy, Maybe } from "@/types/api/api"
 
 export type ItemRowTerm = {
   name: string,

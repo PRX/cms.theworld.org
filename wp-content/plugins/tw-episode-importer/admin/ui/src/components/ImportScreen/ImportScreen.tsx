@@ -1,17 +1,16 @@
 import type { ItemRow } from '@/types/state/itemRow';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import ConfettiExplosion from 'react-confetti-explosion';
-import axios, { AxiosResponse } from 'axios';
-import { RotateCw } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import axios from 'axios';
+import { ArrowLeft, Edit, RotateCw } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ImportItemRow } from '@/components/ImportItemRow';
 import { Progress } from '@/components/ui/progress';
 import { AppContext } from '@/lib/contexts/AppContext';
 import { cn } from '@/lib/utils';
-import { ApiEpisode } from '@/types/api/api';
-import { Maybe } from '@/types/api/graphql';
+import { ApiEpisode, Maybe } from '@/types/api/api';
+import { Button } from '@/components/ui/button';
 
 type ImportDataMap = Map<string, ItemRow>;
 
@@ -30,13 +29,9 @@ async function postApiData(endPoint: string, body: object): Promise<Maybe<ApiEpi
 
   return axios.post<ApiEpisode>(apiUrl.toString(), body, options)
     .then((res) => {
-
-      console.log('POST OK', res);
-
       return res.data || null;
     })
     .catch((res) => {
-      console.log('POST ERROR', res);
       return null;
     });
 }
@@ -71,7 +66,7 @@ function getTaxonomiesProps(row: ItemRow) {
 
 export function ImportScreen() {
   const importIsRunning = useRef(false);
-  const { state } = useContext(AppContext);
+  const { state, setStage } = useContext(AppContext);
   const { data } = state || {};
   const { importData } = data || {};
   const { episode, segments } = importData || {};
@@ -91,6 +86,8 @@ export function ImportScreen() {
   const [importMessage, setImportMessage] = useState('Importing...');
   const [importingGuid, setImportingGuid] = useState<string>();
   const [progress, setProgress] = useState(0);
+  const isImportComplete = progress >= 100;
+  const importedEpisode = episode && importedMap.get(episode.guid);
   const stages: ((data: ImportDataMap, imported: ImportDataMap) => Promise<ImportDataMap>)[] = [];
 
   function LoadingIcon({ guid }: { guid: string }) {
@@ -109,8 +106,6 @@ export function ImportScreen() {
   useEffect(() => {
     if (importIsRunning.current) return;
 
-    console.log('Queueing stages...', episode, segments);
-
     // Add stages to import or update segments.
     if (segments?.length) {
       segments.forEach(({ guid: segmentGuid }) => {
@@ -119,8 +114,6 @@ export function ImportScreen() {
             const { data, title } = segment;
             const doEpisodeImport = !data.existingPost;
             const message = `${doEpisodeImport ? 'Importing' : 'Updating'} Segment: "${title}"`;
-
-            console.log(message, segment, dataMap, imported);
 
             setImportMessage(() => message);
             setImportingGuid(() => guid);
@@ -137,8 +130,6 @@ export function ImportScreen() {
                   ...segment,
                   data: data || segment.data
                 });
-
-                console.log('updated imported map', imported);
               }
 
               resolve(imported);
@@ -156,8 +147,6 @@ export function ImportScreen() {
         const { data, title } = episode;
         const doEpisodeImport = !data.existingPost;
         const message = `${doEpisodeImport ? 'Importing' : 'Updating'} Episode: "${title}"`;
-
-        console.log(message, episode, dataMap);
 
         setImportMessage(() => message);
         setImportingGuid(() => guid);
@@ -178,8 +167,6 @@ export function ImportScreen() {
               ...episode,
               data: data || episode.data
             });
-
-            console.log('updated imported map', imported);
           }
 
           resolve(imported);
@@ -196,17 +183,17 @@ export function ImportScreen() {
       let current = 0;
       const max = stages.length;
 
-      console.log('starting import stages...', prevImportedMap);
       for (const fn of stages) {
-        console.log('starting stage:', current + 1);
         const newImportedMap = await fn(importingDataMap, prevImportedMap);
-        console.log('storing new data...', newImportedMap)
+
         current++;
+
         setImportedMap(new Map(newImportedMap));
         setProgress(current / max * 100);
+
         prevImportedMap = newImportedMap;
       }
-      console.log('import complete...', prevImportedMap);
+
       importIsRunning.current = false;
       setImportMessage(() => 'Import Complete! 🥳')
     })()
@@ -215,10 +202,26 @@ export function ImportScreen() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{importMessage}{progress >= 100 && <span className='relative inline-block'><ConfettiExplosion duration={3000} width={2000} zIndex={100000} /></span>}</CardTitle>
+        <CardTitle className='flex gap-4 items-center'>
+          {isImportComplete && (
+            <Button size='icon' variant='ghost' color='' onClick={() => setStage('selecting')}>
+              <ArrowLeft />
+            </Button>
+          )}
+          <span>{importMessage}{isImportComplete && <span className='relative inline-block'><ConfettiExplosion duration={3000} width={2000} zIndex={100000} /></span>}</span></CardTitle>
       </CardHeader>
       <CardContent>
+        {!isImportComplete ? (
           <Progress value={progress} />
+        ) : (
+          importedEpisode && (
+            <Button className='flex gap-2 rounded-full hover:text-white focus-visible:text-white active:text-white' asChild>
+              <a href={importedEpisode.data.existingPost.editLink}>
+                Edit Episode <Edit />
+              </a>
+            </Button>
+          )
+        )}
       </CardContent>
       <CardContent>
 

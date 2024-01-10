@@ -1,6 +1,6 @@
 import type { ApiTaxonomies } from '@/types/api/api';
 import type { KeyboardEventWithTarget } from '@/types/dom/events';
-import { appStages, type AppAction, type AppState, type AppData } from '@/types/state/app';
+import { appStages, type AppAction, type AppState, type AppData, AppStage } from '@/types/state/app';
 import React, { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react';
 import axios from 'axios';
 import { SelectingScreen } from '@/components/SelectingScreen';
@@ -18,6 +18,12 @@ function appStateReducer(state: AppState, action: AppAction) {
   const { data } = state;
 
   switch (action.type) {
+    case 'SET_STAGE':
+      return {
+        ...state,
+        stage: (action as AppAction<AppStage>).payload
+      }
+
     case 'NEXT_STAGE':
       return {
         ...state,
@@ -75,6 +81,7 @@ function App() {
     state,
     setAppData,
     updateAppData,
+    setStage,
     nextStage,
     audioElm: audioElm.current,
     playAudio,
@@ -82,14 +89,16 @@ function App() {
     playingAudioUrl: audioUrl
   } as AppContextValue;
 
-  console.log('App State', state);
-
   function setAppData(data: AppData) {
     dispatch({ type: 'SET_DATA', payload: data} as AppAction<AppData>);
   }
 
   function updateAppData(data: Partial<AppData>) {
     dispatch({ type: 'UPDATE_DATA', payload: data} as AppAction<Partial<AppData>>);
+  }
+
+  function setStage(stage: AppStage) {
+    dispatch({type: 'SET_STAGE', payload: stage} as AppAction<AppStage>);
   }
 
   function nextStage() {
@@ -104,8 +113,6 @@ function App() {
   };
 
   function loadAudio(src: string, isPlaying: boolean) {
-    console.log('loading audio...', src, isPlaying);
-
     if (audioElm.current && !audioElm.current?.src.startsWith(src)) {
       audioElm.current.preload = isPlaying ? 'auto' : 'none';
       audioElm.current.src = src ? generateAudioUrl(src) : null;
@@ -140,8 +147,6 @@ function App() {
   }, []);
 
   const handleLoadedMetadata = useCallback(() => {
-    console.log('handleLoadedMetadata', playing);
-
     if (playing) {
       startPlaying();
     }

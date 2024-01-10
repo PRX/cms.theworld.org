@@ -52,7 +52,7 @@ async function getApiData(publishDate?: Date, beforeDate?: Date, noCache?: boole
   };
 
   if (noCache) {
-    params.set('cb', `${(new Date()).getUTCSeconds()}`);
+    params.set('cb', `${(new Date()).getTime()}`);
   }
 
   episodesApiUrl.search = params.toString();
@@ -72,7 +72,6 @@ async function getApiData(publishDate?: Date, beforeDate?: Date, noCache?: boole
       }
     })
     .catch((res) => {
-      console.log('Data Fetch Failed. Retrying...', res);
       return res instanceof CanceledError ? null : fetchData();
     });
   }
@@ -106,7 +105,6 @@ export function SelectingScreen() {
   const haveImports = allImports.find(({ data: { existingPost } }) => !existingPost);
   const haveUpdates = allImports.find(({ data: { hasUpdatedAudio } }) => hasUpdatedAudio);
   const buttonLabel = (haveImports && haveUpdates && 'Import & Update') || (haveImports && 'Import') || (haveUpdates && 'Update') || null;
-  console.log('Button Label', buttonLabel, haveImports, haveUpdates, [...allImports]);
   const playingAudioUrlInView = !![...(episodes || []), ...(segments || [])].find(({ enclosure }) => playingAudioUrl === enclosure.href);
   const playingAudioUrlItemRow = [...importRowsMap.values()].find((itemRow) => itemRow.audioUrl === playingAudioUrl);
   const datesData = [...(apiData?.values() || [])].map(({ episodes, segments, date }) => {
@@ -245,8 +243,6 @@ export function SelectingScreen() {
       const data = await getApiData(queryAfterDate, queryBeforeDate, false, controllers);
       const tempData = new Map<string, ApiData>(apiData);
 
-      console.log('fetched api data', data, queryMonthDate);
-
       data?.episodes?.forEach((episode) => {
         const dateKey = episode.dateKey || formatDateKey(new Date(episode.datePublished));
         const dateData = tempData.get(dateKey) || {} as ApiData;
@@ -275,8 +271,6 @@ export function SelectingScreen() {
         tempData.set(dateKey, dateData);
       });
 
-      console.log(controllers.episodes.signal.aborted, controllers.segments.signal.aborted)
-
       if (tempData.size) {
         setApiData(tempData);
       }
@@ -286,9 +280,7 @@ export function SelectingScreen() {
   }, [queryMonthDate]);
 
   useEffect(() => {
-    console.log('set timeout?', publishDate, today, isSameDay(publishDate, today));
-
-    if (isSameDay(publishDate, today)) {
+    if (!loading && isSameDay(publishDate, today)) {
 
       if (publishDateDataRefreshTimeout.current) {
         clearTimeout(publishDateDataRefreshTimeout.current);
@@ -298,7 +290,7 @@ export function SelectingScreen() {
         fetchDateData(publishDate);
       }, 60000)
     }
-  }, [apiData, publishDateData, publishDate]);
+  }, [loading, publishDateData, publishDate]);
 
   function fetchDateData(date: Date) {
     setLoading(true);
@@ -306,8 +298,6 @@ export function SelectingScreen() {
     (async () => {
       const dateKey = formatDateKey(date);
       const data = await getApiData(date, undefined, true);
-
-      console.log('fetched api data for date', date, dateKey, data, queryMonthDate);
 
       if (data?.episodes?.length) {
         setApiData((currentApiData) => {
@@ -338,7 +328,6 @@ export function SelectingScreen() {
   }
 
   function handleRowChange(newData: ItemRow) {
-    console.log('New row data', newData);
     setImportRowsMap((currentMap) => {
       currentMap.set(newData.guid, newData);
       return currentMap;
@@ -429,7 +418,6 @@ export function SelectingScreen() {
       <CardContent className='pt-6'>
 
         <RadioGroup defaultValue={importEpisodeGuid} onValueChange={(guid) => {
-          console.log('EPISODE RADIO CHANGED', guid);
           setImportEpisodeGuid(guid);
         } }>
 

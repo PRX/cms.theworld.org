@@ -1,7 +1,6 @@
 
 import React from 'react';
-import { ApiAuthor } from "@/types/api/api"
-import { Maybe } from "@/types/api/graphql"
+import { ApiAuthor, Maybe } from "@/types/api/api"
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { UserPlus2 } from 'lucide-react';

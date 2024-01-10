@@ -1,4 +1,4 @@
-import { Maybe } from "../api/graphql";
+export type Maybe<T> = T | null;
 
 export type ApiAuthor = {
   name: string,
@@ -51,6 +51,7 @@ export type ApiPost = {
   databaseId: number,
   editLink: string,
   type: string,
+  status: 'publish' | 'future' | 'draft' | 'pending' | 'private' | 'trash' | 'auto-draft' | 'inherit',
   audio: Maybe<ApiAudio>
 }
 
