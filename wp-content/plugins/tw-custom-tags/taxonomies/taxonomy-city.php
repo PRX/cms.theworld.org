@@ -18,8 +18,6 @@ function tw_city_taxonomy() {
 	$labels = array(
 		'name'                       => esc_html__( 'Cities', 'newspack' ),
 		'singular_name'              => esc_html__( 'City', 'newspack' ),
-		'name'                       => esc_html__( 'Cities', 'newspack' ),
-		'singular_name'              => esc_html__( 'City', 'newspack' ),
 		'search_items'               => esc_html__( 'Search Cities', 'newspack' ),
 		'popular_items'              => esc_html__( 'Popular Cities', 'newspack' ),
 		'all_items'                  => esc_html__( 'All Cities', 'newspack' ),

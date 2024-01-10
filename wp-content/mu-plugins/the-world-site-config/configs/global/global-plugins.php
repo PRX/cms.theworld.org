@@ -22,6 +22,7 @@ define(
 		'tw-custom-tags/tw-custom-tags.php',
 		'tw-disable-yoast-indexables/tw-disable-yoast-indexables.php',
 		'tw-endpoint-helper/tw-endpoint-helper.php',
+		'tw-episode-importer/tw-episode-importer.php',
 		'tw-episodes/tw-episodes.php',
 		'tw-graphql/tw-graphql.php',
 		'tw-import-post-types/tw-import-post-types.php', // This is the plugin that creates the custom post types for the import. Can be removed after the import is complete.

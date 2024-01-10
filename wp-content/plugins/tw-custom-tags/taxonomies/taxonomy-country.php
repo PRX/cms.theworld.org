@@ -18,8 +18,6 @@ function tw_country_taxonomy() {
 	$labels = array(
 		'name'                       => esc_html__( 'Countries', 'newspack' ),
 		'singular_name'              => esc_html__( 'Country', 'newspack' ),
-		'name'                       => esc_html__( 'Countries', 'newspack' ),
-		'singular_name'              => esc_html__( 'Country', 'newspack' ),
 		'search_items'               => esc_html__( 'Search Countries', 'newspack' ),
 		'popular_items'              => esc_html__( 'Popular Countries', 'newspack' ),
 		'all_items'                  => esc_html__( 'All Countries', 'newspack' ),

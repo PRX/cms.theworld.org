@@ -18,8 +18,6 @@ function tw_province_state_taxonomy() {
 	$labels = array(
 		'name'                       => esc_html__( 'Province Or States', 'newspack' ),
 		'singular_name'              => esc_html__( 'Province Or State', 'newspack' ),
-		'name'                       => esc_html__( 'Province Or States', 'newspack' ),
-		'singular_name'              => esc_html__( 'Province Or State', 'newspack' ),
 		'search_items'               => esc_html__( 'Search Province Or States', 'newspack' ),
 		'popular_items'              => esc_html__( 'Popular Province Or States', 'newspack' ),
 		'all_items'                  => esc_html__( 'All Province Or States', 'newspack' ),

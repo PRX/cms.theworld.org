@@ -18,8 +18,6 @@ function tw_call_to_actions_taxonomy_cta_region_type() {
 	$labels = array(
 		'name'                       => esc_html__( 'CTA Region Types', 'newspack' ),
 		'singular_name'              => esc_html__( 'CTA Region Type', 'newspack' ),
-		'name'                       => esc_html__( 'CTA Region Types', 'newspack' ),
-		'singular_name'              => esc_html__( 'CTA Region Type', 'newspack' ),
 		'search_items'               => esc_html__( 'Search CTA Region Types', 'newspack' ),
 		'popular_items'              => esc_html__( 'Popular CTA Region Types', 'newspack' ),
 		'all_items'                  => esc_html__( 'All CTA Region Types', 'newspack' ),

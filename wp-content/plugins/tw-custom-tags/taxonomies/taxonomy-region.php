@@ -18,8 +18,6 @@ function tw_region_taxonomy() {
 	$labels = array(
 		'name'                       => esc_html__( 'Regions', 'newspack' ),
 		'singular_name'              => esc_html__( 'Region', 'newspack' ),
-		'name'                       => esc_html__( 'Regions', 'newspack' ),
-		'singular_name'              => esc_html__( 'Region', 'newspack' ),
 		'search_items'               => esc_html__( 'Search Regions', 'newspack' ),
 		'popular_items'              => esc_html__( 'Popular Regions', 'newspack' ),
 		'all_items'                  => esc_html__( 'All Regions', 'newspack' ),

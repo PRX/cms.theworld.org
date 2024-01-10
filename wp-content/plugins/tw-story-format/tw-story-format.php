@@ -19,8 +19,6 @@ function tw_story_types_taxonomy() {
 	$labels = array(
 		'name'                       => esc_html__( 'Story Formats', 'newspack' ),
 		'singular_name'              => esc_html__( 'Story Format', 'newspack' ),
-		'name'                       => esc_html__( 'Story Formats', 'newspack' ),
-		'singular_name'              => esc_html__( 'Story Format', 'newspack' ),
 		'search_items'               => esc_html__( 'Search Story Formats', 'newspack' ),
 		'popular_items'              => esc_html__( 'Popular Story Formats', 'newspack' ),
 		'all_items'                  => esc_html__( 'All Story Formats', 'newspack' ),
@@ -45,7 +43,7 @@ function tw_story_types_taxonomy() {
 	$args = array(
 		'label'                 => esc_html__( 'Story Formats', 'newspack' ),
 		'labels'                => $labels,
-		'public'                => true,
+		'public'                => false,
 		'publicly_queryable'    => true,
 		'hierarchical'          => false,
 		'show_ui'               => true,
@@ -70,6 +68,5 @@ function tw_story_types_taxonomy() {
 		'graphql_plural_name'   => 'storyFormats',
 	);
 	register_taxonomy( 'story_format', array( 'post' ), $args );
-
 }
 add_action( 'init', 'tw_story_types_taxonomy', 0 );

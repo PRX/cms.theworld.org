@@ -6,14 +6,14 @@
  * @package tw_graphql
  */
 
- if (!defined('ABSPATH')) {
-    exit();
+if ( ! defined( 'ABSPATH' ) ) {
+	exit();
 }
 
 use WPGraphQL\AppContext;
 use WPGraphQL\Model\Term;
 
- /**
+/**
  * Register GraphQL fields.
  */
 add_action(
@@ -33,43 +33,47 @@ add_action(
 		);
 
 		// Add primary term field to post types for hierachical taxonomies.
-        $post_types = \WPGraphQL::get_allowed_post_types();
-        $taxonomies = \WPGraphQL::get_allowed_taxonomies();
+		$post_types = \WPGraphQL::get_allowed_post_types();
+		$taxonomies = \WPGraphQL::get_allowed_taxonomies();
 
-		if (!empty($post_types) && is_array($post_types)) {
+		if ( ! empty( $post_types ) && is_array( $post_types ) ) {
 			// Loop through each post type...
-			foreach ($post_types as $post_type) {
-				$post_type_object = get_post_type_object($post_type);
+			foreach ( $post_types as $post_type ) {
+				$post_type_object = get_post_type_object( $post_type );
 
 				// Only add field to post types that are configured for graphql.
-				if (isset($post_type_object->graphql_single_name)) {
-                    $taxonomiesPostObj = get_object_taxonomies($post_type, 'objects');
-                    $postNameKey = wp_gql_seo_get_field_key($post_type_object->graphql_single_name);
+				if ( isset( $post_type_object->graphql_single_name ) ) {
+					$taxonomies_post_object = get_object_taxonomies( $post_type, 'objects' );
+					$post_name_key          = wp_gql_seo_get_field_key( $post_type_object->graphql_single_name );
 
 					// Loop through each taxomony...
-                    foreach ($taxonomiesPostObj as $tax) {
-						$isHierarchicalTaxonomy = isset($tax->hierarchical) && $tax->hierarchical;
-						$postTypeUsesTaxonomy = in_array($post_type_object->name, $tax->object_type);
+					foreach ( $taxonomies_post_object as $tax ) {
+						$is_hierarchical_taxonomy = isset( $tax->hierarchical ) && $tax->hierarchical;
+						$post_type_uses_taxonomy  = in_array( $post_type_object->name, $tax->object_type, true );
 
 						// Only add field for taxonomies that are configured for graphql, are hierachical, and are used by the post type.
-                        if ($isHierarchicalTaxonomy && $postTypeUsesTaxonomy && isset($tax->graphql_single_name)) {
-							$taxNameKey = wp_gql_seo_get_field_key($tax->graphql_single_name);
+						if ( $is_hierarchical_taxonomy && $post_type_uses_taxonomy && isset( $tax->graphql_single_name ) ) {
+							$tax_name_key = wp_gql_seo_get_field_key( $tax->graphql_single_name );
 
-                            register_graphql_field(ucfirst($postNameKey), 'primary' . ucfirst($tax->graphql_single_name), [
-                                'type' => ucfirst($taxNameKey),
-                                'description' => __('The Yoast SEO Primary ' . $tax->name, 'text_domain'),
-                                'resolve' => function ($item, array $args, AppContext $context) use ($tax, $taxNameKey) {
-                                    $postId = $item->ID;
+							register_graphql_field(
+								ucfirst( $post_name_key ),
+								'primary' . ucfirst( $tax->graphql_single_name ),
+								array(
+									'type'        => ucfirst( $tax_name_key ),
+									'description' => __( 'The Yoast SEO Primary', 'text_domain' ) . ' ' . ucfirst( $tax->name ),
+									'resolve'     => function ( $item, array $args, AppContext $context ) use ( $tax, $tax_name_key ) {
+										$post_id = $item->ID;
 
-                                    $wpseo_primary_term = new WPSEO_Primary_Term($tax->name, $postId);
-                                    $primaryTaxId = $wpseo_primary_term->get_primary_term();
+										$wpseo_primary_term = new WPSEO_Primary_Term( $tax->name, $post_id );
+										$primary_tax_id       = $wpseo_primary_term->get_primary_term();
 
-                                    return $context->get_loader('term')->load_deferred(absint($primaryTaxId));
-                                },
-                            ]);
-                        }
-                    }
-				};
+										return $context->get_loader( 'term' )->load_deferred( absint( $primary_tax_id ) );
+									},
+								)
+							);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -80,7 +84,7 @@ add_action(
  */
 add_filter(
 	'graphql_post_object_connection_query_args',
-	function ( $query_args, $source, $args, $context, $info ) {
+	function ( $query_args, $source, $args ) {
 
 		$excluded_program_ids = $args['where']['programNotIn'];
 
@@ -90,9 +94,10 @@ add_filter(
 
 			// Decode hashed ids.
 			$ids = array_map(
-				function( $id ) {
+				function ( $id ) {
 					if ( ! is_numeric( $id ) ) {
 						// Decode hashed id.
+						// phpcs:ignore
 						$decoded_id  = base64_decode( $id );
 						list( , $id) = explode( ':', $decoded_id );
 					}
@@ -101,6 +106,7 @@ add_filter(
 				$excluded_program_ids
 			);
 
+			// phpcs:ignore
 			$query_args['tax_query'] = array(
 				array(
 					'taxonomy' => 'program',

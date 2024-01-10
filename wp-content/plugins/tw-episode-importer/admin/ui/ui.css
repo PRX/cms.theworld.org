@@ -1,0 +1,11 @@
+/* Admin scope styles. */
+
+/* Remove left padding from admin content container. */
+#wpcontent {
+  padding: 0 !important;
+}
+
+/* Hide any body content that is not in the app container. */
+#wpbody-content > :not(#tw-episode-importer-app) {
+  display: none !important;
+}

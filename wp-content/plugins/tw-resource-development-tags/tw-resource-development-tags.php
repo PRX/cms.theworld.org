@@ -19,8 +19,6 @@ function tw_resource_development_tags_taxonomy() {
 	$labels = array(
 		'name'                       => esc_html__( 'Resource developments', 'newspack' ),
 		'singular_name'              => esc_html__( 'Resource development', 'newspack' ),
-		'name'                       => esc_html__( 'Resource developments', 'newspack' ),
-		'singular_name'              => esc_html__( 'Resource development', 'newspack' ),
 		'search_items'               => esc_html__( 'Search Resource developments', 'newspack' ),
 		'popular_items'              => esc_html__( 'Popular Resource developments', 'newspack' ),
 		'all_items'                  => esc_html__( 'All Resource developments', 'newspack' ),
@@ -45,7 +43,7 @@ function tw_resource_development_tags_taxonomy() {
 	$args = array(
 		'label'                 => esc_html__( 'Resource developments', 'newspack' ),
 		'labels'                => $labels,
-		'public'                => true,
+		'public'                => false,
 		'publicly_queryable'    => true,
 		'hierarchical'          => false,
 		'show_ui'               => true,
