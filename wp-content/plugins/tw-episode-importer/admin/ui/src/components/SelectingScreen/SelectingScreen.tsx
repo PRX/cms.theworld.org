@@ -95,9 +95,9 @@ export function SelectingScreen() {
   const [loading, setLoading] = useState(false);
   const [importRowsMap, setImportRowsMap] = useState(new Map<string, ItemRow>());
   const [importEpisodeGuid, setImportEpisodeGuid] = useState<string>();
-  const [importSegmentGuids, setImportSegmentGuids] = useState(new Set<string>());
+  const [importSegmentGuids, setImportSegmentGuids] = useState<Set<string>>();
   const importEpisode = importRowsMap.get(importEpisodeGuid);
-  const importSegments = [...importSegmentGuids].map((guid) => importRowsMap.get(guid));
+  const importSegments = [...(importSegmentGuids || [])].map((guid) => importRowsMap.get(guid));
   const allImports = [
     ...(importEpisode ? [importEpisode] : []),
     ...importSegments
@@ -189,7 +189,10 @@ export function SelectingScreen() {
   useEffect(() => {
     const dateData = apiData?.get(publishDateKey);
 
-    if (!dateData) return;
+    if (!dateData) {
+      setImportEpisodeGuid(null);
+      return;
+    };
 
     const importEpisode = dateData.episodes?.find(({ existingPost, hasUpdatedAudio, enclosure: { episodeKey } }) => {
       const isImportingOrUpdated = !existingPost || hasUpdatedAudio;
@@ -204,18 +207,26 @@ export function SelectingScreen() {
   useEffect(() => {
     const dateData = apiData?.get(publishDateKey);
 
-    if (!dateData) return;
+    if (!dateData) {
+      setImportSegmentGuids(null);
+      return;
+    };
 
     const episode = dateData.episodes?.find(({ guid }) => guid === importEpisodeGuid);
 
     setImportSegmentGuids((guids) => {
-      guids.clear();
+      const newGuids = new Set(guids);
+
+      newGuids.clear();
+
       const importSegments = dateData.segments?.filter(({ enclosure, existingPost, hasUpdatedAudio }) => {
         const episodeIsSelected = !!episode && enclosure.episodeKey === episode.enclosure.episodeKey;
         return episodeIsSelected || !existingPost || hasUpdatedAudio;
       });
-      importSegments?.map((segment) => guids.add(segment.guid));
-      return new Set(guids);
+
+      importSegments?.map((segment) => newGuids.add(segment.guid));
+
+      return newGuids;
     })
   }, [publishDate, publishDateKey, apiData, importEpisodeGuid]);
 
@@ -480,7 +491,7 @@ export function SelectingScreen() {
           <TableBody>
             {!loading || segments ? (
               !!segments?.length ? segments.sort(sortByEnclosureFilename).map((segment) => {
-                const selected = importSegmentGuids.has(segment.guid);
+                const selected = !!importSegmentGuids?.has(segment.guid);
                 return (
                   <ImportItemRow data={segment} rowData={importRowsMap.get(segment.guid)}
                     importAs='segment'
