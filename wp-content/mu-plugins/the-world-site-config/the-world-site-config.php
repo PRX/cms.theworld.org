@@ -24,7 +24,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Require plugins helpers so configs can manage plugins.
  */
-require_once dirname( __FILE__ ) . '/includes/plugins.php';
+require_once __DIR__ . '/includes/plugins.php';
 
 /**
  * Initialize plugins.
@@ -38,16 +38,16 @@ function tw_init_plugins() {
 	$plugins_to_activate = array();
 
 	// Get global plugins.
-	require_once dirname( __FILE__ ) . '/configs/global/global-plugins.php';
+	require_once __DIR__ . '/configs/global/global-plugins.php';
 	$plugins_to_activate = array_merge( $plugins_to_activate, GLOBAL_PLUGINS );
 
 	// Get production plugins.
 	if ( in_array( getenv( 'WP_ENVIRONMENT_TYPE' ), array( 'staging', 'production' ), true ) ) {
-		require_once dirname( __FILE__ ) . '/configs/production/production-plugins.php';
+		require_once __DIR__ . '/configs/production/production-plugins.php';
 		$plugins_to_activate = array_merge( $plugins_to_activate, PRODUCTION_PLUGINS );
 	} else {
 		// Get development plugins.
-		require_once dirname( __FILE__ ) . '/configs/development/development-plugins.php';
+		require_once __DIR__ . '/configs/development/development-plugins.php';
 		$plugins_to_activate = array_merge( $plugins_to_activate, DEVELOPMENT_PLUGINS );
 	}
 
@@ -62,7 +62,7 @@ function tw_init_plugins() {
 	/**
 	 * Enable global configs.
 	 */
-	require_once dirname( __FILE__ ) . '/configs/global/global-config.php';
+	require_once __DIR__ . '/configs/global/global-config.php';
 
 	/**
 	 * Enable production environment configs.
@@ -70,14 +70,14 @@ function tw_init_plugins() {
 	 * - Production
 	*/
 	if ( in_array( getenv( 'WP_ENVIRONMENT_TYPE' ), array( 'staging', 'production' ), true ) ) {
-		require_once dirname( __FILE__ ) . '/configs/production/production-config.php';
+		require_once __DIR__ . '/configs/production/production-config.php';
 	} else {
 		/**
 		 * Enable development environment configs.
 		 * - Local
 		 * - Development
 		*/
-		require_once dirname( __FILE__ ) . '/configs/development/development-config.php';
+		require_once __DIR__ . '/configs/development/development-config.php';
 	}
 }
 add_action( 'init', 'tw_init_plugins' );

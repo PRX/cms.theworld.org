@@ -86,11 +86,15 @@ add_filter(
 	'graphql_post_object_connection_query_args',
 	function ( $query_args, $source, $args ) {
 
-		$excluded_program_ids = $args['where']['programNotIn'];
+		if ( ! isset( $args['where'] ) ) {
+			return $query_args;
+		}
 
-		if ( isset( $excluded_program_ids ) ) {
+		if ( isset( $args['where']['programNotIn'] ) ) {
 			// If the 'programNotIn' argument is provided, we add it to the tax_query.
 			// For more details, refer to the WP_Query class documentation at https://developer.wordpress.org/reference/classes/wp_query/.
+
+			$excluded_program_ids = $args['where']['programNotIn'];
 
 			// Decode hashed ids.
 			$ids = array_map(

@@ -43,5 +43,5 @@ tooling:
 events:
   post-db-import:
     - appserver:
-      # Replace Wordpress domain in the database pantheon dev environment
-      - wp --path=/app --url=dev-the-world-wp.pantheonsite.io search-replace 'dev-the-world-wp.pantheonsite.io' 'the-world-wp.lndo.site'
+        # Replace Wordpress domain in the database pantheon dev environment
+        - wp --path=/app --url=dev-the-world-wp.pantheonsite.io search-replace 'dev-the-world-wp.pantheonsite.io' 'the-world-wp.lndo.site'

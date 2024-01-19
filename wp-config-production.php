@@ -2,11 +2,13 @@
 /**
  * Production configuration.
  * !!! IMPORTANT: NEVER include wp-settings.php !!!
+ *
+ * @package tw
  */
 
 // Ensure debug mode is disabled.
 if ( ! defined( 'WP_DEBUG' ) ) {
-	define('WP_DEBUG', false);
+	define( 'WP_DEBUG', false );
 }
 
 // Configure S3 Uploads.
