@@ -15,3 +15,88 @@ Text Domain: theworld
 .edit-post-post-preview-dropdown .components-menu-group:first-child {
   display: none;
 }
+
+table.fixed {
+  table-layout: unset;
+}
+
+@media screen and (min-width: 783px) {
+  table.wp-list-table.posts tr {
+    /**
+    * User input values.
+    */
+    --grid-layout-gap: 0px;
+    --grid-column-count: 7;
+    --grid-item--min-width: 100px;
+
+    /**
+    * Calculated values.
+    */
+    --gap-count: calc(var(--grid-column-count) - 1);
+    --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
+    --grid-item--max-width: calc(
+      (100% - var(--total-gap-width)) / var(--grid-column-count)
+    );
+
+    display: grid;
+    grid-template-columns: 2.5rem repeat(
+        auto-fill,
+        minmax(
+          max(var(--grid-item--min-width), var(--grid-item--max-width)),
+          1fr
+        )
+      );
+    grid-gap: var(--grid-layout-gap);
+  }
+
+  table.wp-list-table.posts tr :where(td, th):not(.hidden) {
+    width: unset;
+  }
+  table.wp-list-table.posts tr :is([class^="taxonomy-"], .tags, .categories) {
+    grid-column: span 2;
+  }
+  table.wp-list-table.posts
+    tr
+    :where(td, th):not(
+      :is(.check-column, .column-title, .column-author, .column-date)
+    )::before {
+    content: attr(data-colname);
+    display: block;
+    font-weight: bolder;
+  }
+  table.wp-list-table.posts tr .check-column {
+    grid-row: span 99;
+    height: 100%;
+    box-sizing: border-box;
+    display: grid;
+    justify-items: center;
+    align-content: center;
+  }
+  table.wp-list-table.posts tr .check-column input {
+    margin: 0;
+  }
+  table.wp-list-table.posts tr .column-title {
+    grid-column: span 4;
+  }
+  table.wp-list-table.posts tr .column-date {
+    grid-row: 1;
+    grid-column: 7;
+  }
+  table.wp-list-table.posts
+    :where(thead, tfoot)
+    tr
+    :where(td, th):not(
+      :is(.check-column, .column-title, .column-author, .column-date)
+    ) {
+    display: none;
+  }
+
+  table.wp-list-table.posts .row-actions {
+    position: static;
+    width: max-content;
+    background-color: hsl(0 0% 0% / 5%);
+    margin-block-start: 0.5rem;
+    padding: 0.25em 1em;
+    border-radius: 100vw;
+  }
+}
