@@ -20,7 +20,7 @@ if ( ! function_exists( 'the_world_styles' ) ) :
 		wp_enqueue_style( 'style', get_stylesheet_uri(), array(), 1.0 );
 	}
 endif;
-add_action( 'wp_enqueue_scripts', 'the_world_styles' );
+add_action( 'admin_enqueue_scripts', 'the_world_styles' );
 
 if ( ! function_exists( 'tw_allowed_redirect_hosts' ) ) :
 	/**
