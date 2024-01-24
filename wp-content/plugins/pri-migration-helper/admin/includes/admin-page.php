@@ -1554,8 +1554,8 @@ function f_pmh_img_replacement_html( int $i_img_id, $a_drupal_media_data ) {
 
 	$a_block_args = array(
 		'id'              => $i_img_id,
-		'width'           => $a_attachment_metadata['width'],
-		'height'          => $a_attachment_metadata['height'],
+		'width'           => rtrim($a_attachment_metadata['width'], 'px').'px',
+		'height'          => rtrim($a_attachment_metadata['height'], 'px').'px',
 		'sizeSlug'        => 'full',
 		'linkDestination' => 'none',
 		'className'       => $s_drupal_class,
