@@ -50,5 +50,6 @@ define(
 		'add-wpgraphql-seo/wp-graphql-yoast-seo.php',
 		'custom-post-type-permalinks/custom-post-type-permalinks.php',
 		'faustwp/faustwp.php',
+		'media-credit/media-credit.php',
 	)
 );
