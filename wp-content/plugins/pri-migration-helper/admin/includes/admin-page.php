@@ -111,7 +111,6 @@ function pmh_admin_page_json_diff() {
 	echo wp_sprintf( '<h2>%s</h2>', __( 'JSON Diff' ) );
 
 	require_once PMH_ADMIN_DIR . '/parts/json-diff.php';
-
 }
 
 /**
@@ -222,7 +221,14 @@ function pmh_admin_enqueue() {
 		wp_localize_script( 'media-fix', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
 
 		$fields = array_merge( pri_get_post_meta_keys_and_values(), pri_get_term_meta_keys_and_values() );
-		wp_localize_script( 'acf-fix', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'pri_fields' => $fields ) );
+		wp_localize_script(
+			'acf-fix',
+			'ajax_object',
+			array(
+				'ajax_url'   => admin_url( 'admin-ajax.php' ),
+				'pri_fields' => $fields,
+			)
+		);
 	}
 }
 
@@ -245,12 +251,11 @@ function pmh_admin_json_diff_process() {
 	$count             = $pmh_get_json_diff->getDiffCnt();
 	$count_print       = ( 0 == $count ) ? '<div class="dashicons-before dashicons-yes"></div>' : '<div class="dashicons-before dashicons-no-alt"></div>';
 	$patch             = ( 0 != $count ) ? '<div class="faq-drawer">
-	<input class="faq-drawer__trigger" id="faq-drawer'.$next_row.'" type="checkbox" /><label class="faq-drawer__title" for="faq-drawer'.$next_row.'">See diff detail('.$count.')</label>
+	<input class="faq-drawer__trigger" id="faq-drawer' . $next_row . '" type="checkbox" /><label class="faq-drawer__title" for="faq-drawer' . $next_row . '">See diff detail(' . $count . ')</label>
 	<div class="faq-drawer__content-wrapper">
-	  <div class="faq-drawer__content"><pre>'.var_export( $pmh_get_json_diff->getPatch()->jsonSerialize(), true ).'</pre></div>
+	  <div class="faq-drawer__content"><pre>' . var_export( $pmh_get_json_diff->getPatch()->jsonSerialize(), true ) . '</pre></div>
       </div>
     </div>' : '<div class="dashicons-before dashicons-minus"></div>';
-
 
 	if ( ! $obj1 || ! $obj2 ) {
 
@@ -388,7 +393,7 @@ function pmh_post_worker_get_sample() {
 			$total = wp_count_terms(
 				$object_name,
 				array(
-					'hide_empty'=> false,
+					'hide_empty' => false,
 				)
 			);
 
@@ -406,16 +411,16 @@ function pmh_post_worker_get_sample() {
 					switch ( $_sample->taxonomy ) {
 						case 'program':
 							$term_meta_key = '_fgd2wp_old_program_id';
-							$post_prefix = 'node';
+							$post_prefix   = 'node';
 							break;
 						case 'contributor':
 							$term_meta_key = '_fgd2wp_old_person_id';
-							$post_prefix = 'node';
+							$post_prefix   = 'node';
 							break;
 
 						default:
 							$term_meta_key = '_fgd2wp_old_taxonomy_id';
-							$post_prefix = 'taxonomy/term';
+							$post_prefix   = 'taxonomy/term';
 							break;
 					}
 
@@ -444,12 +449,12 @@ function pmh_post_worker_get_sample() {
 				switch ( $object_name ) {
 					case 'segment':
 						$post_meta_key = 'fid';
-						$post_prefix = 'file';
+						$post_prefix   = 'file';
 						break;
 
 					default:
 						$post_meta_key = 'nid';
-						$post_prefix = 'node';
+						$post_prefix   = 'node';
 						break;
 				}
 				foreach ( $_samples as $_sample ) {
@@ -513,16 +518,16 @@ function pmh_post_worker_run_process() {
 					switch ( $term->taxonomy ) {
 						case 'program':
 							$term_meta_key = '_fgd2wp_old_program_id';
-							$post_prefix = 'node';
+							$post_prefix   = 'node';
 							break;
 						case 'contributor':
 							$term_meta_key = '_fgd2wp_old_person_id';
-							$post_prefix = 'node';
+							$post_prefix   = 'node';
 							break;
 
 						default:
 							$term_meta_key = '_fgd2wp_old_taxonomy_id';
-							$post_prefix = 'taxonomy/term';
+							$post_prefix   = 'taxonomy/term';
 							break;
 					}
 
@@ -561,8 +566,7 @@ function pmh_post_worker_run_process() {
 			break;
 
 		case 'post-type':
-
-			$args     = array(
+			$args  = array(
 				'post_status'    => 'all',
 				'post_type'      => $object_name,
 				'posts_per_page' => 500,
@@ -582,12 +586,12 @@ function pmh_post_worker_run_process() {
 						switch ( $object_name ) {
 							case 'segment':
 								$post_meta_key = 'fid';
-								$post_prefix = 'file';
+								$post_prefix   = 'file';
 								break;
 
 							default:
 								$post_meta_key = 'nid';
-								$post_prefix = 'node';
+								$post_prefix   = 'node';
 								break;
 						}
 						$nid = get_post_meta( $post_id, $post_meta_key, true );
@@ -643,27 +647,27 @@ add_action( 'wp_ajax_pmh_post_worker_run_process', 'pmh_post_worker_run_process'
  *
  * @param integer $i_paged
  * @param integer $i_perpage
- * @param array $a_ids
+ * @param array   $a_ids
  * @return array
  */
 function f_pmh_get_media_ids( int $i_paged, int $i_perpage, $a_ids = array() ) {
 
 	// Query media.
 	$a_args = array(
-        'post_type'      => 'attachment',
+		'post_type'      => 'attachment',
 		'post_mime_type' => 'image',
 		'post_status'    => 'inherit',
 		'post_parent'    => null, // any parent
 		'fields'         => 'ids',
-		'meta_query'  => array(
+		'meta_query'     => array(
 			array(
 				'key'     => s_pmh_get_fixed_flag_key(),
 				'compare' => 'NOT EXISTS',
 			),
 		),
-		'no_found_rows' => true,
+		'no_found_rows'  => true,
 		'orderby'        => 'ID',
-        'order'          => 'ASC',
+		'order'          => 'ASC',
 	);
 	if ( $a_ids ) {
 
@@ -676,7 +680,7 @@ function f_pmh_get_media_ids( int $i_paged, int $i_perpage, $a_ids = array() ) {
 		$a_args['posts_per_page'] = $i_perpage;
 	}
 	$WP_Query_posts = new WP_Query( $a_args );
-	$a_posts = $WP_Query_posts->get_posts();
+	$a_posts        = $WP_Query_posts->get_posts();
 
 	return $a_posts;
 }
@@ -686,17 +690,17 @@ function f_pmh_get_media_ids( int $i_paged, int $i_perpage, $a_ids = array() ) {
  *
  * @param integer $i_paged
  * @param integer $i_perpage
- * @param array $a_ids
+ * @param array   $a_ids
  * @return array
  */
 function f_pmh_get_posts_ids( int $i_paged, int $i_perpage, $a_ids = array() ) {
 
 	// Query media.
 	$a_args = array(
-        'post_type'      => 'post',
-		'fields'         => 'ids',
-		'orderby'        => 'ID',
-		'order'          => 'ASC',
+		'post_type' => 'post',
+		'fields'    => 'ids',
+		'orderby'   => 'ID',
+		'order'     => 'ASC',
 	);
 
 	if ( $a_ids ) {
@@ -711,8 +715,8 @@ function f_pmh_get_posts_ids( int $i_paged, int $i_perpage, $a_ids = array() ) {
 		/**
 		 * Search by meta query.
 		 */
-		$a_args['no_found_rows']  = true;
-		$a_args['meta_query']     = array(
+		$a_args['no_found_rows'] = true;
+		$a_args['meta_query']    = array(
 			array(
 				'key'     => s_pmh_get_fixed_flag_key(),
 				'compare' => 'NOT EXISTS',
@@ -720,7 +724,7 @@ function f_pmh_get_posts_ids( int $i_paged, int $i_perpage, $a_ids = array() ) {
 		);
 	}
 	$WP_Query_posts = new WP_Query( $a_args );
-	$a_posts = $WP_Query_posts->get_posts();
+	$a_posts        = $WP_Query_posts->get_posts();
 	return $a_posts;
 }
 
@@ -754,7 +758,8 @@ function f_pmh_get_drupal_file_metadata( $a_wp_media_ids ) {
 			$a_wp_drupal_ids[ $i_media_id ] = $i_fid;
 		}
 
-		/* Debug
+		/*
+		Debug
 		echo "<pre>";
 		var_dump( 'drupal_db connection.' );
 		var_dump( $fgd2wpp->drupal_connect() );
@@ -782,7 +787,8 @@ function f_pmh_get_drupal_file_metadata( $a_wp_media_ids ) {
 
 			$a_rows = $fgd2wpp->drupal_query( $s_sql_query );
 
-			/* Debug
+			/*
+			Debug
 			echo "<pre>";
 			var_dump( $a_rows );
 			echo "</pre>";
@@ -791,7 +797,7 @@ function f_pmh_get_drupal_file_metadata( $a_wp_media_ids ) {
 
 			if ( count( $a_rows ) > 0 ) {
 
-				foreach( $a_wp_drupal_ids as $i_media_id => $i_drupal_id ) {
+				foreach ( $a_wp_drupal_ids as $i_media_id => $i_drupal_id ) {
 
 					$a_drupal_meta = array();
 
@@ -821,7 +827,8 @@ function f_pmh_get_drupal_file_metadata( $a_wp_media_ids ) {
 					$a_drupal_metas[ $i_media_id ] = $a_drupal_meta;
 				}
 			}
-			/* Debug
+			/*
+			Debug
 			echo "<pre>";
 			var_dump( $results_2 );
 			echo "</pre>";
@@ -847,7 +854,7 @@ function f_ajax_pmh_media_fix_sample() {
 	$s_per_ids         = sanitize_text_field( $_POST['s_per_ids'] );
 
 	$i_next_paged_process = $s_per_ids ? false : $i_paged_process + 1;
-	$a_per_ids            = $s_per_ids ? explode( " ", $s_per_ids ) : false;
+	$a_per_ids            = $s_per_ids ? explode( ' ', $s_per_ids ) : false;
 
 	// Start Log.
 	$s_log = "MEDIA SAMPLE\n\n";
@@ -857,7 +864,8 @@ function f_ajax_pmh_media_fix_sample() {
 
 	if ( $a_media_ids ) {
 
-		/* Debug
+		/*
+		Debug
 		echo "<pre>";
 		var_dump( f_pmh_get_drupal_file_metadata( $a_media_ids ) );
 		echo "</pre>";
@@ -896,22 +904,22 @@ function f_ajax_pmh_media_fix_sample() {
 					$s_drupal_info = 'n/a';
 
 					if (
-						'width' === $a_image_attribute_keys[$i]
+						'width' === $a_image_attribute_keys[ $i ]
 						||
-						'height' === $a_image_attribute_keys[$i]
+						'height' === $a_image_attribute_keys[ $i ]
 					) {
 
 						if (
-							isset( $a_drupal_media_metadatas[ $i_media_id ][ $a_image_attribute_keys[$i] ] )
+							isset( $a_drupal_media_metadatas[ $i_media_id ][ $a_image_attribute_keys[ $i ] ] )
 							&&
-							$a_drupal_media_metadatas[ $i_media_id ][ $a_image_attribute_keys[$i] ]
+							$a_drupal_media_metadatas[ $i_media_id ][ $a_image_attribute_keys[ $i ] ]
 						) {
 
-							$s_drupal_info = $a_drupal_media_metadatas[ $i_media_id ][ $a_image_attribute_keys[$i] ];
+							$s_drupal_info = $a_drupal_media_metadatas[ $i_media_id ][ $a_image_attribute_keys[ $i ] ];
 						}
 					}
 
-					$s_log .= $a_image_attribute_keys[$i] . ":\n" . $s_image_attribute . "\n($s_drupal_info)" . "\n\n";
+					$s_log .= $a_image_attribute_keys[ $i ] . ":\n" . $s_image_attribute . "\n($s_drupal_info)" . "\n\n";
 				}
 			} else {
 
@@ -961,7 +969,7 @@ function f_ajax_pmh_media_fix_run() {
 	$s_per_ids         = isset( $_POST['s_per_ids'] ) ? sanitize_text_field( $_POST['s_per_ids'] ) : '';
 
 	$i_next_paged_process = $s_per_ids ? false : $i_paged_process + 1;
-	$a_per_ids            = $s_per_ids ? explode( " ", $s_per_ids ) : false;
+	$a_per_ids            = $s_per_ids ? explode( ' ', $s_per_ids ) : false;
 
 	// Start Log.
 	$s_log = "MEDIA FIX RUNNING - PAGED {$i_paged_process}\n\n";
@@ -997,7 +1005,7 @@ function f_ajax_pmh_media_fix_run() {
 					$b_updated = true;
 
 					$s_log .= $s_key_to_change . ":\n" . $a_attachment_metadata[ $s_key_to_change ];
-					$s_log .= " => " . $a_drupal_media_metadatas[ $i_media_id ][ $s_key_to_change ] . "\n\n";
+					$s_log .= ' => ' . $a_drupal_media_metadatas[ $i_media_id ][ $s_key_to_change ] . "\n\n";
 
 					// File metadata.
 					$a_attachment_metadata[ $s_key_to_change ] = $a_drupal_media_metadatas[ $i_media_id ][ $s_key_to_change ];
@@ -1014,7 +1022,7 @@ function f_ajax_pmh_media_fix_run() {
 
 				$m_updated = wp_update_attachment_metadata( $i_media_id, $a_attachment_metadata );
 
-				$s_log .= $m_updated ? "updated" : "failed to update";
+				$s_log .= $m_updated ? 'updated' : 'failed to update';
 				$s_log .= "\n";
 
 			} else {
@@ -1090,12 +1098,12 @@ function pri_ajax_acf_fix_run() {
 		$i_term_paged_process = ( $i_paged_process - 1 ) * 10;
 
 		$a_query_args = array(
-			'taxonomy'    => $s_query_type,
-			'fields'      => 'ids',
-			'number'      => $i_perpage_process,
-			'offset'      => $i_term_paged_process,
-			'hide_empty'  => false,
-			'meta_query'  => array(
+			'taxonomy'   => $s_query_type,
+			'fields'     => 'ids',
+			'number'     => $i_perpage_process,
+			'offset'     => $i_term_paged_process,
+			'hide_empty' => false,
+			'meta_query' => array(
 				array(
 					'key'     => $s_field,
 					'compare' => 'NOT EXISTS',
@@ -1106,26 +1114,26 @@ function pri_ajax_acf_fix_run() {
 	} else {
 
 		$a_query_args = array(
-			'post_type'      => $s_query_type,
-			'fields'         => 'ids',
-			'posts_per_page' => $i_perpage_process,
+			'post_type'              => $s_query_type,
+			'fields'                 => 'ids',
+			'posts_per_page'         => $i_perpage_process,
 			// 'paged'          => $i_paged_process, // Commented this as 1 because we removed the found rows functionality.
-			'post_status'    => $s_query_type === 'attachment' ? 'inherit' : array( 'publish', 'draft', 'private' ),
-			'meta_query'     => array(
+			'post_status'            => $s_query_type === 'attachment' ? 'inherit' : array( 'publish', 'draft', 'private' ),
+			'meta_query'             => array(
 				array(
 					'key'     => $s_field,
 					'compare' => 'NOT EXISTS',
 				),
 			),
 			'update_post_term_cache' => false,
-            'update_post_meta_cache' => false,
-            'no_found_rows' => true,
-            'order' => 'ASC',
-            'orderby' => 'ID',
+			'update_post_meta_cache' => false,
+			'no_found_rows'          => true,
+			'order'                  => 'ASC',
+			'orderby'                => 'ID',
 		);
 	}
 
-	if( $s_per_ids ) {
+	if ( $s_per_ids ) {
 
 		if ( $b_is_term ) {
 
@@ -1137,7 +1145,7 @@ function pri_ajax_acf_fix_run() {
 		}
 	}
 
-	if( in_array( $s_post_type, array( 'images', 'audio' ) ) && ! $b_is_term ) {
+	if ( in_array( $s_post_type, array( 'images', 'audio' ) ) && ! $b_is_term ) {
 		$a_query_args['post_mime_type'] = $s_post_type === 'images' ? 'image' : 'audio';
 	}
 
@@ -1152,7 +1160,7 @@ function pri_ajax_acf_fix_run() {
 
 			foreach ( $a_query_term_ids as $i_acf_term_id ) {
 
-				$s_log .= "\n" . $i_acf_term_id . " - " . $s_query_type . "\n- - - - - - - - -\n";
+				$s_log .= "\n" . $i_acf_term_id . ' - ' . $s_query_type . "\n- - - - - - - - -\n";
 
 				$s_field_value = pri_get_term_meta_keys_and_values( $s_post_type, $s_field );
 
@@ -1162,19 +1170,19 @@ function pri_ajax_acf_fix_run() {
 
 					if ( $m_add_term_meta ) {
 
-						$s_log .= "\n" . $i_acf_term_id . " - " . $s_field . " - " . $s_field_value . " - field value inserted\n";
+						$s_log .= "\n" . $i_acf_term_id . ' - ' . $s_field . ' - ' . $s_field_value . " - field value inserted\n";
 
 					} elseif ( is_wp_error( $m_add_term_meta ) ) {
 
-						$s_log .= "\n" . $i_acf_term_id . " - " . $s_field . " - " . $s_field_value . " - ambiguous between taxonomies\n";
+						$s_log .= "\n" . $i_acf_term_id . ' - ' . $s_field . ' - ' . $s_field_value . " - ambiguous between taxonomies\n";
 
 					} else {
 
-						$s_log .= "\n" . $i_acf_term_id . " - " . $s_field . " - " . $s_field_value . " - failed to insert value\n";
+						$s_log .= "\n" . $i_acf_term_id . ' - ' . $s_field . ' - ' . $s_field_value . " - failed to insert value\n";
 					}
 				} else {
 
-					$s_log .= "\n" . $i_acf_term_id . " - " . $s_query_type . " - no field value\n";
+					$s_log .= "\n" . $i_acf_term_id . ' - ' . $s_query_type . " - no field value\n";
 				}
 			}
 		} else {
@@ -1191,15 +1199,15 @@ function pri_ajax_acf_fix_run() {
 					// use a foreach loop to iterate through the post ids
 					$s_mime_type = get_post_mime_type( $i_acf_post_id );
 
-					$s_log .= "\n" . $i_acf_post_id . " - " . $s_mime_type . "\n- - - - - - - - -\n";
+					$s_log .= "\n" . $i_acf_post_id . ' - ' . $s_mime_type . "\n- - - - - - - - -\n";
 
 					$s_field_value = pri_get_post_meta_keys_and_values( $s_post_type, $s_field );
 
 					if ( $s_field_value ) {
 						update_post_meta( $i_acf_post_id, $s_field, $s_field_value, true );
-						$s_log .= "\n" . $i_acf_post_id . " - " . $s_field . " - " . $s_field_value . " - field value inserted\n";
+						$s_log .= "\n" . $i_acf_post_id . ' - ' . $s_field . ' - ' . $s_field_value . " - field value inserted\n";
 					} else {
-						$s_log .= "\n" . $i_acf_post_id . " - " . $s_mime_type . " - no field value\n";
+						$s_log .= "\n" . $i_acf_post_id . ' - ' . $s_mime_type . " - no field value\n";
 					}
 				}
 			}
@@ -1237,7 +1245,7 @@ function f_ajax_pmh_posts_fix_run() {
 	$s_per_ids         = isset( $_POST['s_per_ids'] ) ? sanitize_text_field( $_POST['s_per_ids'] ) : '';
 
 	$i_next_paged_process = $s_per_ids ? false : $i_paged_process + 1;
-	$a_per_ids            = $s_per_ids ? explode( " ", $s_per_ids ) : false;
+	$a_per_ids            = $s_per_ids ? explode( ' ', $s_per_ids ) : false;
 
 	// Start Log.
 	$s_log = "POSTS FIX RUNNING - PAGED {$i_paged_process}\n\n";
@@ -1268,9 +1276,9 @@ function f_ajax_pmh_posts_fix_run() {
 		}
 	} else {
 
-		$s_log .= "No Posts to process. ";
+		$s_log .= 'No Posts to process. ';
 		if ( $a_media_ids ) {
-			$s_log .= "There are still unfixed images. ";
+			$s_log .= 'There are still unfixed images. ';
 		}
 		$s_log .= "\n\n";
 
@@ -1299,22 +1307,22 @@ add_action( 'wp_ajax_posts_fix_run', 'f_ajax_pmh_posts_fix_run' );
  */
 function f_pmh_remote_file_exist( $url ) {
 
-    $response = wp_remote_head($url);
+	$response = wp_remote_head( $url );
 
-    if (is_wp_error($response)) {
-        return false;  // The HTTP request failed for some reason
-    }
+	if ( is_wp_error( $response ) ) {
+		return false;  // The HTTP request failed for some reason
+	}
 
-    $status_code = wp_remote_retrieve_response_code($response);
+	$status_code = wp_remote_retrieve_response_code( $response );
 
-    // If the HTTP response code is 200, it's likely the image exists
+	// If the HTTP response code is 200, it's likely the image exists
 	$allowed_codes = array(
 		200,
 		301,
 		302,
 	);
 
-    return in_array($status_code, $allowed_codes);
+	return in_array( $status_code, $allowed_codes );
 }
 
 /**
@@ -1327,10 +1335,10 @@ function f_pmh_remote_file_exist( $url ) {
 function f_pmh_get_clean_url( $s_image_url ) {
 
 	// Escape the URL.
-	$s_target_url    = esc_url( $s_image_url );
-	$s_file_name     = basename( $s_target_url );
-	$s_valid_url     = filter_var( $s_target_url, FILTER_VALIDATE_URL );
-	$s_clean_url	= $s_valid_url ? $s_target_url : str_replace( $s_file_name, urlencode( $s_file_name ), $s_image_url );
+	$s_target_url = esc_url( $s_image_url );
+	$s_file_name  = basename( $s_target_url );
+	$s_valid_url  = filter_var( $s_target_url, FILTER_VALIDATE_URL );
+	$s_clean_url  = $s_valid_url ? $s_target_url : str_replace( $s_file_name, urlencode( $s_file_name ), $s_image_url );
 
 	// Get image size normally.
 	$b_image_exist = f_pmh_remote_file_exist( $s_clean_url );
@@ -1347,7 +1355,7 @@ function f_pmh_get_clean_url( $s_image_url ) {
 		if ( false === $b_image_exist ) {
 
 			// Get image size with rawurlencode.
-			$s_clean_url = str_replace( $s_file_name,rawurlencode( $s_file_name ), $s_image_url );
+			$s_clean_url = str_replace( $s_file_name, rawurlencode( $s_file_name ), $s_image_url );
 		}
 	}
 
@@ -1417,7 +1425,8 @@ function f_pmh_process_posts_content( int $i_post_id ) {
 
 		if ( $a_switches_1 ) {
 
-			/* Debug
+			/*
+			Debug
 			echo "<pre>";
 			var_dump( '$a_switches_1' );
 			var_dump( $a_switches_1 );
@@ -1506,12 +1515,12 @@ function f_pmh_get_drupal_content_media_data( int $i_drupal_id ) {
 
 					$a_drupal_media_data[ $a_match_data['fid'] ] = $a_match_data;
 				}
-
 			}
 		}
 	}
 
-	/* Debug
+	/*
+	Debug
 	echo "<pre>";
 	var_dump( $a_drupal_media_data );
 	echo "</pre>";
@@ -1525,7 +1534,7 @@ function f_pmh_get_drupal_content_media_data( int $i_drupal_id ) {
  * Image HTML format.
  *
  * @param integer $i_img_id
- * @param array $a_drupal_media_data
+ * @param array   $a_drupal_media_data
  * @return string
  */
 function f_pmh_img_replacement_html( int $i_img_id, $a_drupal_media_data ) {
@@ -1534,7 +1543,8 @@ function f_pmh_img_replacement_html( int $i_img_id, $a_drupal_media_data ) {
 
 	$a_attachment_metadata = wp_get_attachment_metadata( $i_img_id );
 
-	/* Debug
+	/*
+	Debug
 	echo "<pre>";
 	var_dump( $a_attachment_metadata );
 	echo "</pre>";
@@ -1544,6 +1554,7 @@ function f_pmh_img_replacement_html( int $i_img_id, $a_drupal_media_data ) {
 	// $s_attachment_url = wp_get_attachment_image_url( $i_img_id, 'full' );
 	$s_attachment_alt = get_post_meta( $i_img_id, '_wp_attachment_image_alt', true );
 	$s_drupal_class   = isset( $a_drupal_media_data['attributes']['class'] ) ? $a_drupal_media_data['attributes']['class'] : '';
+	$a_drupal_class   = explode( ' ', $s_drupal_class );
 	// $s_wp_img_html    = "<img src='{$s_attachment_url}' alt='$s_attachment_alt' class='wp-image-{$i_img_id}'/>";
 
 	$a_attachment_args = array(
@@ -1554,24 +1565,45 @@ function f_pmh_img_replacement_html( int $i_img_id, $a_drupal_media_data ) {
 
 	$a_block_args = array(
 		'id'              => $i_img_id,
-		'width'           => rtrim($a_attachment_metadata['width'], 'px').'px',
-		'height'          => rtrim($a_attachment_metadata['height'], 'px').'px',
+		'width'           => rtrim( $a_attachment_metadata['width'], 'px' ) . 'px',
+		'height'          => rtrim( $a_attachment_metadata['height'], 'px' ) . 'px',
 		'sizeSlug'        => 'full',
 		'linkDestination' => 'none',
-		'className'       => $s_drupal_class,
 	);
 
-	$s_block_args  = json_encode( $a_block_args );
-	$s_wp_img_html = wp_get_attachment_image( $i_img_id, 'full', false, $a_attachment_args );
+	$a_figure_class = array(
+		'wp-block-image',
+		'size-full',
+	);
 
-	/* Debug
+	if ( in_array( 'file-full-width', $a_drupal_class, true ) ) {
+		$a_block_args['align'] = 'wide';
+		$a_figure_class[]      = 'alignwide';
+	} elseif ( in_array( 'file-browser-width', $a_drupal_class, true ) ) {
+		$a_block_args['align'] = 'full';
+		$a_figure_class[]      = 'alignfull';
+	} elseif ( in_array( 'media-wysiwyg-align-left', $a_drupal_class, true ) || in_array( 'media-image_on_left', $a_drupal_class, true ) ) {
+		$a_block_args['align'] = 'left';
+		$a_figure_class[]      = 'alignleft';
+	} elseif ( in_array( 'media-wysiwyg-align-right', $a_drupal_class, true ) || in_array( 'media-image_on_right', $a_drupal_class, true ) ) {
+		$a_block_args['align'] = 'right';
+		$a_figure_class[]      = 'alignright';
+	}
+
+	$s_block_args   = wp_json_encode( $a_block_args );
+	$s_figure_class = implode( ' ', $a_figure_class );
+	$s_wp_img_html  = wp_get_attachment_image( $i_img_id, 'full', false, $a_attachment_args );
+
+	/*
+	Debug
 	echo "<pre>";
 	var_dump( $s_block_args );
 	echo "</pre>";
 	exit;
 	 */
 
-	/* Debug
+	/*
+	Debug
 	echo "<pre>";
 	var_dump( $s_wp_img_html );
 	echo "</pre>";
@@ -1581,7 +1613,7 @@ function f_pmh_img_replacement_html( int $i_img_id, $a_drupal_media_data ) {
 
 	ob_start();?>
 	<!-- wp:image <?php echo $s_block_args; ?> -->
-		<figure class="wp-block-image size-full is-resized <?php echo $s_drupal_class; ?>">
+		<figure class="<?php echo $s_figure_class; ?>">
 			<?php echo $s_wp_img_html; ?>
 			<figcaption class="wp-element-caption"><?php echo $s_attachment_alt; ?></figcaption>
 		</figure>
@@ -1606,7 +1638,7 @@ function s_pmh_get_fixed_flag_key() {
  * Flag WordPress object as processed.
  *
  * @param integer $i_object_id
- * @param string $s_object_type (post/term)
+ * @param string  $s_object_type (post/term)
  * @return void
  */
 function f_pmh_flag_object_corrected( int $i_object_id, string $s_object_type ) {
@@ -1652,7 +1684,7 @@ function f_pmh_save_settings_cron() {
 	$a_enabled_crons  = array();
 	$a_allowed_values = array( 'media', 'posts' );
 
-	foreach( $_a_enabled_crons as $i => $_s_enabled_cron ) {
+	foreach ( $_a_enabled_crons as $i => $_s_enabled_cron ) {
 
 		if ( in_array( $_s_enabled_cron, $a_allowed_values ) ) {
 
