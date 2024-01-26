@@ -8,4 +8,8 @@ wp.domReady(function () {
   });
 
   wp.blocks.unregisterBlockStyle("core/image", ["default", "rounded"]);
+
+  wp.richText.unregisterFormatType("core/footnote");
+  wp.richText.unregisterFormatType("core/text-color");
+  wp.richText.unregisterFormatType("core/image");
 });

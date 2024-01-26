@@ -1,6 +1,6 @@
 body {
-  --_editor--content--width: 960px;
-  --_editor--gutter: 1rem;
+  --_editor--content--width: 600px;
+  --_editor--content--gutter: 4rem;
   --_editor--color--muted: #535355;
   container-type: inline-size;
   container-name: editor-content;
@@ -11,7 +11,7 @@ body {
   box-sizing: border-box;
   max-width: var(--_editor--content--width);
   margin-inline: auto;
-  padding-inline: var(--_editor--gutter);
+  padding-inline: var(--_editor--content--gutter);
   padding-block-end: 2rem;
 }
 
@@ -23,20 +23,21 @@ body {
 }
 
 .block-editor-block-list__layout.is-root-container
-  > .wp-block:is(
-    .alignfull,
-    .alignwide,
-    .file-browser-width,
-    .file-full-width
-  ):not(.alignleft, .alignright) {
+  > .wp-block:where(.alignwide, .alignfull):not(.alignleft, .alignright) {
   position: relative;
   left: 50%;
   translate: -50% 0;
   width: 100vw;
 }
 .block-editor-block-list__layout.is-root-container
-  > .wp-block:is(.alignwide, .file-full-width):not(.alignleft, .alignright) {
-  max-width: calc(var(--_editor--content--width) * 1.25);
+  > .wp-block:is(.alignwide):not(.alignleft, .alignright) {
+  max-width: var(--_editor--content--width);
+}
+.block-editor-block-list__layout.is-root-container > .wp-block:is(.alignleft) {
+  margin-inline-start: calc(var(--_editor--content--gutter) * -1);
+}
+.block-editor-block-list__layout.is-root-container > .wp-block:is(.alignright) {
+  margin-inline-end: calc(var(--_editor--content--gutter) * -1);
 }
 
 .block-editor-block-list__layout.is-root-container > .wp-block figcaption {
@@ -49,7 +50,7 @@ body {
   box-sizing: border-box;
   max-width: var(--_editor--content--width);
   margin-inline: auto;
-  padding-inline: var(--_editor--gutter);
+  padding-inline: var(--_editor--content--gutter);
 }
 
 .block-editor-block-list__layout.is-root-container
@@ -58,6 +59,12 @@ body {
   font-family: var(--wp--preset--font-family--system-serif);
   border-color: var(--_editor--color--muted);
   text-wrap: balance;
+}
+.block-editor-block-list__layout.is-root-container
+  > :where(.wp-block-pullquote)
+  > blockquote {
+  max-width: var(--_editor--content--width);
+  margin-inline: auto;
 }
 .block-editor-block-list__layout.is-root-container
   > :where(.wp-block-pullquote)
@@ -87,16 +94,6 @@ body {
   width: auto;
   max-width: 550px;
   margin-inline: auto;
-}
-
-@container editor-content (min-width: 600px) {
-  body {
-    --_editor--gutter: 1.5rem;
-  }
-
-  .wp-block-post-content {
-    --_editor--content--width: 600px;
-  }
 }
 
 @container editor-content (min-width: 960px) {

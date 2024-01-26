@@ -13,12 +13,20 @@
 	"settings": {
 		"appearanceTools": false,
     "blocks": {
+      "core/paragraph": {
+        "typography": {
+          "fontFamilies": []
+        }
+      },
       "core/pullquote": {
         "border": {
           "color": false,
           "radius": false,
           "style": false,
           "width": false
+        },
+        "typography": {
+          "fontFamilies": []
         }
       }
     },
@@ -175,7 +183,7 @@
 		},
 		"layout": {
 			"contentSize": "960px",
-			"wideSize": "calc(960px * 1.25)"
+			"wideSize": "none"
 		},
 		"spacing": {
       "padding": false,
@@ -294,7 +302,7 @@
 			"core/post-title": {
 				"spacing": {
 					"margin": {
-						"bottom": "1.25rem",
+						"bottom": "3rem",
 						"top": "1.25rem"
 					}
 				},

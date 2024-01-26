@@ -201,6 +201,8 @@ if ( ! function_exists( 'tw_allowed_block_types' ) ) :
 			'core/separator',
 
 			// Embeds...
+			// Specific types of embeds are now variants of the embed block.
+			// Variants can be enabled in `./js/blockembed.js`.
 			'core/embed',
 		);
 
