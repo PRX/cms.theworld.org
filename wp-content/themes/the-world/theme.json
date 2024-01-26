@@ -13,6 +13,11 @@
 	"settings": {
 		"appearanceTools": false,
     "blocks": {
+      "core/heading": {
+        "typography": {
+          "fontFamilies": []
+        }
+      },
       "core/paragraph": {
         "typography": {
           "fontFamilies": []

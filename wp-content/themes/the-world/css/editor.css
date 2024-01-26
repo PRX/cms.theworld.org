@@ -16,7 +16,7 @@ body {
 }
 
 .wp-block-post-content > * + * {
-  margin-block-start: 1.75rem;
+  margin-block-start: 1.75rem !important;
 }
 .wp-block-post-content > * + *:not(.alignleft, .alignright) {
   margin-block-end: 0;
@@ -32,6 +32,10 @@ body {
 .block-editor-block-list__layout.is-root-container
   > .wp-block:is(.alignwide):not(.alignleft, .alignright) {
   max-width: var(--_editor--content--width);
+}
+.block-editor-block-list__layout.is-root-container
+  > .wp-block:is(.alignleft, .alignright) {
+  width: 44%;
 }
 .block-editor-block-list__layout.is-root-container > .wp-block:is(.alignleft) {
   margin-inline-start: calc(var(--_editor--content--gutter) * -1);
