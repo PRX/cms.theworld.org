@@ -13,7 +13,7 @@ export default function save(props) {
 	const { attributes } = props;
 	const { question, answer, bordered } = attributes;
 	const blockProps = useBlockProps.save();
-	const classNames = blockProps.className.split(" ");
+	const classNames = blockProps.className?.split(" ");
 	const classNamesSet = new Set(classNames);
 
 	classNamesSet.delete("wp-block-tw-qa-block");
