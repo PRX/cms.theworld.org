@@ -43,6 +43,14 @@ body {
 .block-editor-block-list__layout.is-root-container > .wp-block:is(.alignright) {
   margin-inline-end: calc(var(--_editor--content--gutter) * -1);
 }
+.block-editor-block-list__layout.is-root-container
+  > .wp-block:is(.aligncenter) {
+  padding-inline: var(--_editor--content--gutter);
+  text-align: left;
+}
+.block-editor-block-list__layout.is-root-container > .wp-block figcaption {
+  display: block;
+}
 
 .block-editor-block-list__layout.is-root-container > .wp-block figcaption {
   color: var(--_editor--color--muted);
