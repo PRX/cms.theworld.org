@@ -1,0 +1,8 @@
+/* Adjust full width block size when sidebar is open. */
+@media (min-width: 782px) {
+  .is-sidebar-opened
+    .block-editor-block-list__layout.is-root-container
+    > .block-editor-block-list__block.wp-block:is(.alignfull) {
+    width: calc(100vw - 280px);
+  }
+}
