@@ -6,3 +6,10 @@
     width: calc(100vw - 280px);
   }
 }
+
+/* Hide toolbar button: Crop. */
+/* Image crop tool will result in images being served from WordPress server. */
+/* Until thiis tool can be disabled at a configuration level, use CSS to hide button. */
+.components-toolbar-button[aria-label="Crop"] {
+  display: none;
+}
