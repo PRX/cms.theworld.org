@@ -11,7 +11,7 @@ wp.domReady(function () {
   }
 
   // Allow only certain embed variants.
-  const allowedEmbedBlocks = ["twitter", "youtube", "vimeo"];
+  const allowedEmbedBlocks = ["twitter", "youtube", "vimeo", "datawrapper"];
 
   wp.blocks.getBlockVariations("core/embed").forEach(function (blockVariation) {
     if (-1 === allowedEmbedBlocks.indexOf(blockVariation.name)) {
