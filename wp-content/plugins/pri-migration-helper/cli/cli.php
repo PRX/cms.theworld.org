@@ -8,6 +8,7 @@
  * 3. image_fix [all|new, limit]
  * 4. posts_content_media_fix [limit, comma_separated_post_ids(optional)]
  * 5. single_post_content_media_fix [post_id]
+ * 6. post_tags_fix_duplicate [start_page_number post_per_page]
  */
 
 // Add 'tw-media-fix-all' command to wp-cli.
