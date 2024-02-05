@@ -11,7 +11,13 @@ wp.domReady(function () {
   }
 
   // Allow only certain embed variants.
-  const allowedEmbedBlocks = ["twitter", "youtube", "vimeo", "datawrapper"];
+  const allowedEmbedBlocks = [
+    "datawrapper",
+    "spotify",
+    "twitter",
+    "youtube",
+    "vimeo",
+  ];
 
   wp.blocks.getBlockVariations("core/embed").forEach(function (blockVariation) {
     if (-1 === allowedEmbedBlocks.indexOf(blockVariation.name)) {
@@ -43,6 +49,30 @@ wp.hooks.addFilter(
             anchor: false,
             spacing: {},
           },
+        };
+
+      case "core/embed":
+        return {
+          ...settings,
+          variations: settings.variations?.map((variation) => {
+            const { name } = variation;
+
+            switch (name) {
+              // Disable responsive option for Spotify embeds.
+              // Doesn't play well with responsive layouts inside the Spotify iframe.
+              case "spotify":
+                return {
+                  ...variation,
+                  attributes: {
+                    ...variation.attributes,
+                    allowResponsive: false,
+                    responsive: false,
+                  },
+                };
+              default:
+                return variation;
+            }
+          }),
         };
 
       default:
