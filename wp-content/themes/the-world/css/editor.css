@@ -23,23 +23,24 @@ body {
 }
 
 .block-editor-block-list__layout.is-root-container
-  > .wp-block:where(.alignwide, .alignfull):not(.alignleft, .alignright) {
+  > .wp-block:where(.alignwide, .alignfull) {
   position: relative;
   left: 50%;
   translate: -50% 0;
-  width: 100vw;
 }
-.block-editor-block-list__layout.is-root-container
-  > .wp-block:is(.alignwide):not(.alignleft, .alignright) {
+.block-editor-block-list__layout.is-root-container > .wp-block:is(.alignwide) {
   max-width: var(--_editor--content--width);
 }
 .block-editor-block-list__layout.is-root-container
   > .wp-block:is(.alignleft, .alignright) {
   float: none;
-  margin-inline: 0 !important;
+  width: 100%;
+  max-width: calc(100% - (var(--_editor--content--gutter) * 2));
+  margin-inline: auto !important;
 }
 .block-editor-block-list__layout.is-root-container
   > .wp-block:is(.aligncenter) {
+  width: 100%;
   max-width: calc(100% - (var(--_editor--content--gutter) * 2));
   text-align: left;
 }
@@ -95,15 +96,20 @@ body {
 }
 
 .block-editor-block-list__layout.is-root-container
-  > :is(
-    .wp-block-embed[data-title="Twitter"]:not(.alignleft, .alignright),
-    .wp-block-embed[data-title="Twitter"]:is(.alignwide, .alignfull)
+  > .wp-block-embed[data-title="Twitter"]:is(.alignwide, .alignfull):not(
+    .alignleft,
+    .alignright
   ) {
   left: unset;
   translate: unset;
   width: auto;
   max-width: 550px;
   margin-inline: auto;
+}
+
+.block-editor-block-list__layout.is-root-container
+  > .wp-block-embed[data-title="Spotify"]:is(.alignwide, .alignfull) {
+  --_full-width: calc(100vw - var(--_editor--content--gutter));
 }
 
 .block-editor-block-list__block.wp-block-separator {
