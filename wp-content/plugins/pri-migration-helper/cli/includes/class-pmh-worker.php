@@ -886,5 +886,168 @@ class PMH_Worker {
 		// Return false if no post_tags found.
 		return count( $a_post_tags ) > 0 ? $a_post_tags[0] : null;
 	}
+
+	/**
+	 * Import extra image fields from Drupal to WordPress.
+	 *
+	 * Example: wp tw-fix image_captions
+	 *
+	 * @param array $a_args
+	 */
+	public function image_captions( $args ) {
+
+		// Simulate running importer.
+		global $fgd2wpp;
+		ob_start();
+		$fgd2wpp->importer();
+		ob_get_clean();
+
+		// Connect.
+		WP_CLI::log( 'Connecting to Drupal.' );
+
+		$connected = $fgd2wpp->drupal_connect();
+
+		// If Drupal connection is established.
+		if ( $connected ) {
+
+			// Show success.
+			WP_CLI::success( "Drupal connection is established." );
+
+		} else {
+
+			// Return error.
+			WP_CLI::error( "Drupal connection is not established." );
+		}
+
+		// Set the minimum post ID
+		$i_start_from = isset( $args[0] ) ? (int) $args[0] : 0;
+		$limit        = isset( $args[1] ) ? (int) $args[1] : 100;
+
+		// Set the last ID.
+		$this->i_last_id = $i_start_from;
+
+		// Get all media ids.
+		$a_media_ids = $this->process_images_by_asc_id2( $limit );
+
+		// Start.
+		WP_CLI::log( 'Processing images..' );
+
+		// Loop through all media ids.
+		do {
+
+			// Start.
+			WP_CLI::log( wp_sprintf( 'Running fix for %s images starting from ID: %s', $limit, $this->i_last_id ) );
+
+			if ( ! $a_media_ids ) {
+				break;
+			}
+
+			// Loop through all media ids.
+			foreach ( $a_media_ids as $i_media_id ) {
+
+				$this->_image_captions( array( $i_media_id, $connected ) );
+
+				$this->i_last_id = (int) $i_media_id;
+			}
+
+			// Get all media ids.
+			$a_media_ids = $this->process_images_by_asc_id2( 100 );
+
+		} while ( $a_media_ids );
+	}
+
+	/**
+	 * Process images in batches.
+	 *
+	 * @param int $per_process_limit The number of images to process in each batch.
+	 *
+	 * @return array The post ids.
+	 */
+	public function process_images_by_asc_id2( $per_process_limit ) {
+
+		// Query all the images.
+		$args = array(
+			'post_type'      => 'attachment',
+			'post_mime_type' => 'image',
+			'post_status'    => 'inherit',
+			'post_parent'    => null,
+			'fields'         => 'ids',
+			'orderby'        => 'ID',
+			'order'          => 'ASC',
+			'posts_per_page' => $per_process_limit,
+			'no_found_rows'  => true,
+		);
+
+		// Add filter to query.
+		add_filter( 'posts_where', array( $this, 'image_fix_all_wp_query' ) );
+
+		// Do the query.
+		$query = new WP_Query($args);
+
+		// Get the posts.
+		$post_ids = $query->get_posts();
+
+		// Remove filter.
+		remove_filter( 'posts_where', array( $this, 'image_fix_all_wp_query' ) );
+
+		return $post_ids;
+	}
+
+	public function _image_captions( $args ) {
+
+		// Get global.
+		global $fgd2wpp;
+
+		// Set args.
+		$post_id   = (int) $args[0];
+		$connected = (bool) boolval( $args[1] );
+
+		// If Drupal connection is established.
+		if ( ! $connected ) {
+
+			// Simulate running importer.
+			ob_start();
+			$fgd2wpp->importer();
+			ob_get_clean();
+
+			// Connect.
+			$fgd2wpp->drupal_connect();
+		}
+
+		// Get drupal nid.
+		$fid = get_post_meta( $post_id, 'fid', true );
+
+		if ( $fid ) {
+
+			// Start.
+			WP_CLI::log( wp_sprintf( 'Processing post media %s.', $post_id ) );
+
+			// Get file attributes.
+			$attributes = pmh_get_file_attributes_images( array( 'fid' => $fid ) );
+
+			// If caption is set.
+			if ( isset( $attributes['caption'] ) && $attributes['caption'] ) {
+
+				$caption = wp_strip_all_tags( $attributes['caption'] );
+
+				// Update post excerpt.
+				$post = array(
+					'ID'           => $post_id,
+					'post_excerpt' => $caption,
+				);
+
+				// Update the post into the database.
+				$updated = wp_update_post( $post );
+				// $updated = true;
+
+				// Report success.
+				WP_CLI::log( wp_sprintf(
+					'- Post media %s update (%s)',
+					$post_id,
+					$updated ? 'success' : 'failed',
+				) );
+			}
+		}
+	}
 }
 

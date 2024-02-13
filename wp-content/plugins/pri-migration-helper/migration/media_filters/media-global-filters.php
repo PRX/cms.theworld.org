@@ -165,7 +165,8 @@ function pmh_get_file_attributes_images( $attributes ) {
 		fitt.field_file_image_title_text_value AS image_title,
 		fc.field_credit_value AS credit,
 		fhi.field_hide_image_value AS hide_image,
-		ttd.name AS license
+		ttd.name AS license,
+		fcap.field_caption_value AS caption
 
 	FROM
 		file_managed AS fm
@@ -198,6 +199,10 @@ function pmh_get_file_attributes_images( $attributes ) {
 		taxonomy_term_data AS ttd
 	ON fl.field_licence_tid = ttd.tid
 
+	LEFT JOIN
+		field_data_field_caption fcap
+		ON fm.fid = fcap.entity_id
+
 	WHERE
 		fm.fid = {$fid}
 
@@ -221,6 +226,7 @@ function pmh_get_file_attributes_images( $attributes ) {
 		$attributes['credit']      = $results_1[0]['credit'];
 		$attributes['hide_image']  = $results_1[0]['hide_image'];
 		$attributes['license']     = $results_1[0]['license'];
+		$attributes['caption']     = $results_1[0]['caption'];
 	}
 
 	return $attributes;
@@ -512,16 +518,8 @@ function pmh_extra_image_attributes( $image_attributs, $file ) {
 		'related_files',
 		'image_alt',
 		'image_title',
+		'caption',
 	);
-
-	/*
-	 Debug
-	echo "<pre>";
-	var_dump( 'pmh_extra_image_attributes' );
-	var_dump( $file );
-	var_dump( $image_attributs );
-	echo "</pre>";
-	 */
 
 	foreach ( $extra_attributes as $key ) {
 
@@ -568,6 +566,8 @@ function pmh_add_external_media_without_import( $url, $attributes = array(), $op
 	$related_files   = isset( $attributes['related_files'] ) ? $attributes['related_files'] : array();
 	$image_title     = isset( $attributes['image_title'] ) ? $attributes['image_title'] : '';
 	$alt             = isset( $attributes['alt'] ) ? $attributes['alt'] : '';
+	$caption		 = isset( $attributes['caption'] ) ? $attributes['caption'] : '';
+
 	if ( empty( $alt ) ) {
 		$alt = isset( $attributes['image_alt'] ) ? $attributes['image_alt'] : '';
 	}
@@ -585,7 +585,7 @@ function pmh_add_external_media_without_import( $url, $attributes = array(), $op
 		'post_mime_type' => $mime_type,
 		'post_title'     => sanitize_title( preg_replace( '/\.[^.]+$/', '', $filename ) ),
 		'post_content'   => wp_strip_all_tags( $description ),
-		'post_excerpt'   => wp_strip_all_tags( $image_caption ),
+		'post_excerpt'   => wp_strip_all_tags( $caption ),
 	);
 	$attachment    = apply_filters( 'fgd2wp_pre_insert_post', $attachment, $attributes );
 	$attachment_id = wp_insert_attachment( $attachment );
