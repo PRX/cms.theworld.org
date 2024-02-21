@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tw/scroll-gallery",
+  "version": "0.1.0",
+  "title": "Scroll Gallery",
+  "category": "media",
+  "icon": "smiley",
+  "description": "Scroll driven full screen image gallery.",
+  "example": {},
+  "supports": {
+    "html": false
+  },
+  "textdomain": "tw-scroll-gallery",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "attributes": {
+    "transition": {
+      "enum": [
+        "push",
+        "stack",
+        "fade"
+      ],
+      "default": "push"
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "tw/scroll-gallery-slide",
+	"version": "0.1.0",
+	"title": "Scroll Gallery Slide",
+	"parent": ["tw/scroll-gallery"],
+	"category": "widgets",
+	"icon": "smiley",
+	"description": "Slide block used in Scroll Gallery block.",
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "tw-scroll-gallery-slide",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"attributes": {
+		"contentPosition": {
+			"enum": ["left", "center", "right"],
+			"default": "center"
+		},
+		"mediaAlt": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "figure img",
+			"attribute": "alt",
+			"default": "",
+			"__experimentalRole": "content"
+		},
+		"mediaId": {
+			"type": "number",
+			"__experimentalRole": "content"
+		},
+		"mediaUrl": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "figure img",
+			"attribute": "src",
+			"__experimentalRole": "content"
+		},
+		"mediaType": {
+			"type": "string",
+			"__experimentalRole": "content"
+		},
+		"allowedBlocks": {
+			"type": "array"
+		}
+	}
+}

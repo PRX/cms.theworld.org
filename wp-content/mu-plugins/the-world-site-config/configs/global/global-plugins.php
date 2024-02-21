@@ -34,6 +34,7 @@ define(
 		'tw-qa-block/tw-qa-block.php',
 		'tw-datawrapper-block/tw-datawrapper-block.php',
 		'tw-resource-development-tags/tw-resource-development-tags.php',
+		'tw-scroll-gallery/tw-scroll-gallery.php',
 		'tw-segments/tw-segments.php',
 		'tw-story-format/tw-story-format.php',
 		'wordpress-importer/wordpress-importer.php',

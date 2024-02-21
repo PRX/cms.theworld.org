@@ -1,8 +1,8 @@
 {
-	"name": "tw-qa-block",
+	"name": "tw-scroll-gallery",
 	"version": "0.1.0",
-	"description": "Block for question-and-answer content.",
-	"author": "PRX",
+	"description": "Example block scaffolded with Create Block tool.",
+	"author": "The WordPress Contributors",
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
 	"scripts": {
@@ -16,5 +16,9 @@
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^27.2.0"
+	},
+	"dependencies": {
+		"@wordpress/icons": "^9.42.0",
+		"classnames": "^2.5.1"
 	}
 }

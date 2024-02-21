@@ -1,0 +1,185 @@
+/**
+ * The following styles get applied inside the editor only.
+ */
+.editor-styles-wrapper
+	.block-editor-block-list__layout.is-root-container
+	> .wp-block-tw-scroll-gallery {
+	.wp-block-tw-scroll-gallery-slide {
+		--_backdrop--direction: to right;
+		--_backdrop--color: rgb(0 0 0 / 30%);
+		--_backdrop--fade-out: 40%;
+		--_screen-height: calc(100vh - var(--_wp-ui-height, 107px));
+		position: relative;
+		display: grid;
+		grid-template-rows: var(--_screen-height) min-content var(--_screen-height);
+		grid-template-columns: 1fr;
+		justify-items: center;
+		align-items: center;
+		margin: 0;
+
+		> * {
+			grid-column: 1 / -1;
+			grid-row: 2;
+		}
+
+		:where(
+				.tw-scroll-gallery-slide--media-placholder,
+				.tw-scroll-gallery-slide--media
+			) {
+			grid-row: 1;
+			position: sticky;
+			top: 0;
+			height: var(--_screen-height);
+
+			background: var(--wp--preset--gradient--cool-to-warm-spectrum, #0089bd);
+		}
+
+		.tw-scroll-gallery-slide--media-placholder {
+			display: grid;
+			align-content: center;
+			box-shadow: none;
+			outline: none;
+		}
+
+		.tw-scroll-gallery-slide--media {
+			&:is(img) {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+		}
+
+		figcaption.tw-scroll-gallery-slide--content {
+			margin: 0;
+			padding: 2rem 3rem;
+
+			background-image: linear-gradient(
+				var(--_backdrop--direction, to right),
+				transparent 0%,
+				var(--_backdrop--color) var(--_backdrop--fade-out),
+				var(--_backdrop--color) calc(100% - var(--_backdrop--fade-out)),
+				transparent 100%
+			);
+
+			color: var(--wp--preset--color--base);
+			font-size: var(--wp--preset--font-size--medium);
+			text-shadow: 1px 1px 3px rgb(0 0 0 / 45%);
+
+			> * {
+				margin: 0;
+
+				& + * {
+					margin-top: 1.5rem;
+				}
+			}
+		}
+
+		&:where([data-content-position="left"], [data-content-position="right"]) {
+			figcaption.tw-scroll-gallery-slide--content {
+				background-image: linear-gradient(
+					var(--_backdrop--direction, to right),
+					transparent 0%,
+					var(--_backdrop--color) var(--_backdrop--fade-out)
+				);
+			}
+		}
+
+		&[data-content-position="left"] {
+			--_backdrop--direction: to left;
+			justify-items: start;
+
+			figcaption.tw-scroll-gallery-slide--content {
+				padding-inline-end: 5rem;
+			}
+		}
+
+		&[data-content-position="right"] {
+			justify-items: end;
+
+			figcaption.tw-scroll-gallery-slide--content {
+				padding-inline-start: 5rem;
+			}
+		}
+
+		@media (min-width: 768px) {
+			--_wp-ui-height: 86px;
+		}
+	}
+
+	&[data-transition="stack"] {
+		.wp-block-tw-scroll-gallery-slide {
+			& + .wp-block-tw-scroll-gallery-slide {
+				margin-block-start: calc(var(--_screen-height) * -1);
+			}
+			&:not(:last-of-type) {
+				figcaption.tw-scroll-gallery-slide--content {
+					margin-block-end: var(--_screen-height);
+				}
+			}
+		}
+	}
+
+	@supports (animation-timeline: view()) {
+		&[data-transition="fade"] {
+			.wp-block-tw-scroll-gallery-slide {
+				& + .wp-block-tw-scroll-gallery-slide {
+					margin-block-start: calc(var(--_screen-height) * -2);
+					animation: scroll-fade linear forwards;
+					animation-timeline: view();
+					animation-range-start: var(--_screen-height);
+					animation-range-end: calc(var(--_screen-height) * 2);
+					opacity: 0;
+
+					figcaption.tw-scroll-gallery-slide--content {
+						margin-block-start: var(--_screen-height);
+					}
+				}
+				&:not(:last-of-type) {
+					figcaption.tw-scroll-gallery-slide--content {
+						margin-block-end: var(--_screen-height);
+					}
+				}
+			}
+		}
+	}
+
+	@supports not (animation-timeline: view()) {
+		&[data-transition="fade"] {
+			.wp-block-tw-scroll-gallery-slide {
+				& + .wp-block-tw-scroll-gallery-slide {
+					margin-block-start: calc(var(--_screen-height) * -3);
+					mask-image: linear-gradient(
+						to bottom,
+						transparent,
+						transparent var(--_screen-height),
+						black calc(var(--_screen-height) * 2)
+					);
+					transform: translate3d(0, 0, 0);
+
+					figcaption.tw-scroll-gallery-slide--content {
+						margin-block-start: var(--_screen-height);
+					}
+				}
+				&:not(:first-of-type) {
+					figcaption.tw-scroll-gallery-slide--content {
+						margin-block-start: calc(var(--_screen-height) * 2);
+					}
+				}
+				&:not(:last-of-type) {
+					figcaption.tw-scroll-gallery-slide--content {
+						margin-block-end: calc(var(--_screen-height) * 2);
+					}
+				}
+			}
+		}
+	}
+}
+
+@keyframes scroll-fade {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}

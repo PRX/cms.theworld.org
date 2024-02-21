@@ -13,3 +13,10 @@
 .components-toolbar-button[aria-label="Crop"] {
   display: none;
 }
+
+.components-base-control__help dt {
+  font-weight: bold;
+}
+.components-base-control__help dd {
+  margin-inline-start: 1rem;
+}
