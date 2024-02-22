@@ -55,7 +55,7 @@ function tw_inject_credit_into_caption( $block_content, $credit ) {
 
 		// Replacement parts.
 		$pattern     = '</figcaption>';
-		$open        = '<span>';
+		$open        = '<span class="media-credit">';
 		$credit = trim( $credit );
 		$close       = '</span>';
 
