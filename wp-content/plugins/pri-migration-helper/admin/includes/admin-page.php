@@ -1362,13 +1362,42 @@ function f_pmh_get_clean_url( $s_image_url ) {
  */
 function f_pmh_process_posts_content( int $i_post_id ) {
 
-	$s_new_content = '';
+	// Get saved data.
+	$o_post      = get_post( $i_post_id );
+	$s_content   = $o_post->post_content;
+	$i_drupal_id = (int) get_post_meta( $i_post_id, 'nid', true );
 
-	$s_content = get_the_content( null, false, $i_post_id );
+	$s_new_content = f_pmh_get_updated_posts_content( $s_content, $i_drupal_id );
 
 	$m_updated = false;
 
-	$i_drupal_id = (int) get_post_meta( $i_post_id, 'nid', true );
+	if ( $s_new_content ) {
+
+		/**
+		 * Post updater.
+		 */
+		$a_update_post_args = array(
+			'ID'           => $i_post_id,
+			'post_content' => $s_new_content,
+		);
+
+		$m_updated = wp_update_post( $a_update_post_args );
+	}
+
+	return $m_updated;
+}
+add_action( 'fgd2wp_post_import_post', 'f_pmh_process_posts_content', 99, 1 );
+
+/**
+ * Process posts ids.
+ *
+ * @param int $i_post_id
+ * @return void
+ */
+function f_pmh_get_updated_posts_content( string $s_content, int $i_drupal_id ) {
+
+	$s_new_content = '';
+	$m_updated = false;
 
 	$a_matches    = array();
 	$a_switches_1 = array();
@@ -1417,37 +1446,50 @@ function f_pmh_process_posts_content( int $i_post_id ) {
 
 		if ( $a_switches_1 ) {
 
-			/* Debug
-			echo "<pre>";
-			var_dump( '$a_switches_1' );
-			var_dump( $a_switches_1 );
-			var_dump( '$a_switches_2' );
-			var_dump( $a_switches_2 );
-			echo "</pre>";
-			exit;
-			 */
-
 			$s_new_content = str_replace( $a_switches_1, $a_switches_2, $s_content );
 		}
 	}
 
+	/**
+	 * @TODO: enable this when the content is ready.
+	 */
 	f_pmh_flag_object_corrected( $i_post_id, 'post' );
 
 	// Check if new content has value.
 	if ( $s_new_content ) {
 
-		/**
-		 * Post updater.
-		 */
-		$a_update_post_args = array(
-			'ID'           => $i_post_id,
-			'post_content' => $s_new_content,
-		);
+		// New content blocks.
+		$a_new_content_blocks = '';
 
-		$m_updated = wp_update_post( $a_update_post_args );
+		// Parse blocks.
+		$a_post_blocks_array = parse_blocks( $s_new_content );
+
+		// Loop each block and force_balance_tags if blockName is null.
+		foreach ( $a_post_blocks_array as $a_block ) {
+
+			// If blockName is null.
+			if ( is_null( $a_block['blockName'] ) ) {
+
+				$balanced_tags = force_balance_tags( $a_block['innerHTML'] );
+
+				// Force balance tags.
+				$a_new_content_blocks .= serialize_block( array(
+					'blockName'    => null,
+					'attrs'        => array(),
+					'innerContent' => array( $balanced_tags ),
+				) );
+			} else {
+
+				$a_new_content_blocks .= serialize_block( $a_block );
+			}
+		}
+
+		// Clean empty p tags.
+		$pattern = "/<p[^>]*><\\/p[^>]*>/";
+		$s_new_content = preg_replace( $pattern, '', $a_new_content_blocks );
 	}
 
-	return $m_updated;
+	return $s_new_content;
 }
 
 /**
@@ -1522,74 +1564,95 @@ function f_pmh_get_drupal_content_media_data( int $i_drupal_id ) {
 }
 
 /**
- * Image HTML format.
+ * Replace image html with block markup.
  *
  * @param integer $i_img_id
  * @param array $a_drupal_media_data
+ *
  * @return string
  */
 function f_pmh_img_replacement_html( int $i_img_id, $a_drupal_media_data ) {
 
-	$s_img_html = '';
+	// Image size.
+	$s_image_size = 'full';
 
-	$a_attachment_metadata = wp_get_attachment_metadata( $i_img_id );
+	// Drupal class.
+	$s_drupal_class = isset( $a_drupal_media_data['attributes']['class'] ) ? $a_drupal_media_data['attributes']['class'] : '';
+	$a_drupal_class = explode( ' ', $s_drupal_class );
 
-	/* Debug
-	echo "<pre>";
-	var_dump( $a_attachment_metadata );
-	echo "</pre>";
-	exit;
-	 */
-
-	// $s_attachment_url = wp_get_attachment_image_url( $i_img_id, 'full' );
-	$s_attachment_alt = get_post_meta( $i_img_id, '_wp_attachment_image_alt', true );
-	$s_drupal_class   = isset( $a_drupal_media_data['attributes']['class'] ) ? $a_drupal_media_data['attributes']['class'] : '';
-	// $s_wp_img_html    = "<img src='{$s_attachment_url}' alt='$s_attachment_alt' class='wp-image-{$i_img_id}'/>";
-
-	$a_attachment_args = array(
-		'class'    => "wp-image-{$i_img_id}",
-		'loading'  => false,
-		'decoding' => false,
-	);
-
-	$a_block_args = array(
+	// Block attributes.
+	$a_block_attributes = array(
 		'id'              => $i_img_id,
-		'width'           => $a_attachment_metadata['width'],
-		'height'          => $a_attachment_metadata['height'],
-		'sizeSlug'        => 'full',
+		'sizeSlug'        => $s_image_size,
 		'linkDestination' => 'none',
-		'className'       => $s_drupal_class,
 	);
 
-	$s_block_args  = json_encode( $a_block_args );
-	$s_wp_img_html = wp_get_attachment_image( $i_img_id, 'full', false, $a_attachment_args );
+	// Default figure class.
+	$a_figure_class = array(
+		'wp-block-image',
+		'size-full',
+	);
 
-	/* Debug
-	echo "<pre>";
-	var_dump( $s_block_args );
-	echo "</pre>";
-	exit;
-	 */
+	// Detect Drupal class and add align class.
+	if ( in_array( 'file-full-width', $a_drupal_class, true ) ) {
+		$a_block_attributes['align'] = 'wide';
+		$a_figure_class[]            = 'alignwide';
+	} elseif ( in_array( 'file-browser-width', $a_drupal_class, true ) ) {
+		$a_block_attributes['align'] = 'full';
+		$a_figure_class[]            = 'alignfull';
+	} elseif ( in_array( 'media-wysiwyg-align-left', $a_drupal_class, true ) || in_array( 'media-image_on_left', $a_drupal_class, true ) ) {
+		$a_block_attributes['align'] = 'left';
+		$a_figure_class[]            = 'alignleft';
+	} elseif ( in_array( 'media-wysiwyg-align-right', $a_drupal_class, true ) || in_array( 'media-image_on_right', $a_drupal_class, true ) ) {
+		$a_block_attributes['align'] = 'right';
+		$a_figure_class[]            = 'alignright';
+	}
 
-	/* Debug
-	echo "<pre>";
-	var_dump( $s_wp_img_html );
-	echo "</pre>";
-	<!-- wp:image {"id":<?php echo $i_img_id; ?>,"sizeSlug":"full","linkDestination":"none","className":"<?php echo $s_drupal_class; ?>"} -->
-	exit;
-	 */
+	// Figure class.
+	$s_figure_class = implode( ' ', $a_figure_class );
 
-	ob_start();?>
-	<!-- wp:image <?php echo $s_block_args; ?> -->
-		<figure class="wp-block-image size-full is-resized <?php echo $s_drupal_class; ?>">
-			<?php echo $s_wp_img_html; ?>
-			<figcaption class="wp-element-caption"><?php echo $s_attachment_alt; ?></figcaption>
-		</figure>
-	<!-- /wp:image -->
-	<?php
-	$s_img_html = ob_get_clean();
+	// Image url.
+	$s_attachment_url = wp_get_attachment_image_url( $i_img_id, $s_image_size );
 
-	return $s_img_html;
+	// Get alt text.
+	$s_attachment_alt = get_post_meta( $i_img_id, '_wp_attachment_image_alt', true );
+
+	// Image class.
+	$s_img_class = wp_sprintf( 'wp-image-%s', $i_img_id );
+
+	// Get post excerpt as caption.
+	$s_attachment_caption = get_the_excerpt( $i_img_id );
+
+	// Caption element.
+	$s_caption_element = $s_attachment_caption ? wp_sprintf(
+		'<figcaption class="wp-element-caption">%s</figcaption>',
+		$s_attachment_caption
+	) : '';
+
+	// Block args.
+	$image_block = array(
+		'blockName'    => 'core/image',
+		'attrs'        => $a_block_attributes,
+		'innerContent' => array(
+			wp_sprintf(
+				'<figure class="%s">
+					<img src="%s" alt="%s" class="%s"/>
+					%s
+				</figure>',
+				$s_figure_class,
+				$s_attachment_url,
+				$s_attachment_alt,
+				$s_img_class,
+				$s_caption_element
+			),
+		),
+	);
+
+	// Content
+	$content = serialize_block( $image_block );
+
+	// Serialize block.
+	return $content;
 }
 
 /**
