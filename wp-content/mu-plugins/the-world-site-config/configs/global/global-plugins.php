@@ -27,6 +27,7 @@ define(
 		'tw-episode-importer/tw-episode-importer.php',
 		'tw-episodes/tw-episodes.php',
 		'tw-graphql/tw-graphql.php',
+		'tw-image-credit/tw-image-credit.php',
 		'tw-import-post-types/tw-import-post-types.php', // This is the plugin that creates the custom post types for the import. Can be removed after the import is complete.
 		'tw-media/tw-media.php',
 		'tw-menus/tw-menus.php',
