@@ -6,7 +6,7 @@
   "title": "Scroll Gallery",
   "category": "media",
   "icon": "smiley",
-  "description": "Scroll driven full screen image gallery.",
+  "description": "Scroll driven full screen image gallery in Feature presentation formats. Slides will be images with captions in Standard presentation format.",
   "example": {},
   "supports": {
     "html": false

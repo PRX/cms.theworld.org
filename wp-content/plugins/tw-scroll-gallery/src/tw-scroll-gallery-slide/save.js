@@ -33,7 +33,7 @@ export default function save({ attributes }) {
 		// video: () => <video controls src={mediaUrl} />,
 	};
 
-	const className = classnames({});
+	const className = classnames("tw-scroll-gallery-slide", {});
 
 	const blockProps = useBlockProps.save({
 		className,

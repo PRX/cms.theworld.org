@@ -136,7 +136,7 @@ export default function Edit({ attributes, isSelected, setAttributes }) {
 		[mediaId],
 	);
 
-	const classNames = classnames({
+	const classNames = classnames("tw-scroll-gallery-slide", {
 		"is-selected": isSelected,
 	});
 
