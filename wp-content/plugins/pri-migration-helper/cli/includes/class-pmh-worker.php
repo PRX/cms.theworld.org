@@ -970,7 +970,6 @@ class PMH_Worker {
 			'post_type'      => 'attachment',
 			'post_mime_type' => 'image',
 			'post_status'    => 'inherit',
-			'post_parent'    => null,
 			'fields'         => 'ids',
 			'orderby'        => 'ID',
 			'order'          => 'ASC',
