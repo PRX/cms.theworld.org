@@ -194,15 +194,17 @@ if ( ! function_exists( 'tw_allowed_block_types' ) ) :
 			'tw/qa-block',
 
 			// Media...
-			'core/image',
 			'core/audio',
+			'core/image',
+			'tw/scroll-gallery',
+			'tw/scroll-gallery-slide',
 
 			// Design...
 			'core/separator',
 
 			// Embeds...
 			// Specific types of embeds are now variants of the embed block.
-			// Variants can be enabled in `./js/blockembed.js`.
+			// Variations can be enabled in `./js/blockembed.js`.
 			'core/embed',
 		);
 

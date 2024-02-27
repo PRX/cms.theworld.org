@@ -8,7 +8,6 @@ import {
 	createBlock,
 	getBlockAttributes,
 } from "@wordpress/blocks";
-import { createElement } from "@wordpress/element";
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
