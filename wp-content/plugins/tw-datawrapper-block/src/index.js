@@ -54,7 +54,7 @@ const embedDataWrapperIcon = () => (
 );
 
 /*
- * New `core/group` block variation.
+ * New `core/embed` block variation.
  */
 const variation = {
 	name: "datawrapper",
@@ -64,6 +64,7 @@ const variation = {
 	description: __("Embed a DataWrapper chart."),
 	patterns: [/^https?:\/\/datawrapper\.dwcdn\.net\/.+/i],
 	attributes: { providerNameSlug: "datawrapper", responsive: true },
+	isDefault: true,
 	isActive: (blockAttributes, variationAttributes) =>
 		blockAttributes.providerNameSlug === variationAttributes.providerNameSlug,
 };
