@@ -78,6 +78,7 @@ function pri_get_post_meta_keys_and_values( $type = null, $field = null ) {
 			'_fid' => 'field_62b48652faff2',
 			'_image_title' => 'field_62d671c653456',
 			'_hide_image' => 'field_622a6312b1b5d',
+			'__media_credit' => 'field_65cdf8ee238b7',
 		),
 		'audio' => array(
 			'_original_uri' => 'field_62b4862efaff1',

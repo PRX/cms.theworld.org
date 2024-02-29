@@ -19,19 +19,16 @@
 function tw_add_media_credit_to_image_blocks( $block_content, array $block ) {
 
 	// We only target standard images, and only when the credits are not displayed after the post content.
-	if ( 'core/image' !== $block['blockName'] || ! isset( $block['attrs']['id'] ) ) {
+	if ( 'core/image' !== $block['blockName'] || ! isset( $block['attrs']['id'] ) || stripos( $block_content, 'class="media-credit"' ) ) {
 		return $block_content;
 	}
 
-	// Retrieve image.
-	$attachment = get_post( $block['attrs']['id'] );
-	if ( empty( $attachment ) ) {
+	// Get attachment credit using the block id.
+	$attachment_credit = get_post_meta( $block['attrs']['id'], '_media_credit', true );
+	if ( empty( $attachment_credit ) ) {
 		// Not a valid attachment, let's bail.
 		return $block_content;
 	}
-
-	// Get attachment credit.
-	$attachment_credit = get_post_meta( $attachment->ID, '_media_credit', true );
 
 	// Filter if needed.
 	$block_content = apply_filters( 'tw_add_media_credit_to_image_blocks', $block_content, $attachment_credit );
@@ -60,7 +57,7 @@ function tw_inject_credit_into_caption( $block_content, $credit ) {
 		$close       = '</span>';
 
 		// Inject the credit into the caption markup.
-		$block_content = str_replace( $pattern, "{$pattern}{$open}{$credit}{$close}", $block_content );
+		$block_content = str_replace( $pattern, "{$open}{$credit}{$close}{$pattern}", $block_content );
 	}
 
 	// Return the modified block content.
