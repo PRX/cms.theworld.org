@@ -5,7 +5,7 @@ License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: SEO, XML sitemap, Content analysis, Readability, Schema
 Tested up to: 6.4
-Stable tag: 21.8
+Stable tag: 22.1
 Requires PHP: 7.2.5
 
 Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.
@@ -342,52 +342,42 @@ Your question has most likely been answered on our help center: [yoast.com/help/
 
 == Changelog ==
 
-= 21.8 =
+= 22.1 =
 
-Release date: 2024-01-09
+Release date: 2024-02-20
 
-We've just released Yoast SEO 21.8. In this release, we've focused on general enhancements and fixes to improve how your WordPress SEO plugin functions. Find out more about what's new in Yoast SEO 21.8 in [our release post](https://yoa.st/release-9-1-24)!
-
-#### Enhancements
-
-* Aligns the styling of the replacement variables in the post editor with the styling in the settings.
-* Improves the centering of the eye icon in the highlighting button across editors.
-
-#### Bugfixes
-
-* Fixes a bug where highlighting for the _keyphrase density_ assessment would not work when using the latest version of Gutenberg (17.3.0).
-
-#### Other
-
-* Adds a JavaScript action (`yoast.analysis.applyMarks`) that allow users to implement the highlighting functionality in other editors.
-* Adds a notification in the sidebar to leave a quick review.
-* Removes a set of Elementor widgets from the content analysis to make the analysis results more accurate.
-* Re-orders menu items in block editor metabox and sidebar, classic editor metabox and Elementor editor sidebar to be consistent with Yoast SEO Premium.
-
-= 21.7 =
-
-Release date: 2023-12-12
-
-Yoast SEO 21.7 is out now. In this release, we bring an improved first-time configuration, making it easier for people to get started. Also, we fixed several bugs and added some enhancements. Find out more about what's new in Yoast SEO 21.7 in [our release post](https://yoa.st/release-12-12-23)!
+Yoast SEO 22.1 is out today. In this release, you'll find various fixes and improvements, including better Schema support and a new XML sitemap filter. Find out more about what's new in Yoast SEO 22.1 in [our release post](https://yoa.st/release-20-2-24)!
 
 #### Enhancements
 
-* Removes a superfluous warning in the first time configuration when the site environment is non-production.
+* Adds the filter `wpseo_sitemap_urlset` to easily filter `<urlset>` for all XML sitemaps. Props to @jdevalk.
+* Encodes possible spaces in URLs used in `@id` and `url` `WebPage` Schema piece properties when the Schema represents a search results page.
+* Lowers the minimum amount of characters needed to use the search functionality on the settings page.
+* Makes the section headings stand out visually in the _SEO_, _readability_ and _inclusive language_ analysis tabs.
 
 #### Bugfixes
 
-* Fixes a bug where an additional `Organization, Person` schema piece would be wrongly generated for author pages when a website representing an organization was set to represent a person different from the author.
-* Fixes a bug where the initial state for the website name would be empty when saving the site representation step in the first time configuration.
-* Fixes a bug where modifications to the analysis data would not be included in the Insights analysis.
-* Fixes a bug where the "view" button for tracking SEO performance would have the wrong size when editing a post in Elementor and Classic editor.
+* Fixes a bug where ending a _How-To_ or _FAQ_ block element with a backslash would generate errors when re-opening a saved post.
+* Fixes a bug where next and prev links in query loop would be wrong when disabling `Inherit query from template`.
+* Fixes a bug where some custom post types such as Divi layouts would experience problems after activation or deactivation of Yoast SEO.
+* Fixes a bug where the `ProfilePage` schema node would not be valid when it was manually chosen for a page.
+* Fixes a bug where using a plugin that hooks into `views_edit-{$post_type}` would generate fatal errors when the plugin returned an unexpected array.
 
 #### Other
 
-* Adds checks to ensure that the plugin has no known incompatibilities with PHP 8.3.
-* Improves the discoverability of the security policy.
-* Improves the instructions in the first-time configuration so that they're easier to follow.
-* Improves the new installation screen layout and design.
-* Provides a filter to add a list of shortcodes so they can be parsed and then included in our content analysis in Classic editor.
+* Adds more information about Yoast SEO Premium price to the sidebar ad.
+* Adds price and saving information to the `Cover all your SEO bases` card in the `Premium` page.
+
+= 22.0 =
+
+Release date: 2024-02-06
+
+Yoast SEO 22.0 is out today. This release comes with many behind-the-scenes improvements and general enhancements. Find out more about what's new in Yoast SEO 22.0 in [our release post](https://yoa.st/release-6-2-24)!
+
+#### Bugfixes
+
+* Fixes a bug where the `get_head` REST route would return a `rest_invalid_param` if the URL contains a multiple words search string. Props to @lucymtc.
+* Fixes a bug where using a `blog` prefix in the permalink structure with _Strip category base_ enabled would prevent the blog page from being accessible.
 
 = Earlier versions =
 For the changelog of earlier versions, please refer to [the changelog on yoast.com](https://yoa.st/yoast-seo-changelog).
