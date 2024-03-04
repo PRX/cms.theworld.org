@@ -1,4 +1,4 @@
-# Copyright (C) 2023 Microsoft
+# Copyright (C) 2024 Microsoft
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
@@ -9,9 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-11-22T10:27:53+00:00\n"
+"POT-Creation-Date: 2024-01-25T11:20:36+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.8.1\n"
+"X-Generator: WP-CLI 2.9.0\n"
 
 #. Plugin Name of the plugin
 #. translators: Name of plugin, appears in menu bar and edit bar, or in connection page when user tries to connect
@@ -1382,6 +1382,12 @@ msgstr ""
 msgid "Content contains duplicate videos."
 msgstr ""
 
+#. translators: one of reject content published reason message.
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "Content contains broken links."
+msgstr ""
+
 #. translators: one of reason messages for content rejection
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
@@ -1409,6 +1415,12 @@ msgstr ""
 #. translators: one of reason messages for content rejection
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
+msgid "Content source not approved due to sensitivity detected."
+msgstr ""
+
+#. translators: one of reason messages for content rejection
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
 msgid "At least one term or phrase promotes suicide or self-harm."
 msgstr ""
 
@@ -1427,7 +1439,7 @@ msgstr ""
 #. translators: one of reason messages for content rejection
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
-msgid "Title or article text is missing."
+msgid "Slideshow must have at least 200 characters from title to description."
 msgstr ""
 
 #. translators: one of reason messages for content rejection, $1 and $2 will be replaced by examples
@@ -1542,12 +1554,6 @@ msgstr ""
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
 msgid "Canonical URL is broken."
-msgstr ""
-
-#. translators: one of reject content published reason message.
-#: assets/js/editorSidebar.js:1
-#: assets/js/status.js:1
-msgid "Content contains broken links."
 msgstr ""
 
 #. translators: one of reason messages for content rejection
