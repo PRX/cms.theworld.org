@@ -243,8 +243,13 @@ function pri_fgd2wp_pre_insert_taxonomy_term( $custom_field_values, $new_term_id
 	switch ( $custom_field_name ) {
 		case 'category-body':
 			if ( $custom_field_values && ! empty( $custom_field_values[0] ) ) {
-				$args['description'] = get_term_field( 'description', $new_term_id, 'category', 'raw' ) . ' ' . $custom_field_values[0]['field_body_value'];
-				wp_update_term( $new_term_id, 'category', $args );
+				$cat_description = get_term_field( 'description', $new_term_id, 'category', 'raw' );
+				$cat_description_is_valid = is_string( $cat_description ) && ! empty( trim( $cat_description ) );
+				if ( ! $cat_description_is_valid && ! empty( $custom_field_values[0]['field_body_value'] ) ) {
+					$args['description'] = $custom_field_values[0]['field_body_value'];
+					wp_update_term( $new_term_id, 'category', $args );
+				}
+
 				$custom_field_values = array();
 			}
 			break;
