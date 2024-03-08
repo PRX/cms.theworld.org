@@ -834,6 +834,59 @@ function f_pmh_get_drupal_file_metadata( $a_wp_media_ids ) {
 }
 
 /**
+ * Get Drupal file metadata by fid.
+ *
+ * @param int $i_fid
+ *
+ * @return array
+ */
+function f_pmh_get_drupal_image_sizes( int $fid ) {
+
+	global $fgd2wpp;
+
+	$sql_query = "
+	SELECT
+		fmd.fid AS fid,
+		fmd.name AS name,
+		fmd.value AS value
+
+	FROM
+		file_metadata AS fmd
+
+	WHERE
+		fmd.fid = $fid
+	";
+
+	$a_rows = $fgd2wpp->drupal_query( $sql_query );
+
+	$a_drupal_meta = array();
+
+	if ( $a_rows ) {
+
+		foreach ( $a_rows as $a_row ) {
+
+			$s_row_col_name  = $a_row['name'];
+			$s_row_col_value = $a_row['value'];
+
+			if (
+				'width' === $s_row_col_name
+				||
+				'height' === $s_row_col_name
+			) {
+				$s_row_col_value = str_replace( 'i:', '', $s_row_col_value );
+				$s_row_col_value = str_replace( ';', '', $s_row_col_value );
+				$s_row_col_value = intval( $s_row_col_value );
+			}
+
+			$a_drupal_meta[ $s_row_col_name ] = $s_row_col_value;
+
+		}
+	}
+
+	return $a_drupal_meta;
+}
+
+/**
  * Respond to ajax request.
  *
  * @return void
@@ -1367,7 +1420,7 @@ function f_pmh_process_posts_content( int $i_post_id ) {
 	$s_content   = $o_post->post_content;
 	$i_drupal_id = (int) get_post_meta( $i_post_id, 'nid', true );
 
-	$s_new_content = f_pmh_get_updated_posts_content( $s_content, $i_drupal_id );
+	$s_new_content = f_pmh_get_updated_posts_content( $s_content, $i_post_id, $i_drupal_id );
 
 	$m_updated = false;
 
@@ -1394,7 +1447,7 @@ add_action( 'fgd2wp_post_import_post', 'f_pmh_process_posts_content', 99, 1 );
  * @param int $i_post_id
  * @return void
  */
-function f_pmh_get_updated_posts_content( string $s_content, int $i_drupal_id ) {
+function f_pmh_get_updated_posts_content( string $s_content, int $i_post_id, int $i_drupal_id ) {
 
 	$s_new_content = '';
 	$m_updated = false;
