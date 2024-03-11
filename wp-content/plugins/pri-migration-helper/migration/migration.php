@@ -509,4 +509,5 @@ function pri_post_import_media_fix() {
 	// Run media fix.
 	$o_media_fix_cli->image_fix( $a_media_fix_arguments );
 }
-add_action( 'fgd2wp_post_import', 'pri_post_import_media_fix', 100 );
+// Disable this hook for now as the code was included in the normal import process. And we don't need to run it after migration.
+// add_action( 'fgd2wp_post_import', 'pri_post_import_media_fix', 100 );
