@@ -601,8 +601,31 @@ function pmh_add_external_media_without_import( $url, $attributes = array(), $op
 		// Image dimension.
 		if ( wp_attachment_is( 'image', $attachment_id ) ) {
 
-			$attachment_metadata['width']  = $width ? $width : 1024;
-			$attachment_metadata['height'] = $height ? $height : 1024;
+			// Set width and height to 0.
+			$attachment_metadata['width']  = $width;
+			$attachment_metadata['height'] = $height;
+
+			// If one of the dimension is missing.
+			if ( ! $width || ! $height ) {
+
+				// Get image size.
+				$image_sizes = f_pmh_get_drupal_image_sizes( $fid );
+
+				// If image sizes is found and isset.
+				if (
+					$image_sizes
+					&&
+					isset( $image_sizes['width'] )
+					&&
+					isset( $image_sizes['height'] )
+				) {
+
+					// Set width and height.
+					$attachment_metadata['width']  = $image_sizes['width'];
+					$attachment_metadata['height'] = $image_sizes['height'];
+				}
+			}
+
 			$attachment_metadata['sizes']  = array( 'full' => $attachment_metadata );
 		}
 
