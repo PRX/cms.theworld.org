@@ -107,14 +107,14 @@ if ( ! function_exists( 'tw_init_set_auth_cookie' ) ) {
 		$auth       = new WPGraphQL\JWT_Authentication\Auth();
 		$secret_key = $auth->get_secret_key();
 
-		if ( $secret_key && ! isset( $_COOKIE['wp-can_preview'] ) ) {
+		if ( $secret_key && ! isset( $_COOKIE['STYXKEY-can_preview'] ) ) {
 			$hostname = wp_parse_url( get_site_url(), PHP_URL_HOST );
 			// NOTE: Regex assumes front-end domains will use single segment TLD's.
 			$domain = trim( preg_replace( '~.*?\.?((?:\.?[\w_-]+){2})$~', '$1', $hostname ), '.' );
 			$token  = $auth->get_refresh_token( wp_get_current_user() );
 
 			setcookie(
-				'wp-can_preview',
+				'STYXKEY-can_preview',
 				$token,
 				array(
 					'expires'  => 0,
