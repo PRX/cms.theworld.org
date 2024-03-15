@@ -264,7 +264,7 @@ remove_action( 'wp_head', 'wlwmanifest_link' );
 
 if ( ! function_exists( 'tw_custom_menu_link' ) ) :
 	function tw_custom_menu_link() {
-		add_menu_page('my_custom_link_1', 'The World Homepage', 'read', "/wp-admin/term.php?taxonomy=program&tag_ID=2&post_type=post", '', 'dashicons-admin-site-alt3', 8);
+		add_menu_page('tw_edit_hompage_link', 'The World Homepage', 'publish_posts', "/wp-admin/term.php?taxonomy=program&tag_ID=2&post_type=post", '', 'dashicons-admin-site-alt3', 8);
 	}
 endif;
 add_action('admin_menu', 'tw_custom_menu_link');
