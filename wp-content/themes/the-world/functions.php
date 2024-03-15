@@ -262,7 +262,9 @@ add_filter( 'should_load_remote_block_patterns', '__return_false' );
 // Remove Windows Live Writer manifest link.
 remove_action( 'wp_head', 'wlwmanifest_link' );
 
-add_action('admin_menu', 'add_custom_menu_link');
-function add_custom_menu_link() {
-	add_menu_page('my_custom_link_1', 'The World Homepage', 'read', "/wp-admin/term.php?taxonomy=program&tag_ID=2&post_type=post", '', 'dashicons-admin-site-alt3', 8);
-}
+if ( ! function_exists( 'tw_custom_menu_link' ) ) :
+	function tw_custom_menu_link() {
+		add_menu_page('my_custom_link_1', 'The World Homepage', 'read', "/wp-admin/term.php?taxonomy=program&tag_ID=2&post_type=post", '', 'dashicons-admin-site-alt3', 8);
+	}
+endif;
+add_action('admin_menu', 'tw_custom_menu_link');
