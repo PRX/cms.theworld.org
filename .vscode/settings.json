@@ -1,41 +1,50 @@
 {
-	"cSpell.words": [
-		"ABSPATH",
-		"DOCROOT",
-		"jetpack",
-		"Lando",
-		"multidev",
-		"multidevs",
-		"newspack",
-		"pullquote",
-		"SITEURL",
-		"ssot",
-		"uncategorized",
-		"untrailingslashit",
-		"wpcfm",
-		"WPINC",
-		"WPMU"
-	],
-	"cSpell.ignorePaths": [
-		"package-lock.json",
-		"node_modules",
-		"vscode-extension",
-		".git/objects",
-		".vscode",
-		".vscode-insiders",
-		"wp-content/plugins",
-		"vendor"
-	],
-	"phpcs.composerJsonPath": "composer.json",
-	"phpcs.executablePath": "./vendor/bin/phpcs",
-	"phpcs.standard": "WordPress",
-	"phpSniffer.autoDetect": true,
-	"phpSniffer.standard": "WordPress",
-	"editorconfig.generateAuto": false,
-	"editor.formatOnSave": true,
-	"[php]": {
-		"editor.defaultFormatter": "wongjn.php-sniffer"
-	},
+  "cSpell.words": [
+    "ABSPATH",
+    "blockembed",
+    "dashicons",
+    "DOCROOT",
+    "httponly",
+    "jetpack",
+    "Lando",
+    "multidev",
+    "multidevs",
+    "newspack",
+    "pagename",
+    "postname",
+    "pullquote",
+    "shortcode",
+    "SITEURL",
+    "ssot",
+    "theworld",
+    "uncategorized",
+    "untrailingslashit",
+    "wlwmanifest",
+    "wpcfm",
+    "WPINC",
+    "WPMU",
+    "wpseo"
+  ],
+  "cSpell.ignorePaths": [
+    "package-lock.json",
+    "node_modules",
+    "vscode-extension",
+    ".git/objects",
+    ".vscode",
+    ".vscode-insiders",
+    "wp-content/plugins",
+    "vendor"
+  ],
+  "phpcs.composerJsonPath": "composer.json",
+  "phpcs.executablePath": "./vendor/bin/phpcs",
+  "phpcs.standard": "WordPress",
+  "phpSniffer.autoDetect": true,
+  "phpSniffer.standard": "WordPress",
+  "editorconfig.generateAuto": false,
+  "editor.formatOnSave": true,
+  "[php]": {
+    "editor.defaultFormatter": "wongjn.php-sniffer"
+  },
   "[html]": {
     "editor.defaultFormatter": "co6x0.vscode-wp-block-html"
   },
@@ -45,7 +54,7 @@
   "editor.quickSuggestions": {
     "strings": "on"
   },
-	"editor.defaultFormatter": null,
+  "editor.defaultFormatter": null,
   "eslint.format.enable": true,
   "[javascriptreact]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
