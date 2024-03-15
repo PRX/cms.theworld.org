@@ -262,14 +262,14 @@ add_filter( 'should_load_remote_block_patterns', '__return_false' );
 // Remove Windows Live Writer manifest link.
 remove_action( 'wp_head', 'wlwmanifest_link' );
 
-if ( ! function_exists( 'tw_custom_menu_link' ) ) :
+if ( ! function_exists( 'tw_add_edit_homepage_menu_link' ) ) :
 	/**
 	 * Add convenient link for editors to edit homepage.
 	 *
 	 * @uses add_menu_page() Add links to the menu.
 	 */
-	function tw_custom_menu_link() {
+	function tw_add_edit_homepage_menu_link() {
 		add_menu_page('tw_edit_homepage_link', 'The World Homepage', 'publish_posts', "/wp-admin/term.php?taxonomy=program&tag_ID=2&post_type=post", '', 'dashicons-admin-site-alt3', 8);
 	}
 endif;
-add_action('admin_menu', 'tw_custom_menu_link');
+add_action('admin_menu', 'tw_add_edit_homepage_menu_link');
