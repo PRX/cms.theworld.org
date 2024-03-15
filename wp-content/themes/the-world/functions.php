@@ -264,7 +264,7 @@ remove_action( 'wp_head', 'wlwmanifest_link' );
 
 if ( ! function_exists( 'tw_custom_menu_link' ) ) :
 	/**
-	 * Add .
+	 * Add convenient link for editors to edit homepage.
 	 *
 	 * @uses add_menu_page() Add links to the menu.
 	 */
