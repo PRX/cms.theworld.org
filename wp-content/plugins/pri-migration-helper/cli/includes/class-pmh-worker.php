@@ -1049,5 +1049,221 @@ class PMH_Worker {
 			}
 		}
 	}
+
+	/**
+	 * Repair the redirect table for selected object and type.
+	 *
+	 * @param array $args
+	 *              $args[1]: page number to start from
+	 *
+	 * @return void
+	 */
+	public function repair_wp_fg_redirect_tables( $args ) {
+		$paged_process = isset( $args[1] ) ? (int) $args[1] : 0;
+		$object_types   = array( 'taxonomy', 'post-type' );
+		$object_names   = array( 'taxonomy' => array( 'category', 'post_format', 'contributor', 'city', 'continent', 'country', 'province_or_state', 'region', 'license', 'resource_development', 'story_format', 'program', 'media_tag', 'post_tag', 'person', 'social_tags' ), 'post-type' => array( 'page', 'episode', 'post' ) );
+		WP_CLI::log( '-------------------------------' );
+		WP_CLI::log( 'repair_wp_fg_redirect_tables started.' );
+		foreach ( $object_types as $object_type ) {
+			foreach ( $object_names[ $object_type ] as $object_name ) {
+				WP_CLI::log( "Start Adding '{$object_type} - {$object_name}' redirects." );
+				$this->repair_wp_fg_redirect_table( array(
+					$object_type,
+					$object_name,
+					$paged_process,
+				) );
+				WP_CLI::log( "Finish Adding '{$object_type} - {$object_name}' redirects." );
+			}
+		}
+		WP_CLI::log( 'repair_wp_fg_redirect_tables finished.' );
+		WP_CLI::log( '-------------------------------' );
+	}
+
+	/**
+	 * Repair the redirect table for selected object and type.
+	 *
+	 * @param array $args
+	 *              $args[1]: taxonomy | post-type
+	 *              $args[2]: slug
+	 *              $args[3]: paging number to start from
+	 *
+	 * @return void
+	 */
+	public function repair_wp_fg_redirect_table( $args ) {
+
+		$object_type   = $args[0];
+		$object_name   = $args[1];
+		$paged_process = isset( $args[2] ) ? (int) $args[2] : 0;
+
+		// If object type or name is not set.
+		if ( ! $object_type || ! $object_name ) {
+			WP_CLI::error( 'Object type or name is not set.' );
+		}
+
+		// Set variable.
+		$worker_args = array(
+			'object_type'   => $object_type,
+			'object_name'   => $object_name,
+			'paged_process' => $paged_process,
+		);
+
+		// Run worker.
+		$response = pmh_post_worker_run_process( $worker_args );
+
+		// Get log.
+		$log = $response['log'];
+
+		// Print log.
+		WP_CLI::log( $log );
+
+		// Next?
+		$next = $response['next_paged_process'];
+
+		// Loop if next is not false.
+		if ( $next ) {
+
+			// Set above variable to $_POST.
+			$_POST['objectType']   = $object_type;
+			$_POST['objectName']   = $object_name;
+			$_POST['pagedProcess'] = $paged_process + 1;
+
+			$this->repair_wp_fg_redirect_table( array(
+				$object_type,
+				$object_name,
+				$paged_process + 1,
+			) );
+		} else {
+
+			// Print success. 'Redirect table for objectName updated.'
+			WP_CLI::success( "Redirect table for {$object_name} updated." );
+		}
+	}
+
+	/**
+	 * Get from Drupal url_alias table and update migrated WordPress redirect table.
+	 *
+	 * The option name for the last id is 'tw_fix_url_alias_last_id'.
+	 *
+	 * Be sure to already have table wp_migrated_legacy_url_alias created.
+	 *
+	 * @param array $args
+	 *              $args[1] : Start from id. Use 0 to start from the last id in the option. Use 1 to start from the first id.
+	 *              $args[2] : Limit.
+	 *
+	 * @return void
+	 */
+	public function update_url_alias_table( $args ) {
+
+		// Get the last id.
+		$last_id = isset( $args[0] ) ? (int) $args[0] : false;
+
+		// Get the limit.
+		$limit = isset( $args[1] ) ? (int) $args[1] : 100;
+
+		// If last id is not set. Get the last id from the option.
+		if ( ! $last_id ) {
+			$last_id = (int) get_option( 'tw_fix_url_alias_last_id', 0 );
+		}
+
+		// Simulate running importer.
+		global $fgd2wpp;
+
+		ob_start();
+		$fgd2wpp->importer();
+		ob_get_clean();
+
+		// Connect.
+		$fgd2wpp->drupal_connect();
+
+		// DB Information.
+		$drupal_table_name = 'url_alias';
+		$wp_table_name     = 'wp_migrated_legacy_url_alias';
+
+		// Get total row in url_alias table in Drupal starting from the last id.
+		$query_str = "SELECT COUNT(*) as qty FROM {$drupal_table_name} WHERE pid > {$last_id}";
+
+		$total_rows = $fgd2wpp->drupal_query( $query_str, 'total' );
+
+		// If no rows found, Exit.
+		if (
+			isset( $total_rows[0]['qty'] )
+			&&
+			0 === $total_rows[0]['qty']
+		) {
+
+			WP_CLI::log( "No rows found." );
+
+			return;
+		}
+
+		$total_row_count = (int) $total_rows[0]['qty'];
+
+		// Make WP_CLI progress bar.
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Updating url_alias table', $total_row_count );
+
+		// Get row from url_alias table by limit and last id.
+		$query_str = "SELECT * FROM {$drupal_table_name} WHERE pid > {$last_id} LIMIT {$limit}";
+
+		$rows = $fgd2wpp->drupal_query( $query_str );
+
+		// Check if each row exists in the wp_migrated_legacy_url_alias table in WordPress.
+		// Use the pid as the unique key. Use global $wpdb.
+		global $wpdb;
+
+		// Failed row ids.
+		$failed_row_ids = array();
+
+		// Loop through each row.
+		do {
+			foreach ( $rows as $row ) {
+
+				// Get the pid.
+				$pid = $row['pid'];
+
+				// Check if the pid exists in the wp_migrated_legacy_url_alias table.
+				$exists = (int) $wpdb->get_var( $wpdb->prepare( "SELECT 1 FROM {$wp_table_name} WHERE pid = %d LIMIT 1", $pid ) );
+
+				// If the pid does not exist in the wp_migrated_legacy_url_alias table.
+				if ( ! $exists ) {
+
+					// Insert the row to the wp_migrated_legacy_url_alias table.
+					$insert = $wpdb->insert( $wp_table_name, $row );
+
+					// Add failed row id.
+					if ( ! $insert ) {
+						$failed_row_ids[] = $pid;
+					}
+				}
+
+				// Update the last id.
+				update_option( 'tw_fix_url_alias_last_id', $pid );
+
+				// Tick the progress bar.
+				$progress->tick();
+			}
+
+			// Get the next batch of rows.
+			$query_str = "SELECT * FROM {$drupal_table_name} WHERE pid > {$pid} LIMIT {$limit}";
+			$rows = $fgd2wpp->drupal_query( $query_str );
+
+		} while ( $rows );
+
+		$progress->finish();
+
+		// If failed row ids is not empty.
+		if ( $failed_row_ids ) {
+
+			// Log failed row ids.
+			WP_CLI::log( '' );
+			WP_CLI::log( 'Failed row ids:' );
+			WP_CLI::log( implode( ', ', $failed_row_ids ) );
+			WP_CLI::log( '' );
+
+		} else {
+
+			// Log success.
+			WP_CLI::success( 'All rows are updated.' );
+		}
+	}
 }
 
