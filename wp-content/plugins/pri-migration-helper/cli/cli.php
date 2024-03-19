@@ -13,6 +13,10 @@
  *    Both are optional. If not provided, it will start from the beginning by 100 per process.
  * 8. _image_captions [wp_image_id]
  *    If targetting a single image, use this command instead.
+ * 9. repair_wp_fg_redirect_tables [page_number]
+ * 10. repair_wp_fg_redirect_table [obect_type, object_name, page_number]
+ * Example: repair_wp_fg_redirect_table taxonomy category
+ * 11. update_url_alias_table [last_id, limit]
  */
 
 // Add 'tw-media-fix-all' command to wp-cli.

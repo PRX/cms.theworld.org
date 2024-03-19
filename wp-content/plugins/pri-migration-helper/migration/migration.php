@@ -509,5 +509,63 @@ function pri_post_import_media_fix() {
 	// Run media fix.
 	$o_media_fix_cli->image_fix( $a_media_fix_arguments );
 }
-// Disable this hook for now as the code was included in the normal import process. And we don't need to run it after migration.
 // add_action( 'fgd2wp_post_import', 'pri_post_import_media_fix', 100 );
+
+/**
+ * Modify extra conditions for getting nodes.
+ *
+ * @param string $extra_conditions Extra conditions.
+ * @param string $content_type Post type.
+ * @param string $entity_type Entity type.
+ *
+ * @return string
+ */
+function pri_migration_tw_get_nodes_add_extra_conditions( $extra_conditions, $content_type, $entity_type ) {
+
+	// Content types.
+	$selective_fix_content_types = get_option( 'tw_selective_fix_content_types', array() );
+
+	// Add extra conditions if content type matches.
+	if ( in_array( $content_type, $selective_fix_content_types, true ) ) {
+
+		// Get node ids.
+		$node_ids = get_option( 'tw_get_nodes_' . $content_type . '_target_ids' );
+
+		// If node ids exist.
+		if ( $node_ids ) {
+
+			// Add extra conditions.
+			$extra_conditions = ' AND ';
+			$extra_conditions .= "n.nid IN ($node_ids)";
+		}
+	}
+
+	return $extra_conditions;
+}
+add_filter( 'tw_get_nodes_add_extra_conditions', 'pri_migration_tw_get_nodes_add_extra_conditions', 10, 3 );
+
+/**
+ * Add how many nodes to process when extra conditions are added.
+ */
+function pri_migration_tw_how_many_nodes_to_import( $how_many_nodes_to_import, $content_type ) {
+
+	// Content types.
+	$selective_fix_content_types = get_option( 'tw_selective_fix_content_types', array() );
+
+	// Add extra conditions if content type matches.
+	if ( in_array( $content_type, $selective_fix_content_types, true ) ) {
+
+		// Get node ids.
+		$node_ids = get_option( 'tw_get_nodes_' . $content_type . '_target_ids' );
+
+		// If node ids exist.
+		if ( $node_ids ) {
+
+			// Add extra conditions.
+			$how_many_nodes_to_import = count( explode( ',', $node_ids ) );
+		}
+	}
+
+	return $how_many_nodes_to_import;
+}
+add_filter( 'tw_how_many_nodes_to_import', 'pri_migration_tw_how_many_nodes_to_import', 10, 2 );

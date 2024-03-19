@@ -64,6 +64,16 @@ function test_json_diff_option_menu() {
 
 	add_submenu_page(
 		'pmh-admin-test',
+		'Selective Fix',
+		'Selective Fix',
+		'manage_options',
+		'pmh-selective-fix',
+		'pmh_selective_fix',
+		30
+	);
+
+	add_submenu_page(
+		'pmh-admin-test',
 		'Cron',
 		'Cron',
 		'manage_options',
@@ -184,6 +194,14 @@ function pmh_acf_fix() {
 	echo wp_sprintf( '<p>%s</p>', __( 'Fix the ACF meta keys to return information in the API' ) );
 
 	require_once PMH_ADMIN_DIR . '/parts/acf-fix.php';
+}
+
+function pmh_selective_fix() {
+
+	echo wp_sprintf( '<h2>%s</h2>', __( 'Selective Fix' ) );
+	echo wp_sprintf( '<p>%s</p>', __( 'Import node selectively by ID' ) );
+
+	require_once PMH_ADMIN_DIR . '/parts/selective-fix.php';
 }
 
 /**
@@ -478,15 +496,27 @@ add_action( 'wp_ajax_pmh_post_worker_get_sample', 'pmh_post_worker_get_sample' )
 /**
  * Get object names.
  *
- * @return void
+ * @param array $args taxonomy, category, pagedProcess
+ *
+ * @return mixed
  */
-function pmh_post_worker_run_process() {
+function pmh_post_worker_run_process( $args ) {
 
 	global $wpdb;
 
-	$object_type   = sanitize_text_field( $_POST['objectType'] );
-	$object_name   = sanitize_text_field( $_POST['objectName'] );
-	$paged_process = (int) sanitize_text_field( $_POST['pagedProcess'] );
+	// If doing ajax.
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+
+		$object_type   = sanitize_text_field( $_POST['objectType'] );
+		$object_name   = sanitize_text_field( $_POST['objectName'] );
+		$paged_process = (int) sanitize_text_field( $_POST['pagedProcess'] );
+
+	} else {
+
+		$object_type   = $args['object_type'];
+		$object_name   = $args['object_name'];
+		$paged_process = $args['paged_process'];
+	}
 
 	$next_paged_process = $paged_process + 1;
 
@@ -634,7 +664,15 @@ function pmh_post_worker_run_process() {
 		'next_paged_process' => $next_paged_process,
 	);
 
-	wp_send_json( $response );
+	// Is doing ajax.
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+
+		wp_send_json( $response );
+
+	} else {
+
+		return $response;
+	}
 }
 add_action( 'wp_ajax_pmh_post_worker_run_process', 'pmh_post_worker_run_process' );
 
