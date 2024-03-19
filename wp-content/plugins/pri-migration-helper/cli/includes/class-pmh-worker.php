@@ -1147,7 +1147,7 @@ class PMH_Worker {
 	 * Be sure to already have table wp_migrated_legacy_url_alias created.
 	 *
 	 * @param array $args
-	 *              $args[1] : Start from id. Use 0 to start from the last id in the option. Use 1 to start from the first id.
+	 *              $args[1] : Start from id. Use 0 or empty to start from the last id in the option. Use 1 to start from the first id.
 	 *              $args[2] : Limit.
 	 *
 	 * @return void

@@ -16,7 +16,7 @@
  * 9. repair_wp_fg_redirect_tables [page_number]
  * 10. repair_wp_fg_redirect_table [obect_type, object_name, page_number]
  * Example: repair_wp_fg_redirect_table taxonomy category
- * 11. _image_captions [wp_image_id]
+ * 11. update_url_alias_table [last_id, limit]
  */
 
 // Add 'tw-media-fix-all' command to wp-cli.
