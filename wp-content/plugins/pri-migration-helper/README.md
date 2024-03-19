@@ -20,3 +20,12 @@ Used to test the code used to replace img tags by image blocks in a single post.
 `wp tw-fix post_tags_fix_duplicate [start_page_number post_per_page]`
 Command to loop through all post_tags, check each term if it is duplicated in other custom taxonomies.
 If it is duplicated, add posts related to the post_tag to the custom taxonomy term.
+### Redirect table
+`wp tw-fix repair_wp_fg_redirect_tables [page_number]`
+Command to create redirects for all taxonomies and post types migrated.
+`wp tw-fix repair_wp_fg_redirect_table [obect_type, object_name, page_number]`
+Command to create redirects for specific taxonomies or post types migrated.
+* Example: `wp tw-fix repair_wp_fg_redirect_table taxonomy category`
+### Redirect table
+`wp tw-fix update_url_alias_table [last_id, limit]`
+ Command to add all the aliases stored in url_alias Drupal table. Last ID imported will be stored to continue from there. If migration from scratch is needed the last_id parameter must be set as 1.
