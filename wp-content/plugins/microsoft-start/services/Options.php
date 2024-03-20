@@ -1,7 +1,7 @@
 <?php
 // © Microsoft Corporation. All rights reserved.
 namespace microsoft_start\services;
-
+use microsoft_start\infrastructure\Util;
 class Options
 {
     private static function get($key, $default=null)
@@ -131,7 +131,8 @@ class Options
                 "feedName" => "",
                 "feedURL" => get_option( 'permalink_structure' ) ? "feed/" : "?feed=rss2",
                 "countryRegion" => $profile->market ?? 'en-us',
-                "isLocalNews" => $profile->isLocalNews ? "Yes" : "No",
+                "isLocalNews" => Util::trans_boolean_value_to_stringboolean($profile->isLocalNews),
+                "isAIACIncluded" => Util::trans_boolean_value_to_stringboolean($profile->isAIACIncluded),
                 "locations" => json_encode($profile->locations ?? [])
             ];
         }

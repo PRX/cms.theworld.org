@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInite9f9a7ec7c1268a21d820f6274f1c95f
+class ComposerStaticInitad0cdc0b143b4a07cfd830dddba460d4
 {
     public static $files = array (
         'c92bf23a32412037ecdc51806b458c36' => __DIR__ . '/..' . '/alledia/edd-sl-plugin-updater/EDD_SL_Plugin_Updater.php',
@@ -78,6 +78,15 @@ class ComposerStaticInite9f9a7ec7c1268a21d820f6274f1c95f
         'Pimple\\Psr11\\ServiceLocator' => __DIR__ . '/..' . '/pimple/pimple/src/Pimple/Psr11/ServiceLocator.php',
         'Pimple\\ServiceIterator' => __DIR__ . '/..' . '/pimple/pimple/src/Pimple/ServiceIterator.php',
         'Pimple\\ServiceProviderInterface' => __DIR__ . '/..' . '/pimple/pimple/src/Pimple/ServiceProviderInterface.php',
+        'Pimple\\Tests\\Fixtures\\Invokable' => __DIR__ . '/..' . '/pimple/pimple/src/Pimple/Tests/Fixtures/Invokable.php',
+        'Pimple\\Tests\\Fixtures\\NonInvokable' => __DIR__ . '/..' . '/pimple/pimple/src/Pimple/Tests/Fixtures/NonInvokable.php',
+        'Pimple\\Tests\\Fixtures\\PimpleServiceProvider' => __DIR__ . '/..' . '/pimple/pimple/src/Pimple/Tests/Fixtures/PimpleServiceProvider.php',
+        'Pimple\\Tests\\Fixtures\\Service' => __DIR__ . '/..' . '/pimple/pimple/src/Pimple/Tests/Fixtures/Service.php',
+        'Pimple\\Tests\\PimpleServiceProviderInterfaceTest' => __DIR__ . '/..' . '/pimple/pimple/src/Pimple/Tests/PimpleServiceProviderInterfaceTest.php',
+        'Pimple\\Tests\\PimpleTest' => __DIR__ . '/..' . '/pimple/pimple/src/Pimple/Tests/PimpleTest.php',
+        'Pimple\\Tests\\Psr11\\ContainerTest' => __DIR__ . '/..' . '/pimple/pimple/src/Pimple/Tests/Psr11/ContainerTest.php',
+        'Pimple\\Tests\\Psr11\\ServiceLocatorTest' => __DIR__ . '/..' . '/pimple/pimple/src/Pimple/Tests/Psr11/ServiceLocatorTest.php',
+        'Pimple\\Tests\\ServiceIteratorTest' => __DIR__ . '/..' . '/pimple/pimple/src/Pimple/Tests/ServiceIteratorTest.php',
         'Psr\\Container\\ContainerExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerExceptionInterface.php',
         'Psr\\Container\\ContainerInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerInterface.php',
         'Psr\\Container\\NotFoundExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/NotFoundExceptionInterface.php',
@@ -161,10 +170,10 @@ class ComposerStaticInite9f9a7ec7c1268a21d820f6274f1c95f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInite9f9a7ec7c1268a21d820f6274f1c95f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite9f9a7ec7c1268a21d820f6274f1c95f::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInite9f9a7ec7c1268a21d820f6274f1c95f::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInite9f9a7ec7c1268a21d820f6274f1c95f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitad0cdc0b143b4a07cfd830dddba460d4::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitad0cdc0b143b4a07cfd830dddba460d4::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitad0cdc0b143b4a07cfd830dddba460d4::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitad0cdc0b143b4a07cfd830dddba460d4::$classMap;
 
         }, null, ClassLoader::class);
     }

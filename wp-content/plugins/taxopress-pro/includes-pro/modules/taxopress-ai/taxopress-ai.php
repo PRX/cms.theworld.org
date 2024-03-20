@@ -60,6 +60,13 @@ if (!class_exists('TaxoPress_Pro_AI_Module')) {
                 'default_value' => 1,
                 'tab' => 'open_ai',
             ];
+            $fields['open_ai_tag_prompt'] = [
+                'label' => esc_html__('OpenAI Prompt (Beta)', 'taxopress-pro'),
+                'description' => sprintf(esc_html__('%1s Click here for prompt documentation. %2s', 'taxopress-pro'), '<a target="_blank" href="https://taxopress.com/docs/openai-prompts/">', '</a>'),
+                'type' => 'textarea',
+                'default_value' => "Extract tags from the following content: '{content}'. Tags:",
+                'tab' => 'open_ai',
+            ];
 
             //add ibm watson fields
             $fields['ibm_watson_api_url'] = [

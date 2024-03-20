@@ -24,12 +24,14 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
                         add_action($taxonomy . '_edit_form_fields', [$this, 'edit_term_fields'], 10, 2);
                         add_action('created_' . $taxonomy, [$this, 'save_term_fields']);
                         add_action('edited_' . $taxonomy, [$this, 'save_term_fields']);
+                        add_action('delete_' . $taxonomy, [$this, 'delete_linked_term_relation'], 10, 3);
                     }
                 }
             }, 19);
 
             // Add linked term to post
             add_action('save_post', array($this, 'add_linked_term_to_post'), 100, 2);
+
         }
 
         public function excluded_linked_terms_taxonomy()
@@ -173,6 +175,47 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
                     }
                 }
             }
+        }
+
+       /**
+        * @param int     $term         Term ID.
+        * @param int     $tt_id        Term taxonomy ID.
+        * @param WP_Term $deleted_term Copy of the already-deleted term.
+        */
+        public function delete_linked_term_relation($term, $tt_id, $deleted_term) {
+            /**
+             * Get all terms where current term is added as linked term
+             */
+            $args = [
+                'taxonomy'   => $deleted_term->taxonomy,
+                'hide_empty' => false,
+                'meta_query' => [
+                    [
+                        'key'     => self::LINKED_TERM_FIELD,
+                        'value'   => sprintf(':"%s";', $deleted_term->name),
+                        'compare' => 'LIKE'
+                    ],
+                ],
+            ];
+            $linked_terms = get_terms($args);
+
+            if (!empty($linked_terms)) {
+                foreach ($linked_terms as $linked_term) {
+                    // remove deleted term from linked term
+                    $taxopress_linked_terms = (array) get_term_meta($linked_term->term_id, self::LINKED_TERM_FIELD, true);
+                    $key = array_search($deleted_term->name, $taxopress_linked_terms);
+                    if ($key !== false) {
+                        unset($taxopress_linked_terms[$key]);
+                    }
+                    $taxopress_linked_terms = !empty($taxopress_linked_terms) ? array_values($taxopress_linked_terms) : [];
+                    update_term_meta(
+                        $linked_term->term_id,
+                        self::LINKED_TERM_FIELD,
+                        $taxopress_linked_terms
+                    );
+                }
+            }
+
         }
     }
 }

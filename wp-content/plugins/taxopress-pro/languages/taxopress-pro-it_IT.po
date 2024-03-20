@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaxoPress Pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-25 13:44+0000\n"
-"PO-Revision-Date: 2023-09-26 18:34+0200\n"
+"POT-Creation-Date: 2023-11-02 12:16+0000\n"
+"PO-Revision-Date: 2024-02-18 17:14+0100\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Language: it_IT\n"
@@ -11,14 +11,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3\n"
+"X-Generator: Poedit 3.4\n"
 "X-Loco-Version: 2.6.3; wp-6.1.1\n"
 "X-Domain: taxopress-pro\n"
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:268
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:283
 #, php-format
 msgid "%1$s is already added as a synonym to \"%2$s\"."
 msgstr "%1$s è già stato aggiunto come sinonimo a \"%2$s\"."
+
+#: includes-pro/modules/autoterms/autoterms.php:444
+#, php-format
+msgid "%1sYou need an API key to use LSEG / Refinitiv.%2s"
+msgstr "%1sDevi avere una chiave API per usare LSEG/Refinitiv.%2s"
 
 #: includes-pro/modules/autoterms/autoterms.php:156
 #: includes-pro/modules/autoterms/autoterms.php:191
@@ -50,6 +55,10 @@ msgstr "6 mesi fa"
 msgid "7 days ago"
 msgstr "7 giorni fa"
 
+#: includes-pro/classes/licence.php:91
+msgid "Activate License"
+msgstr "Attiva la licenza"
+
 #: includes-pro/modules/autolinks/autolinks.php:68
 msgid "Add"
 msgstr "Aggiungi"
@@ -58,11 +67,48 @@ msgstr "Aggiungi"
 msgid "Add Element"
 msgstr "Aggiungi elemento"
 
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:101
+msgid "API Confidence Value"
+msgstr "Valore di confidenza dell'API"
+
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:44
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:73
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:125
+msgid "API Key"
+msgstr "Chiave API"
+
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:94
+msgid "API Token"
+msgstr "Token API"
+
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:66
+msgid "API URL"
+msgstr "URL dell'API"
+
 #: includes-pro/modules/autoterms/autoterms.php:134
 msgid "Batches wait time"
 msgstr "Tempo di attesa per l'elaborazione dei lotti"
 
-#: includes-pro/modules/autoterms/autoterms.php:393
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:58
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:87
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:117
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:139
+msgid ""
+"By caching the results locally, new API requests will not be made unless the "
+"post title or content changes. This saves API usage."
+msgstr ""
+"Memorizzando nella cache i risultati a livello locale, non verranno "
+"effettuate nuove richieste API a meno che il titolo dell'articolo o il "
+"contenuto non cambino. In questo modo si risparmia l'utilizzo dell'API."
+
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:57
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:86
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:116
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:138
+msgid "Cache Results"
+msgstr "Risultati della cache"
+
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:102
 msgid ""
 "Choose a value between 0 and 1. A high value such as 0.8 will provide a few, "
 "accurate suggestions. A low value such as 0.2 will produce more suggestions, "
@@ -76,23 +122,35 @@ msgstr ""
 msgid "Daily"
 msgstr "Giornaliero"
 
-#: includes-pro/modules/autoterms/autoterms.php:356
+#: includes-pro/modules/autoterms/autoterms.php:419
 msgid "Dandelion"
 msgstr "Dandelion"
-
-#: includes-pro/modules/autoterms/autoterms.php:391
-msgid "Dandelion API confidence value"
-msgstr "Valore di confidenza dell'API Dandelion"
-
-#: includes-pro/modules/autoterms/autoterms.php:368
-msgid "Dandelion API token"
-msgstr "Token dell'API Dandelion"
 
 #: includes-pro/modules/autolinks/autolinks.php:68
 msgid "Element tag"
 msgstr "Tag elemento"
 
-#: includes-pro/modules/autoterms/autoterms.php:489
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:95
+msgid "Enter your Dandelion API Key."
+msgstr "Inserisci la tua chiave dell'API Dandelion."
+
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:74
+msgid "Enter your IBM Watson API Key."
+msgstr "Inserisci la tua chiave dell'API IBM Watson."
+
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:67
+msgid "Enter your IBM Watson API URL."
+msgstr "Inserisci la URL della tua chiave dell'API IBM Watson."
+
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:126
+msgid "Enter your LSEG / Refinitiv API Key."
+msgstr "Inserisci la tua chiave dell'API LSEG / Refinitiv."
+
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:45
+msgid "Enter your OpenAI API Key."
+msgstr "Inserisci la tua chiave dell'API OpenAI"
+
+#: includes-pro/modules/autoterms/autoterms.php:500
 msgid ""
 "Example <code>/\\b({term})\\b/i</code> will match whole word and <code>{term}"
 "</code> will be replaced with the term name before the regex action."
@@ -106,9 +164,11 @@ msgid "Exclude previously analyzed content"
 msgstr "Escludi il ccontenuto analizzato in precedenza"
 
 #: includes-pro/modules/autoterms/autoterms.php:95
-#: includes-pro/modules/autoterms/autoterms.php:340
-#: includes-pro/modules/autoterms/autoterms.php:408
-#: includes-pro/modules/autoterms/autoterms.php:458
+#: includes-pro/modules/autoterms/autoterms.php:342
+#: includes-pro/modules/autoterms/autoterms.php:373
+#: includes-pro/modules/autoterms/autoterms.php:401
+#: includes-pro/modules/autoterms/autoterms.php:430
+#: includes-pro/modules/autoterms/autoterms.php:469
 msgid "False"
 msgstr "Falso"
 
@@ -124,6 +184,10 @@ msgstr "https://taxopress.com"
 msgid "https://wordpress.org/plugins/simple-tags/"
 msgstr "https://wordpress.org/plugins/simple-tags/"
 
+#: includes-pro/modules/autoterms/autoterms.php:391
+msgid "IBM Watson"
+msgstr "IBM Watson"
+
 #: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:92
 #: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:112
 msgid ""
@@ -132,6 +196,10 @@ msgid ""
 msgstr ""
 "Se TaxoPress analizza i contenuti e trova un sinonimo, si comporterà come se "
 "avesse trovato il termine principale."
+
+#: includes-pro/classes/licence.php:72
+msgid "License key"
+msgstr "Chiave di licenza"
 
 #: includes-pro/modules/autoterms/autoterms.php:216
 msgid "Limit Auto Terms, based on published date"
@@ -146,6 +214,10 @@ msgstr "Limite per i lotti"
 msgid "Linked Terms"
 msgstr "Termini collegati"
 
+#: includes-pro/modules/autoterms/autoterms.php:451
+msgid "LSEG / Refinitiv"
+msgstr "LSEG / Refinitiv"
+
 #: includes-pro/modules/autolinks/autolinks.php:71
 msgid "New Element"
 msgstr "Nuovo elemento"
@@ -159,23 +231,19 @@ msgstr "Illimitato"
 msgid "None"
 msgstr "Nessuno"
 
-#: includes-pro/modules/autoterms/autoterms.php:424
-msgid "Open Calais"
-msgstr "Open Calais"
+#: includes-pro/modules/autoterms/autoterms.php:363
+msgid "OpenAI"
+msgstr "OpenAI"
 
-#: includes-pro/modules/autoterms/autoterms.php:436
-msgid "OpenCalais API Key"
-msgstr "Chiave API di OpenCalais"
-
-#: includes-pro/modules/autoterms/autoterms.php:486
+#: includes-pro/modules/autoterms/autoterms.php:497
 msgid "Regex code"
 msgstr "Codice Regex"
 
-#: includes-pro/modules/autoterms/autoterms.php:474
+#: includes-pro/modules/autoterms/autoterms.php:485
 msgid "Regular Expressions"
 msgstr "Espressione regolare"
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:289
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:304
 msgid "Request status."
 msgstr "Stato della richiesta."
 
@@ -183,14 +251,25 @@ msgstr "Stato della richiesta."
 msgid "Schedule Auto Terms for your content"
 msgstr "Programma i termini automatici per i tuoi contenuti"
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:297
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:312
 msgid "Security error. Kindly reload this page and try again"
 msgstr "Errore di sicurezza. Ricarica la pagina e riprova."
+
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:50
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:79
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:109
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:131
+msgid "Show Term Post Count"
+msgstr "Mostra il conteggio degli articoli del termine"
 
 #: includes-pro/modules/linked-terms/linked-terms.php:89
 #: includes-pro/modules/linked-terms/linked-terms.php:108
 msgid "Start typing to choose existing terms."
 msgstr "Inizia a scrivere per scegliere i termini esistenti."
+
+#: includes-pro/classes/licence.php:75
+msgid "Status"
+msgstr "Stato"
 
 #. Author of the plugin
 msgid "TaxoPress"
@@ -213,25 +292,22 @@ msgstr "TaxoPress Pro"
 msgid "Term Synonyms"
 msgstr "Sinonimi del termine"
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:230
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:317
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:264
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:358
 #, php-format
 msgid ""
-"These synonyms can't be added because at least one of %1$s is a term on this "
-"site."
+"These synonyms can't be added because %1$s are already added to another term."
 msgstr ""
-"Questi sinonimi non possono essere aggiunti perché almeno uno di %1$s è un "
-"termine presente in questo sito."
+"Questi sinonimi non possono essere aggiunti perché %1$s sono già stati "
+"aggiunti ad un altro termine."
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:249
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:340
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:240
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:333
 #, php-format
-msgid ""
-"These synonyms can't be added because at least one of %1$s is already added "
-"to another term."
+msgid "These synonyms can't be added because %1$s are terms on this site."
 msgstr ""
-"Questi sinonimi non possono essere aggiunti perché almeno uno di %1$s è già "
-"stato aggiunto ad un altro termine."
+"Questi sinonimi non possono essere aggiunti perché %1$s sono termini su "
+"questo sito."
 
 #: includes-pro/modules/autoterms/autoterms.php:112
 msgid ""
@@ -268,16 +344,16 @@ msgstr ""
 "ai soli contenuti recenti. Ti consigliamo di utilizzare questa funzione per "
 "evitare timeout su siti di grandi dimensioni."
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:225
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:312
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:235
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:328
 #, php-format
 msgid "This synonym can't be added because %1$s is a term on this site."
 msgstr ""
 "Questo sinonimo non può essere aggiunto perché %1$s è un termine su questo "
 "sito."
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:244
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:335
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:259
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:353
 #, php-format
 msgid ""
 "This synonym can't be added because %1$s is already added to another term."
@@ -285,26 +361,51 @@ msgstr ""
 "Questo sinonimo non può essere aggiunto perché %1$s è già stato aggiunto ad "
 "un altro termine."
 
-#: includes-pro/modules/autoterms/autoterms.php:357
+#: includes-pro/modules/autoterms/autoterms.php:413
 msgid ""
-"This will automatically add new terms from the Dandelion API service. Please "
+"This will automatically add new terms from the Dandelion service. Please "
 "test carefully before use."
 msgstr ""
-"Questo aggiungerà automaticamente nuovi termini dal servizio API di "
-"Dandelion. Ti consigliamo di testarlo con attenzione prima di utilizzarlo."
+"Questo aggiungerà automaticamente nuovi termini dal servizio di Dandelion. "
+"Ti consigliamo di testarlo con attenzione prima di utilizzarlo."
 
-#: includes-pro/modules/autoterms/autoterms.php:425
+#: includes-pro/modules/autoterms/autoterms.php:385
 msgid ""
-"This will automatically add new terms from the Open Calais service. Please "
+"This will automatically add new terms from the IBM Watson service. Please "
 "test carefully before use."
 msgstr ""
-"Questo aggiungerà automaticamente nuovi termini dal servizio API di Open "
-"Calais. Ti consigliamo di testarlo con attenzione prima di utilizzarlo."
+"Questo aggiungerà automaticamente nuovi termini dal servizio IBM Watson. Ti "
+"consigliamo di testarlo con attenzione prima di utilizzarlo."
+
+#: includes-pro/modules/autoterms/autoterms.php:442
+msgid ""
+"This will automatically add new terms from the LSEG / Refinitiv service. "
+"Please test carefully before use."
+msgstr ""
+"Questo aggiungerà automaticamente nuovi termini dal servizio LSEG / "
+"Refinitiv. Ti consigliamo di testarlo con attenzione prima di utilizzarlo."
+
+#: includes-pro/modules/autoterms/autoterms.php:354
+msgid ""
+"This will automatically add new terms from the OpenAI service. Please test "
+"carefully before use."
+msgstr ""
+"Questo aggiungerà automaticamente nuovi termini dal servizio OpenAI. Ti "
+"consigliamo di testarlo con attenzione prima di utilizzarlo."
+
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:51
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:80
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:110
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:132
+msgid "This will show number of posts attached to the term."
+msgstr "Questo mostrerà il numero di articoli allegati al termine."
 
 #: includes-pro/modules/autoterms/autoterms.php:100
-#: includes-pro/modules/autoterms/autoterms.php:345
-#: includes-pro/modules/autoterms/autoterms.php:413
-#: includes-pro/modules/autoterms/autoterms.php:463
+#: includes-pro/modules/autoterms/autoterms.php:347
+#: includes-pro/modules/autoterms/autoterms.php:378
+#: includes-pro/modules/autoterms/autoterms.php:406
+#: includes-pro/modules/autoterms/autoterms.php:435
+#: includes-pro/modules/autoterms/autoterms.php:474
 msgid "True"
 msgstr "Vero"
 
@@ -313,7 +414,7 @@ msgstr "Vero"
 msgid "Type the synonym name and then click Enter or Return."
 msgstr "Digitare il nome del sinonimo e fare clic su Enter o Invio."
 
-#: includes-pro/modules/autoterms/autoterms.php:475
+#: includes-pro/modules/autoterms/autoterms.php:486
 msgid "Use Regular Expressions to change how Auto Terms analyzes your posts."
 msgstr ""
 "Usa le espressioni regolari per modificare il modo in cui i termini "
@@ -326,22 +427,56 @@ msgstr ""
 "Quando il termine principale viene aggiunto a un articolo, vengono aggiunti "
 "anche questi termini."
 
-#: includes-pro/modules/autoterms/autoterms.php:371
+#: includes-pro/modules/autoterms/autoterms.php:356
+#, php-format
 msgid ""
-"You need an API key to use Dandelion for auto terms. <br /> <a "
-"href=\"https://taxopress.com/docs/dandelion-api/\">Click here for "
-"documentation.</a>"
+"You need an API key to use OpenAI. %1s %2sClick here to add an API Key.%3s"
 msgstr ""
-"È necessaria una chiave API per utilizzare Dandelion per i termini "
-"automatici. <br /> <a href=\"https://taxopress.com/docs/dandelion-api/\">Fai "
-"clic qui per la documentazione.</a>"
+"Devi avere una chiave API per usare OpenAI. %1s %2sFai clic qui per "
+"aggiungere una chiave API.%3s"
 
-#: includes-pro/modules/autoterms/autoterms.php:439
-msgid ""
-"You need an API key to use OpenCalais for auto terms. <br /> <a "
-"href=\"https://taxopress.com/docs/opencalais/\">Click here for documentation."
-"</a>"
+#: includes-pro/classes/licence.php:76
+msgid "Your license key provides access to updates and support."
 msgstr ""
-"È necessaria una chiave API per utilizzare OpenCalais per i termini "
-"automatici. <br /> <a href=\"https://taxopress.com/docs/opencalais/\">Fai "
-"clic qui per la documentazione.</a>"
+"La tua chiave di licenza ti dà accesso agli aggiornamenti e al supporto "
+"tecnico."
+
+#~ msgid "Open Calais"
+#~ msgstr "Open Calais"
+
+#~ msgid "OpenCalais API Key"
+#~ msgstr "Chiave API di OpenCalais"
+
+#, php-format
+#~ msgid ""
+#~ "These synonyms can't be added because at least one of %1$s is a term on "
+#~ "this site."
+#~ msgstr ""
+#~ "Questi sinonimi non possono essere aggiunti perché almeno uno di %1$s è "
+#~ "un termine presente in questo sito."
+
+#, php-format
+#~ msgid ""
+#~ "These synonyms can't be added because at least one of %1$s is already "
+#~ "added to another term."
+#~ msgstr ""
+#~ "Questi sinonimi non possono essere aggiunti perché almeno uno di %1$s è "
+#~ "già stato aggiunto ad un altro termine."
+
+#~ msgid ""
+#~ "You need an API key to use Dandelion for auto terms. <br /> <a "
+#~ "href=\"https://taxopress.com/docs/dandelion-api/\">Click here for "
+#~ "documentation.</a>"
+#~ msgstr ""
+#~ "È necessaria una chiave API per utilizzare Dandelion per i termini "
+#~ "automatici. <br /> <a href=\"https://taxopress.com/docs/dandelion-api/"
+#~ "\">Fai clic qui per la documentazione.</a>"
+
+#~ msgid ""
+#~ "You need an API key to use OpenCalais for auto terms. <br /> <a "
+#~ "href=\"https://taxopress.com/docs/opencalais/\">Click here for "
+#~ "documentation.</a>"
+#~ msgstr ""
+#~ "È necessaria una chiave API per utilizzare OpenCalais per i termini "
+#~ "automatici. <br /> <a href=\"https://taxopress.com/docs/opencalais/\">Fai "
+#~ "clic qui per la documentazione.</a>"

@@ -275,20 +275,22 @@ if (!class_exists('TaxoPress_Taxonomy_Synonyms')) {
             }
 
             //Prevent users from adding terms if it exists as a synonym
-            $existing_term_synonyms = self::find_terms_with_synonyms([$term]);
-            if (!is_wp_error($existing_term_synonyms) && count($existing_term_synonyms) > 0) {
-                $existing_term_synonym_names = array_column($existing_term_synonyms, 'name');
+            if (!is_wp_error($term)) {
+                $existing_term_synonyms = self::find_terms_with_synonyms([$term]);
+                if (!is_wp_error($existing_term_synonyms) && count($existing_term_synonyms) > 0) {
+                    $existing_term_synonym_names = array_column($existing_term_synonyms, 'name');
 
-                $error_message = sprintf(
-                    esc_html__('%1$s is already added as a synonym to "%2$s".', 'taxopress-pro'),
-                    $term,
-                    join(', ', $existing_term_synonym_names)
-                );
+                    $error_message = sprintf(
+                        esc_html__('%1$s can\'t be added as a tag because %2$s is already used as a synonym.', 'taxopress-pro'),
+                        $term,
+                        join(', ', $existing_term_synonym_names)
+                    );
 
-                return new WP_Error(
-                    'taxopress_taxonomy_synonyms_exists',
-                    $error_message
-                );
+                    return new WP_Error(
+                        'taxopress_taxonomy_synonyms_exists',
+                        $error_message
+                    );
+                }
             }
 
             return $term;
