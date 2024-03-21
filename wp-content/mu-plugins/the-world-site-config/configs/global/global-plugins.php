@@ -14,6 +14,7 @@ define(
 		'disable-comments/disable-comments.php',
 		'genesis-custom-blocks/genesis-custom-blocks.php',
 		'PATCH-external-media-without-import/external-media-without-import.php',
+		'PATCH-s3-uploads/s3-uploads.php',
 		'microsoft-start/index.php',
 		'pwa/pwa.php',
 		'redirection/redirection.php',
