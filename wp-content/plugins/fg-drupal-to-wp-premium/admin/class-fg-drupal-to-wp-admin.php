@@ -1637,6 +1637,9 @@ SQL;
 		 * @return int Number of inserted terms
 		 */
 		public function insert_taxonomies_terms( $terms, $taxonomy ) {
+
+			global $fgd2wpp;
+
 			$terms_count           = 0;
 			$processed_terms_count = count( $terms );
 			$term_metakey          = '_fgd2wp_old_taxonomy_id';
@@ -1665,7 +1668,14 @@ SQL;
 
 				// Description
 				if ( isset( $term['description'] ) ) {
-					$args['description'] = $term['description'];
+					// $args['description'] = $term['description'];
+
+					// DINKUM: Add media support to taxonomy description.
+					$term_body        = $fgd2wpp->replace_media_shortcodes( $term['description'] );
+					$term_media       = $this->import_media_from_content( $term_body );
+					$term_description = $this->process_content( $term_body, $term_media['media'] );
+
+					$args['description'] = $term_description;
 				}
 
 				// Parent term
@@ -1681,7 +1691,13 @@ SQL;
 				// Hook before inserting the term
 				$args = apply_filters( 'fgd2wp_pre_insert_taxonomy_term', $args, $term, $wp_taxonomy );
 
+				// Allow html in description
+				pri_allow_html_term_description( true );
+
 				$new_term = wp_insert_term( $term['name'], $wp_taxonomy, $args );
+
+				// Disallow html in description
+				pri_allow_html_term_description( false );
 
 				// Store the last ID to resume the import where it left off
 				$term_id_without_prefix = preg_replace( '/^(\D*)/', '', $term_id );

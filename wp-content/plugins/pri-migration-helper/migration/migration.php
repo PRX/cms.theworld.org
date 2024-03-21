@@ -569,3 +569,25 @@ function pri_migration_tw_how_many_nodes_to_import( $how_many_nodes_to_import, $
 	return $how_many_nodes_to_import;
 }
 add_filter( 'tw_how_many_nodes_to_import', 'pri_migration_tw_how_many_nodes_to_import', 10, 2 );
+
+/**
+ * Allow and disallow HTML tags.
+ *
+ * @param bool $allow Allow HTML tags.
+ *
+ * @return void
+ */
+function pri_allow_html_term_description( bool $allow ) {
+
+	if ( $allow ) {
+		remove_filter( 'term_description', 'wp_kses_data' );
+		remove_filter( 'pre_term_description', 'wp_filter_kses' );
+		add_filter( 'term_description', 'wp_kses_post' );
+		add_filter( 'pre_term_description', 'wp_filter_post_kses' );
+	} else {
+		add_filter( 'term_description', 'wp_kses_data' );
+		add_filter( 'pre_term_description', 'wp_filter_kses' );
+		remove_filter( 'term_description', 'wp_kses_post' );
+		remove_filter( 'pre_term_description', 'wp_filter_post_kses' );
+	}
+}
