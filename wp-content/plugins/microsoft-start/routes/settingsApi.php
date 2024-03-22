@@ -4,6 +4,7 @@
 namespace microsoft_start\routes;
 
 use microsoft_start\infrastructure\ApiController;
+use microsoft_start\infrastructure\Util;
 use microsoft_start\services\Options;
 use microsoft_start\services\MSNClient;
 
@@ -16,15 +17,17 @@ class settingsApi extends ApiController
         Options::set_publishOption($parameters['publishOption']);
     }
     function getPayload($feedConfig) {
-        return (object)[
+        $res = (object)[
             "name" => $feedConfig['feedName'],
             "markets" => [$feedConfig['countryRegion']],
             "format"=> 1,
             "type" => 1,
             "link" => trailingslashit(site_url()) . $feedConfig['feedURL'],
-            "isLocalNews" => $feedConfig['isLocalNews'] === "Yes" ? true : false,
+            "isLocalNews" => Util::trans_stringboolean_value_to_boolean($feedConfig['isLocalNews']),
+            "isAIACIncluded" => Util::trans_stringboolean_value_to_boolean($feedConfig['isAIACIncluded']),
             "locations" => json_decode($feedConfig['locations'])
         ];
+        return $res;
     }
     function isRequestSuccess($response) {
         $body = json_decode($response['body'],true);

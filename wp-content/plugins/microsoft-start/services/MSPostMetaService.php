@@ -9,6 +9,7 @@ class MSPostMetaService
         "MSN_Publish_Option",
         "MSN_Categories",
         "MSN_Is_Local_News",
+        "MSN_Is_AIAC_Included",
         "MSN_Location",
         "MSN_Has_Custom_Author",
         "MSN_Custom_Author",
@@ -21,6 +22,7 @@ class MSPostMetaService
         "MSN_Publish_Option",
         "MSN_Categories",
         "MSN_Is_Local_News",
+        "MSN_Is_AIAC_Included",
         "MSN_Location"
     ];
 
@@ -70,13 +72,23 @@ class MSPostMetaService
         } else {
             $profile = $profile_cache->profile;
         }
-        return [
+        if (isset($profile->isAIACIncluded) && $profile->isAIACIncluded === true) {
+            $MSN_Is_AIAC_Included = 'Yes';
+        } else if (isset($profile->isAIACIncluded) && $profile->isAIACIncluded === false) {
+            $MSN_Is_AIAC_Included = 'No';
+        } else {
+            $MSN_Is_AIAC_Included = "Empty";
+        }
+        $res = [
             "MSN_Publish_Option" => Options::get_enable() ? "1" : "0",
             "MSN_Categories" => Options::get_category(),
             "MSN_Is_Local_News" => $profile->isLocalNews ? '1' : '0',
+            "MSN_Is_AIAC_Included" => $MSN_Is_AIAC_Included,
             // using wp_slash here to prevent wrong format of locaiton being passed to data-memorizedLocation field of the location selector of newsPanelBody
             "MSN_Location" => json_encode(($profile->locations) ?? [])
         ];
+
+        return $res;
     }
 
     private static function update_meta_data_by_id($postID, $meta, $keys)

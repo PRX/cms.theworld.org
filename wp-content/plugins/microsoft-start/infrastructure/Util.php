@@ -73,4 +73,24 @@ Class Util {
         ))->version;
         return $latest_version;
     }
+
+    static function trans_stringboolean_value_to_boolean($value) {
+        if ($value === "Yes") {
+            return true;
+        } else if ($value === "No") {
+            return false;
+        } else {
+            return null;
+        }
+    }
+
+    static function trans_boolean_value_to_stringboolean($value) {
+        if ($value === true) {
+            return "Yes";
+        } else if ($value === false) {
+            return "No";
+        } else {
+            return "Empty";
+        }
+    }
 }

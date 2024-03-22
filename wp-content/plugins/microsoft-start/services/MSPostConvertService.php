@@ -41,6 +41,7 @@ class MSPostConvertService
             "categories" => [get_post_meta($post->ID, 'MSN_Categories', true)],
             "tags" => static::get_tags($post),
             "isLocalNews" => get_post_meta($post->ID, 'MSN_Is_Local_News', true) == "1" ? true : false,
+            "isAIACIncluded" => get_post_meta($post->ID, 'MSN_Is_AIAC_Included', true) == "Yes" ? true : (get_post_meta($post->ID, 'MSN_Is_AIAC_Included', true) == "No" ? false : null),
             "locations" => json_decode(get_post_meta($post->ID, 'MSN_Location', true)),
             "author" => get_post_meta($post->ID, 'MSN_Has_Custom_Author', true) == "1" ? get_post_meta($post->ID, 'MSN_Custom_Author', true) : "",
             "seo" => [

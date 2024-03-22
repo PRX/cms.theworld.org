@@ -378,13 +378,6 @@ if ( isset($_GET['taxonomy_type']) && $_GET['taxonomy_type'] === 'all' ) {
                                             </li>
                                             <?php } ?>
 
-                                            <?php if($taxonomy_edit){ ?>
-                                            <li aria-current="false" class="taxonomy_templates_tab" data-content="taxonomy_templates">
-                                                <a href="#taxonomy_templates"><span><?php esc_html_e('Templates',
-                                                            'simple-tags'); ?></span></a>
-                                            </li>
-                                            <?php } ?>
-
                                             <?php if (!empty($_GET) && !empty($_GET['action']) && 'edit' === $_GET['action']) { ?>
                                             <li aria-current="false" class="taxonomy_delete_tab" data-content="taxonomy_delete">
                                                 <a href="#taxonomy_delete"><span><?php esc_html_e('Deactivate or Delete',
@@ -425,7 +418,7 @@ if ( isset($_GET['taxonomy_type']) && $_GET['taxonomy_type'] === 'all' ) {
                                                     'name'        => 'name',
                                                     'textvalue'   => isset($current['name']) ? esc_attr($current['name']) : '',
                                                     'maxlength'   => '32',
-                                                    'helptext'    => esc_html__('The “slug” is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.',
+                                                    'helptext'    => esc_html__('The “slug” is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and underscores.',
                                                     'simple-tags'),
                                                     'class'     => 'tax-slug-input',
                                                     'required'    => true,
@@ -643,7 +636,7 @@ if ( isset($_GET['taxonomy_type']) && $_GET['taxonomy_type'] === 'all' ) {
                                                 'namearray'  => 'cpt_custom_tax',
                                                 'name'       => 'include_in_result',
                                                 'labeltext'  => esc_html__('Archive page result', 'simple-tags'),
-                                                'aftertext'  => esc_html__('Show content from all post types on archive page',
+                                                'aftertext'  => esc_html__('Normally, WordPress will only show one post type on taxonomy archive pages. Enable this feature to show content from all selected posts types.',
                                                     'simple-tags'),
                                                 'selections' => $select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                             ]);
@@ -684,7 +677,7 @@ if ( isset($_GET['taxonomy_type']) && $_GET['taxonomy_type'] === 'all' ) {
                                                     'name'        => 'name',
                                                     'textvalue'   => isset($current['name']) ? esc_attr($current['name']) : '',
                                                     'maxlength'   => '32',
-                                                    'helptext'    => 'The “slug” is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.',
+                                                    'helptext'    => 'The “slug” is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and underscores.',
                                                     'class'     => 'tax-slug-input',
                                                     'required'    => true,
                                                     'placeholder' => false,
@@ -717,41 +710,6 @@ if ( isset($_GET['taxonomy_type']) && $_GET['taxonomy_type'] === 'all' ) {
 
                                                 ?>
 
-                                            </table>
-
-
-                                            <table class="form-table taxopress-table taxonomy_templates"
-                                                   style="display:none;">
-                                                   <?php if (!empty($_GET) && !empty($_GET['action']) && 'edit' === $_GET['action']) { ?>
-                                                <?php
-                                                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                                                echo $ui->get_tr_start() . $ui->get_th_start();
-                                                echo 'Template Hierarchy';
-                                                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                                                echo $ui->get_th_end();
-
-                                                $template_hierarchy_slug = isset($current['name']) ? esc_attr($current['name']) : '';
-                                                $template_hierarchy = '
-        <ul style="margin-top: 0;">
-        <li style="list-style: decimal;">taxonomy-'.esc_html( $template_hierarchy_slug ).'-term_slug.php *</li>
-        <li style="list-style: decimal;">taxonomy-'. esc_html( $template_hierarchy_slug ).'.php</li>
-        <li style="list-style: decimal;">taxonomy.php</li>
-        <li style="list-style: decimal;">archive.php</li>
-        <li style="list-style: decimal;">index.php</li>
-        </ul>
-        <p style="font-weight:bolder;">'.esc_html__( '*Replace "term_slug" with the slug of the actual taxonomy term.', 'simple-tags' ).'</p>';
-
-        echo '<td>';
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo $template_hierarchy;
-        echo '</td>';
-         }
-
-                                               // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                                                echo $ui->get_tr_end();
-
-
-                                                ?>
                                             </table>
 
 
@@ -876,7 +834,7 @@ if ( isset($_GET['taxonomy_type']) && $_GET['taxonomy_type'] === 'all' ) {
                                                     'namearray'  => 'cpt_custom_tax',
                                                     'name'       => 'show_ui',
                                                     'labeltext'  => esc_html__('Show user interface', 'simple-tags'),
-                                                    'aftertext'  => '',
+                                                    'aftertext'  => esc_html__('Should there be a visible interface in the WordPress admin area to manage these terms?', 'simple-tags'),
                                                     'selections' => $select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                                 ]);
 
@@ -900,7 +858,7 @@ if ( isset($_GET['taxonomy_type']) && $_GET['taxonomy_type'] === 'all' ) {
                                                     'namearray'  => 'cpt_custom_tax',
                                                     'name'       => 'show_in_menu',
                                                     'labeltext'  => esc_html__('Show in admin menus', 'simple-tags'),
-                                                    'aftertext'  => '',
+                                                    'aftertext'  => esc_html__('Should there be links to this taxonomy in the WordPress admin menus?', 'simple-tags'),
                                                     'selections' => $select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                                 ]);
 
@@ -924,7 +882,7 @@ if ( isset($_GET['taxonomy_type']) && $_GET['taxonomy_type'] === 'all' ) {
                                                     'namearray'  => 'cpt_custom_tax',
                                                     'name'       => 'show_in_nav_menus',
                                                     'labeltext'  => esc_html__('Show in frontend menus', 'simple-tags'),
-                                                    'aftertext'  => '',
+                                                    'aftertext'  => esc_html__('Should this taxonomy be available for the frontend “Menus” and “Navigation” options?', 'simple-tags'),
                                                     'selections' => $select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                                 ]);
 
@@ -949,7 +907,7 @@ if ( isset($_GET['taxonomy_type']) && $_GET['taxonomy_type'] === 'all' ) {
                                                     'namearray'  => 'cpt_custom_tax',
                                                     'name'       => 'show_admin_column',
                                                     'labeltext'  => esc_html__('Show admin column', 'simple-tags'),
-                                                    'aftertext'  => '',
+                                                    'aftertext'  => esc_html__('Should a column for this taxonomy appear on screens such as “Posts” and “Pages”?', 'simple-tags'),
                                                     'selections' => $select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                                 ]);
 
@@ -974,7 +932,7 @@ if ( isset($_GET['taxonomy_type']) && $_GET['taxonomy_type'] === 'all' ) {
                                                 'name'       => 'show_in_quick_edit',
                                                 'labeltext'  => esc_html__('Show in "Quick Edit" and "Bulk Edit"',
                                                     'simple-tags'),
-                                                'aftertext'  => '',
+                                                'aftertext'  => esc_html__('Should this taxonomy be available in editing tools on screens such as “Posts” and “Pages”?', 'simple-tags'),
                                                 'selections' => $select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                             ]);
 
@@ -1002,7 +960,7 @@ if ( isset($_GET['taxonomy_type']) && $_GET['taxonomy_type'] === 'all' ) {
                                                             'Show in Filter',
                                                             'simple-tags'
                                                         ),
-                                                        'aftertext' => '',
+                                                        'aftertext' => esc_html__('Should this taxonomy be available in filters on screens such as “Posts” and “Pages”?', 'simple-tags'),
                                                         'selections' => $select, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                                     )
                                                 );
@@ -1377,12 +1335,23 @@ if ( isset($_GET['taxonomy_type']) && $_GET['taxonomy_type'] === 'all' ) {
                                                     'selections' => $select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                                 ]);
 
+                                                $rest_base_slug = '';
+
+                                                if (!empty($current['rest_base'])) {
+                                                    $rest_base_slug .= $current['rest_base'];
+                                                } elseif (!empty($current['name'])) {
+                                                    $rest_base_slug .= $current['name'];
+                                                } else {
+                                                    $rest_base_slug .= '{taxonomy}';
+                                                }
+
+                                                // $current['name']
                                                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                                 echo $ui->get_text_input([
                                                     'namearray' => 'cpt_custom_tax',
                                                     'name'      => 'rest_base',
                                                     'labeltext' => esc_html__('REST API base slug', 'simple-tags'),
-                                                    'helptext'  => esc_attr__('The base slug that this taxonomy will use in the REST API.', 'simple-tags'),
+                                                    'helptext'  => esc_attr__('The base slug that this taxonomy will use in the REST API.', 'simple-tags') . ' <a target="blank" href="'. home_url('/wp-json/wp/v2/'. $rest_base_slug .'').'">'. home_url('/wp-json/wp/v2/'. $rest_base_slug .'').'</a>',
                                                     'textvalue' => isset($current['rest_base']) ? esc_attr($current['rest_base']) : '',
                                                 ]);
 
