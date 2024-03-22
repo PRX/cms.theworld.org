@@ -498,7 +498,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                 'labeltext'  => '',
                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 'helptext'  => __(
-                    'Example <code>/\b({term})\b/i</code> will match whole word and <code>{term}</code> will be replaced with the term name before the regex action.',
+                    'Example <code>/\b({term})\b/i</code> will match whole word while <code>/({term})/i</code> will match at any location even if it\'s part of another word. <code>{term}</code> will be replaced with the term name before the regex action.',
                     'taxopress-pro'
                 ),
                 'required'  => false,

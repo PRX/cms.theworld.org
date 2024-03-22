@@ -60,6 +60,7 @@ class PostEditor
             'show_in_rest' => true,
             'type' => 'string',
             'single' => true,
+            'default' => 'Uncategorized'
         ));
 
         /**
@@ -79,21 +80,31 @@ class PostEditor
             'show_in_rest' => true,
             'type' => 'boolean',
             'single' => true,
-            'auth_callback' => true
+            'auth_callback' => true,
+            'default' => false
+        ));
+
+        register_meta('post', 'MSN_Is_AIAC_Included', array(
+            'show_in_rest' => true,
+            'type' => 'string',
+            'single' => true,
+            'default' => 'Empty'
         ));
 
         register_meta('post', 'MSN_Location', array(
             'show_in_rest' => true,
             'type' => 'string',
             'single' => true,
-            'auth_callback' => true
+            'auth_callback' => true,
+            'default' => "[]"
         ));
 
         register_meta('post', 'MSN_Add_Feature_Img_On_Top_Of_Post', array(
             'show_in_rest' => true,
             'type' => 'boolean',
             'single' => true,
-            'auth_callback' => true
+            'auth_callback' => true,
+            'default' => false
         ));
 
         /**
@@ -103,14 +114,16 @@ class PostEditor
             'show_in_rest' => true,
             'type' => 'boolean',
             'single' => true,
-            'auth_callback' => true
+            'auth_callback' => true,
+            'default' => false
         ));
 
         register_meta('post', 'MSN_Custom_Author', array(
             'show_in_rest' => true,
             'type' => 'string',
             'single' => true,
-            'auth_callback' => true
+            'auth_callback' => true,
+            'default' => ''
         ));
 
         /**
@@ -120,14 +133,16 @@ class PostEditor
             'show_in_rest' => true,
             'type' => 'boolean',
             'single' => true,
-            'auth_callback' => true
+            'auth_callback' => true,
+            'default' => false
         ));
 
         register_meta('post', 'MSN_Custom_Canonical_Url', array(
             'show_in_rest' => true,
             'type' => 'string',
             'single' => true,
-            'auth_callback' => true
+            'auth_callback' => true,
+            'default' => ''
         ));
     }
 }

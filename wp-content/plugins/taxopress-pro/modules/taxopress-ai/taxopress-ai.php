@@ -548,6 +548,16 @@ if (!class_exists('TaxoPress_AI_Module')) {
                                         <?php echo esc_html($args['description']); ?>
                                     </p>
                                 <?php endif; ?>
+                            <?php elseif ($args['type'] === 'textarea') : ?>
+                                <?php
+                                $required_attr = ($args['required'] ? 'required="true"' : '');
+                                ?>
+                                <textarea style="min-height: 150px;" name="taxopress_ai_integration[<?php echo esc_attr($key); ?>]" id="<?php echo esc_attr($key); ?>" <?php echo $required_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>                 <?php echo $args['other_attr']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo sanitize_textarea_field(stripslashes_deep($args['value'])); ?></textarea>
+                                <?php if (isset($args['description'])): ?>
+                                    <p class="description">
+                                        <?php echo $args['description']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                                    </p>
+                                <?php endif; ?>
                             <?php else: ?>
                                 <?php
                                 $required_attr = ($args['required'] ? 'required="true"' : '');
@@ -800,6 +810,8 @@ if (!class_exists('TaxoPress_AI_Module')) {
                     }
 
 
+                    $support_private_taxonomy = SimpleTags_Plugin::get_option_value('taxopress_ai_' . $post->post_type . '_support_private_taxonomy');
+
                     $post_type_taxonomies = get_object_taxonomies($post->post_type, 'objects');
                     $post_type_taxonomy_names = array_keys($post_type_taxonomies);
                     $post_type_default_taxonomy = SimpleTags_Plugin::get_option_value('taxopress_ai_' . $post->post_type . '_metabox_default_taxonomy');
@@ -863,7 +875,7 @@ if (!class_exists('TaxoPress_AI_Module')) {
                                                     <select class="taxopress-ai-fetch-taxonomy-select">
                                                             <?php foreach ($post_type_taxonomies as $tax_key => $tax_object):
                                                             
-                                                            if (!in_array($tax_key, ['post_format']) && !empty($tax_object->show_ui)) {
+                                                            if (!in_array($tax_key, ['post_format']) && (!empty($tax_object->show_ui) || !empty($support_private_taxonomy))) {
                                                                 $rest_api_base = !empty($tax_object->rest_base) ? $tax_object->rest_base : $tax_key;
                                                                 $hierarchical = !empty($tax_object->hierarchical) ? (int) $tax_object->hierarchical : 0;
                                                                 ?>

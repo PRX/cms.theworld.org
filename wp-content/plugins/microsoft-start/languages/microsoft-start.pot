@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Microsoft Start 2.7.13\n"
+"Project-Id-Version: Microsoft Start 2.7.15\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/__translate_cache\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-01-25T11:20:36+00:00\n"
+"POT-Creation-Date: 2024-03-08T07:55:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 
@@ -242,6 +242,46 @@ msgstr ""
 msgid "Contact support"
 msgstr ""
 
+#. translators: one of two options of IsLocalNews
+#: assets/js/callback.js:1
+#: assets/js/dashboard.js:1
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "Yes, content is local"
+msgstr ""
+
+#. translators: one of two options of IsLocalNews
+#: assets/js/callback.js:1
+#: assets/js/dashboard.js:1
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "No, content isn't local"
+msgstr ""
+
+#. translators: Placeholder text of AI Assisted Content declaration selector
+#: assets/js/callback.js:1
+#: assets/js/dashboard.js:1
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "Select one"
+msgstr ""
+
+#. translators: true value of AI Assisted Content declaration in feed mode config
+#: assets/js/callback.js:1
+#: assets/js/dashboard.js:1
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "Yes, this feed includes AI Assisted Content"
+msgstr ""
+
+#. translators: false value of AI Assisted Content declaration feed mode config
+#: assets/js/callback.js:1
+#: assets/js/dashboard.js:1
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "No, this feed does not include AI Assisted Content"
+msgstr ""
+
 #. translators: The onboarding task's status text, keep it short.
 #: assets/js/callback.js:1
 #: assets/js/dashboard.js:1
@@ -426,6 +466,22 @@ msgstr ""
 #: assets/js/callback.js:1
 #: assets/js/dashboard.js:1
 msgid "Check the information you provided to activate this account."
+msgstr ""
+
+#. translators: true value of AI Assisted Content declaration in editor mode
+#: assets/js/callback.js:1
+#: assets/js/dashboard.js:1
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "Yes, it is AI Assisted Content"
+msgstr ""
+
+#. translators: false value of AI Assisted Content declaration in editor mode
+#: assets/js/callback.js:1
+#: assets/js/dashboard.js:1
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "No, it is not AI Assisted Content"
 msgstr ""
 
 #. translators: Conjunction in pagination, like '1 of 3'
@@ -1141,6 +1197,20 @@ msgstr ""
 msgid "Please select at least 1 and up to 10 locations for the intended audience. This can be a city or county or combined."
 msgstr ""
 
+#. translators: AI Assisted Content declaration selector label
+#: assets/js/dashboard.js:1
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "AI Assisted Content declaration"
+msgstr ""
+
+#. translators: Tooltip of AI Assisted Content declaration selector label
+#: assets/js/dashboard.js:1
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "Select {b}Yes{/b} if any content (text, image or video) generated with the assistance of AI. Do not submit content that is unreviewed AI-generated content."
+msgstr ""
+
 #. translators: appears in settings bar and corresponding section title
 #: assets/js/dashboard.js:1
 msgid "Profile"
@@ -1164,20 +1234,6 @@ msgstr ""
 #. translators: description title for description
 #: assets/js/dashboard.js:1
 msgid "Description"
-msgstr ""
-
-#. translators: one of two options of IsLocalNews
-#: assets/js/dashboard.js:1
-#: assets/js/editorSidebar.js:1
-#: assets/js/status.js:1
-msgid "Yes, content is local"
-msgstr ""
-
-#. translators: one of two options of IsLocalNews
-#: assets/js/dashboard.js:1
-#: assets/js/editorSidebar.js:1
-#: assets/js/status.js:1
-msgid "No, content isn't local"
 msgstr ""
 
 #. translators: Settings tab title
