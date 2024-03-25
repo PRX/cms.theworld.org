@@ -4,22 +4,22 @@ Plugin Name: TW WP-CFM config path alter
 Description: Alters the wpcfm config path for local / dev / live environments
 Version: 0.1
 */
-// Tell wp-cfm where our config files live
 
-function set_multi_env() {
+function tw_set_multi_env() {
+	// Tell wp-cfm where our config files live
 
 	// If we are in a Pantheon environment, set the 3 instances slugs out of the box.
 	$environments = array( 'dev', 'live' );
 
 	return $environments;
 }
-add_filter( 'wpcfm_multi_env', 'set_multi_env' );
+add_filter( 'wpcfm_multi_env', 'tw_set_multi_env' );
 
 /**
  * @param string $env - Default is an empty string ''.
  * @return string
  */
-function set_current_env( $env ) {
+function tw_set_current_env( $env ) {
 	// Detect with your own code logic the current environment the WordPress site is running.
 	// Generally this will be defined in a constant inside `$_ENV` or `$_SERVER` super-globals.
 	// ...
@@ -32,13 +32,13 @@ function set_current_env( $env ) {
 
 	return $env;
 }
-add_filter( 'wpcfm_current_env', 'set_current_env' );
+add_filter( 'wpcfm_current_env', 'tw_set_current_env' );
 
 /**
  * @param string $config_dir - Default is "<root>/wp-content/config"
  * @return string
  */
-function change_config_dir( $config_dir ) {
+function tw_change_config_dir( $config_dir ) {
 	// Change default path to $config_dir if lando.
 	if ( defined( 'PANTHEON_ENVIRONMENT' ) ) {
 		// Set the Pantheon environment to test or live
@@ -49,13 +49,13 @@ function change_config_dir( $config_dir ) {
 
 	return $config_dir;
 }
-add_filter( 'wpcfm_config_dir', 'change_config_dir' );
+add_filter( 'wpcfm_config_dir', 'tw_change_config_dir' );
 
 /**
  * @param string $config_url - Default is "<domain>/wp-content/config"
  * @return string
  */
-function change_config_url( $config_url ) {
+function tw_change_config_url( $config_url ) {
 	// Change default URL to $config_url if lando
 	if ( defined( 'PANTHEON_ENVIRONMENT' ) ) {
 		// Set the Pantheon environment to test or live
@@ -65,4 +65,4 @@ function change_config_url( $config_url ) {
 	}
 	return $config_url;
 }
-add_filter( 'wpcfm_config_url', 'change_config_url' );
+add_filter( 'wpcfm_config_url', 'tw_change_config_url' );
