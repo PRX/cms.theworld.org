@@ -42,7 +42,6 @@ define(
 		'tw-story-format/tw-story-format.php',
 		'wordpress-importer/wordpress-importer.php',
 		'wordpress-seo/wp-seo.php',
-		'wp-all-export-pro/wp-all-export-pro.php',
 		'wp-cfm-path/wp-cfm-path.php',
 		'wp-cfm/wp-cfm.php',
 		'wp-rest-menu/wp-rest-menus.php',
