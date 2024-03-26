@@ -631,6 +631,7 @@ function pmh_add_external_media_without_import( $url, $attributes = array(), $op
 
 					// Get the image dimensions.
 					$a_image_sizes = $media_fix_cli->clean_url_get_imagesize( $s_attachment_url );
+					update_post_meta( $attachment_id, '_temp_import_image_size_from_download', $a_image_sizes );
 
 					// If the image dimensions are found.
 					if ( $a_image_sizes ) {
@@ -640,6 +641,14 @@ function pmh_add_external_media_without_import( $url, $attributes = array(), $op
 						// Update the attachment metadata.
 						$attachment_metadata['width']  = $i_width;
 						$attachment_metadata['height'] = $i_height;
+					} else {
+						// If width and height are still missing after a dowload set them with max wp size as default value.
+						if ( ! $attachment_metadata['width'] ) {
+							$attachment_metadata['width'] = 2560;
+						}
+						if ( ! $attachment_metadata['height'] ) {
+							$attachment_metadata['height'] = 2560;
+						}
 					}
 				}
 			}
