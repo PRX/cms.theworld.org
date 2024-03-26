@@ -615,14 +615,32 @@ function pmh_add_external_media_without_import( $url, $attributes = array(), $op
 				if (
 					$image_sizes
 					&&
-					isset( $image_sizes['width'] )
+					( isset( $image_sizes['width'] ) && $image_sizes['width'] )
 					&&
-					isset( $image_sizes['height'] )
+					( isset( $image_sizes['height'] ) && $image_sizes['height'] )
 				) {
 
 					// Set width and height.
 					$attachment_metadata['width']  = $image_sizes['width'];
 					$attachment_metadata['height'] = $image_sizes['height'];
+				} else {
+					// Get the attachment URL.
+					$s_attachment_url = wp_get_attachment_url( $attachment_id );
+					// Initialize media fix cli object.
+					$media_fix_cli = new PMH_Worker();
+
+					// Get the image dimensions.
+					$a_image_sizes = $media_fix_cli->clean_url_get_imagesize( $s_attachment_url );
+
+					// If the image dimensions are found.
+					if ( $a_image_sizes ) {
+
+						list( $i_width, $i_height ) = $a_image_sizes;
+
+						// Update the attachment metadata.
+						$attachment_metadata['width']  = $i_width;
+						$attachment_metadata['height'] = $i_height;
+					}
 				}
 			}
 
