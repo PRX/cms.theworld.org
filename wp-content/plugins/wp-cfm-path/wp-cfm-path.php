@@ -35,7 +35,7 @@ function set_current_env( $env ) {
 add_filter( 'wpcfm_current_env', 'set_current_env' );
 
 /**
- * @param string $config_dir - Default is "<root>/wp-content/config"
+ * @param string $config_dir - Default is "<root>/private/config"
  * @return string
  */
 function change_config_dir( $config_dir ) {
@@ -43,7 +43,7 @@ function change_config_dir( $config_dir ) {
 	if ( defined( 'PANTHEON_ENVIRONMENT' ) ) {
 		// Set the Pantheon environment to test or live
 		if ( in_array( PANTHEON_ENVIRONMENT, array( 'lando' ) ) ) {
-			$config_dir = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/config/' . WPCFM_CURRENT_ENV;
+			$config_dir = $_SERVER['DOCUMENT_ROOT'] . '/private/config/' . WPCFM_CURRENT_ENV;
 		}
 	}
 
@@ -52,7 +52,7 @@ function change_config_dir( $config_dir ) {
 add_filter( 'wpcfm_config_dir', 'change_config_dir' );
 
 /**
- * @param string $config_url - Default is "<domain>/wp-content/config"
+ * @param string $config_url - Default is "<domain>/private/config"
  * @return string
  */
 function change_config_url( $config_url ) {
@@ -60,7 +60,7 @@ function change_config_url( $config_url ) {
 	if ( defined( 'PANTHEON_ENVIRONMENT' ) ) {
 		// Set the Pantheon environment to test or live
 		if ( in_array( PANTHEON_ENVIRONMENT, array( 'lando' ) ) ) {
-			$config_url = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/config/' . WPCFM_CURRENT_ENV;
+			$config_url = $_SERVER['DOCUMENT_ROOT'] . '/private/config/' . WPCFM_CURRENT_ENV;
 		}
 	}
 	return $config_url;
