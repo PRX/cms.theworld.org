@@ -16,6 +16,13 @@ if ( file_exists( __DIR__ . '/wp-config-' . SERVER_PLATFORM_NAME . '.php' ) && i
 	require_once __DIR__ . '/wp-config-' . SERVER_PLATFORM_NAME . '.php';
 }
 
+/**
+ * Wire up S3 Uploads key and secret values to ENV variable.
+ * Needs to be assigned AFTER platform config.
+ */
+define( 'S3_UPLOADS_KEY', getenv( 'S3_KEY' ) );
+define( 'S3_UPLOADS_SECRET', getenv( 'S3_SECRET' ) );
+
 
 /** Standard wp-config.php stuff from here on down. */
 
