@@ -271,7 +271,7 @@ if ( ! function_exists( 'tw_add_edit_homepage_menu_link' ) ) :
 	 * @uses add_menu_page() Add links to the menu.
 	 */
 	function tw_add_edit_homepage_menu_link() {
-		add_menu_page( 'tw_edit_homepage_link', 'The World Homepage', 'publish_posts', '/wp-admin/term.php?taxonomy=program&tag_ID=12270&post_type=post&wp_http_referer=%2Fwp-admin%2Fedit-tags.php%3Ftaxonomy%3Dprogram%26post_type%3Dpost%26s%3Dthe%2Bworld', '', 'dashicons-admin-site-alt3', 8 );
+		add_menu_page( 'tw_edit_homepage_link', 'The World Homepage', 'publish_posts', '/wp-admin/term.php?taxonomy=program&tag_ID=12270&post_type=post', '', 'dashicons-admin-site-alt3', 8 );
 	}
 endif;
 add_action( 'admin_menu', 'tw_add_edit_homepage_menu_link' );
