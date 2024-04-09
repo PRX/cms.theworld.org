@@ -825,7 +825,7 @@ function tw_episode_importer_parse_api_item( $api_item, $post_type ) {
 
 				$contributor_image = get_field( 'image', 'contributor_' . $contributor_term->term_id );
 				if ( $contributor_image ) {
-					$author['image'] = $contributor_image['url'];
+					$author['image'] = is_array( $contributor_image ) ? $contributor_image['url'] : $contributor_image;
 				}
 
 				return $author;
