@@ -1898,6 +1898,9 @@ SQL;
 			$extra_conditions   = ' AND ';
 			$extra_conditions  .= 'DESC' === $this->order_by_get_nodes && empty( $last_drupal_id ) ? "n.nid {$last_id_comparison} ( SELECT MAX(nm.nid) FROM ${prefix}${table_name} nm )" : "n.nid {$last_id_comparison} '{$last_drupal_id}'";
 
+			// DINKUM: Add ID targeting if available.
+			$extra_conditions = apply_filters( 'tw_get_nodes_add_extra_conditions', $extra_conditions, $content_type, $entity_type );
+
 			// DINKUM: Skip blank titles.
 			if ( $fgd2wp_skip_blank_titles ) {
 				$extra_conditions .= " AND n.title <> ''";
