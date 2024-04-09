@@ -15,6 +15,6 @@ if ( ! defined( 'WP_DEBUG' ) ) {
 define( 'S3_UPLOADS_BUCKET', 'media-pri-org/s3fs-public' );
 define( 'S3_UPLOADS_REGION', 'us-east-1' );
 // Define the base bucket URL (without trailing slash).
-define( 'S3_UPLOADS_BUCKET_URL', 'https://media.pri.org' );
+define( 'S3_UPLOADS_BUCKET_URL', 'https://media.pri.org/s3fs-public' );
 
 define( 'WP_MEMORY_LIMIT', '512M' );
