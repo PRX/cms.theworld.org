@@ -90,3 +90,24 @@ function peh_get_object_taxonomy( $object, $url_query ) {
 }
 
 add_filter( 'peh_get_object_wild', 'peh_get_object_taxonomy', 13, 2 );
+
+/**
+ * Function to check if the object is a page based on the URL query.
+ *
+ * @param object $object
+ * @param array $url_query
+ * @return object $object
+ */
+function peh_get_object_maybe_any( $object, $url_query ) {
+
+	// Maybe page?
+	// Exception added to avoid conflict with program post type.
+	if ( false === $object && isset( $url_query['pagename'] ) && $url_query['pagename'] && ! isset( $url_query['program'] ) && ! isset( $url_query['person'] ) ) {
+		$url_query['post_type'] = 'any';
+		$object = _peh_get_object_by_slug( $url_query['pagename'], $url_query );
+
+	}
+	return $object;
+}
+
+add_filter( 'peh_get_object_wild', 'peh_get_object_maybe_any', 15, 2 );
