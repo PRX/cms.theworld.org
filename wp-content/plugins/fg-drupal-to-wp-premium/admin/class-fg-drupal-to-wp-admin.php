@@ -1794,6 +1794,10 @@ SQL;
 		public function import_nodes( $content_type, $entity_type = 'node' ) {
 			$imported_nodes_count = 0;
 
+			// DINKUM: May modify how many nodes to import.
+
+			$this->how_many_nodes_to_import = apply_filters( 'tw_how_many_nodes_to_import', $this->how_many_nodes_to_import, $content_type );
+
 			$message = sprintf( __( 'Importing Node %s...', 'fg-drupal-to-wp' ), FG_Drupal_to_WordPress_Tools::plural( $content_type ) );
 			if ( defined( 'WP_CLI' ) ) {
 				$progress_cli = \WP_CLI\Utils\make_progress_bar( $message, $this->get_nodes_count( $content_type ) );
@@ -1898,6 +1902,9 @@ SQL;
 			$extra_conditions   = ' AND ';
 			$extra_conditions  .= 'DESC' === $this->order_by_get_nodes && empty( $last_drupal_id ) ? "n.nid {$last_id_comparison} ( SELECT MAX(nm.nid) FROM ${prefix}${table_name} nm )" : "n.nid {$last_id_comparison} '{$last_drupal_id}'";
 
+			// DINKUM: Add ID targeting if available.
+			$extra_conditions = apply_filters( 'tw_get_nodes_add_extra_conditions', $extra_conditions, $content_type, $entity_type );
+
 			// DINKUM: Skip blank titles.
 			if ( $fgd2wp_skip_blank_titles ) {
 				$extra_conditions .= " AND n.title <> ''";
@@ -1942,6 +1949,31 @@ SQL;
 			// 	}
 			// 	$this->test_antiduplicate = true;
 			// }
+
+			// DINKUM: Remove content types if matches.
+			$selective_fix_content_types = get_option( 'tw_selective_fix_content_types', array() );
+			if ( in_array( $content_type, $selective_fix_content_types ) && 'node' === $entity_type ) {
+				// Get string of nids.
+				$node_ids = get_option( 'tw_get_nodes_' . $content_type . '_target_ids' );
+
+				// Convert to array.
+				$node_ids = explode( ',', $node_ids );
+
+				// Remove the nid.
+				$node_ids = array_diff( $node_ids, array( $node['nid'] ) );
+
+				// Convert back to string.
+				$node_ids = implode( ',', $node_ids );
+
+				// Update the option.
+				update_option( 'tw_get_nodes_' . $content_type . '_target_ids', $node_ids );
+
+				// Clear content type if no more nids.
+				if ( empty( $node_ids ) ) {
+					$selective_fix_content_types = array_diff( $selective_fix_content_types, array( $content_type ) );
+					update_option( 'tw_selective_fix_content_types', $selective_fix_content_types );
+				}
+			}
 
 			$last_node_type_metakey = "fgd2wp_last_${entity_type}_${content_type}_id";
 
@@ -3769,15 +3801,19 @@ SQL;
 				$sql     = "SELECT post_id FROM {$support_table} WHERE type = '{$query_type}' AND node_id = '$meta_value' LIMIT 1";
 				$post_id = $wpdb->get_var( $sql );
 
-				if ( $post_id ) {
-					return $post_id;
-				}
+				// return $post_id;
+				// DINKUM: Verify the post object.
+				$post = get_post( $post_id );
+				return $post ? $post->ID : false;
 			}
 
 			$sql     = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '$meta_key' AND meta_value = '$meta_value' LIMIT 1";
 			$post_id = $wpdb->get_var( $sql );
 
-			return $post_id;
+			// return $post_id;
+			// DINKUM: Verify the post object.
+			$post = get_post( $post_id );
+			return $post ? $post->ID : false;
 		}
 
 		/**
