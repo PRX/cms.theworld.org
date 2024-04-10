@@ -319,7 +319,7 @@ function _peh_get_object_by_wp_migrated_legacy_redirect_db( $slug ) {
 
 	global $wpdb;
 
-	$row = $wpdb->get_row( "SELECT `uid` AS `id`, `type`, `redirect` FROM `wp_migrated_legacy_redirect` WHERE `source` = '$slug' LIMIT 1;" );
+	$row = $wpdb->get_row( $wpdb->prepare( "SELECT `uid` AS `id`, `type`, `redirect` FROM `wp_migrated_legacy_redirect` WHERE `source` = '%s' LIMIT 1;", $slug ) );
 	if ( isset( $row->type ) && 'redirect' === $row->type && wp_http_validate_url( $row->redirect ) ) {
 		$row->is_external = true;
 	} elseif( $row && isset( $row->redirect ) && $row->redirect )  {
@@ -349,7 +349,7 @@ function _peh_get_object_by_wp_migrated_legacy_alias_db( $slug ) {
 
 	global $wpdb;
 
-	$row = $wpdb->get_row( "SELECT `source`, `alias` FROM `wp_migrated_legacy_url_alias` WHERE `alias` = '$slug' LIMIT 1;" );
+	$row = $wpdb->get_row( $wpdb->prepare( "SELECT `source`, `alias` FROM `wp_migrated_legacy_url_alias` WHERE `alias` = '%s' LIMIT 1;", $slug ) );
 
 	if (
 		isset( $row->source ) && $row->source
