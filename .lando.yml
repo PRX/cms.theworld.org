@@ -12,7 +12,7 @@ config:
   ssl: true
 services:
   node:
-    type: node:16
+    type: node:20
     build:
       - npm install
       - chmod +x scripts/*
