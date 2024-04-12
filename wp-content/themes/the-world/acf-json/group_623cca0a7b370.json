@@ -3,6 +3,27 @@
     "title": "Contributor Details",
     "fields": [
         {
+            "key": "field_6618448d7a2e0",
+            "label": "Bio",
+            "name": "bio",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "default_value": "",
+            "tabs": "visual",
+            "toolbar": "basic",
+            "media_upload": 0,
+            "delay": 0
+        },
+        {
             "key": "field_623cca1414076",
             "label": "Program",
             "name": "program",
@@ -24,7 +45,8 @@
             "return_format": "id",
             "field_type": "multi_select",
             "allow_null": 1,
-            "multiple": 0
+            "multiple": 0,
+            "bidirectional_target": []
         },
         {
             "key": "field_623cca46fe70b",
@@ -138,5 +160,5 @@
     "graphql_field_name": "contributorDetails",
     "map_graphql_types_from_location_rules": 0,
     "graphql_types": "",
-    "modified": 1689364079
+    "modified": 1712868708
 }
