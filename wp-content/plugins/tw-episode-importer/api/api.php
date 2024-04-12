@@ -824,6 +824,11 @@ function tw_episode_importer_parse_api_item( $api_item, $post_type ) {
 				);
 
 				$contributor_image = get_field( 'image', 'contributor_' . $contributor_term->term_id );
+
+				if ( is_numeric( $contributor_image ) ) {
+					$contributor_image = wp_get_attachment_image_url( $contributor_image );
+				}
+
 				if ( $contributor_image ) {
 					$author['image'] = is_array( $contributor_image ) ? $contributor_image['url'] : $contributor_image;
 				}
@@ -926,13 +931,8 @@ function tw_episode_importer_get_existing_post_data( $post_type, $guid, $audio_k
 
 	// Attempt to get imported audio by guid.
 	if ( is_null( $audio_post ) ) {
-		$audio_query = new WP_Query(
-			array(
-				'post_type' => 'attachment',
-				'guid'      => $guid,
-			)
-		);
-		$audio_post  = $audio_query->have_posts() ? reset( $audio_query->posts ) : null;
+		$audio_id   = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE guid=%s", "http://{$guid}" ) );
+		$audio_post = get_post( $audio_id );
 	}
 
 	// Attempt to get existing audio by using audio key derived from filename.
@@ -987,7 +987,12 @@ function tw_episode_importer_get_existing_post_data( $post_type, $guid, $audio_k
 			$post = get_post( $id );
 
 			if ( $post ) {
-				$audio_id       = get_field( 'audio', $post->ID );
+				$audio_id = get_field( 'audio', $post->ID );
+
+				if ( is_array( $audio_id ) ) {
+					$audio_id = $audio_id['ID'];
+				}
+
 				$audio_post     = get_post( $audio_id );
 				$audio_metadata = get_metadata( 'post', $audio_id );
 
