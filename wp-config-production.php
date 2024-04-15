@@ -6,6 +6,11 @@
  * @package tw
  */
 
+// Ensure WP Environment Type constant is set.
+if ( ! defined( 'WP_ENVIRONMENT_TYPE' ) ) {
+	define( 'WP_ENVIRONMENT_TYPE', 'production' );
+}
+
 // Ensure debug mode is disabled.
 if ( ! defined( 'WP_DEBUG' ) ) {
 	define( 'WP_DEBUG', false );
