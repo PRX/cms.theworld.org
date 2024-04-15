@@ -40,6 +40,7 @@ define(
 		'tw-scroll-gallery/tw-scroll-gallery.php',
 		'tw-segments/tw-segments.php',
 		'tw-story-format/tw-story-format.php',
+		'visual-term-description-editor/visual-term-description-editor.php',
 		'wordpress-importer/wordpress-importer.php',
 		'wordpress-seo/wp-seo.php',
 		'wp-cfm-path/wp-cfm-path.php',
