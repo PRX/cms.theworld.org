@@ -83,6 +83,7 @@ if ( getenv( 'WP_ENVIRONMENT_TYPE' ) === false ) {
 			break;
 		case 'test':
 			putenv( 'WP_ENVIRONMENT_TYPE=staging' );
+			define( 'WP_ENVIRONMENT_TYPE', 'staging' );
 			break;
 		default:
 			putenv( 'WP_ENVIRONMENT_TYPE=development' );
