@@ -368,6 +368,10 @@ function _peh_get_object_by_wp_migrated_legacy_alias_db( $slug ) {
 				'replace' => 'node/',
 			),
 			array(
+				'name'    => 'file',
+				'replace' => 'file/',
+			),
+			array(
 				'name'    => 'taxonomy',
 				'replace' => 'taxonomy/term/',
 			),
@@ -388,8 +392,9 @@ function _peh_get_object_by_wp_migrated_legacy_alias_db( $slug ) {
 		// Return only if something is found.
 		if ( $id && $type ) {
 
-			$wp_id   = '';
-			$wp_type = '';
+			$wp_id       = '';
+			$wp_type     = '';
+			$wp_meta_key = 'nid';
 
 			// Convert type from node to post_type if needed.
 			switch ( $type ) {
@@ -402,6 +407,11 @@ function _peh_get_object_by_wp_migrated_legacy_alias_db( $slug ) {
 					$wp_type = 'post';
 					break;
 
+				case 'media':
+					$wp_type     = 'segment';
+					$wp_meta_key = 'fid';
+					break;
+
 				default:
 					$wp_type = $type;
 					break;
@@ -410,15 +420,20 @@ function _peh_get_object_by_wp_migrated_legacy_alias_db( $slug ) {
 			// Get WP Posts by node id.
 			$s_args = array(
 					'post_type'  => $wp_type,
-					'meta_key'   => 'nid',
+					'meta_key'   => $wp_meta_key,
 					'meta_value' => $id,
+					'fields' => 'ids',
+					'posts_per_page' => 1,
+					'no_found_rows'  => true,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false
 			);
 
 			$posts = get_posts( $s_args );
 
 			if ( $posts && ! is_wp_error( $posts ) ) {
 
-				$wp_id = $posts[0]->ID;
+				$wp_id = $posts[0];
 			}
 
 			if ( $wp_id && $wp_type ) {
@@ -435,6 +450,7 @@ function _peh_get_object_by_wp_migrated_legacy_alias_db( $slug ) {
 	return false;
 }
 
+
 /**
  * Get post by slug.
  *
@@ -448,6 +464,9 @@ function _peh_get_object_by_slug( $slug, $extra_args = array() ) {
 		'name'           => $slug,
 		'post_status'    => 'publish',
 		'posts_per_page' => 1,
+		'no_found_rows'  => true,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false
 	);
 
 	if ( $extra_args ) {
