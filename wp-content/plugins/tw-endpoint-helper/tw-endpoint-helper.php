@@ -342,14 +342,20 @@ function _peh_get_object_by_wp_fg_redirect_db( $slug ) {
 /**
  * Get post id from wp_fg_redirect table.
  *
- * @param array $slug string
+ * @param string $slug string
  * @return bool|int
  */
 function _peh_get_object_by_wp_migrated_legacy_alias_db( $slug ) {
 
 	global $wpdb;
 
-	$row = $wpdb->get_row( $wpdb->prepare( "SELECT `source`, `alias` FROM `wp_migrated_legacy_url_alias` WHERE `alias` = '%s' LIMIT 1;", $slug ) );
+	// Check if it starts with media/ to try to select file alias as well.
+	if ( 0 === strpos( $slug, 'media/' ) ) {
+		$slug_file = str_replace( 'media/', 'file/', $slug );
+		$row = $wpdb->get_row( $wpdb->prepare( "SELECT `source`, `alias` FROM `wp_migrated_legacy_url_alias` WHERE `alias` IN ('%s', '%s') LIMIT 1;", $slug, $slug_file ) );
+	} else {
+		$row = $wpdb->get_row( $wpdb->prepare( "SELECT `source`, `alias` FROM `wp_migrated_legacy_url_alias` WHERE `alias` = '%s' LIMIT 1;", $slug ) );
+	}
 
 	if (
 		isset( $row->source ) && $row->source
@@ -386,6 +392,8 @@ function _peh_get_object_by_wp_migrated_legacy_alias_db( $slug ) {
 
 				$type = $matches ? $matches[0] : $row->alias;
 				$id   = str_replace( $check['replace'], '', $row->source );
+				// stop lookin for other types.
+				break;
 			}
 		}
 
@@ -408,6 +416,7 @@ function _peh_get_object_by_wp_migrated_legacy_alias_db( $slug ) {
 					break;
 
 				case 'media':
+				case 'file':
 					$wp_type     = 'segment';
 					$wp_meta_key = 'fid';
 					break;
