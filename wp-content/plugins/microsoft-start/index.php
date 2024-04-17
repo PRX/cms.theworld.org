@@ -5,7 +5,7 @@
  * Plugin Name:       Microsoft Start
  * Plugin URI:        https://www.msn.com/
  * Description:       Microsoft Start WordPress plugin to help WordPress content creators to share content to Microsoft Start News feed.
- * Version:           2.7.15
+ * Version:           2.7.16
  * Requires at least: 5.4
  * Requires PHP:      7.3
  * Author:            Microsoft

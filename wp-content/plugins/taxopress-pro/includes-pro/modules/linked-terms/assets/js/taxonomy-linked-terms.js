@@ -84,7 +84,7 @@
     }
 
     // Linked term auto complete init
-    st_init_linked_terms_autocomplete('.linked-term-autocomplete-input', ajaxurl + '?action=simpletags_autocomplete&stags_action=helper_js_collection&taxonomy=' + linkedTermsRequestAction.taxonomy + '&exclude_term=' + linkedTermsRequestAction.term_id, 0);
+    st_init_linked_terms_autocomplete('.linked-term-autocomplete-input', ajaxurl + '?action=simpletags_autocomplete&stags_action=helper_js_collection&taxonomy=all_taxopress_taxonomy&exclude_term=' + linkedTermsRequestAction.term_id, 0);
 
 
     function sortedSynonymsList(selector) {
@@ -119,23 +119,29 @@
           // clear input
           this.value = '';
           // add selected term
-          var selected_value = ui.item.value;
-          var previous_values = [];
-          $("input.term-linked-terms").each(function () {
-            previous_values.push($(this).val());
-          });
+          var selected_id = ui.item.id;
+          var selected_name = ui.item.name;
+          var selected_taxonomy = ui.item.taxonomy;
           
-          if (!previous_values.includes(selected_value)) {
+          if ($('.taxopress-term-li.' + selected_taxonomy + '-' + selected_id).length == 0) {
             var linked_term_list = $(".taxopress-term-linked-terms.wrapper");
             var new_linked_term = "";
-            new_linked_term += "<li>";
+            new_linked_term += '<li class="taxopress-term-li ' + selected_taxonomy + '-' + selected_id +'">';
             new_linked_term +=
-              '<span class="display-text">' + selected_value + "</span>";
+              '<span class="display-text">' + selected_name + ' (' + selected_taxonomy + ')</span>';
             new_linked_term +=
               '<span class="remove-linked_term"><span class="dashicons dashicons-no-alt"></span></span>';
             new_linked_term +=
-              '<input type="hidden" class="term-linked-terms" name="taxopress_linked_terms[]" value="' +
-              selected_value +
+              '<input type="hidden" class="term-linked-terms id" name="taxopress_linked_term_id[]" value="' +
+              selected_id +
+              '">';
+            new_linked_term +=
+              '<input type="hidden" class="term-linked-terms name" name="taxopress_linked_term_name[]" value="' +
+              selected_name +
+              '">';
+            new_linked_term +=
+              '<input type="hidden" class="term-linked-terms taxonomy" name="taxopress_linked_term_taxonomy[]" value="' +
+              selected_taxonomy +
               '">';
             new_linked_term += "</li>";
             linked_term_list.append(new_linked_term);

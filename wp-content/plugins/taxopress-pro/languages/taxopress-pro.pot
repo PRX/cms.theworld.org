@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaxoPress Pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-18 07:40+0000\n"
+"POT-Creation-Date: 2024-03-28 17:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -22,7 +22,6 @@ msgid "%1$s can't be added as a tag because %2$s is already used as a synonym."
 msgstr ""
 
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:65
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:72
 #, php-format
 msgid "%1s Click here for prompt documentation. %2s"
 msgstr ""
@@ -74,21 +73,21 @@ msgstr ""
 msgid "Add Element"
 msgstr ""
 
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:115
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:108
 msgid "API Confidence Value"
 msgstr ""
 
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:44
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:87
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:139
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:80
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:132
 msgid "API Key"
 msgstr ""
 
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:108
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:101
 msgid "API Token"
 msgstr ""
 
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:80
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:73
 msgid "API URL"
 msgstr ""
 
@@ -97,22 +96,22 @@ msgid "Batches wait time"
 msgstr ""
 
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:58
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:101
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:131
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:153
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:94
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:124
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:146
 msgid ""
 "By caching the results locally, new API requests will not be made unless the "
 "post title or content changes. This saves API usage."
 msgstr ""
 
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:57
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:100
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:130
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:152
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:93
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:123
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:145
 msgid "Cache Results"
 msgstr ""
 
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:116
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:109
 msgid ""
 "Choose a value between 0 and 1. A high value such as 0.8 will provide a few, "
 "accurate suggestions. A low value such as 0.2 will produce more suggestions, "
@@ -131,19 +130,19 @@ msgstr ""
 msgid "Element tag"
 msgstr ""
 
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:109
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:102
 msgid "Enter your Dandelion API Key."
 msgstr ""
 
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:88
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:81
 msgid "Enter your IBM Watson API Key."
 msgstr ""
 
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:81
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:74
 msgid "Enter your IBM Watson API URL."
 msgstr ""
 
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:140
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:133
 msgid "Enter your LSEG / Refinitiv API Key."
 msgstr ""
 
@@ -207,8 +206,8 @@ msgstr ""
 msgid "Limit per batches"
 msgstr ""
 
-#: includes-pro/modules/linked-terms/linked-terms.php:90
-#: includes-pro/modules/linked-terms/linked-terms.php:107
+#: includes-pro/modules/linked-terms/linked-terms.php:236
+#: includes-pro/modules/linked-terms/linked-terms.php:256
 msgid "Linked Terms"
 msgstr ""
 
@@ -233,12 +232,8 @@ msgstr ""
 msgid "OpenAI"
 msgstr ""
 
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:71
-msgid "OpenAI Suggested Tag Prompt (Beta)"
-msgstr ""
-
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:64
-msgid "OpenAI Tag Prompt (Beta)"
+msgid "OpenAI Prompt (Beta)"
 msgstr ""
 
 #: includes-pro/modules/autoterms/autoterms.php:497
@@ -262,14 +257,14 @@ msgid "Security error. Kindly reload this page and try again"
 msgstr ""
 
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:50
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:93
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:123
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:145
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:86
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:116
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:138
 msgid "Show Term Post Count"
 msgstr ""
 
-#: includes-pro/modules/linked-terms/linked-terms.php:91
-#: includes-pro/modules/linked-terms/linked-terms.php:110
+#: includes-pro/modules/linked-terms/linked-terms.php:237
+#: includes-pro/modules/linked-terms/linked-terms.php:259
 msgid "Start typing to choose existing terms."
 msgstr ""
 
@@ -372,9 +367,9 @@ msgid ""
 msgstr ""
 
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:51
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:94
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:124
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:146
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:87
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:117
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:139
 msgid "This will show number of posts attached to the term."
 msgstr ""
 
@@ -396,8 +391,8 @@ msgstr ""
 msgid "Use Regular Expressions to change how Auto Terms analyzes your posts."
 msgstr ""
 
-#: includes-pro/modules/linked-terms/linked-terms.php:92
-#: includes-pro/modules/linked-terms/linked-terms.php:111
+#: includes-pro/modules/linked-terms/linked-terms.php:238
+#: includes-pro/modules/linked-terms/linked-terms.php:260
 msgid "When the main term is added to a post, these terms will be added also."
 msgstr ""
 
