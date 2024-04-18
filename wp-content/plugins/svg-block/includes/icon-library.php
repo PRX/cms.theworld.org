@@ -91,22 +91,26 @@ if ( ! class_exists( IconLibrary::class ) ) :
 			 * @return void
 			 */
 		public function get_icon_library( $request ) {
-			// icons file path.
-			$icons_file = SVG_BLOCK_PATH . 'data/icon-library/icons.json';
-
-			// Send the error if the icons file is not exists.
-			if ( ! \file_exists( $icons_file ) ) {
-				wp_send_json_error( __( 'The icons.json file is not exists.', 'svg-block' ), 500 );
-			}
-
-			// Parse json.
-			$icons = wp_json_file_decode( $icons_file, [ 'associative' => true ] );
+			$icons = [];
 
 			// Query svg images from the media library.
 			$media_svg_images = $this->query_svg_images();
 
 			if ( $media_svg_images ) {
-				$icons = $media_svg_images + $icons;
+				$icons = $media_svg_images;
+			}
+
+			if ( apply_filters( 'boldblocks_svg_block_load_icons_from_library', true ) ) {
+				// icons file path.
+				$icons_file = SVG_BLOCK_PATH . 'data/icon-library/icons.json';
+
+				// Send the error if the icons file is not exists.
+				if ( \file_exists( $icons_file ) ) {
+					// Parse json.
+					$icons_library = wp_json_file_decode( $icons_file, [ 'associative' => true ] );
+
+					$icons += $icons_library;
+				}
 			}
 
 			wp_send_json(

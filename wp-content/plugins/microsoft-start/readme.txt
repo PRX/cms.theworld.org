@@ -2,8 +2,8 @@
 Tags: Microsoft, Microsoft Start
 Requires at least: 5.4
 Requires PHP: 7.3
-Stable tag: 2.7.15
-Tested up to: 6.4
+Stable tag: 2.7.16
+Tested up to: 6.5
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Contributors: Microsoft

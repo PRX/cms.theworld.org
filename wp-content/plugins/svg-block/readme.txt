@@ -3,8 +3,8 @@ Contributors:      Mr2P
 Tags:              Gutenberg, block, SVG, image, icon
 Requires PHP:      7.0.0
 Requires at least: 6.3
-Tested up to:      6.4
-Stable tag:        1.1.17
+Tested up to:      6.5
+Stable tag:        1.1.18
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -46,12 +46,12 @@ If this plugin is useful for you, please do a quick review and [rate it](https:/
 Please check out my other plugins if you're interested:
 
 * [Content Blocks Builder](https://wordpress.org/plugins/content-blocks-builder) - A tool to create blocks, patterns or variations easily for your site directly on the Block Editor.
+* [Meta Field Block](https://wordpress.org/plugins/display-a-meta-field-as-block) - A block to display a meta field or an ACF field as a block. It can also be used in the Query Loop block.
 * [Block Enhancements](https://wordpress.org/plugins/block-enhancements) - A plugin to add more useful features to blocks like icons, box-shadow, transform, hover style, etc.
 * [Icon separator](https://wordpress.org/plugins/icon-separator) - A tiny block just like the core/separator block but with the ability to add an icon to it.
-* [Meta Field Block](https://wordpress.org/plugins/display-a-meta-field-as-block) - A block to display a meta field or an ACF field as a block. It can also be used in the Query Loop block.
 * [Counting Number Block](https://wordpress.org/plugins/counting-number-block) - A block to display a number that has the number-counting effect.
 * [Breadcrumb Block](https://wordpress.org/plugins/breadcrumb-block) - A simple breadcrumb trail block that supports JSON-LD structured data.
-* [Better Youtube Embed Block](https://wordpress.org/plugins/better-youtube-embed-block) - Embed Youtube videos without slowing down your site.
+* [Better YouTube Embed Block](https://wordpress.org/plugins/better-youtube-embed-block) - Embed YouTube videos without slowing down your site.
 
 The plugin is developed using @wordpress/create-block.
 
@@ -99,6 +99,13 @@ Anyone can use this plugin.
 7. Block's placeholder
 
 == Changelog ==
+
+= 1.1.18 =
+*Release Date - 01 April 2024*
+
+* Added   - Allow the ability to exclude the icon library from the icon popup
+* Updated - Update SDK
+* Updated - Icon Library
 
 = 1.1.17 =
 *Release Date - 31 October 2023*

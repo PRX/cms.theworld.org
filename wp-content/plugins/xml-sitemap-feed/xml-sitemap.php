@@ -3,7 +3,7 @@
  * Plugin Name: XML Sitemap & Google News
  * Plugin URI: https://status301.net/wordpress-plugins/xml-sitemap-feed/
  * Description: Feed the hungry spiders in compliance with the XML Sitemap and Google News protocols. Happy with the results? Please leave me a <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ravanhagen%40gmail%2ecom&item_name=XML%20Sitemap%20Feed">tip</a></strong> for continued development and support. Thanks :)
- * Version: 5.4.6
+ * Version: 5.4.8
  * Text Domain: xml-sitemap-feed
  * Requires at least: 4.4
  * Requires PHP: 5.6
@@ -13,7 +13,7 @@
  * @package XML Sitemap & Google News
  */
 
-define( 'XMLSF_VERSION', '5.4.6' );
+define( 'XMLSF_VERSION', '5.4.8' );
 
 /**
  * Copyright 2024 RavanH
@@ -225,7 +225,7 @@ function xmlsf_robots_txt( $output ) {
 	// SITEMAPS.
 
 	$output .= PHP_EOL . '# XML Sitemap & Google News version ' . XMLSF_VERSION . ' - https://status301.net/wordpress-plugins/xml-sitemap-feed/' . PHP_EOL;
-	if ( '1' !== get_option( 'blog_public' ) ) {
+	if ( 1 !== (int) get_option( 'blog_public' ) ) {
 		$output .= '# XML Sitemaps are disabled because of this site\'s privacy settings.' . PHP_EOL;
 	} elseif ( ! xmlsf_sitemaps_enabled() ) {
 		$output .= '# No XML Sitemaps are enabled.' . PHP_EOL;
@@ -253,11 +253,6 @@ function xmlsf_sitemaps_enabled( $which = 'any' ) {
 		$sitemaps = (array) get_option( 'xmlsf_sitemaps', array() );
 
 		switch ( true ) {
-			default:
-			case '1' !== get_option( 'blog_public' ):
-				$enabled = array();
-				break;
-
 			case isset( $sitemaps['sitemap'] ) && isset( $sitemaps['sitemap-news'] ):
 				$enabled = array( 'sitemap', 'news' );
 				break;
@@ -269,6 +264,10 @@ function xmlsf_sitemaps_enabled( $which = 'any' ) {
 			case isset( $sitemaps['sitemap-news'] ):
 				$enabled = array( 'news' );
 				break;
+
+			default:
+			case 1 !== (int) get_option( 'blog_public' ):
+				$enabled = array();
 		}
 	}
 
