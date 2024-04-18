@@ -18,3 +18,5 @@ define( 'S3_UPLOADS_BUCKET', 'media-pri-org/s3fs-public' );
 define( 'S3_UPLOADS_REGION', 'us-east-1' );
 
 define( 'GRAPHQL_DEBUG', true );
+
+define( 'COOKIE_DOMAIN', 'the-world-wp.lndo.site' );

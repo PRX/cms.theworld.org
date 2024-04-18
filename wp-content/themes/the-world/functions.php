@@ -114,7 +114,7 @@ if ( ! function_exists( 'tw_init_set_auth_cookie' ) ) {
 			if ( $user && $secret_key && ! isset( $_COOKIE[ $cookie_name ] ) ) {
 				$hostname = wp_parse_url( get_site_url(), PHP_URL_HOST );
 				// NOTE: Regex assumes front-end domains will use single segment TLD's.
-				$domain = trim( preg_replace( '~.*?\.?((?:\.?[\w_-]+){2})$~', '$1', $hostname ), '.' );
+				$domain = defined( 'COOKIE_DOMAIN' ) ? COOKIE_DOMAIN : trim( preg_replace( '~.*?\.?((?:\.?[\w_-]+){2})$~', '$1', $hostname ), '.' );
 				$token  = $auth->get_refresh_token( $user );
 
 				if ( $token && is_string( $token ) ) {
