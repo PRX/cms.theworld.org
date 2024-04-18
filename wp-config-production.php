@@ -23,3 +23,5 @@ define( 'S3_UPLOADS_REGION', 'us-east-1' );
 define( 'S3_UPLOADS_BUCKET_URL', 'https://media.pri.org/s3fs-public' );
 
 define( 'WP_MEMORY_LIMIT', '512M' );
+
+define( 'COOKIE_DOMAIN', '.theworld.org' );
