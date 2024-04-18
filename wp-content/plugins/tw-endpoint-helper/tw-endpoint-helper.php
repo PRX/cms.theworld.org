@@ -41,7 +41,7 @@ function peh_rest_api_init() {
 		'methods'             => WP_REST_Server::READABLE,
 		'callback'            => 'peh_route_alias',
 		'permission_callback' => '__return_true',
-		'args'     => array(
+		'args'                => array(
 			// slug is the alias.
 			'slug' => array(
 				'validate_callback' => 'peh_args_validation_callback',
@@ -63,9 +63,9 @@ add_action( 'rest_api_init', 'peh_rest_api_init' );
 /**
  * Validate param.
  *
- * @param string $value
+ * @param string          $value
  * @param WP_REST_Request $request
- * @param string $key
+ * @param string          $key
  * @return bool
  */
 function peh_args_validation_callback( $value, $request, $key ) {
@@ -84,14 +84,14 @@ function peh_args_validation_callback( $value, $request, $key ) {
  * Resolve an url to an array of WP_Query.
  *
  * @param string $url       Url to resolve
- * @param type $query_vars  Query variables to be added to the url
+ * @param type   $query_vars  Query variables to be added to the url
  * @return array|\WP_Error  Resolved query or WP_Error is something goes wrong
  * @staticvar \GM\UrlToQuery $resolver
  */
-function peh_url_to_query( $url = '', Array $query_vars = [ ] ) {
-	static $resolver = NULL;
+function peh_url_to_query( $url = '', array $query_vars = array() ) {
+	static $resolver = null;
 	if ( is_null( $resolver ) ) {
-		$resolver = new GM\UrlToQuery( );
+		$resolver = new GM\UrlToQuery();
 	}
 	return $resolver->resolve( $url, $query_vars );
 }
@@ -99,9 +99,9 @@ function peh_url_to_query( $url = '', Array $query_vars = [ ] ) {
 /**
  * Sanitize function.
  *
- * @param string $value
+ * @param string          $value
  * @param WP_REST_Request $request
- * @param string $param
+ * @param string          $param
  * @return void
  */
 function peh_data_arg_sanitize_callback( $value, $request, $param ) {
@@ -131,8 +131,20 @@ function peh_route_alias( WP_REST_Request $request ) {
 
 	} else {
 
-		// Check from redirect table.
-		$alias_object = _peh_get_object( $slug );
+		if ( is_numeric( $slug ) ) {
+			// Slug could be a nid or a fid...
+
+			// Check for node with slug as nid.
+			$alias_object = _peh_get_object_with_nid( $slug );
+
+			if ( ! $alias_object instanceof Peh_Alias_Object ) {
+				// Check for media with slug as fid.
+				$alias_object = _peh_get_object_with_fid( $slug );
+			}
+		} else {
+			// Check from redirect table.
+			$alias_object = _peh_get_object( $slug );
+		}
 
 		if ( $alias_object instanceof Peh_Alias_Object ) {
 
@@ -203,7 +215,7 @@ function _peh_get_object( $slug ) {
 /**
  * Filter object.
  *
- * @param mixed $object
+ * @param mixed  $object
  * @param string $slug
  * @return mixed
  */
@@ -216,7 +228,7 @@ add_filter( 'peh_get_object_filters', 'peh_maybe_object_wp_migrated_legacy_redir
 /**
  * Filter object.
  *
- * @param mixed $object
+ * @param mixed  $object
  * @param string $slug
  * @return mixed
  */
@@ -229,7 +241,7 @@ add_filter( 'peh_get_object_filters', 'peh_maybe_object_wp_migrated_legacy_alias
 /**
  * Filter object.
  *
- * @param mixed $object
+ * @param mixed  $object
  * @param string $slug
  * @return mixed
  */
@@ -242,7 +254,7 @@ add_filter( 'peh_get_object_filters', 'peh_maybe_object_wp_fg_redirect_db', 5, 2
 /**
  * Filter object.
  *
- * @param mixed $object
+ * @param mixed  $object
  * @param string $slug
  * @return mixed
  */
@@ -255,7 +267,7 @@ add_filter( 'peh_get_object_filters', 'peh_maybe_object_post', 10, 2 );
 /**
  * Filter object.
  *
- * @param mixed $object
+ * @param mixed  $object
  * @param string $slug
  * @return mixed
  */
@@ -268,7 +280,7 @@ add_filter( 'peh_get_object_filters', 'peh_maybe_object_terms', 15, 2 );
 /**
  * Filter object for posts migrated as terms.
  *
- * @param mixed $object
+ * @param mixed  $object
  * @param string $slug
  * @return mixed
  */
@@ -276,18 +288,18 @@ function peh_maybe_post_moved_to_object_terms( $object ) {
 
 	if ( isset( $object->type ) && in_array( $object->type, array( 'program', 'contributor' ) ) ) {
 		$object_type = $object->type === 'contributor' ? 'person' : $object->type;
-		$args = array(
+		$args        = array(
 			'hide_empty' => false, // also retrieve terms which are not used yet
 			'meta_query' => array(
 				array(
-				   'key'       => "_pri_old_wp_{$object_type}_id",
-				   'value'     => $object->id,
-				   'compare'   => '='
-				)
+					'key'     => "_pri_old_wp_{$object_type}_id",
+					'value'   => $object->id,
+					'compare' => '=',
+				),
 			),
-			'fields'  => 'ids',
+			'fields'     => 'ids',
 		);
-		$terms = get_terms( $args );
+		$terms       = get_terms( $args );
 		if ( $terms ) {
 			$object->id = $terms[0];
 		}
@@ -299,7 +311,7 @@ add_filter( 'peh_get_object_filters', 'peh_maybe_post_moved_to_object_terms', 20
 /**
  * Filter object.
  *
- * @param mixed $object
+ * @param mixed  $object
  * @param string $slug
  * @return mixed
  */
@@ -322,7 +334,7 @@ function _peh_get_object_by_wp_migrated_legacy_redirect_db( $slug ) {
 	$row = $wpdb->get_row( $wpdb->prepare( "SELECT `uid` AS `id`, `type`, `redirect` FROM `wp_migrated_legacy_redirect` WHERE `source` = '%s' LIMIT 1;", $slug ) );
 	if ( isset( $row->type ) && 'redirect' === $row->type && wp_http_validate_url( $row->redirect ) ) {
 		$row->is_external = true;
-	} elseif( $row && isset( $row->redirect ) && $row->redirect )  {
+	} elseif ( $row && isset( $row->redirect ) && $row->redirect ) {
 		$row = apply_filters( 'peh_get_object_filters', false, $row->redirect );
 	}
 	return $row;
@@ -352,7 +364,7 @@ function _peh_get_object_by_wp_migrated_legacy_alias_db( $slug ) {
 	// Check if it starts with media/ to try to select file alias as well.
 	if ( 0 === strpos( $slug, 'media/' ) ) {
 		$slug_file = str_replace( 'media/', 'file/', $slug );
-		$row = $wpdb->get_row( $wpdb->prepare( "SELECT `source`, `alias` FROM `wp_migrated_legacy_url_alias` WHERE `alias` IN ('%s', '%s') LIMIT 1;", $slug, $slug_file ) );
+		$row       = $wpdb->get_row( $wpdb->prepare( "SELECT `source`, `alias` FROM `wp_migrated_legacy_url_alias` WHERE `alias` IN ('%s', '%s') LIMIT 1;", $slug, $slug_file ) );
 	} else {
 		$row = $wpdb->get_row( $wpdb->prepare( "SELECT `source`, `alias` FROM `wp_migrated_legacy_url_alias` WHERE `alias` = '%s' LIMIT 1;", $slug ) );
 	}
@@ -363,8 +375,8 @@ function _peh_get_object_by_wp_migrated_legacy_alias_db( $slug ) {
 		isset( $row->alias ) && $row->alias
 	) {
 
-		$id   = '';
-		$type = '';
+		$id      = '';
+		$type    = '';
 		$wp_type = '';
 
 		// Check for node or taxonomy record type.
@@ -428,14 +440,14 @@ function _peh_get_object_by_wp_migrated_legacy_alias_db( $slug ) {
 
 			// Get WP Posts by node id.
 			$s_args = array(
-					'post_type'  => $wp_type,
-					'meta_key'   => $wp_meta_key,
-					'meta_value' => $id,
-					'fields' => 'ids',
-					'posts_per_page' => 1,
-					'no_found_rows'  => true,
-					'update_post_meta_cache' => false,
-					'update_post_term_cache' => false
+				'post_type'              => $wp_type,
+				'meta_key'               => $wp_meta_key,
+				'meta_value'             => $id,
+				'fields'                 => 'ids',
+				'posts_per_page'         => 1,
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
 			);
 
 			$posts = get_posts( $s_args );
@@ -464,18 +476,18 @@ function _peh_get_object_by_wp_migrated_legacy_alias_db( $slug ) {
  * Get post by slug.
  *
  * @param string $slug
- * @param array $extra_args
+ * @param array  $extra_args
  * @return void
  */
 function _peh_get_object_by_slug( $slug, $extra_args = array() ) {
 
 	$args = array(
-		'name'           => $slug,
-		'post_status'    => 'publish',
-		'posts_per_page' => 1,
-		'no_found_rows'  => true,
+		'name'                   => $slug,
+		'post_status'            => 'publish',
+		'posts_per_page'         => 1,
+		'no_found_rows'          => true,
 		'update_post_meta_cache' => false,
-		'update_post_term_cache' => false
+		'update_post_term_cache' => false,
 	);
 
 	if ( $extra_args ) {
@@ -488,8 +500,8 @@ function _peh_get_object_by_slug( $slug, $extra_args = array() ) {
 	if ( $objects ) {
 
 		$object       = new stdClass();
-		$object->id   = $objects[ 0 ]->ID;
-		$object->type = $objects[ 0 ]->post_type;
+		$object->id   = $objects[0]->ID;
+		$object->type = $objects[0]->post_type;
 
 		return $object;
 	}
@@ -544,6 +556,72 @@ function _peh_get_object_wild( $slug ) {
 	return $object;
 }
 
+/**
+ * Assume slug is an nid.
+ *
+ * @param string $slug
+ * @return void
+ */
+function _peh_get_object_with_nid( $slug ) {
+
+	global $wpdb;
+
+	$object = false;
+
+	$result = $wpdb->get_row( $wpdb->prepare( "SELECT p.ID, p.post_type, p.post_mime_type FROM `wp_postmeta` `pm` LEFT JOIN `wp_posts` `p` ON p.ID = pm.post_id WHERE pm.meta_key = 'nid' AND pm.meta_value = %s;", $slug ) );
+
+	if ( $result ) {
+		$alias_object       = new stdClass();
+		$alias_object->id   = $result->ID;
+		$alias_object->type = $result->post_type;
+
+		$object = new Peh_Alias_Object( $alias_object );
+	}
+
+	return $object;
+}
+
+/**
+ * Assume slug is an fid.
+ *
+ * @param string $slug
+ * @return void
+ */
+function _peh_get_object_with_fid( $slug ) {
+
+	global $wpdb;
+
+	$object = false;
+
+	$results = $wpdb->get_results( $wpdb->prepare( "SELECT p.ID, p.post_type, p.post_mime_type FROM `wp_postmeta` `pm` LEFT JOIN `wp_posts` `p` ON p.ID = pm.post_id WHERE pm.meta_key = 'fid' AND pm.meta_value = %s;", $slug ) );
+
+	if ( is_array( $results ) ) {
+		// Favor segment post type when attachment is audio.
+		$object_attachments = array_filter( $results, fn( $row ) => 'attachment' === $row->post_type );
+		$object_segments    = array_filter( $results, fn( $row ) => 'segment' === $row->post_type );
+		$object_attachment  = array_pop( $object_attachments );
+		$object_segment     = array_pop( $object_segments );
+
+		if ( 0 === strpos( $object_attachment->post_mime_type, 'audio/' ) && $object_segment ) {
+			$object = $object_segment;
+		} else {
+			$object = $object_attachment;
+		}
+	} elseif ( $results ) {
+		$object = $results;
+	}
+
+	if ( $object ) {
+		$alias_object       = new stdClass();
+		$alias_object->id   = $object->ID;
+		$alias_object->type = $object->post_type;
+
+		$object = new Peh_Alias_Object( $alias_object );
+	}
+
+	return $object;
+}
+
 
 
 
@@ -564,9 +642,9 @@ function peh_get_response( array $response ) {
 		500 => array( 'rest_internal_error', 'TW - 500 Internal Error.' ),
 	);
 
-	$error = isset( $errors[$status] ) ? $errors[$status] : false;
+	$error = isset( $errors[ $status ] ) ? $errors[ $status ] : false;
 
 	return $error
-		? new WP_Error( $error[0], __( $error[1], 'peh'), $response )
+		? new WP_Error( $error[0], __( $error[1], 'peh' ), $response )
 		: new WP_REST_Response( $response['data'], $status );
 }
