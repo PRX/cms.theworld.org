@@ -95,7 +95,10 @@
     "html": false,
     "align": true
   },
-  "usesContext": ["postId", "postType"],
+  "usesContext": [
+    "postId",
+    "postType"
+  ],
   "textdomain": "svg-block",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",

@@ -4,7 +4,7 @@
  * Description:       Display an SVG image as a block, which can be used for displaying icons, dividers, buttons...
  * Requires at least: 6.3
  * Requires PHP:      7.0
- * Version:           1.1.17
+ * Version:           1.1.18
  * Author:            Phi Phan
  * Author URI:        https://boldblocks.net
  *
@@ -45,28 +45,26 @@ require_once __DIR__ . '/includes/icon-library.php';
  * @return string
  */
 function svg_block_render_block( $block_content, $block, $block_instance ) {
-	if ( 'boldblocks/svg-block' === ( $block['blockName'] ?? '' ) ) {
-		if ( $block['attrs']['linkToPost'] ?? false ) {
-			if ( isset( $block_instance->context['postId'] ) ) {
-				// Get post_id from the context first.
-				$post_id = $block_instance->context['postId'];
-			} else {
-				// Fallback to the current post id.
-				$post_id = get_queried_object_id();
-			}
+	if ( $block['attrs']['linkToPost'] ?? false ) {
+		if ( isset( $block_instance->context['postId'] ) ) {
+			// Get post_id from the context first.
+			$post_id = $block_instance->context['postId'];
+		} else {
+			// Fallback to the current post id.
+			$post_id = get_queried_object_id();
+		}
 
-			$post_link = get_permalink( $post_id );
-			if ( $post_link ) {
-				$processor = new \WP_HTML_Tag_Processor( $block_content );
-				if ( $processor->next_tag( 'a' ) ) {
-					$processor->set_attribute( 'href', $post_link );
+		$post_link = get_permalink( $post_id );
+		if ( $post_link ) {
+			$processor = new \WP_HTML_Tag_Processor( $block_content );
+			if ( $processor->next_tag( 'a' ) ) {
+				$processor->set_attribute( 'href', $post_link );
 
-					$block_content = $processor->get_updated_html();
-				}
+				$block_content = $processor->get_updated_html();
 			}
 		}
 	}
 
 	return $block_content;
 }
-add_action( 'render_block', __NAMESPACE__ . '\\svg_block_render_block', 10, 3 );
+add_action( 'render_block_boldblocks/svg-block', __NAMESPACE__ . '\\svg_block_render_block', 10, 3 );
