@@ -134,7 +134,7 @@ function peh_route_alias( WP_REST_Request $request ) {
 		if ( is_numeric( $slug ) ) {
 			// Slug could be a nid or a fid...
 
-			// Check from redirect table for node.
+			// Check for node with slug as nid.
 			$alias_object = _peh_get_object_with_nid( $slug );
 
 			if ( ! $alias_object instanceof Peh_Alias_Object ) {
