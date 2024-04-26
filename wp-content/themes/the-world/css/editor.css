@@ -40,7 +40,7 @@ body {
   margin-inline: auto !important;
 }
 .block-editor-block-list__layout.is-root-container
-  > .wp-block:is(.aligncenter) {
+  > .wp-block:where(.aligncenter) {
   width: 100%;
   max-width: calc(100% - (var(--_editor--content--gutter) * 2));
   text-align: left;
@@ -118,6 +118,9 @@ body {
 }
 .block-editor-block-list__block.wp-block-separator.is-style-wide {
   border-width: 2px;
+}
+.block-editor-block-list__block.wp-block-separator.is-style-dots {
+  text-align: center;
 }
 
 @container editor-content (min-width: 960px) {

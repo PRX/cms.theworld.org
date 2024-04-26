@@ -16,6 +16,30 @@ services:
     build:
       - npm install
       - chmod +x scripts/*
+  appserver_nginx:
+    scanner:
+      retry: 10
+      okCodes:
+        - 302
+        - 401
+        - 402
+        - 403
+  edge:
+    scanner:
+      retry: 10
+      okCodes:
+        - 302
+        - 401
+        - 402
+        - 403
+  edge_ssl:
+    scanner:
+      retry: 10
+      okCodes:
+        - 302
+        - 401
+        - 402
+        - 403
   mailhog:
     type: mailhog
     portforward: false

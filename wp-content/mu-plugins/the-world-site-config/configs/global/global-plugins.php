@@ -33,6 +33,7 @@ define(
 		'tw-media/tw-media.php',
 		'tw-menus/tw-menus.php',
 		'tw-newsletters/tw-newsletters.php',
+		'tw-previews/tw-previews.php',
 		'tw-programs/tw-programs.php',
 		'tw-qa-block/tw-qa-block.php',
 		'tw-datawrapper-block/tw-datawrapper-block.php',

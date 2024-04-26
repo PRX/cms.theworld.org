@@ -1,0 +1,2 @@
+# Ignore generated graphql types
+src/types/api/graphql.ts

@@ -80,7 +80,7 @@ if ( ! function_exists( 'tw_preview_post_link' ) ) {
 		return $permalink_ready;
 	}
 }
-add_filter( 'preview_post_link', 'tw_preview_post_link', 100, 2 );
+// add_filter( 'preview_post_link', 'tw_preview_post_link', 100, 2 );
 
 /**
  * Add filter hooks to extend those provided by Faust plugin to include our custom post types.
@@ -127,6 +127,7 @@ if ( ! function_exists( 'tw_init_set_auth_cookie' ) ) {
 							'domain'   => $domain,
 							'httponly' => true,
 							'secure'   => isset( $_SERVER['HTTPS'] ),
+							'samesite' => 'Lax',
 						)
 					);
 				}
