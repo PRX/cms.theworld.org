@@ -1,7 +1,7 @@
 import type { ContentNode } from '@/types/api/graphql';
 import { type AppAction, type AppState } from '@/types/state/app';
 import React, { useEffect, useReducer, useRef } from 'react';
-import { CheckCircle, Loader } from 'lucide-react';
+import { CheckCircle, Loader2Icon } from 'lucide-react';
 import { AppContext, type AppContextValue } from '@/lib/contexts/AppContext';
 import { DocumentNode, gql, useQuery } from '@apollo/client';
 import { Toaster } from '@/components/ui/toaster';
@@ -58,18 +58,13 @@ function App() {
   };
   const { data, query, previewSource, revisionId } = state;
   const { data: revisionData, startPolling } = useQuery<{default: ContentNode}>(PREVIEW_REVISION_ID_QUERY, { variables: { id } });
-  const { data: queryData } = useQuery<{[k: string]: ContentNode}>(query, { variables: { id: revisionId }, skip: !revisionId });
-
-  console.log('DATA >> ', id, data);
-  console.log('QUERY >> ', id, queryData);
-  console.log('REVISION >> ', revisionId, revisionData);
+  const { data: queryData } = useQuery<{[k: string]: ContentNode}>(query, { variables: { id: revisionId }, skip: !revisionId, pollInterval: 5000 });
 
   useEffect(() => {
     function handlePostMessage(e: MessageEvent<{ query: DocumentNode }>) {
       const { query } = e.data;
 
       if (query) {
-        console.log('New query recieved...', query, e);
         dispatch({type: 'SET_QUERY', payload: {query, previewSource: e.source}} as AppAction<AppState>);
       }
     }
@@ -91,7 +86,7 @@ function App() {
     toast({
       title: 'Revision loaded.',
       action: <CheckCircle />,
-      duration: 8000
+      duration: 5000
     });
 
   }, [queryData, dispatch]);
@@ -108,15 +103,15 @@ function App() {
     if (revisionData?.default) {
       toast({
         title: 'New revision detected...',
-        action: <Loader />,
-        duration: 8000
+        action: <Loader2Icon className="animate-spin" />,
+        duration: 5000
       });
       dispatch({ type: 'SET_REVISION_ID', payload: revisionData.default.previewRevisionId || id } as AppAction<string>);
     }
   }, [id, revisionData, dispatch]);
 
   return (
-    <div className="w-screen h-screen">
+    <div className="w-screen h-screen dark">
       <AppContext.Provider value={contextValue}>
         <iframe ref={iframeRef} src={previewUrl} className="w-full h-full" />
       </AppContext.Provider>

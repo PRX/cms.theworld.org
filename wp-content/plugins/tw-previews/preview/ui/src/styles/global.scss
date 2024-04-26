@@ -89,15 +89,3 @@
     text-wrap: balance;
   }
 }
-
-.rdp-dropdown_icon {
-  display: inline-block;
-}
-
-.rdp-caption_dropdowns {
-  @apply gap-2;
-  :has(.rdp-dropdown_icon) {
-    display: inline-flex;
-    align-items: center;
-  }
-}
