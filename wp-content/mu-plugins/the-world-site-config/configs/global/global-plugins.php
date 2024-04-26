@@ -52,7 +52,6 @@ define(
 		'svg-block/svg-block.php',
 		'wp-graphql/wp-graphql.php',
 		'wp-graphql-acf/wp-graphql-acf.php',
-		'wp-graphql-jwt-authentication/wp-graphql-jwt-authentication.php',
 		'add-wpgraphql-seo/wp-graphql-yoast-seo.php',
 		'custom-post-type-permalinks/custom-post-type-permalinks.php',
 		'faustwp/faustwp.php',
