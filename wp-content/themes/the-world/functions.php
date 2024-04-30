@@ -65,14 +65,14 @@ if ( ! function_exists( 'tw_admin_styles' ) ) :
 	function tw_admin_styles() {
 		// Fixes layout heights of some accordion containers after WP 6.3 update.
 		echo '<style>
-			.components-panel__body { display: grid; }
 			.wpseo-meta-section, .wpseo-meta-section-react { min-height: unset; }
 		</style>';
 
 		// Hides device options from preview menu dropdown. They are basically useless and confusing.
 		echo '<style>
-			.edit-post-post-preview-dropdown .components-menu-group:first-child { display: none; }
-			.edit-post-post-preview-dropdown .components-menu-group + .components-menu-group { border-top: none; margin-top: -8px; }
+			.components-form-token-field__token-text { white-space: unset; }
+		    .components-dropdown-menu__menu:has(a[target^="wp-preview"]) .components-menu-group:not(:has(a[target^="wp-preview"])) { display: none; }
+			.components-dropdown-menu__menu:has(a[target^="wp-preview"]) .components-menu-group:has(a[target^="wp-preview"]) { border-top: none; margin-top: -8px; }
 		</style>';
 	}
 endif;

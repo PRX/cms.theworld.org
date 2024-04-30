@@ -8,7 +8,7 @@
             "name": "image_title",
             "aria-label": "",
             "type": "text",
-            "instructions": "",
+            "instructions": "Provide a human readable title to be used in title attribute of image element. Will show up as a tooltip in most browsers and read by screen readers. Should be short and descriptive, but not as descriptive as the alt text.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -16,11 +16,12 @@
                 "class": "",
                 "id": ""
             },
+            "show_in_graphql": 1,
             "default_value": "",
-            "placeholder": "",
+            "maxlength": "",
+            "placeholder": "Example: \"Luke Skywalker Training With Yoda\"",
             "prepend": "",
-            "append": "",
-            "maxlength": ""
+            "append": ""
         },
         {
             "key": "field_622a6312b1b5d",
@@ -48,7 +49,7 @@
             "name": "_media_credit",
             "aria-label": "",
             "type": "text",
-            "instructions": "",
+            "instructions": "Give credit when credit is due. See image usage agreement for required credit text format.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -62,6 +63,24 @@
             "placeholder": "",
             "prepend": "",
             "append": ""
+        },
+        {
+            "key": "field_66311e6ccd8b9",
+            "label": "Image Credit URL",
+            "name": "_media_credit_url",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "Provide link back to source as required by image usage agreement.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "default_value": "",
+            "placeholder": ""
         }
     ],
     "location": [
@@ -74,10 +93,10 @@
         ]
     ],
     "menu_order": 5,
-    "position": "normal",
+    "position": "side",
     "style": "default",
     "label_placement": "top",
-    "instruction_placement": "label",
+    "instruction_placement": "field",
     "hide_on_screen": "",
     "active": true,
     "description": "",
@@ -86,5 +105,5 @@
     "graphql_field_name": "imageFields",
     "map_graphql_types_from_location_rules": 0,
     "graphql_types": "",
-    "modified": 1709042362
+    "modified": 1714499083
 }
