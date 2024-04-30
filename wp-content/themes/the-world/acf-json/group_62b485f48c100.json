@@ -1,69 +1,81 @@
 {
-  "key": "group_62b485f48c100",
-  "title": "File Meta - Migration",
-  "fields": [
-    {
-      "key": "field_62b4862efaff1",
-      "label": "Original URI",
-      "name": "original_uri",
-      "aria-label": "",
-      "type": "text",
-      "instructions": "",
-      "required": 0,
-      "conditional_logic": 0,
-      "wrapper": {
-        "width": "",
-        "class": "",
-        "id": ""
-      },
-      "default_value": "",
-      "placeholder": "",
-      "prepend": "",
-      "append": "",
-      "maxlength": ""
-    },
-    {
-      "key": "field_62b48652faff2",
-      "label": "Drupal ID",
-      "name": "fid",
-      "aria-label": "",
-      "type": "text",
-      "instructions": "",
-      "required": 0,
-      "conditional_logic": 0,
-      "wrapper": {
-        "width": "",
-        "class": "",
-        "id": ""
-      },
-      "default_value": "",
-      "placeholder": "",
-      "prepend": "",
-      "append": "",
-      "maxlength": ""
-    }
-  ],
-  "location": [
-    [
-      {
-        "param": "attachment",
-        "operator": "==",
-        "value": "all"
-      }
-    ]
-  ],
-  "menu_order": 10,
-  "position": "normal",
-  "style": "seamless",
-  "label_placement": "top",
-  "instruction_placement": "label",
-  "hide_on_screen": "",
-  "active": true,
-  "description": "",
-  "show_in_rest": 0,
-  "show_in_graphql": 0,
-  "graphql_field_name": "fileMeta",
-  "map_graphql_types_from_location_rules": 0,
-  "graphql_types": "",
-  "modified": 1709041316
+    "key": "group_62b485f48c100",
+    "title": "File Meta",
+    "fields": [
+        {
+            "key": "field_62b4862efaff1",
+            "label": "Original URI",
+            "name": "original_uri",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Holds URL to remote file, usually in S3.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 0,
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_62b48652faff2",
+            "label": "Drupal ID",
+            "name": "fid",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "File ID from Drupal prior to migration.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 0,
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "attachment",
+                "operator": "==",
+                "value": "all"
+            },
+            {
+                "param": "current_user_role",
+                "operator": "==",
+                "value": "administrator"
+            },
+            {
+                "param": "user_role",
+                "operator": "==",
+                "value": "administrator"
+            }
+        ]
+    ],
+    "menu_order": 10,
+    "position": "normal",
+    "style": "seamless",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "show_in_graphql": 0,
+    "graphql_field_name": "fileMeta",
+    "map_graphql_types_from_location_rules": 0,
+    "graphql_types": "",
+    "modified": 1714496454
 }
