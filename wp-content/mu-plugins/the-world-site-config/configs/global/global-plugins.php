@@ -18,6 +18,7 @@ define(
 		'microsoft-start/index.php',
 		'pwa/pwa.php',
 		'redirection/redirection.php',
+		'revision-manager-tmc/revision-manager-tmc.php',
 		'user-role-editor/user-role-editor.php',
 		'taxopress-pro/taxopress-pro.php',
 		'tw-call-to-actions/tw-call-to-actions.php',

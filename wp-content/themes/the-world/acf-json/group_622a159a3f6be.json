@@ -30,7 +30,8 @@
             "return_format": "id",
             "min": "",
             "max": "",
-            "elements": ""
+            "elements": "",
+            "bidirectional_target": []
         },
         {
             "key": "field_6328c949421fe",
@@ -67,11 +68,12 @@
                         "class": "",
                         "id": ""
                     },
-                    "default_value": "",
+                    "show_in_graphql": 1,
+                    "default_value": "spotify:playlist:0krKDnlEtMHTWPMTWAk79R",
+                    "maxlength": "",
                     "placeholder": "",
                     "prepend": "",
                     "append": "",
-                    "maxlength": "",
                     "parent_repeater": "field_6328c949421fe"
                 }
             ]
@@ -99,5 +101,5 @@
     "graphql_field_name": "episodeContent",
     "map_graphql_types_from_location_rules": 0,
     "graphql_types": "",
-    "modified": 1685119712
+    "modified": 1713988486
 }
