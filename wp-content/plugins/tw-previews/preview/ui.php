@@ -85,6 +85,7 @@ if ( ! function_exists( 'tw_previews_preview_post_link' ) ) {
 	}
 }
 add_filter( 'preview_post_link', 'tw_previews_preview_post_link', 100000, 2 );
+add_filter( 'revisionary_preview_url', 'tw_previews_preview_post_link', 100000, 2 );
 
 /**
  * Render HTML and enqueue scripts for admin page.

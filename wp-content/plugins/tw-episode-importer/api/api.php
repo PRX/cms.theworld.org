@@ -768,7 +768,7 @@ function tw_episode_importer_parse_api_item( $api_item, $post_type ) {
 			return $p['type'] === $post_type;
 		}
 	) : null;
-	$post               = is_array( $post ) && ! empty( $post ) ? $post[0] : null;
+	$post               = is_array( $post ) && ! empty( $post ) ? array_shift( $post ) : null;
 	$was_imported       = is_array( $post ) && isset( $post['guid'] ) ? $post['guid'] === $guid : false;
 	$audio_is_different = is_array( $audio ) && isset( $audio['url'] ) && $api_item->_links->enclosure->href !== $audio['url'];
 	$has_updated_audio  = is_array( $audio ) &&
@@ -931,7 +931,7 @@ function tw_episode_importer_get_existing_post_data( $post_type, $guid, $audio_k
 
 	// Attempt to get imported audio by guid.
 	if ( is_null( $audio_post ) ) {
-		$audio_id   = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE guid=%s", "http://{$guid}" ) );
+		$audio_id   = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE guid IN (%s, %s)", array( "{$guid}", "http://{$guid}" ) ) );
 		$audio_post = get_post( $audio_id );
 	}
 

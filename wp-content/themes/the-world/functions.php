@@ -71,8 +71,9 @@ if ( ! function_exists( 'tw_admin_styles' ) ) :
 		// Hides device options from preview menu dropdown. They are basically useless and confusing.
 		echo '<style>
 			.components-form-token-field__token-text { white-space: unset; }
-		    .components-dropdown-menu__menu:has(a[target^="wp-preview"]) .components-menu-group:not(:has(a[target^="wp-preview"])) { display: none; }
-			.components-dropdown-menu__menu:has(a[target^="wp-preview"]) .components-menu-group:has(a[target^="wp-preview"]) { border-top: none; margin-top: -8px; }
+		    .components-popover__content:has(.editor-preview-dropdown__button-external) .components-menu-group:not(:has(.editor-preview-dropdown__button-external)) { display: none; }
+		    .components-popover__content:has(.editor-preview-dropdown__button-external) .components-menu-group:has([target="pp_revisions_copy"]) { display: none; }
+			.components-popover__content:has(.editor-preview-dropdown__button-external) .components-menu-group + .components-menu-group:has(.editor-preview-dropdown__button-external) { border-top: none; margin-top: -8px; }
 		</style>';
 	}
 endif;
