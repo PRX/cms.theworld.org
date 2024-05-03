@@ -9,9 +9,7 @@
     "type": "git"
   },
   "scripts": {
-    "refresh": "./scripts/refresh.sh",
-    "local": "./scripts/local.sh",
-    "config-export": "./scripts/config-export.sh"
+    "refresh": "./scripts/refresh.sh"
   },
   "bugs": {
     "url": "https://github.com/LuminexCorporation/luminexcorp/issues"

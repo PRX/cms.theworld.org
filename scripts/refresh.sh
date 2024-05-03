@@ -14,12 +14,6 @@ else
   lando pull --database=dev --files=none --code=none
 fi
 
-echo "Activate Configuration Management before importing configuration"
-lando wp plugin activate wp-cfm
-lando wp plugin activate wp-cfm-path
-echo "Import configuration from WP CFM bundles and Replace domain in the database."
-lando wp config pull all
-
 echo "Create local admin user"
 lando wp user create local-admin local-admin@the-world-wp.com
 lando wp user set-role local-admin administrator
