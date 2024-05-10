@@ -65,14 +65,6 @@ Install the following extension:
 
 - TBD
 
-### Configuration
-
-This wordpress installation uses WP-CFM to manage database changes and deploy them between environments. Follow the steps below to ensure your local changes are properly captured and deployed.
-
-- Go to http://the-world-wp.lndo.site/wp-admin/options-general.php?page=wpcfm and manually create any new configuration bundles or update existing bundles if needed.
-- Run `npm run config-export`
--
-
 ### Helper scripts
 
 To use the helper script provided you will need to have `npm` installed. These commands are bash scripts located in the `./scripts` directory and defined in `package.json`.

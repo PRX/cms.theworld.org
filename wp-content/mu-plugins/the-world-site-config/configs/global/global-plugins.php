@@ -44,8 +44,6 @@ define(
 		'visual-term-description-editor/visual-term-description-editor.php',
 		'wordpress-importer/wordpress-importer.php',
 		'wordpress-seo/wp-seo.php',
-		'wp-cfm-path/wp-cfm-path.php',
-		'wp-cfm/wp-cfm.php',
 		'wp-rest-menu/wp-rest-menus.php',
 		'xml-sitemap-feed/xml-sitemap.php',
 		'wp-redis/wp-redis.php',
