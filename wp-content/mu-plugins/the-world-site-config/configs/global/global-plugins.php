@@ -21,6 +21,7 @@ define(
 		'revisionary/revisionary.php',
 		'user-role-editor/user-role-editor.php',
 		'taxopress-pro/taxopress-pro.php',
+		'tw-acf-sync-helper/tw-acf-sync-helper.php',
 		'tw-call-to-actions/tw-call-to-actions.php',
 		'tw-contributors/tw-contributors.php',
 		'tw-custom-tags/tw-custom-tags.php',
