@@ -12,6 +12,50 @@ namespace SVGBlock;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+if ( is_readable( SVG_BLOCK_PATH . '/vendor/autoload.php' ) ) {
+	require SVG_BLOCK_PATH . '/vendor/autoload.php';
+}
+
+/**
+ * SVG allowed tags
+ */
+class SVGBockAllowedTags extends \enshrined\svgSanitize\data\AllowedTags {
+	/**
+	 * Returns an array of tags
+	 *
+	 * @return array
+	 */
+	public static function getTags() {
+
+		/**
+		 * Tags that are allowed.
+		 *
+		 * @var array
+		 */
+		return apply_filters( 'svg_allowed_tags', parent::getTags() );
+	}
+}
+
+/**
+ * SVG allowed attributes
+ */
+class SVGBlockAllowedAttributes extends \enshrined\svgSanitize\data\AllowedAttributes {
+	/**
+	 * Returns an array of attributes
+	 *
+	 * @return array
+	 */
+	public static function getAttributes() {
+
+		/**
+		 * Attributes that are allowed.
+		 *
+		 * @var array
+		 */
+		return apply_filters( 'svg_allowed_attributes', parent::getAttributes() );
+	}
+}
+
 if ( ! class_exists( IconLibrary::class ) ) :
 	/**
 	 * The controller class for icon library.
@@ -25,9 +69,18 @@ if ( ! class_exists( IconLibrary::class ) ) :
 		private static $instance;
 
 		/**
+		 * The sanitizer
+		 *
+		 * @var \enshrined\svgSanitize\Sanitizer
+		 */
+		private $sanitizer;
+
+		/**
 		 * A dummy constructor
 		 */
-		private function __construct() {}
+		private function __construct() {
+			$this->sanitizer = new \enshrined\svgSanitize\Sanitizer();
+		}
 
 		/**
 		 * Initialize the instance.
@@ -55,6 +108,9 @@ if ( ! class_exists( IconLibrary::class ) ) :
 			if ( apply_filters( 'boldblocks_svg_block_allow_upload_svg_image', true ) ) {
 				// Allow SVG upload.
 				add_filter( 'upload_mimes', [ $this, 'mime_types_support_svg' ] );
+
+				// Handle SVG upload.
+				add_filter( 'wp_handle_upload_prefilter', [ $this, 'handle_svg_upload' ] );
 
 				// Display svg images.
 				add_action( 'admin_head', [ $this, 'display_svg_thumb' ] );
@@ -162,9 +218,109 @@ if ( ! class_exists( IconLibrary::class ) ) :
 		 * @return array
 		 */
 		public function mime_types_support_svg( $mimes ) {
-			$mimes['svg'] = 'image/svg+xml';
+			if ( $this->current_user_can_upload_svg() ) {
+				$mimes['svg'] = 'image/svg+xml';
+			}
 
 			return $mimes;
+		}
+
+		/**
+		 * Handle SVG uplaod
+		 *
+		 * @param array $file An array of data for the uploaded file.
+		 *
+		 * @return mixed
+		 */
+		public function handle_svg_upload( $file ) {
+			// Bail if there is no valid file path.
+			if ( ! isset( $file['tmp_name'] ) ) {
+				return $file;
+			}
+
+			$file_name   = isset( $file['name'] ) ? $file['name'] : '';
+			$wp_filetype = wp_check_filetype_and_ext( $file['tmp_name'], $file_name );
+			$type        = ! empty( $wp_filetype['type'] ) ? $wp_filetype['type'] : '';
+
+			// Handle SVG file.
+			if ( 'image/svg+xml' === $type ) {
+				// Don't allow upload, if the current user cannot upload SVG.
+				if ( ! $this->current_user_can_upload_svg() ) {
+					$file['error'] = __(
+						'Sorry, you are not allowed to upload SVG files.',
+						'svg-block'
+					);
+
+					return $file;
+				}
+
+				if ( ! $this->sanitize( $file['tmp_name'] ) ) {
+					$file['error'] = __(
+						"Sorry, this file couldn't be sanitized so for security reasons wasn't uploaded.",
+						'svg-block'
+					);
+				}
+			}
+
+			return $file;
+		}
+
+		/**
+		 * Sanitize the SVG
+		 *
+		 * @param string $file Temp file path.
+		 *
+		 * @return bool|int
+		 */
+		private function sanitize( $file ) {
+			$dirty = file_get_contents( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+
+			// Is the SVG gzipped?
+			$is_zipped = $this->is_gzipped( $dirty );
+
+			// Decode it, if SVG is zipped.
+			if ( $is_zipped ) {
+				$dirty = gzdecode( $dirty );
+
+				// Bail if decoding fails.
+				if ( false === $dirty ) {
+					return false;
+				}
+			}
+
+			$this->sanitizer->setAllowedTags( new SVGBockAllowedTags() );
+			$this->sanitizer->setAllowedAttrs( new SVGBlockAllowedAttributes() );
+
+			$clean = $this->sanitizer->sanitize( $dirty );
+
+			if ( false === $clean ) {
+				return false;
+			}
+
+			// If we were gzipped, we need to re-zip.
+			if ( $is_zipped ) {
+				$clean = gzencode( $clean );
+			}
+
+			file_put_contents( $file, $clean ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
+
+			return true;
+		}
+
+		/**
+		 * Is gzipped?
+		 *
+		 * @param string $content
+		 * @return boolean
+		 */
+		private function is_gzipped( $content ) {
+			// phpcs:disable Generic.Strings.UnnecessaryStringConcat.Found
+			if ( function_exists( 'mb_strpos' ) ) {
+				return 0 === mb_strpos( $content, "\x1f" . "\x8b" . "\x08" );
+			} else {
+				return 0 === strpos( $content, "\x1f" . "\x8b" . "\x08" );
+			}
+			// phpcs:enable
 		}
 
 		/**
@@ -217,6 +373,20 @@ if ( ! class_exists( IconLibrary::class ) ) :
 			}
 
 			return $data;
+		}
+
+		/**
+		 * Check whether current user can upload SVG or not
+		 *
+		 * @return boolean
+		 */
+		private function current_user_can_upload_svg() {
+			$upload_roles = apply_filters( 'svg_block_upload_roles', [ 'administrator' ] );
+
+			$user               = wp_get_current_user();
+			$current_user_roles = (array) $user->roles;
+
+			return array_intersect( $upload_roles, $current_user_roles );
 		}
 	}
 

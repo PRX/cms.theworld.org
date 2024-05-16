@@ -1,5 +1,6 @@
 <?php
 require_once plugin_dir_path(__FILE__) . 'linked-terms-schema.php';
+require_once plugin_dir_path(__FILE__) . 'linked-terms-table.php';
 
 if (!class_exists('TaxoPress_Linked_Terms')) {
     /**
@@ -7,9 +8,13 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
      */
     class TaxoPress_Linked_Terms
     {
+        const MENU_SLUG = 'st_options';
 
         // class instance
         static $instance;
+
+        // WP_List_Table object
+        public $terms_table;
 
         /**
          * Construct the TaxoPress_Linked_Terms class
@@ -19,8 +24,9 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
             add_action('admin_init', [$this, 'run_installer_task']);
 
             add_action('admin_init', function () {
-                foreach (array_keys(get_taxonomies()) as $taxonomy) {
-                    if (!in_array($taxonomy, $this->excluded_linked_terms_taxonomy())) {
+                $linked_terms_taxonomies = SimpleTags_Plugin::get_option_value('linked_terms_taxonomies');
+                if (is_array($linked_terms_taxonomies)) {
+                    foreach ($linked_terms_taxonomies as $taxonomy) {
                         add_action($taxonomy . '_add_form_fields', [$this, 'add_term_fields']);
                         add_action($taxonomy . '_edit_form_fields', [$this, 'edit_term_fields'], 10, 2);
                         add_action('created_' . $taxonomy, [$this, 'save_term_fields']);
@@ -32,6 +38,12 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
 
             // Add linked term to post
             add_action('save_post', [$this, 'add_linked_term_to_post'], 100, 2);
+
+            add_filter('set-screen-option', [$this, 'set_screen'], 10, 3);
+            // Admin menu
+            add_action('admin_menu', [$this, 'admin_menu']);
+
+            add_filter('removable_query_args', [$this, 'remove_args']);
 
         }
 
@@ -57,6 +69,127 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
                 update_option('taxopress_linked_terms_table_installed', true);
            }
         }
+
+        public function remove_args ($args) {
+            return array_merge($args, [
+                'action',
+                'taxopress_linked_terms',
+                '_wpnonce'
+            ]);
+        }
+
+        public function set_screen($status, $option, $value)
+        {
+            return $value;
+        }
+
+        /**
+         * Screen options
+         */
+        public function screen_option()
+        {
+    
+            $option = 'per_page';
+            $args   = [
+                'label'   => esc_html__('Number of items per page', 'taxopress-pro'),
+                'default' => 20,
+                'option'  => 'st_linked_terms_per_page'
+            ];
+    
+            add_screen_option($option, $args);
+    
+            $this->terms_table = new Taxopress_Linked_Terms_List();
+        }
+
+        /**
+         * Add WP admin menu for Tags
+         *
+         * @return void
+         */
+        public function admin_menu()
+        {
+            $hook = add_submenu_page(
+                self::MENU_SLUG,
+                esc_html__('Linked Terms', 'taxopress-pro'),
+                esc_html__('Linked Terms', 'taxopress-pro'),
+                'simple_tags',
+                'st_linked_terms',
+                [
+                    $this,
+                    'page_manage_linked_terms',
+                ]
+            );
+    
+            add_action("load-$hook", [$this, 'screen_option']);
+        }
+
+        /**
+         * Method for build the page HTML manage tags
+         *
+         * @return void
+         * @author Olatechpro
+         */
+        public function page_manage_linked_terms()
+        {
+            // Default order
+            if (!isset($_GET['order'])) {
+                $_GET['order'] = 'name-asc';
+            }
+    
+            settings_errors(__CLASS__);
+        ?>
+            <div class="wrap st_wrap st-manage-taxonomies-page manage-taxopress-linked-terms">
+    
+                <div id="">
+                    <h1 class="wp-heading-inline"><?php esc_html_e('Linked Terms', 'taxopress-pro'); ?></h1>
+                    <div class="taxopress-description">
+                        <?php esc_html_e('This feature allows you to connect terms. When the main term is added to a post, the linked terms will be added also.', 'taxopress-pro'); ?>
+                    </div>
+    
+                    <?php
+                    if (isset($_REQUEST['s']) && $search = esc_attr(sanitize_text_field(wp_unslash($_REQUEST['s'])))) {
+                        /* translators: %s: search keywords */
+                        printf(' <span class="subtitle">' . esc_html__(
+                            'Search results for &#8220;%s&#8221;',
+                            'taxopress-pro'
+                        ) . '</span>', esc_html($search));
+                    }
+                    ?>
+                    <?php
+    
+                    //the terms table instance
+                    $this->terms_table->prepare_items();
+                    ?>
+    
+    
+                    <hr class="wp-header-end">
+                    <div id="ajax-response"></div>
+                    <form class="search-form wp-clearfix st-taxonomies-search-form" method="get">
+                        <?php $this->terms_table->search_box(esc_html__('Search Terms', 'taxopress-pro'), 'term'); ?>
+                    </form>
+                    <div class="clear"></div>
+    
+                    <div id="col-container" class="wp-clearfix">
+    
+                        <div class="col-wrap">
+                            <form action="<?php echo esc_url(add_query_arg('', '')); ?>" method="post">
+                                <?php $this->terms_table->display(); //Display the table 
+                                ?>
+                            </form>
+                            <div class="form-wrap edit-term-notes">
+                                <p><?php esc_html__('Description here.', 'taxopress-pro') ?></p>
+                            </div>
+                        </div>
+    
+    
+                    </div>
+    
+    
+                </div>
+                <?php SimpleTags_Admin::printAdminFooter(); ?>
+            </div>
+    <?php
+    }
 
         /**
          * Run migration for legacy linked terms
@@ -183,20 +316,6 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
             }
 
             return $wpdb->query($query);
-        }
-
-        /**
-         * List taxonomies to be excluded from linked terms
-         */
-        public function excluded_linked_terms_taxonomy()
-        {
-
-            $excluded_taxonomy = [];
-            $excluded_taxonomy[] = 'author';
-
-            $excluded_taxonomy = apply_filters('taxopress_linked_terms_excluded_taxonomy', $excluded_taxonomy);
-
-            return $excluded_taxonomy;
         }
 
         /**

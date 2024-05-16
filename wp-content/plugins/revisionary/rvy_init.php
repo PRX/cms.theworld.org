@@ -98,6 +98,33 @@ if (class_exists('ACF')) {
 	);
 }
 
+if (defined('PP_AUTHORS_VERSION')) {
+	add_action(
+		'init', 
+		function () {
+			global $current_user, $revisionary;
+			
+			if (!empty($current_user->allcaps) && !empty($current_user->allcaps['ppma_edit_post_authors'])) {
+				$post_types = get_post_types(['public' => true], 'object');
+
+				$post_types = array_intersect_key($post_types, $revisionary->enabled_post_types);
+
+				foreach ($post_types as $type_obj) {
+					if (!empty($type_obj->cap->edit_published_posts) && empty($current_user->allcaps[$type_obj->cap->edit_published_posts])
+					) {
+						if (!is_super_admin() && !current_user_can('administrator')) {
+							unset($current_user->allcaps['ppma_edit_post_authors']);
+						}
+						
+						break;
+					}
+				}
+			}
+		},
+		100
+	);
+}
+
 if (defined('JREVIEWS_ROOT') && !empty($_REQUEST['preview']) 
 && ((empty($_REQUEST['preview_id']) && empty($_REQUEST['thumbnail_id']))
 || (!empty($_REQUEST['preview_id']) && rvy_in_revision_workflow((int) $_REQUEST['preview_id']))
