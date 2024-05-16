@@ -41,6 +41,7 @@ define(
 		'tw-datawrapper-block/tw-datawrapper-block.php',
 		'tw-resource-development-tags/tw-resource-development-tags.php',
 		'tw-scroll-gallery/tw-scroll-gallery.php',
+		'tw-sitemap-mask/tw-sitemap-mask.php',
 		'tw-segments/tw-segments.php',
 		'tw-story-format/tw-story-format.php',
 		'visual-term-description-editor/visual-term-description-editor.php',
