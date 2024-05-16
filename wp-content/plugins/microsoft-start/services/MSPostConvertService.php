@@ -29,7 +29,7 @@ class MSPostConvertService
         }
         
         $publishedDateTime = new \DateTime;
-        $publishedDateTime->setTimestamp(get_post_time('U', false, $post->ID));
+        $publishedDateTime->setTimestamp(get_post_time('U', true, $post->ID));
         $MSPost = [
             "id" => $msn_id,
             "link" => $post->guid,

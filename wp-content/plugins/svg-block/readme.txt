@@ -1,14 +1,14 @@
 === SVG Block ===
 Contributors:      Mr2P
-Tags:              Gutenberg, block, SVG, image, icon
+Tags:              block, SVG, image, icon, button
 Requires PHP:      7.0.0
 Requires at least: 6.3
 Tested up to:      6.5
-Stable tag:        1.1.18
+Stable tag:        1.1.20
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
-Display an SVG image as a block, which can be used for displaying icons, dividers, buttons...
+Display an SVG image as a block, which can be used for displaying images, icons, dividers, buttons
 
 == Description ==
 
@@ -99,6 +99,17 @@ Anyone can use this plugin.
 7. Block's placeholder
 
 == Changelog ==
+
+= 1.1.20 =
+*Release Date - 28 April 2024*
+
+* Improved - Uploading SVGs: sanitize and only the administrator can upload SVG
+
+= 1.1.19 =
+*Release Date - 19 April 2024*
+
+* Added   - Allow inputting SVG data, URL, button text on the content only locking
+* Updated - Refactor code
 
 = 1.1.18 =
 *Release Date - 01 April 2024*

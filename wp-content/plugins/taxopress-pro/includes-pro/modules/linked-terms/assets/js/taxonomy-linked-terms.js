@@ -60,23 +60,23 @@
       // Make linked term sortable
       sortedSynonymsList($(".taxopress-term-linked-terms.wrapper"));
 
-      // Reset Fields on Add New Term 
+      // Reset Fields on Add New Term
       let numberOfTags = 0;
       let newNumberOfTags = 0;
-    
+
       // when there are some terms are already created
       if( ! $( '#the-list' ).children( 'tr' ).first().hasClass( 'no-items' ) ) {
         numberOfTags = $( '#the-list' ).children( 'tr' ).length;
       }
-    
-      // after a term has been added via AJAX	
+
+      // after a term has been added via AJAX
       $(document).ajaxComplete( function( event, xhr, settings ){
-    
+
         newNumberOfTags = $( '#the-list' ).children('tr').length;
         if( parseInt( newNumberOfTags ) > parseInt( numberOfTags ) ) {
           // refresh the actual number of tags variable
           numberOfTags = newNumberOfTags;
-      
+
           // empty custom fields right here
           $(".taxopress-term-linked-terms.wrapper").html('');
         }
@@ -84,7 +84,7 @@
     }
 
     // Linked term auto complete init
-    st_init_linked_terms_autocomplete('.linked-term-autocomplete-input', ajaxurl + '?action=simpletags_autocomplete&stags_action=helper_js_collection&taxonomy=all_taxopress_taxonomy&exclude_term=' + linkedTermsRequestAction.term_id, 0);
+    st_init_linked_terms_autocomplete('.linked-term-autocomplete-input', ajaxurl + '?action=simpletags_autocomplete&stags_action=helper_js_collection&taxonomy=linked_term_taxonomies&exclude_term=' + linkedTermsRequestAction.term_id, 0);
 
 
     function sortedSynonymsList(selector) {
@@ -122,7 +122,7 @@
           var selected_id = ui.item.id;
           var selected_name = ui.item.name;
           var selected_taxonomy = ui.item.taxonomy;
-          
+
           if ($('.taxopress-term-li.' + selected_taxonomy + '-' + selected_id).length == 0) {
             var linked_term_list = $(".taxopress-term-linked-terms.wrapper");
             var new_linked_term = "";
@@ -155,7 +155,7 @@
     function st_linked_terms_split (val) {
       return val.split(/,\s*/)
     }
-    
+
     function st_linked_terms_extract_last (term) {
       return st_linked_terms_split(term).pop()
     }

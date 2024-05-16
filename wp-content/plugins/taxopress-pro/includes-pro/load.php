@@ -69,6 +69,7 @@ if (!class_exists('TaxoPress_Pro_Init')) {
         public function taxopress_pro_admin_pages($taxopress_pages){
 
             $taxopress_pages[] = 'st_licence';
+            $taxopress_pages[] = 'st_linked_terms';
 
             return $taxopress_pages;
         }
@@ -76,16 +77,26 @@ if (!class_exists('TaxoPress_Pro_Init')) {
         public function taxopress_pro_dashboard_features($features){
 
             $features['st_features_synonyms'] = [
-                'label'        => esc_html__('Synonyms', 'simple-tags'),
-                'description'  => esc_html__('This feature allows you to associate additional words with each term. For example, "website" can have synonyms such as "websites", "web site", and "web pages".', 'simple-tags'),
+                'label'        => esc_html__('Synonyms', 'taxopress-pro'),
+                'description'  => esc_html__('This feature allows you to associate additional words with each term. For example, "website" can have synonyms such as "websites", "web site", and "web pages".', 'taxopress-pro'),
                 'option_key'   => 'active_features_synonyms',
             ];
 
-            $features['st_features_linked_terms'] = [
-                'label'        => esc_html__('Linked Terms', 'simple-tags'),
-                'description'  => esc_html__('This feature allows you to connect terms. When the main term is added to a post, the linked terms will be added also.', 'simple-tags'),
+            $linked_terms_feature = [
+                'label'        => esc_html__('Linked Terms', 'taxopress-pro'),
+                'description'  => esc_html__('This feature allows you to connect terms. When the main term is added to a post, the linked terms will be added also.', 'taxopress-pro'),
                 'option_key'   => 'active_features_linked_terms',
             ];
+
+            // add linked term after terms in dashboard
+            $index = array_search('st_terms', array_keys($features));
+            if ($index !== false) {
+                $features = array_slice($features, 0, $index + 1, true) + 
+                    array('st_linked_terms' => $linked_terms_feature) + 
+                    array_slice($features, $index + 1, count($features) - 1, true);
+            } else {
+                $features['st_linked_terms'] = $linked_terms_feature;
+            }
 
             return $features;
         }
