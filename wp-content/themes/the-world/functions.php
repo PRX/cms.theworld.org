@@ -191,3 +191,41 @@ if ( ! function_exists( 'tw_add_edit_homepage_menu_link' ) ) :
 	}
 endif;
 add_action( 'admin_menu', 'tw_add_edit_homepage_menu_link' );
+
+if ( ! function_exists( 'tw_oembed_dataparse_youtube_shorts' ) ) {
+	/**
+	 * Ensure HTML markup for YouTube Shorts embeds is in portrait orientation.
+	 * YouTube oembed API returns data portrait width and height props, but HTML
+	 * with the width and height swapped to landscape.
+	 *
+	 * @param string $html Current HTML markup for embed.
+	 * @param object $data oEmbed data returned by YouTube API.
+	 * @param string $url URL of content to be embedded. NOT the embed iframe URL.
+	 * @return string Updated HTML markup in portrait orientation.
+	 */
+	function tw_oembed_dataparse_youtube_shorts( $html, $data, $url ) {
+		// Don't proceed if not a YouTube Shorts URL.
+		if ( preg_match( '#https?://((m|www)\.)?youtube\.com/shorts/*#i', $url ) !== 1 ) {
+			return $html;
+		}
+
+		// Let's replace the attributes.
+		$attribute_patterns = array(
+			'/width="\d+"/i',
+			'/height="\d+"/i',
+		);
+
+		// Since data width and height seem to be correct, use them as source of truth.
+		// Shorts may be able to be filmed in landscape or even square aspect ratios.
+		// We just want to make sure the HTML markup is using the correct values.
+		$replacement_values = array(
+			"width=\"{$data->width}\"",
+			"height=\"{$data->height}\"",
+		);
+
+		$html = preg_replace( $attribute_patterns, $replacement_values, $html );
+
+		return $html;
+	}
+}
+add_filter( 'oembed_dataparse', 'tw_oembed_dataparse_youtube_shorts', 20, 3 );

@@ -33,7 +33,7 @@ body {
   max-width: var(--_editor--content--width);
 }
 .block-editor-block-list__layout.is-root-container
-  > .wp-block:is(.alignleft, .alignright) {
+  > .wp-block:where(.alignleft, .alignright) {
   float: none;
   width: 100%;
   max-width: calc(100% - (var(--_editor--content--gutter) * 2));
@@ -52,7 +52,7 @@ body {
   font-size: 0.9rem;
 }
 .block-editor-block-list__layout.is-root-container
-  > .wp-block:is(.alignwide, .alignfull)
+  > .wp-block:where(.alignwide, .alignfull)
   figcaption {
   box-sizing: border-box;
   max-width: var(--_editor--content--width);
@@ -97,10 +97,7 @@ body {
 }
 
 .block-editor-block-list__layout.is-root-container
-  > .wp-block-embed[data-title="Twitter"]:is(.alignwide, .alignfull):not(
-    .alignleft,
-    .alignright
-  ) {
+  > .wp-block-embed[data-title="Twitter"]:not(.alignleft, .alignright) {
   left: unset;
   translate: unset;
   width: auto;
@@ -109,8 +106,33 @@ body {
 }
 
 .block-editor-block-list__layout.is-root-container
+  > .wp-block-embed[data-title="Twitter"]:not(.alignleft, .alignright)
+  figcaption {
+  padding-inline: 1rem;
+}
+
+.block-editor-block-list__layout.is-root-container
+  > .wp-block-embed[data-title="TikTok"]:is(.alignleft, .alignright) {
+  width: 325px;
+}
+
+.block-editor-block-list__layout.is-root-container
   > .wp-block-embed[data-title="Spotify"]:is(.alignwide, .alignfull) {
   --_full-width: calc(100vw - var(--_editor--content--gutter));
+}
+
+.block-editor-block-list__layout.is-root-container
+  > .wp-block-embed.wp-has-aspect-ratio:where(.wp-embed-aspect-9-16)
+  > figure:where(.is-type-video) {
+  max-width: calc(80vh * (9 / 16));
+  margin-inline: auto;
+}
+
+.block-editor-block-list__layout.is-root-container
+  > .wp-block-embed[data-title="YouTube"]
+  .wp-embed-aspect-9-16
+  iframe {
+  border-radius: 1ch;
 }
 
 .block-editor-block-list__block.wp-block-separator {
@@ -130,18 +152,19 @@ body {
 
   .block-editor-block-list__layout.is-root-container
     > .wp-block:is(.alignleft, .alignright) {
-    width: 44%;
+    width: 33%;
     margin-block-end: 2rem !important;
-    margin-inline: 2rem !important;
   }
   .block-editor-block-list__layout.is-root-container
     > .wp-block:is(.alignleft) {
     float: left;
     margin-inline-start: calc(var(--_editor--content--gutter) * -1) !important;
+    margin-inline-end: 2rem !important;
   }
   .block-editor-block-list__layout.is-root-container
     > .wp-block:is(.alignright) {
     float: right;
+    margin-inline-start: 2rem !important;
     margin-inline-end: calc(var(--_editor--content--gutter) * -1) !important;
   }
 }
