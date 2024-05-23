@@ -1,8 +1,4 @@
 wp.domReady(function () {
-  //Disable Gutenberg Tour Guide popup.
-  wp.data.select("core/editor").isFeatureActive("welcomeGuide") &&
-    wp.data.dispatch("core/editor").toggleFeature("welcomeGuide");
-
   // Make Featured Image opened initially.
   if (!wp.data.select("core/editor").isEditorPanelOpened("featured-image")) {
     wp.data.dispatch("core/editor").toggleEditorPanelOpened("featured-image");
@@ -79,5 +75,5 @@ wp.hooks.addFilter(
         return settings;
     }
   },
-  100
+  1000
 );
