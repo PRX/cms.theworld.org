@@ -1,6 +1,6 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/theme.json",
-	"version": 2,
+	"version": 3,
 	"customTemplates": [
 		{
 			"name": "404",
@@ -13,6 +13,13 @@
 	"settings": {
 		"appearanceTools": false,
     "blocks": {
+      "core/image": {
+        "shadow": {
+          "presets": [],
+          "defaultPresets": false
+        },
+        "appearanceTools": false
+      },
       "core/heading": {
         "typography": {
           "fontFamilies": []

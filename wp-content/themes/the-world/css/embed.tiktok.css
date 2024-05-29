@@ -1,0 +1,80 @@
+@layer embed;
+
+@layer embed.tiktok {
+  .tiktok-embed {
+    --_embed--tiktok--text-color: var(--embed--tiktok--text-color, inherit);
+    --_embed--tiktok--link-color: var(--embed--tiktok--link-color, inherit);
+    --_embed--tiktok--border-color: var(--embed--tiktok--border-color, #cdcdcd);
+    --_embed--tiktok--border-radius: var(--embed--tiktok--border-radius, 1ch);
+    --_embed--tiktok--background-color: var(
+      --embed--tiktok--background-color,
+      white
+    );
+    --_embed--tiktok--background-color--hover: var(
+      --embed--tiktok--background-color--hover,
+      #efefef
+    );
+
+    display: grid;
+    width: 325px;
+    isolation: isolate;
+    margin-inline: auto;
+    color: var(--_embed--tiktok--text-color);
+    font-family: system-ui, sans-serif;
+    font-size: 1rem;
+    font-weight: normal;
+    line-height: 1.3;
+  }
+  .tiktok-embed > a {
+    position: absolute;
+    inset: 0;
+  }
+  .tiktok-embed :where(.thumbnail) {
+    display: grid;
+    overflow: hidden;
+    margin: 0;
+    border-radius: var(--_embed--tiktok--border-radius);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .tiktok-embed :where(.thumbnail img) {
+    object-fit: cover;
+    scale: 1.1;
+  }
+  .tiktok-embed :where(section) {
+    display: grid;
+    padding: 0.75rem;
+    border: 1px solid var(--_embed--tiktok--border-color);
+    border-radius: var(--_embed--tiktok--border-radius);
+    background-color: var(--_embed--tiktok--background-color);
+  }
+  .tiktok-embed:where(:hover, :focus-within) :where(section) {
+    background-color: var(--_embed--tiktok--background-color--hover);
+  }
+  .tiktok-embed :where(.thumbnail + section) {
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  .tiktok-embed :where(section > *) {
+    margin-block: 0;
+  }
+  .tiktok-embed :where(section > * + *) {
+    margin-block-start: 0.75em;
+  }
+  .tiktok-embed :where(section a) {
+    position: relative;
+    color: var(--_embed--tiktok--link-color);
+    text-decoration: none;
+  }
+  .tiktok-embed :where(section > a:where(:hover, :focus-within)) {
+    text-decoration: underline;
+  }
+  .tiktok-embed :where(section > a:where(:first-of-type)) {
+    font-size: 1.3em;
+    font-weight: 700;
+  }
+  .tiktok-embed :where(section > a:where(:last-of-type)) {
+    font-size: 0.8em;
+  }
+}

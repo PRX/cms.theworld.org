@@ -191,3 +191,173 @@ if ( ! function_exists( 'tw_add_edit_homepage_menu_link' ) ) :
 	}
 endif;
 add_action( 'admin_menu', 'tw_add_edit_homepage_menu_link' );
+
+if ( ! function_exists( 'tw_oembed_dataparse_youtube_shorts' ) ) {
+	/**
+	 * Ensure HTML markup for YouTube embeds is in the appropriate orientation.
+	 * YouTube oembed API returns data portrait width and height props for shorts, but HTML
+	 * with the width and height swapped to landscape. Also, ensure the no cookie domain is used.
+	 *
+	 * @param string $html Current HTML markup for embed.
+	 * @param object $data oEmbed data returned by YouTube API.
+	 * @param string $url URL of content to be embedded. NOT the embed iframe URL.
+	 * @return string Updated HTML markup in portrait orientation.
+	 */
+	function tw_oembed_dataparse_youtube_shorts( $html, $data, $url ) {
+		// Don't proceed if not a YouTube URL.
+		if ( preg_match( '#https?://(((m|www)\.)?youtube(-nocookie)?\.com|youtu.be)#i', $url ) !== 1 ) {
+			return $html;
+		}
+
+		$src_regex = '/src="(?<SRC>[^"]+)"/i';
+
+		preg_match( $src_regex, $html, $src_matches );
+
+		$src = preg_replace( '/(-nocookie)?\.com/i', '-nocookie.com', $src_matches['SRC'] );
+
+		// Let's replace the attributes.
+		$attribute_patterns = array(
+			'/width="\d+"/i',
+			'/height="\d+"/i',
+			$src_regex,
+		);
+
+		// Since data width and height seem to be correct, use them as source of truth.
+		// Shorts may be able to be filmed in landscape or even square aspect ratios.
+		// We just want to make sure the HTML markup is using the correct values.
+		$replacement_values = array(
+			"width=\"{$data->width}\"",
+			"height=\"{$data->height}\"",
+			"src=\"{$src}\"",
+		);
+
+		$html = preg_replace( $attribute_patterns, $replacement_values, $html );
+
+		return $html;
+	}
+}
+add_filter( 'oembed_dataparse', 'tw_oembed_dataparse_youtube_shorts', 20, 3 );
+
+if ( ! function_exists( 'tw_oembed_dataparse_tiktok' ) ) {
+	/**
+	 * Sanitize TikTok embed markup to not require scripts and have minimal iframe sandbox attributes.
+	 *
+	 * @param string $html Current HTML markup for embed.
+	 * @param object $data oEmbed data returned by YouTube API.
+	 * @param string $url URL of content to be embedded. NOT the embed iframe URL.
+	 * @return string Updated HTML markup in portrait orientation.
+	 */
+	function tw_oembed_dataparse_tiktok( $html, $data, $url ) {
+		// Don't proceed if not a TikTok URL.
+		if ( preg_match( '#https?://(www\.)?tiktok\.com/(?:.*/video/.*|@.*)#i', $url ) !== 1 ) {
+			return $html;
+		}
+
+		// Extract useful pieces of HTML.
+		preg_match( '~(?<BLOCKQUOTE><blockquote[^>]+>)(?<CONTENT>.*)</blockquote>~', $html, $matches );
+
+		$blockquote_open = $matches['BLOCKQUOTE'];
+		$content         = $matches['CONTENT'];
+
+		preg_match( '~cite="(?<LINK_URL>.*?)"~i', $blockquote_open, $blockquote_matches );
+
+		$link_url = $blockquote_matches['LINK_URL'];
+
+		$aspect_ratio = $data->thumbnail_width / $data->thumbnail_height;
+
+		$styles = file_get_contents( __DIR__ . '/css/embed.tiktok.css', true );
+
+		$link_attributes = implode(
+			' ',
+			array(
+				'class="tiktok-embed-link"',
+				"href=\"{$link_url}?refer=embed\"",
+				'target="_blank"',
+				'title="View video on TikTok.com"',
+			)
+		);
+		$link_open       = "<a {$link_attributes}>";
+
+		$image = false;
+
+		if ( $data->thumbnail_url ) {
+			$figure_attributes = implode(
+				' ',
+				array(
+					'class="thumbnail"',
+				)
+			);
+			$figure_open       = "<figure {$figure_attributes}>";
+
+			$image_width      = 325;
+			$image_height     = round( 325 / $aspect_ratio );
+			$image_attributes = implode(
+				' ',
+				array(
+					"src=\"{$data->thumbnail_url}\"",
+					"width=\"{$image_width}\"",
+					"height=\"{$image_height}\"",
+				)
+			);
+			$image            = "<img {$image_attributes} />";
+		}
+
+		// Update blockquote styles.
+		$blockquote_open = preg_replace( '~style=".*?"~', '', $blockquote_open );
+
+		$script = implode(
+			'',
+			array(
+				'((videoId, aspectRatio) => {',
+				'window.addEventListener("message",(e) => {',
+				'if (!e.data.startsWith("{")) return;',
+				'const data = JSON.parse(e.data);',
+				'if (!data.signalSource || !data.height) return;',
+				'const f = document.querySelector(`[name="${data.signalSource}"]`);',
+				'f?.style.setProperty("width", data.width + "px");',
+				'f?.style.setProperty("height", data.height + "px");',
+				'});',
+				'const bq = document.querySelector(`blockquote[data-video-id="${videoId}"]`);',
+				'const f = document.createElement("iframe");',
+				'f.name = `__tt_embed__v${videoId}`;',
+				'f.sandbox = "allow-popups allow-popups-to-escape-sandbox allow-scripts allow-top-navigation-by-user-activation";',
+				'f.src = `https://www.tiktok.com/embed/v2/${videoId}?lang=${navigator.language}&embedFrom=oembed`;',
+				'f.style.setProperty("display", "block");',
+				'f.style.setProperty("visibility", "unset");',
+				'f.style.setProperty("width", "100%");',
+				'f.style.setProperty("aspect-ratio", aspectRatio);',
+				'f.style.setProperty("border", "none");',
+				'bq.innerHTML = "";',
+				'bq.appendChild(f);',
+				"})('{$data->embed_product_id}', {$aspect_ratio})",
+			)
+		);
+
+		$html = implode(
+			'',
+			! $image ? array(
+				"<style>{$styles}</style>",
+				$blockquote_open,
+				$link_open,
+				'</a>',
+				$content,
+				'</blockquote>',
+				"<script>{$script}</script>",
+			) : array(
+				"<style>{$styles}</style>",
+				$blockquote_open,
+				$figure_open,
+				$link_open,
+				$image,
+				'</a>',
+				'</figure>',
+				$content,
+				'</blockquote>',
+				"<script>{$script}</script>",
+			)
+		);
+
+		return $html;
+	}
+}
+add_filter( 'oembed_dataparse', 'tw_oembed_dataparse_tiktok', 20, 3 );

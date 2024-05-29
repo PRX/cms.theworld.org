@@ -1,19 +1,15 @@
 wp.domReady(function () {
-  //Disable Gutenberg Tour Guide popup.
-  wp.data.select("core/edit-post").isFeatureActive("welcomeGuide") &&
-    wp.data.dispatch("core/edit-post").toggleFeature("welcomeGuide");
-
   // Make Featured Image opened initially.
-  if (!wp.data.select("core/edit-post").isEditorPanelOpened("featured-image")) {
-    wp.data
-      .dispatch("core/edit-post")
-      .toggleEditorPanelOpened("featured-image");
+  if (!wp.data.select("core/editor").isEditorPanelOpened("featured-image")) {
+    wp.data.dispatch("core/editor").toggleEditorPanelOpened("featured-image");
   }
 
   // Allow only certain embed variants.
   const allowedEmbedBlocks = [
     "datawrapper",
+    "instagram",
     "spotify",
+    "tiktok",
     "twitter",
     "youtube",
     "vimeo",
@@ -79,5 +75,5 @@ wp.hooks.addFilter(
         return settings;
     }
   },
-  100
+  1000
 );
