@@ -147,14 +147,14 @@ if ( ! function_exists( 'tw_block_editor_assets' ) ) :
 			'tw-deny-list-blocks',
 			get_template_directory_uri() . '/js/blockembed.js',
 			array( 'wp-blocks', 'wp-dom-ready', 'wp-edit-post' ),
-			'1.0',
+			'1.1',
 			array( 'in_footer' => true )
 		);
 		wp_enqueue_style(
 			'tw-block-editor-styles',
 			get_template_directory_uri() . '/css/block-editor.css',
 			array(),
-			'1.0'
+			'1.1'
 		);
 	}
 endif;
