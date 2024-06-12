@@ -7,6 +7,9 @@ use microsoft_start\services\TokenService;
 
 use microsoft_start\infrastructure\ApiController;
 use microsoft_start\services\MSNClient;
+use microsoft_start\services\LogService;
+use microsoft_start\services\LoggerTelemetryType;
+use microsoft_start\services\LoggerFeatureSet;
 use microsoft_start\services\Options;
 
 class authenticationApi extends ApiController
@@ -21,7 +24,9 @@ class authenticationApi extends ApiController
             'callback' => function ($data) {
                 $parameters = $data->get_json_params();
                 $msnAccountUrl = MSPH_SERVICE_URL;
-
+                LogService::add_log(LoggerTelemetryType::Log, LoggerFeatureSet::PartnerOnboarding, "Before redeem code request", array(
+                    'redeem_code' => $parameters['redeemCode']
+                ));
                 $response = wp_remote_post(
                     "{$msnAccountUrl}account/RedeemCode/{$parameters['redeemCode']}?wrapodata=false",
                     [
@@ -45,6 +50,11 @@ class authenticationApi extends ApiController
 
                         break;
                     default:
+                        LogService::add_log(LoggerTelemetryType::Log, LoggerFeatureSet::PartnerOnboarding, "Redeem code response not 200", array(
+                            'redeem_code' => $parameters['redeemCode'],
+                            'response' => json_encode($response['response']),
+                            'body' => $response['body']
+                        ));
                         header("HTTP/1.1 500 Internal Server Error");
                         die($response['body']);
                 }
