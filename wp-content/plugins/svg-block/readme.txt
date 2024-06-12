@@ -4,7 +4,7 @@ Tags:              block, SVG, image, icon, button
 Requires PHP:      7.0.0
 Requires at least: 6.3
 Tested up to:      6.5
-Stable tag:        1.1.20
+Stable tag:        1.1.22
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -65,7 +65,7 @@ The plugin is developed using @wordpress/create-block.
 
 = What problem does this plugin solve? =
 
-It helps to input inline SVG images as blocks easily and safely.
+It helps to input inline SVG images as blocks easily and safely. You can use SVGs from the icon library or upload your own. It also supports uploading SVG images to the media library and displaying them with this block.
 
 = When should we use this plugin? =
 
@@ -100,10 +100,25 @@ Anyone can use this plugin.
 
 == Changelog ==
 
+= 1.1.22 =
+*Release Date - 30 May 2024*
+
+* Updated  - Update the unique ID for the SVG on the server
+* Refactor - Vertical spacing
+* Improved - Adjust the styling for the replacement SVG dropdown in the contentOnly mode
+
+= 1.1.21 =
+*Release Date - 22 May 2024*
+
+* Improved - The SVG URL input UI component
+* Updated  - Put the shadow panel inside the Border panel
+* Improved - Allow inputting alpha value for colors
+* Fixed    - Fix some small styling issues
+
 = 1.1.20 =
 *Release Date - 28 April 2024*
 
-* Improved - Uploading SVGs: sanitize and only the administrator can upload SVG
+* Improved - Uploading SVGs: sanitize and allow only the administrator can upload SVG
 
 = 1.1.19 =
 *Release Date - 19 April 2024*
