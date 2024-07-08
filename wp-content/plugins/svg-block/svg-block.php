@@ -4,7 +4,7 @@
  * Description:       Display an SVG image as a block, which can be used for displaying images, icons, dividers, buttons
  * Requires at least: 6.3
  * Requires PHP:      7.0
- * Version:           1.1.20
+ * Version:           1.1.22
  * Author:            Phi Phan
  * Author URI:        https://boldblocks.net
  *
@@ -37,7 +37,7 @@ add_action( 'init', __NAMESPACE__ . '\\svg_block_block_init' );
 require_once __DIR__ . '/includes/icon-library.php';
 
 /**
- * Link the block to post.
+ * Render the block on the server.
  *
  * @param string   $block_content
  * @param array    $block
@@ -45,7 +45,13 @@ require_once __DIR__ . '/includes/icon-library.php';
  * @return string
  */
 function svg_block_render_block( $block_content, $block, $block_instance ) {
-	if ( $block['attrs']['linkToPost'] ?? false ) {
+	$attrs = $block['attrs'] ?? [];
+	if ( ! ( $attrs['linkToPost'] ?? false ) && ! ( $attrs['title'] ?? false ) && ! ( $attrs['description'] ?? false ) ) {
+		return $block_content;
+	}
+
+	$block_reader = new \WP_HTML_Tag_Processor( $block_content );
+	if ( $attrs['linkToPost'] ?? false ) {
 		if ( isset( $block_instance->context['postId'] ) ) {
 			// Get post_id from the context first.
 			$post_id = $block_instance->context['postId'];
@@ -56,15 +62,40 @@ function svg_block_render_block( $block_content, $block, $block_instance ) {
 
 		$post_link = get_permalink( $post_id );
 		if ( $post_link ) {
-			$processor = new \WP_HTML_Tag_Processor( $block_content );
-			if ( $processor->next_tag( 'a' ) ) {
-				$processor->set_attribute( 'href', $post_link );
-
-				$block_content = $processor->get_updated_html();
+			if ( $block_reader->next_tag( 'a' ) ) {
+				$block_reader->set_attribute( 'href', $post_link );
 			}
 		}
 	}
 
-	return $block_content;
+	// Back compat, do nothing if there is an unique id.
+	if ( ! ( $attrs['blockId'] ?? false ) ) {
+		if ( $block_reader->next_tag( 'svg' ) ) {
+			$id = \uniqid();
+			$block_reader->set_bookmark( 'svg' );
+			$block_reader->set_attribute( 'id', "svg_block_{$id}" );
+			$block_reader->set_attribute( 'role', 'img' );
+
+			if ( $attrs['title'] ?? false ) {
+				$block_reader->set_attribute( 'aria-labelledby', "svg_block_{$id}_title" );
+				if ( $block_reader->next_tag( 'title' ) ) {
+					$block_reader->set_attribute( 'id', "svg_block_{$id}_title" );
+
+					$block_reader->seek( 'svg' );
+				}
+			}
+
+			if ( $attrs['description'] ?? false ) {
+				$block_reader->set_attribute( 'aria-describedby', "svg_block_{$id}_desc" );
+				if ( $block_reader->next_tag( 'desc' ) ) {
+					$block_reader->set_attribute( 'id', "svg_block_{$id}_desc" );
+				}
+			}
+
+			$block_reader->release_bookmark( 'svg' );
+		}
+	}
+
+	return $block_reader->get_updated_html();
 }
 add_action( 'render_block_boldblocks/svg-block', __NAMESPACE__ . '\\svg_block_render_block', 10, 3 );

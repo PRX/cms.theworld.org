@@ -2,37 +2,42 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Microsoft Start 2.7.15\n"
+"Project-Id-Version: Microsoft Start 2.7.19\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/__translate_cache\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-03-08T07:55:41+00:00\n"
+"POT-Creation-Date: 2024-05-27T09:51:15+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.9.0\n"
+"X-Generator: WP-CLI 2.10.0\n"
 
 #. Plugin Name of the plugin
 #. translators: Name of plugin, appears in menu bar and edit bar, or in connection page when user tries to connect
+#: index.php
 #: infrastructure/Page.php:34
 #: assets/js/editorSidebar.js:1
 msgid "Microsoft Start"
 msgstr ""
 
 #. Plugin URI of the plugin
+#: index.php
 msgid "https://www.msn.com/"
 msgstr ""
 
 #. Description of the plugin
+#: index.php
 msgid "Microsoft Start WordPress plugin to help WordPress content creators to share content to Microsoft Start News feed."
 msgstr ""
 
 #. Author of the plugin
+#: index.php
 msgid "Microsoft"
 msgstr ""
 
 #. Author URI of the plugin
+#: index.php
 msgid "https://www.microsoft.com/"
 msgstr ""
 
@@ -1251,6 +1256,11 @@ msgstr ""
 msgid "Transactions for this account is not allowed. Please contact ({email}) for support or connect to a brand with an available partner account."
 msgstr ""
 
+#. translators: Notice message when session expired
+#: assets/js/dashboard.js:1
+msgid "Session expired, it will restored after we refresh your page."
+msgstr ""
+
 #. translators: categories
 #: assets/js/dashboard.js:1
 #: assets/js/editorSidebar.js:1
@@ -1340,22 +1350,34 @@ msgstr ""
 msgid "{n} days ago"
 msgstr ""
 
+#. translators: Where the words appear.
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "main content"
+msgstr ""
+
+#. translators: Where the words appear.
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "embedded media"
+msgstr ""
+
 #. translators: Additional hint message when the rejected words or images are more than threshold
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
 msgid "Only a maximum of 50 images or 100 words are shown here."
 msgstr ""
 
-#. translators: Hint text for rejection details. %s will be replaced by link to publishing guidelines
-#: assets/js/editorSidebar.js:1
-#: assets/js/status.js:1
-msgid "The following does not meet our %s."
-msgstr ""
-
 #. translators: message for failed moderation
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
 msgid "Failures detected during moderation. Contact us if issue persists."
+msgstr ""
+
+#. translators: Hint text for rejection details. %s will be replaced by link to publishing guidelines
+#: assets/js/editorSidebar.js:1
+#: assets/js/status.js:1
+msgid "The following does not meet our %s."
 msgstr ""
 
 #. translators: text for hyper link to MSPH
@@ -1477,7 +1499,7 @@ msgstr ""
 #. translators: one of reason messages for content rejection
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
-msgid "At least one term or phrase promotes suicide or self-harm."
+msgid "In the {wordsPosition}, at least one term or phrase promotes suicide or self-harm."
 msgstr ""
 
 #. translators: one of reason messages for content rejection
@@ -1537,7 +1559,7 @@ msgstr ""
 #. translators: one of reason messages for content rejection
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
-msgid "At least one image contains profanity or vulgar language."
+msgid "In the {wordsPosition}, at least one image contains profanity or vulgar language."
 msgstr ""
 
 #. translators: one of reason messages for content rejection
@@ -1639,7 +1661,7 @@ msgstr ""
 #. translators: one of reason messages for content rejection
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
-msgid "At least one term or phrase contains profanity or vulgar language."
+msgid "In the {wordsPosition}, at least one term or phrase contains profanity or vulgar language."
 msgstr ""
 
 #. translators: one of reason messages for content rejection
