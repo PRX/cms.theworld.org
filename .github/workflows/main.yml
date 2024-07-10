@@ -14,7 +14,7 @@ jobs:
         shell: bash
         # Pantheon server is the server name you get from SSH Clone URL when you click on Connection info in pantheon dashboard.
         run: |
-          echo "sshkey=$(ssh-keyscan -t rsa -H ${{ secrets.PANTHEON_SERVER }})" >> $GITHUB_OUTPUT
+          echo "sshkey=$(ssh-keyscan -t rsa -H -p 2222 ${{ secrets.PANTHEON_SERVER }})" >> $GITHUB_OUTPUT
 
       - name: Checkout repository
         uses: actions/checkout@v3
