@@ -3,8 +3,8 @@ Contributors:      Mr2P
 Tags:              block, SVG, image, icon, button
 Requires PHP:      7.0.0
 Requires at least: 6.3
-Tested up to:      6.5
-Stable tag:        1.1.22
+Tested up to:      6.6
+Stable tag:        1.1.23
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -13,7 +13,7 @@ Display an SVG image as a block, which can be used for displaying images, icons,
 == Description ==
 
 This SVG block allows you to display SVG images as inline HTML markup. You can either choose an icon from the icon library with more than 3000 icons or you can upload or input your custom SVG images directly in the block's setting.
-It also allows you to upload SVG images to your WordPress site, and load them into the icon library. Only SVG files that have XML declaration at the top like `<?xml version="1.0" encoding="utf-8"?>` can be uploaded to the WordPress media library.
+It also allows you to upload SVG images to the WordPress media library, and load them into the icon library. Only SVG files that have XML declaration at the top like `<?xml version="1.0" encoding="utf-8"?>` can be uploaded to the WordPress media library.
 
 === Key Features ===
 
@@ -99,6 +99,13 @@ Anyone can use this plugin.
 7. Block's placeholder
 
 == Changelog ==
+
+= 1.1.23 =
+*Release Date - 03 July 2024*
+
+* Improved - Refactor code to make the placeholder look good when installing the block from the inserter
+* Improved - Adjust vertical spacing style for some inspector controls
+* Added    - Support clientNavigation interactivity
 
 = 1.1.22 =
 *Release Date - 30 May 2024*

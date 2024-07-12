@@ -71,11 +71,14 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
         }
 
         public function remove_args ($args) {
-            return array_merge($args, [
-                'action',
-                'taxopress_linked_terms',
-                '_wpnonce'
-            ]);
+            if (isset($_GET['page']) && $_GET['page'] === 'st_linked_terms') {
+                $args = array_merge($args, [
+                    'action',
+                    'taxopress_linked_terms',
+                    '_wpnonce'
+                ]);
+            }
+            return $args;
         }
 
         public function set_screen($status, $option, $value)
@@ -354,7 +357,7 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
             <div class="form-field">
                 <label for="text"><?php esc_html_e('Linked Terms', 'taxopress-pro'); ?></label>
                 <input type="text" class="taxopress-linked-terms-input term-linked-terms linked-term-autocomplete-input" placeholder="<?php esc_attr_e('Start typing to choose existing terms.', 'taxopress-pro'); ?>" />
-                <p><?php esc_html_e('When the main term is added to a post, these terms will be added also.', 'taxopress-pro'); ?></p>
+                <p><?php esc_html_e('These terms are linked to the main term. When the main term or any of these terms are added to the post, all the other terms will be added also.', 'taxopress-pro'); ?></p>
                 <ul class="taxopress-term-linked-terms wrapper"></ul>
             </div>
         <?php
@@ -376,7 +379,7 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
                 </th>
                 <td>
                     <input type="text" class="taxopress-linked-terms-input term-linked-terms linked-term-autocomplete-input" placeholder="<?php esc_attr_e('Start typing to choose existing terms.', 'taxopress-pro'); ?>" />
-                    <p><?php esc_html_e('When the main term is added to a post, these terms will be added also.', 'taxopress-pro'); ?></p>
+                    <p><?php esc_html_e('These terms are linked to the main term. When the main term or any of these terms are added to the post, all the other terms will be added also.', 'taxopress-pro'); ?></p>
                     <ul class="taxopress-term-linked-terms wrapper">
                         <?php if (!empty($linked_terms)) : ?>
                             <?php foreach ($linked_terms as $linked_term_option) : 

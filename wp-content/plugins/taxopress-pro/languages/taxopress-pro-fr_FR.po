@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: TaxoPress Pro\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-28 17:36+0000\n"
-"PO-Revision-Date: 2024-04-22 08:30+0000\n"
+"PO-Revision-Date: 2024-04-24 08:43+0200\n"
 "Last-Translator: \n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Loco https://localise.biz/\n"
+"X-Generator: Poedit 3.4\n"
 "X-Loco-Version: 2.6.3; wp-6.1.1\n"
 "X-Domain: taxopress-pro\n"
 
@@ -33,11 +33,11 @@ msgstr "%1sVous nécessitez une clé API pour utiliser LSEG / Refinitiv.%2s"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:282
 msgid "%d posts updated successfully."
-msgstr ""
+msgstr "%d publications ont bien été mises à jour."
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:285
 msgid "0 post update."
-msgstr ""
+msgstr "0 mise à jour de publications."
 
 #: includes-pro/modules/autoterms/autoterms.php:156
 #: includes-pro/modules/autoterms/autoterms.php:191
@@ -84,12 +84,12 @@ msgstr "Ajouter un élément"
 #: includes-pro/modules/linked-terms/linked-terms-table.php:174
 #: includes-pro/modules/linked-terms/linked-terms-table.php:467
 msgid "Add Linked Term to Term Posts"
-msgstr ""
+msgstr "Ajouter un terme lié aux publications de termes"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:173
 #: includes-pro/modules/linked-terms/linked-terms-table.php:453
 msgid "Add Term to Linked Term Posts"
-msgstr ""
+msgstr "Ajouter un terme aux publications du terme lié"
 
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:108
 msgid "API Confidence Value"
@@ -153,11 +153,11 @@ msgstr "Dandelion"
 #: includes-pro/modules/linked-terms/linked-terms-table.php:175
 #: includes-pro/modules/linked-terms/linked-terms-table.php:481
 msgid "Delete Relationship"
-msgstr ""
+msgstr "Supprimer la relation"
 
 #: includes-pro/modules/linked-terms/linked-terms.php:180
 msgid "Description here."
-msgstr ""
+msgstr "Description ici."
 
 #: includes-pro/modules/autolinks/autolinks.php:68
 msgid "Element tag"
@@ -185,18 +185,18 @@ msgstr "Saisissez votre clé de l’API de OpenAI"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:244
 msgid "Error deleting linked term relationship."
-msgstr ""
+msgstr "Erreur lors de la suppression d’une relation de terme lié."
 
 #: includes-pro/modules/autoterms/autoterms.php:500
 msgid ""
-"Example <code>/\\b({term})\\b/i</code> will match whole word while <code>"
-"/({term})/i</code> will match at any location even if it's part of another "
+"Example <code>/\\b({term})\\b/i</code> will match whole word while <code>/"
+"({term})/i</code> will match at any location even if it's part of another "
 "word. <code>{term}</code> will be replaced with the term name before the "
 "regex action."
 msgstr ""
 "Par exemple, <code>/\\b({term})\\b/i</code> correspondra à un mot entier et "
-"<code>/({term})/i</code> correspondra à n'importe quel endroit, même s'il "
-"fait partie d'un autre mot. <code>{term}</code> sera remplacé par le nom du "
+"<code>/({term})/i</code> correspondra à n’importe quel endroit, même s’il "
+"fait partie d’un autre mot. <code>{term}</code> sera remplacé par le nom du "
 "terme avant l’action de la regex."
 
 #: includes-pro/modules/autoterms/autoterms.php:111
@@ -214,7 +214,7 @@ msgstr "Faux"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:206
 msgid "Filter"
-msgstr ""
+msgstr "Filtrer"
 
 #: includes-pro/modules/autoterms/autoterms.php:59
 msgid "Hourly"
@@ -255,19 +255,19 @@ msgstr "Limite par lot"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:250
 msgid "Linked term deleted successfully."
-msgstr ""
+msgstr "Le terme lié a bien été supprimé."
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:126
 msgid "Linked Term Name"
-msgstr ""
+msgstr "Nom du terme lié"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:130
 msgid "Linked Term Post Counts"
-msgstr ""
+msgstr "Nombre de publications du terme lié"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:128
 msgid "Linked Term Taxonomy"
-msgstr ""
+msgstr "Taxonomie des termes liés"
 
 #: includes-pro/load.php:86
 #: includes-pro/modules/linked-terms/linked-terms.php:113
@@ -280,7 +280,7 @@ msgstr "Termes liés"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:247
 msgid "Linked terms deleted successfully."
-msgstr ""
+msgstr "Les termes liés ont bien été supprimés."
 
 #: includes-pro/modules/autoterms/autoterms.php:451
 msgid "LSEG / Refinitiv"
@@ -297,7 +297,7 @@ msgstr "Aucune limite"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:342
 msgid "No linked terms found."
-msgstr ""
+msgstr "Aucun terme lié trouvé."
 
 #: includes-pro/modules/autoterms/autoterms.php:58
 msgid "None"
@@ -305,7 +305,7 @@ msgstr "Aucun"
 
 #: includes-pro/modules/linked-terms/linked-terms.php:94
 msgid "Number of items per page"
-msgstr ""
+msgstr "Nombre d’éléments par page"
 
 #: includes-pro/modules/autoterms/autoterms.php:363
 msgid "OpenAI"
@@ -313,7 +313,7 @@ msgstr "OpenAI"
 
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:64
 msgid "OpenAI Prompt (Beta)"
-msgstr "Fenêtre surgissante d'OpenAI (Beta)"
+msgstr "Fenêtre surgissante d’OpenAI (Beta)"
 
 #: includes-pro/modules/autoterms/autoterms.php:497
 msgid "Regex code"
@@ -335,11 +335,11 @@ msgstr "Programmez des termes automatiques pour votre contenu"
 #: includes-pro/modules/linked-terms/linked-terms.php:152
 #, php-format
 msgid "Search results for &#8220;%s&#8221;"
-msgstr ""
+msgstr "Résultats de la recherche pour &#171; %s &#187;"
 
 #: includes-pro/modules/linked-terms/linked-terms.php:168
 msgid "Search Terms"
-msgstr ""
+msgstr "Rechercher des termes"
 
 #: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:314
 msgid "Security error. Kindly reload this page and try again"
@@ -363,11 +363,11 @@ msgstr "État"
 
 #: includes-pro/load.php:80
 msgid "Synonyms"
-msgstr ""
+msgstr "Synonymes"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:198
 msgid "Taxonomy"
-msgstr ""
+msgstr "Taxonomie"
 
 #. Author of the plugin
 msgid "TaxoPress"
@@ -387,11 +387,11 @@ msgstr "TaxoPress Pro"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:125
 msgid "Term Name"
-msgstr ""
+msgstr "Nom du terme"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:129
 msgid "Term Post Counts"
-msgstr ""
+msgstr "Nombre de publications du terme"
 
 #: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:90
 #: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:108
@@ -400,7 +400,7 @@ msgstr "Synonymes du terme"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:127
 msgid "Term Taxonomy"
-msgstr ""
+msgstr "Taxonomie du terme"
 
 #: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:264
 #: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:360
@@ -442,12 +442,18 @@ msgid ""
 "example, \"website\" can have synonyms such as \"websites\", \"web site\", "
 "and \"web pages\"."
 msgstr ""
+"Cette fonctionnalité vous permet d’associer des mots supplémentaires à "
+"chaque terme. Par exemple, « site » peut être associé à des synonymes tels "
+"que « sites web », « site web » et « pages web »."
 
 #: includes-pro/load.php:87
 msgid ""
 "This feature allows you to connect terms. When the main term is added to a "
 "post, the linked terms will be added also."
 msgstr ""
+"Cette fonctionnalité vous permet de relier des termes. Lorsque le terme "
+"principal est ajouté à une publication, les termes liés sont également "
+"ajoutés."
 
 #: includes-pro/modules/autoterms/autoterms.php:135
 msgid ""
@@ -462,6 +468,8 @@ msgstr ""
 #: includes-pro/modules/linked-terms/linked-terms.php:146
 msgid "This screen allows you to see linked terms relationships on your site."
 msgstr ""
+"Cet écran vous permet de voir les relations entre les termes liés sur votre "
+"site."
 
 #: includes-pro/modules/autoterms/autoterms.php:220
 msgid ""
@@ -508,8 +516,8 @@ msgid ""
 "This will automatically add new terms from the LSEG / Refinitiv service. "
 "Please test carefully before use."
 msgstr ""
-"Cela ajoutera automatiquement de nouveaux termes à partir du service de LSEG "
-"/ Refinitiv. Veuillez vérifier soigneusement avant de l’utiliser."
+"Cela ajoutera automatiquement de nouveaux termes à partir du service de "
+"LSEG / Refinitiv. Veuillez vérifier soigneusement avant de l’utiliser."
 
 #: includes-pro/modules/autoterms/autoterms.php:354
 msgid ""

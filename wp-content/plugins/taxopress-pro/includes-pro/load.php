@@ -84,7 +84,7 @@ if (!class_exists('TaxoPress_Pro_Init')) {
 
             $linked_terms_feature = [
                 'label'        => esc_html__('Linked Terms', 'taxopress-pro'),
-                'description'  => esc_html__('This feature allows you to connect terms. When the main term is added to a post, the linked terms will be added also.', 'taxopress-pro'),
+                'description'  => esc_html__('This feature allows you to connect terms. When the main term or any of these terms are added to the post, all the other terms will be added also.', 'taxopress-pro'),
                 'option_key'   => 'active_features_linked_terms',
             ];
 
