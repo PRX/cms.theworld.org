@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: TaxoPress Pro\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-28 17:36+0000\n"
-"PO-Revision-Date: 2024-04-22 08:30+0000\n"
+"PO-Revision-Date: 2024-04-23 19:44+0200\n"
 "Last-Translator: \n"
 "Language-Team: Spanish (Spain)\n"
 "Language: es_ES\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Loco https://localise.biz/\n"
+"X-Generator: Poedit 3.4\n"
 "X-Loco-Version: 2.6.3; wp-6.1.1\n"
 "X-Domain: taxopress-pro\n"
 
@@ -32,11 +32,11 @@ msgstr "%1sNecesitas una clave API para utilizar LSEG/Refinitiv.%2s"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:282
 msgid "%d posts updated successfully."
-msgstr ""
+msgstr "%d entradas actualizadas correctamente."
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:285
 msgid "0 post update."
-msgstr ""
+msgstr "Actualización de 0 entradas."
 
 #: includes-pro/modules/autoterms/autoterms.php:156
 #: includes-pro/modules/autoterms/autoterms.php:191
@@ -83,12 +83,12 @@ msgstr "Añadir elemento"
 #: includes-pro/modules/linked-terms/linked-terms-table.php:174
 #: includes-pro/modules/linked-terms/linked-terms-table.php:467
 msgid "Add Linked Term to Term Posts"
-msgstr ""
+msgstr "Añadir término enlazado a las entradas del término"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:173
 #: includes-pro/modules/linked-terms/linked-terms-table.php:453
 msgid "Add Term to Linked Term Posts"
-msgstr ""
+msgstr "Añadir término a las entradas con términos enlazados"
 
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:108
 msgid "API Confidence Value"
@@ -152,11 +152,11 @@ msgstr "Dandelion"
 #: includes-pro/modules/linked-terms/linked-terms-table.php:175
 #: includes-pro/modules/linked-terms/linked-terms-table.php:481
 msgid "Delete Relationship"
-msgstr ""
+msgstr "Borrar relación"
 
 #: includes-pro/modules/linked-terms/linked-terms.php:180
 msgid "Description here."
-msgstr ""
+msgstr "Aquí la descripición."
 
 #: includes-pro/modules/autolinks/autolinks.php:68
 msgid "Element tag"
@@ -184,12 +184,12 @@ msgstr "Introduce la clave de la API de OpenAI."
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:244
 msgid "Error deleting linked term relationship."
-msgstr ""
+msgstr "Error al borrar la relación de términos enlazados."
 
 #: includes-pro/modules/autoterms/autoterms.php:500
 msgid ""
-"Example <code>/\\b({term})\\b/i</code> will match whole word while <code>"
-"/({term})/i</code> will match at any location even if it's part of another "
+"Example <code>/\\b({term})\\b/i</code> will match whole word while <code>/"
+"({term})/i</code> will match at any location even if it's part of another "
 "word. <code>{term}</code> will be replaced with the term name before the "
 "regex action."
 msgstr ""
@@ -213,7 +213,7 @@ msgstr "Falso"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:206
 msgid "Filter"
-msgstr ""
+msgstr "Filtrar"
 
 #: includes-pro/modules/autoterms/autoterms.php:59
 msgid "Hourly"
@@ -254,19 +254,19 @@ msgstr "Límite por lotes"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:250
 msgid "Linked term deleted successfully."
-msgstr ""
+msgstr "Término enlazado borrado correctamente."
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:126
 msgid "Linked Term Name"
-msgstr ""
+msgstr "Nombre del término enlazado"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:130
 msgid "Linked Term Post Counts"
-msgstr ""
+msgstr "Recuentos de entradas de términos enlazados"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:128
 msgid "Linked Term Taxonomy"
-msgstr ""
+msgstr "Taxonomía de términos enlazados"
 
 #: includes-pro/load.php:86
 #: includes-pro/modules/linked-terms/linked-terms.php:113
@@ -279,7 +279,7 @@ msgstr "Términos enlazados"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:247
 msgid "Linked terms deleted successfully."
-msgstr ""
+msgstr "Términos enlazados borrados correctamente."
 
 #: includes-pro/modules/autoterms/autoterms.php:451
 msgid "LSEG / Refinitiv"
@@ -296,7 +296,7 @@ msgstr "Sin límite"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:342
 msgid "No linked terms found."
-msgstr ""
+msgstr "No se han encontrado términos enlazados."
 
 #: includes-pro/modules/autoterms/autoterms.php:58
 msgid "None"
@@ -304,7 +304,7 @@ msgstr "Ninguno"
 
 #: includes-pro/modules/linked-terms/linked-terms.php:94
 msgid "Number of items per page"
-msgstr ""
+msgstr "Número de elementos por página"
 
 #: includes-pro/modules/autoterms/autoterms.php:363
 msgid "OpenAI"
@@ -334,11 +334,11 @@ msgstr "Programar términos automáticos para tu contenido"
 #: includes-pro/modules/linked-terms/linked-terms.php:152
 #, php-format
 msgid "Search results for &#8220;%s&#8221;"
-msgstr ""
+msgstr "Resultados de la búsqueda de &#8220;%s&#8221;"
 
 #: includes-pro/modules/linked-terms/linked-terms.php:168
 msgid "Search Terms"
-msgstr ""
+msgstr "términos de la búsqueda"
 
 #: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:314
 msgid "Security error. Kindly reload this page and try again"
@@ -363,11 +363,11 @@ msgstr "Estado"
 
 #: includes-pro/load.php:80
 msgid "Synonyms"
-msgstr ""
+msgstr "Sinónimos"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:198
 msgid "Taxonomy"
-msgstr ""
+msgstr "Taxonomía"
 
 #. Author of the plugin
 msgid "TaxoPress"
@@ -387,11 +387,11 @@ msgstr "TaxoPress Pro"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:125
 msgid "Term Name"
-msgstr ""
+msgstr "Nombre del término"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:129
 msgid "Term Post Counts"
-msgstr ""
+msgstr "Recuentos de entradas del término"
 
 #: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:90
 #: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:108
@@ -400,7 +400,7 @@ msgstr "Sinónimos del término"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:127
 msgid "Term Taxonomy"
-msgstr ""
+msgstr "Taxonomía del término"
 
 #: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:264
 #: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:360
@@ -442,12 +442,17 @@ msgid ""
 "example, \"website\" can have synonyms such as \"websites\", \"web site\", "
 "and \"web pages\"."
 msgstr ""
+"Esta característica te permite asociar palabras adicionales a cada término. "
+"Por ejemplo, «sitio web» puede tener sinónimos como «sitios web», «web» y "
+"«páginas web»."
 
 #: includes-pro/load.php:87
 msgid ""
 "This feature allows you to connect terms. When the main term is added to a "
 "post, the linked terms will be added also."
 msgstr ""
+"Esta característica te permite conectar términos. Cuando se añada el término "
+"principal a una entrada, se añadirán también los términos enlazados."
 
 #: includes-pro/modules/autoterms/autoterms.php:135
 msgid ""
@@ -462,6 +467,8 @@ msgstr ""
 #: includes-pro/modules/linked-terms/linked-terms.php:146
 msgid "This screen allows you to see linked terms relationships on your site."
 msgstr ""
+"Esta pantalla te permite ver las relaciones de términos enlazados en tu "
+"sitio."
 
 #: includes-pro/modules/autoterms/autoterms.php:220
 msgid ""
@@ -500,8 +507,8 @@ msgid ""
 "This will automatically add new terms from the IBM Watson service. Please "
 "test carefully before use."
 msgstr ""
-"Esto añadirá automáticamente nuevos términos desde el servicio de IBM Watson."
-" Por favor, pruébalo cuidadosamente antes de usarlo."
+"Esto añadirá automáticamente nuevos términos desde el servicio de IBM "
+"Watson. Por favor, pruébalo cuidadosamente antes de usarlo."
 
 #: includes-pro/modules/autoterms/autoterms.php:442
 msgid ""

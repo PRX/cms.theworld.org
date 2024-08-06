@@ -100,7 +100,10 @@
   },
   "supports": {
     "html": false,
-    "align": true
+    "align": true,
+    "interactivity": {
+      "clientNavigation": true
+    }
   },
   "usesContext": [
     "postId",

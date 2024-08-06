@@ -3,7 +3,7 @@
         'name' => 'taxopress/taxopress-pro',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'ae010c3b5b046998c092470d8c2324b581e14763',
+        'reference' => '423e966c0da00e6cbbac5732628f82a883fa6ddf',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -76,7 +76,7 @@
         'taxopress/taxopress-pro' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'ae010c3b5b046998c092470d8c2324b581e14763',
+            'reference' => '423e966c0da00e6cbbac5732628f82a883fa6ddf',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

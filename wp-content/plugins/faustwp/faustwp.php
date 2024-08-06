@@ -9,7 +9,7 @@
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: faustwp
  * Domain Path: /languages
- * Version: 1.3.1
+ * Version: 1.3.2
  * Requires PHP: 7.2
  * Requires at least: 5.7
  *
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'FAUSTWP_FILE', __FILE__ );
-define( 'FAUSTWP_DIR', dirname( __FILE__ ) );
+define( 'FAUSTWP_DIR', __DIR__ );
 define( 'FAUSTWP_URL', plugin_dir_url( __FILE__ ) );
 define( 'FAUSTWP_PATH', plugin_basename( FAUSTWP_FILE ) );
 define( 'FAUSTWP_SLUG', dirname( plugin_basename( FAUSTWP_FILE ) ) );
