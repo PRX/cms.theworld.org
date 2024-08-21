@@ -146,7 +146,7 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
                 <div id="">
                     <h1 class="wp-heading-inline"><?php esc_html_e('Linked Terms', 'taxopress-pro'); ?></h1>
                     <div class="taxopress-description">
-                        <?php esc_html_e('This feature allows you to connect terms. When the main term is added to a post, the linked terms will be added also.', 'taxopress-pro'); ?>
+                        <?php esc_html_e('This feature allows you to connect terms. When the main term or any Linked Term is added to a post, all the other terms will be added also.', 'taxopress-pro'); ?>
                     </div>
     
                     <?php

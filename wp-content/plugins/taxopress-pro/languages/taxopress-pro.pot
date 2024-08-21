@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaxoPress Pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-26 06:31+0000\n"
+"POT-Creation-Date: 2024-07-16 11:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -429,8 +429,8 @@ msgstr ""
 
 #: includes-pro/modules/linked-terms/linked-terms.php:149
 msgid ""
-"This feature allows you to connect terms. When the main term is added to a "
-"post, the linked terms will be added also."
+"This feature allows you to connect terms. When the main term or any Linked "
+"Term is added to a post, all the other terms will be added also."
 msgstr ""
 
 #: includes-pro/load.php:87
