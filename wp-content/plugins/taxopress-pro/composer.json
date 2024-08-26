@@ -19,7 +19,6 @@
         "build-unpacked": "vendor/bin/robo build:unpacked --ansi"
     },
   "config": {
-    "process-timeout": 1600,
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true
     }
