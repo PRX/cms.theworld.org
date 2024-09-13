@@ -1,9 +1,9 @@
-name: Push to Pantheon Core Environments
+name: Push to Pantheon Multidev
 
 on:
   push:
     branches:
-      - main
+      - "multidev-*"
 
 jobs:
   deploy:
@@ -13,12 +13,8 @@ jobs:
         id: vars
         run: |
           COMMIT_MESSAGE="${{ github.event.head_commit.message }}"
-          DEPLOY_ENV='dev'
-
-          # If the commit message contains [deploy:ENV], set the deploy environment.
-          if [[ $COMMIT_MESSAGE =~ \[deploy:(.*)\] ]]; then
-            DEPLOY_ENV=${BASH_REMATCH[1]}
-          fi
+          BRANCH_NAME="${{ github.ref }}"
+          DEPLOY_ENV=${BRANCH_NAME#refs/heads/multidev-}
 
           echo "deploy_env=$DEPLOY_ENV" >> $GITHUB_OUTPUT
           # This method ensures that the multi-line commit message is correctly stored as an output variable and can be used in subsequent steps or jobs within your workflow.
@@ -72,22 +68,22 @@ jobs:
 
           git remote add github_repo $GITHUB_WORKSPACE
           git fetch github_repo
+          # Review this because it is merging things from a repo that is not the correct i think
           git merge --allow-unrelated-histories -X theirs github_repo/${{ github.ref_name }}
 
-      - name: Push code to Pantheon Dev Environment
+      - name: Check for Multidev Environment and create if it does not exist
+        id: check-multidev
         run: |
+          # Check if the multidev environment already exists.
+          EXISTING_ENV=$(terminus multidev:list ${{ vars.PANTHEON_SITE }} --format=list --field=Name | grep -w ${{ steps.vars.outputs.deploy_env }} || true)
+          if [[ -z "$EXISTING_ENV" ]]; then
+            terminus multidev:create ${{ vars.PANTHEON_SITE }}.live ${{ steps.vars.outputs.deploy_env }}
+          fi
+
           cd pantheon_repo
-          git push origin master
-
-      - name: Deploy to Test Environment
-        if: steps.vars.outputs.deploy_env == 'test' || steps.vars.outputs.deploy_env == 'live'
-        run: |
-          terminus env:deploy ${{ vars.PANTHEON_SITE }}.test --note "${{ steps.vars.outputs.deploy_note }}"
-
-      - name: Deploy to Live Environment
-        if: steps.vars.outputs.deploy_env == 'live'
-        run: |
-          terminus env:deploy ${{ vars.PANTHEON_SITE }}.live --note "${{ steps.vars.outputs.deploy_note }}"
+          git checkout -b ${{ steps.vars.outputs.deploy_env }}
+          # we must force the update because the github repo is the source of truth.
+          git push origin ${{ steps.vars.outputs.deploy_env }} -f
 
       - name: Clear Pantheon Cache
         if: steps.vars.outputs.deploy_env != ''
