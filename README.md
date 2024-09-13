@@ -76,3 +76,4 @@ Run `nvm use` prior to running the scripts below.
 `npm run refresh` - See the `lando refresh` description above.
 
 `npm run config-export` - Updates configuration bundles stored in `wp-content/config/` with any changes staged in the database.
+
