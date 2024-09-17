@@ -3,7 +3,7 @@ Contributors: publishpress, kevinB, stevejburge, andergmartins, olatechpro, ojop
 Tags: category, tag, taxonomy, related posts, tag cloud, terms, tagging, navigation, tag manager, tags manager, term manager, terms manager
 Requires at least: 3.3
 Tested up to: 6.6
-Stable tag: 3.23.0
+Stable tag: 3.25.1
 Requires PHP: 7.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -225,7 +225,44 @@ If you have a busy WooCommerce site, it can be difficult to organize all your pr
 
 == Changelog ==
 
-v3.23.0- 2024-08-06
+v3.25.1- 2024-09-05
+* Fixed: Undefined variable $default_featured_media in Related Posts, #2187
+
+v3.25.0- 2024-09-05
+* Fixed: "Exclude previously analyzed content" not working, #2169
+* Update: Improve OpenAI failure message, #1951
+* Update: Add a notice about not leaving the screen on Existing Content page, #2170
+* Update: Add an edit link to Existing Content Auto Terms, #2172
+* Feature: Add "Border Cloud" design option to Terms Display Format. #1193
+* Feature: Add "Table" display in Terms Display format options, #1398
+* Feature: Add a "WordPress Default" display for Terms Display, #1398
+* Fixed: Auto Links not working on apostrophes, #2097
+* Update: Remove the required from Auto Terms "Existing taxonomy terms *" source field label, #2108
+* Update: Add "Save Settings" button to "Existing Content" page, #2137
+* Update: Remove "TaxoPress AI", add "Auto Terms" to plugin action links, #2139
+* Update: Update the text for "Display format" in "Terms Display, #2104
+* Update: Translation Updates ES-FR-IT_TAXO_Free v3.24.1, #2162
+
+v3.24.1- 2024-08-23
+* Fixed: Warning: Cannot modify header information preventing login on PHP 8, #2157
+
+v3.24.0- 2024-08-22
+* Update: Add options to Exclude Blocks from Auto Links, #2134
+* Update: Add options to Exclude Shortcodes from Auto Links, #2135
+* Update: Allow %post_content% as an option in Related Posts, #2127
+* Update: Allow %post_thumb_url% in Related Posts, #2114
+* Update: Make Auto Links run early before other the_content filter, #2133
+* Fixed: Auto Links issues with Preformatted code, #2120
+* Fixed: Issue with Soundcloud block and Auto Links, #2119
+* Fixed: Auto Links issues with < > in a paragraph, #2118
+* Update: Text change for related post ,#2112
+* Update: Update the text for "Display format" in "Terms Display, #2104
+* Update: Update the header area for "Manage Terms", #2130
+* Update: Update the header area for "Mass edit terms", #2129
+* Update: Remove Upgrade boxes from the "Exisiting Content" screen, #2138
+* Update: Translation Updates ES-FR-IT_TAXO_v3.23, #2125
+
+v3.23.0- 2024-08-07
 * Update: Add role visibility settings for metabox, #1957
 * Update: Allow users to remove the default Tags and Categories metaboxes, #2044
 * Update: Re-organize TaxoPress Menu, #2069

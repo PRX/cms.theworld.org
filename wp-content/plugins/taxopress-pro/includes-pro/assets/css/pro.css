@@ -48,6 +48,7 @@
     color: #f54d4d;
     cursor: pointer;
     margin-left: 10px;
+    overflow-wrap: normal;
 }
 
 .st_wrap.manage-taxopress-linked-terms table.linkedterms th.column-primary {

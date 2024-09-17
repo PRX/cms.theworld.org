@@ -2,8 +2,8 @@
 Contributors: antpb, apmatthe, blakewpe, chriswiegman, claygriffiths, jasonkonen, joefusco, markkelnar, matthewguywright, mindctrl, modernnerd, rfmeier, TeresaGobble, thdespou, wpengine
 Tags: faustjs, faust, headless, decoupled, composable-architecture
 Requires at least: 5.7
-Tested up to: 6.5
-Stable tag: 1.3.2
+Tested up to: 6.6.1
+Stable tag: 1.4.1
 Requires PHP: 7.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -54,26 +54,22 @@ plugins/faustwp/.wordpress-org/screenshot-3.png
 
 == Changelog ==
 
+= 1.4.1 =
+
+### Patch Changes
+
+- e80d80af: Tested up to WordPress v6.6.1
+
+= 1.4.0 =
+
+### Minor Changes
+
+- 9ff1df86: Introduces a new setting on the Faust settings page that allows users to opt-in or out of Faust removing Nav Menu Locations that are not registered on the Faust Settings page.
+
 = 1.3.2 =
 
 ### Patch Changes
 
 - 84076cd1: Bug: Fixes issue with blocks not showing in the block editor when running blockset command on WP >=v6.5
-
-= 1.3.1 =
-
-### Patch Changes
-
-- c28624c: Improve domain_match function to handle port checks and Add Comprehensive Test Cases
-
-= 1.3.0 =
-
-### Minor Changes
-
-- a478997: The default settings for `enable_image_source` has been changed to "on" for new installs.
-
-### Patch Changes
-
-- bced682: Ensure's any related translations will properly load by calling `load_text_domain`
 
 [View the full changelog](https://github.com/wpengine/faustjs/blob/canary/plugins/faustwp/CHANGELOG.md)

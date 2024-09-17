@@ -639,7 +639,7 @@ class SimpleTags_Autoterms
                                                         'labeltext'  => esc_html__('Existing taxonomy terms', 'simple-tags'),
                                                         'aftertext'  => esc_html__('This will add existing terms from the taxonomy selected in the "General" tab.', 'simple-tags'),
                                                         'selections' => $select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                                                        'required'    => true,
+                                                        'required'    => false,
                                                     ]);
 
 
@@ -683,7 +683,7 @@ class SimpleTags_Autoterms
                                                         'name'       => 'autoterm_useall',
                                                         'class'      => 'autoterm_useall autoterm-terms-to-use-field',
                                                         'labeltext'  => '',
-                                                        'aftertext'  => esc_html__('Use all the terms in the selected taxonomy. Please test this option carefully as it can use significant server resources if you have many terms.', 'simple-tags'),
+                                                        'aftertext'  => esc_html__('Use all the terms in the selected taxonomy.', 'simple-tags'),
                                                         'selections' => $select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                                         'required'    => false,
                                                     ]);
@@ -1214,7 +1214,7 @@ class SimpleTags_Autoterms
                                     </h3>
                                 </div>
                                 <div class="inside">
-                                    <p><?php echo sprintf(esc_html__('If your website language does not use the A-Z alphabet, %1s please read this documentation. %2s', 'simple-tags'), '<a href="https://taxopress.com/docs/characters/">', '</a>'); ?>
+                                    <p><?php echo sprintf(esc_html__('Please note that this is an automatic tool. It does have limitations around languages, types of content, and other factors. %1s Please read this documentation. %2s', 'simple-tags'), '<a href="https://taxopress.com/docs/characters/">', '</a>'); ?>
                                     </p>
                                 </div>
                             </div>

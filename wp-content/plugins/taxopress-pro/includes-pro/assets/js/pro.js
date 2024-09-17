@@ -76,6 +76,12 @@
         $('.html-exclusions-customs-form .new-element-submit').trigger('click'); // trigger input submit
       }
     });
+    $(document).on('keydown', '.shortcodes-exclusions-form .shortcode-name', function (event) {
+      if (event.keyCode === 13) { // Enter key
+        event.preventDefault(); // Prevent form submission
+        $('.shortcodes-exclusions-form .new-element-submit').trigger('click'); // trigger input submit
+      }
+    });
 
     // -------------------------------------------------------------
     //   Show autolink custom element exclusion form
@@ -109,6 +115,28 @@
         $('.html-exclusions-customs-form .element-name').val('');
         $('.html-exclusions-customs-form').css('display', 'none');
         $('.html-exclusions-customs-add').css('display', '');  
+      }
+    });
+
+    // -------------------------------------------------------------
+    //   Add new autolink shortcode custom element exclusion
+    // -------------------------------------------------------------
+    $(document).on('click', '.shortcodes-exclusions-form .new-element-submit', function (event) {
+      event.preventDefault();
+      
+      var input_val = $('.shortcodes-exclusions-form .shortcode-name').val();
+
+      if (!isEmptyOrSpaces(input_val)) {
+        var new_element_html = '';
+        new_element_html += '<tr valign="top" class="html-exclusions-customs-row"><th scope="row"><label for="' + input_val + '">[' + input_val + ']</label></th><td>';
+        new_element_html += '<input type="hidden" name="shortcodes_exclusion_entries[]" value="' + input_val + '" />';
+        new_element_html += '<input type="checkbox" id="' + input_val + '" name="shortcodes_exclusion[]" value="' + input_val + '" checked />';
+        new_element_html += '<label for="' + input_val + '" ></label> <span class="delete">Delete</span> <br /> </td></tr>';
+        $('.shortcodes-exclusions-placeholder').before(new_element_html);  
+
+        breakLongAutolinkExlusionWords();
+        
+        $('.shortcodes-exclusions-form .shortcode-name').val('');
       }
     });
 
@@ -147,8 +175,79 @@
     })
 
 
+    // -------------------------------------------------------------
+    //   Accept only valid name for shortcode
+    // -------------------------------------------------------------
+    $(document).on('keyup', '.shortcodes-exclusions-form .shortcode-name', function (e) {
+      
+      var value, original_value
+      value = original_value = $(this).val()
+      if (e.keyCode !== 9 && e.keyCode !== 37 && e.keyCode !== 38 && e.keyCode !== 39 && e.keyCode !== 40) {
+        value = value.replace(/ /g, "")
+        value = replaceDiacritics(value)
+        value = transliterate(value)
+
+        if (value) {
+          value = value.replace(/[^a-zA-Z0-9_-]/g, '');
+        }
+        if (value !== original_value) {
+          $(this).prop('value', value)
+        }
+      }
+    })
+
+    
+
+    /**
+     * TaxoPress posts select2
+     */
+    if ($('.blocks-exclusions-form .block-name').length > 0) {
+      
+      taxopressBlockSelect2($('.blocks-exclusions-form .block-name'));
+      function taxopressBlockSelect2(selector) {
+        selector.each(function () {
+            var blockSearch = $(this).ppma_select2({
+                placeholder: $(this).data("placeholder"),
+                allowClear: true,
+                ajax: {
+                    url:
+                        window.ajaxurl +
+                        "?action=taxopress_blocks_search&nonce=" +
+                        $(this).data("nonce"),
+                    dataType: "json",
+                    data: function (params) {
+                        return {
+                            q: params.term
+                        };
+                    }
+                }
+            }).on('ppma_select2:select', function (e) {
+              var data = e.params.data;
+              var selected_name = data.id;
+              var selected_label = data.text;
+              var friendly_name = replaceNonAlphabet(selected_name);
+
+              var new_element_html = '';
+              new_element_html += '<tr valign="top" class="html-exclusions-customs-row"><th scope="row"><label for="' + friendly_name + '">' + selected_label + '</label></th><td>';
+              new_element_html += '<input type="hidden" name="blocks_exclusion_entries[name][]" value="' + selected_name + '" />';
+              new_element_html += '<input type="hidden" name="blocks_exclusion_entries[label][]" value="' + selected_label + '" />';
+              new_element_html += '<input type="hidden" name="blocks_exclusion_entries[slug][]" value="' + friendly_name + '" />';
+              new_element_html += '<input type="checkbox" id="' + friendly_name + '" name="blocks_exclusion[]" value="' + selected_name + '" checked />';
+              new_element_html += '<label for="' + friendly_name + '" ></label> <span class="delete">Delete</span> <br /> </td></tr>';
+              $('.blocks-exclusions-placeholder').before(new_element_html); 
+
+              $(this).val(null).trigger('change'); 
+
+              breakLongAutolinkExlusionWords();
+
+          });
+        });
+    }
+  }
+
+
     function isEmptyOrSpaces(str) {
-      return str === null || str.match(/^ *$/) !== null;
+      return !str || str === null || str.match(/^ *$/) !== null;
     }
 
 
@@ -262,12 +361,13 @@
     }
 
     function breakLongWords(element) {
+
       var  html_element = decodeHTMLEntities(element.innerHTML);
 
       if (html_element.indexOf('<wbr>') !== -1) {
         return;
       }
-      var words = html_element.split(' ');
+      var words = html_element.split('/\s+/');
           
       for (var i = 0; i < words.length; i++) {
         var word = words[i];
@@ -282,6 +382,7 @@
 
       element.innerHTML = words.join(' ');
     }
+  
 
     function breakLongAutolinkExlusionWords() {
 

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaxoPress Pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-28 17:36+0000\n"
-"PO-Revision-Date: 2024-04-24 08:43+0200\n"
+"POT-Creation-Date: 2024-08-21 07:58+0000\n"
+"PO-Revision-Date: 2024-08-24 06:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4\n"
+"X-Generator: Poedit 3.4.4\n"
 "X-Loco-Version: 2.6.3; wp-6.1.1\n"
 "X-Domain: taxopress-pro\n"
 
@@ -73,23 +73,24 @@ msgstr "Il y a 7 jours"
 msgid "Activate License"
 msgstr "Activer la licence"
 
-#: includes-pro/modules/autolinks/autolinks.php:68
+#: includes-pro/modules/autolinks/autolinks.php:78
+#: includes-pro/modules/autolinks/autolinks.php:164
 msgid "Add"
 msgstr "Ajouter"
 
-#: includes-pro/modules/autolinks/autolinks.php:71
+#: includes-pro/modules/autolinks/autolinks.php:167
 msgid "Add Element"
 msgstr "Ajouter un élément"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:174
 #: includes-pro/modules/linked-terms/linked-terms-table.php:467
-msgid "Add Linked Term to Term Posts"
-msgstr "Ajouter un terme lié aux publications de termes"
+msgid "Add Linked Term to post with main term"
+msgstr "Ajouter un terme lié à la publication avec le terme principal"
 
 #: includes-pro/modules/linked-terms/linked-terms-table.php:173
 #: includes-pro/modules/linked-terms/linked-terms-table.php:453
-msgid "Add Term to Linked Term Posts"
-msgstr "Ajouter un terme aux publications du terme lié"
+msgid "Add main term to posts with Linked Term"
+msgstr "Ajouter un terme principal aux publications du terme lié"
 
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:108
 msgid "API Confidence Value"
@@ -155,13 +156,17 @@ msgstr "Dandelion"
 msgid "Delete Relationship"
 msgstr "Supprimer la relation"
 
-#: includes-pro/modules/linked-terms/linked-terms.php:180
+#: includes-pro/modules/linked-terms/linked-terms.php:183
 msgid "Description here."
 msgstr "Description ici."
 
-#: includes-pro/modules/autolinks/autolinks.php:68
+#: includes-pro/modules/autolinks/autolinks.php:164
 msgid "Element tag"
 msgstr "Étiquette d’élément"
+
+#: includes-pro/modules/autolinks/autolinks.php:79
+msgid "Enter the shortcode name without [ ] or parameters."
+msgstr "Saisir le nom du code court sans [ ] ni paramètres."
 
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:102
 msgid "Enter your Dandelion API Key."
@@ -269,12 +274,12 @@ msgstr "Nombre de publications du terme lié"
 msgid "Linked Term Taxonomy"
 msgstr "Taxonomie des termes liés"
 
-#: includes-pro/load.php:86
-#: includes-pro/modules/linked-terms/linked-terms.php:113
-#: includes-pro/modules/linked-terms/linked-terms.php:114
-#: includes-pro/modules/linked-terms/linked-terms.php:144
-#: includes-pro/modules/linked-terms/linked-terms.php:355
-#: includes-pro/modules/linked-terms/linked-terms.php:375
+#: includes-pro/load.php:87
+#: includes-pro/modules/linked-terms/linked-terms.php:116
+#: includes-pro/modules/linked-terms/linked-terms.php:117
+#: includes-pro/modules/linked-terms/linked-terms.php:147
+#: includes-pro/modules/linked-terms/linked-terms.php:358
+#: includes-pro/modules/linked-terms/linked-terms.php:378
 msgid "Linked Terms"
 msgstr "Termes liés"
 
@@ -286,7 +291,7 @@ msgstr "Les termes liés ont bien été supprimés."
 msgid "LSEG / Refinitiv"
 msgstr "LSEG / Refinitiv"
 
-#: includes-pro/modules/autolinks/autolinks.php:71
+#: includes-pro/modules/autolinks/autolinks.php:167
 msgid "New Element"
 msgstr "Nouvel élément"
 
@@ -303,7 +308,7 @@ msgstr "Aucun terme lié trouvé."
 msgid "None"
 msgstr "Aucun"
 
-#: includes-pro/modules/linked-terms/linked-terms.php:94
+#: includes-pro/modules/linked-terms/linked-terms.php:97
 msgid "Number of items per page"
 msgstr "Nombre d’éléments par page"
 
@@ -331,19 +336,35 @@ msgstr "État de la demande."
 msgid "Schedule Auto Terms for your content"
 msgstr "Programmez des termes automatiques pour votre contenu"
 
+#: includes-pro/modules/autolinks/autolinks.php:121
+msgid "Search and select blocks."
+msgstr "Rechercher et sélectionner les blocs."
+
+#: includes-pro/modules/autolinks/autolinks.php:119
+msgid "Search Block"
+msgstr "Rechercher les blocs"
+
 #. %s: search keywords
-#: includes-pro/modules/linked-terms/linked-terms.php:152
+#: includes-pro/modules/linked-terms/linked-terms.php:155
 #, php-format
 msgid "Search results for &#8220;%s&#8221;"
 msgstr "Résultats de la recherche pour &#171; %s &#187;"
 
-#: includes-pro/modules/linked-terms/linked-terms.php:168
+#: includes-pro/modules/linked-terms/linked-terms.php:171
 msgid "Search Terms"
 msgstr "Rechercher des termes"
+
+#: includes-pro/modules/autolinks/autolinks.php:120
+msgid "Search..."
+msgstr "Rechercher…"
 
 #: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:314
 msgid "Security error. Kindly reload this page and try again"
 msgstr "Erreur de sécurité. Veuillez recharger cette page et réessayer"
+
+#: includes-pro/modules/autolinks/autolinks.php:77
+msgid "Shortcode Name"
+msgstr "Nom du code court"
 
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:50
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:86
@@ -352,8 +373,8 @@ msgstr "Erreur de sécurité. Veuillez recharger cette page et réessayer"
 msgid "Show Term Post Count"
 msgstr "Afficher le nombre de publications du terme"
 
-#: includes-pro/modules/linked-terms/linked-terms.php:356
-#: includes-pro/modules/linked-terms/linked-terms.php:378
+#: includes-pro/modules/linked-terms/linked-terms.php:359
+#: includes-pro/modules/linked-terms/linked-terms.php:381
 msgid "Start typing to choose existing terms."
 msgstr "Commencez à saisir pour choisir les termes existants."
 
@@ -361,7 +382,7 @@ msgstr "Commencez à saisir pour choisir les termes existants."
 msgid "Status"
 msgstr "État"
 
-#: includes-pro/load.php:80
+#: includes-pro/load.php:81
 msgid "Synonyms"
 msgstr "Synonymes"
 
@@ -419,6 +440,16 @@ msgstr ""
 "Ces synonymes ne peuvent pas être ajoutés car %1$s il sont des termes du "
 "site."
 
+#: includes-pro/modules/linked-terms/linked-terms.php:360
+#: includes-pro/modules/linked-terms/linked-terms.php:382
+msgid ""
+"These terms are linked to the main term. When the main term or any of these "
+"terms are added to the post, all the other terms will be added also."
+msgstr ""
+"Ces termes sont liés au terme principal. Lorsque le terme principal ou l'un "
+"de ces termes est ajouté à une publication, tous les autres termes seront "
+"également ajoutés."
+
 #: includes-pro/modules/autoterms/autoterms.php:112
 msgid ""
 "This enables you to skip posts that have already been analyzed by the "
@@ -436,7 +467,7 @@ msgstr ""
 "vous avez beaucoup de contenu, réglez ce réglage sur un nombre inférieur "
 "afin d’éviter les temps dépassés."
 
-#: includes-pro/load.php:81
+#: includes-pro/load.php:82
 msgid ""
 "This feature allows you to associate additional words with each term. For "
 "example, \"website\" can have synonyms such as \"websites\", \"web site\", "
@@ -446,14 +477,23 @@ msgstr ""
 "chaque terme. Par exemple, « site » peut être associé à des synonymes tels "
 "que « sites web », « site web » et « pages web »."
 
-#: includes-pro/load.php:87
+#: includes-pro/modules/linked-terms/linked-terms.php:149
 msgid ""
-"This feature allows you to connect terms. When the main term is added to a "
-"post, the linked terms will be added also."
+"This feature allows you to connect terms. When the main term or any Linked "
+"Term is added to a post, all the other terms will be added also."
 msgstr ""
 "Cette fonctionnalité vous permet de relier des termes. Lorsque le terme "
-"principal est ajouté à une publication, les termes liés sont également "
-"ajoutés."
+"principal ou l'un de ces termes liés est ajouté à une publication, tous les "
+"autres termes seront également ajoutés."
+
+#: includes-pro/load.php:88
+msgid ""
+"This feature allows you to connect terms. When the main term or any of these "
+"terms are added to the post, all the other terms will be added also."
+msgstr ""
+"Cette fonctionnalité vous permet de relier des termes. Lorsque le terme "
+"principal ou l'un de ces termes liés est ajouté à une publication, tous les "
+"autres termes seront également ajoutés."
 
 #: includes-pro/modules/autoterms/autoterms.php:135
 msgid ""
@@ -464,12 +504,6 @@ msgstr ""
 "Il s’agit du temps d’attente (en secondes) entre le traitement des lots de "
 "termes automatiques. Si vous avez beaucoup de contenu existant, définissez "
 "une valeur plus élevée pour éviter les temps dépassés."
-
-#: includes-pro/modules/linked-terms/linked-terms.php:146
-msgid "This screen allows you to see linked terms relationships on your site."
-msgstr ""
-"Cet écran vous permet de voir les relations entre les termes liés sur votre "
-"site."
 
 #: includes-pro/modules/autoterms/autoterms.php:220
 msgid ""
@@ -554,13 +588,6 @@ msgstr ""
 "Utilisez des expressions régulières pour modifier la façon dont les termes "
 "automatiques analysent vos publications."
 
-#: includes-pro/modules/linked-terms/linked-terms.php:357
-#: includes-pro/modules/linked-terms/linked-terms.php:379
-msgid "When the main term is added to a post, these terms will be added also."
-msgstr ""
-"Lorsque le terme principal est ajouté à une publication, ces termes sont "
-"également ajoutés."
-
 #: includes-pro/modules/autoterms/autoterms.php:356
 #, php-format
 msgid ""
@@ -573,3 +600,15 @@ msgstr ""
 msgid "Your license key provides access to updates and support."
 msgstr ""
 "Votre clé de licence vous donne accès aux mises à jour et à le support."
+
+#~ msgid ""
+#~ "This screen allows you to see linked terms relationships on your site."
+#~ msgstr ""
+#~ "Cet écran vous permet de voir les relations entre les termes liés sur "
+#~ "votre site."
+
+#~ msgid ""
+#~ "When the main term is added to a post, these terms will be added also."
+#~ msgstr ""
+#~ "Lorsque le terme principal est ajouté à une publication, ces termes sont "
+#~ "également ajoutés."

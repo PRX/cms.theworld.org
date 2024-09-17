@@ -688,10 +688,23 @@
         $('.auto-term-content-result-title').html('');
     });
 
+    if ($('.taxopress-autoterm-content #autoterm_id').length > 0) {
+      auto_terms_content_settings_edit();
+      $(document).on('change', '.taxopress-autoterm-content #autoterm_id', function (e) {
+        auto_terms_content_settings_edit();
+      });
+    }
+    function auto_terms_content_settings_edit() {
+      $('.autoterm-content-settings-link').remove();
+      var current_settings_id = $('.taxopress-autoterm-content #autoterm_id').val();
+      $('.taxopress-autoterm-content #autoterm_id').next('p').append('<a target="_blank" class="autoterm-content-settings-link" href="' + st_admin_localize.autoterm_admin_url + '&add=new_item&action=edit&taxopress_autoterms=' + current_settings_id + '">' + st_admin_localize.existing_content_admin_label + '</a>');
+    }
+
 
     // -------------------------------------------------------------
     //   Auto term all content
     // -------------------------------------------------------------
+    var existingContentAjaxRequest; 
     $(document).on('click', '.taxopress-autoterm-all-content', function (e) {
         e.preventDefault();
         $('.auto-term-content-result').html('');
@@ -700,7 +713,18 @@
         auto_terms_all_content(0, button);
     });
 
-      function auto_terms_all_content(start_from, button){
+    // Terminate the AJAX request when "Stop" button is clicked
+    $(document).on('click', '.terminate-autoterm-scan', function (e) {
+      e.preventDefault();
+      if (existingContentAjaxRequest) {
+          existingContentAjaxRequest.abort(); // Abort the ongoing AJAX request
+      }
+      $(".taxopress-spinner").removeClass("is-active");
+      $('.taxopress-autoterm-all-content').attr('disabled', false);
+      $('.auto-term-content-result-title').html('');
+    });
+
+      function auto_terms_all_content(start_from, button) {
 
           $(".taxopress-spinner").addClass("is-active");
           button.attr('disabled', true);
@@ -710,13 +734,13 @@
           data.push({ name: 'start_from', value: start_from });
           data.push({ name: 'security', value: st_admin_localize.check_nonce });
 
-          $.post(st_admin_localize.ajaxurl, data, function (response) {
+          existingContentAjaxRequest = $.post(st_admin_localize.ajaxurl, data, function (response) {
               if(response.status === 'error') {
                 $('.auto-term-content-result-title').html(''+response.message+'');
                 $(".taxopress-spinner").removeClass("is-active");
                 button.attr('disabled', false);
               }else if(response.status === 'progress') {
-                $('.auto-term-content-result-title').html(''+response.percentage+'');
+                $('.auto-term-content-result-title').html(response.percentage + response.notice);
                 $('.auto-term-content-result').prepend(response.content);
                 //send next batch
                 auto_terms_all_content(response.done, button);
@@ -928,6 +952,52 @@
           $('.suggest_term_use_opencalais_children').closest('tr').addClass('st-hide-content');
         }
       }
+    }
+
+    // Add related posts uploaded
+    if ($('.select-default-featured-media-field').length > 0) {
+      
+      var frame;
+      // Select Media
+      $('.select-default-featured-media-field').on('click', function(e){
+          e.preventDefault();
+          
+          // If the media frame already exists, reopen it.
+          if (frame) {
+              frame.open();
+              return;
+          }
+          
+          // Create a new media frame
+          frame = wp.media({
+              title: st_admin_localize.select_default_label,
+              button: {
+                  text: st_admin_localize.use_media_label
+              },
+              multiple: false
+          });
+
+          // When an image is selected in the media frame...
+          frame.on('select', function(){
+              var attachment = frame.state().get('selection').first().toJSON();
+              $('#default_featured_media').val(attachment.url);
+              $('.default-featured-media-field-container').html('<img src="' + attachment.url + '" style="max-width: 300px;" />');
+              $('.select-default-featured-media-field').addClass('hidden');
+              $('.delete-default-featured-media-field').removeClass('hidden');
+          });
+
+          // Finally, open the modal on click
+          frame.open();
+      });
+
+      // Remove Media
+      $('.delete-default-featured-media-field').on('click', function(e){
+          e.preventDefault();
+          $('#default_featured_media').val('');
+          $('.default-featured-media-field-container').html('');
+          $('.select-default-featured-media-field').removeClass('hidden');
+          $('.delete-default-featured-media-field').addClass('hidden');
+      });
     }
 
 

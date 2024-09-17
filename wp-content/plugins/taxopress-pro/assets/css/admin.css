@@ -319,6 +319,10 @@
     max-height: 100px;
 }
 
+#auto_link_exclude {
+    width: 100%;
+}
+
 .taxopress-select2 {
     min-width: 200px;
 }
@@ -410,6 +414,9 @@ body.taxopress_page_st_terms tr.inline-edit-row td {
 .st_wrap .stpexplan{margin-top: 4px; color: #646970;}
 .st_wrap .stpexplan ul{list-style:square;margin:0 0 0 20px;padding:0;}
 .st_wrap .stpexplan ul li{margin:0;padding:0;}
+.st_wrap .stpexplan.helper {
+    padding-left: 0;
+}
 
 /* Options - Input Color   */
 .box_color{display:block;width:20px;height:20px;border:1px solid #ccc;}
@@ -988,17 +995,27 @@ ul.taxopress-tab li.posttags_display_tab a::before {
 .manage-taxopress-terms .column-slug {
     width: unset;
 }
-.st-html-exclusion-table th {
+.st-html-exclusion-table th,
+.st-custom-exclusion-table th {
     padding: unset;
-    white-space: nowrap;
     overflow-wrap: break-word;
     max-width: 120px;
 }
-.st-html-exclusion-table td {
+.st-html-exclusion-table td,
+.st-custom-exclusion-table td {
     padding: 5px 5px;
-  white-space: nowrap;
-  overflow-wrap: break-word;
-  max-width: 300px;
+    overflow-wrap: break-word;
+    max-width: 180px;
+}
+
+.st-custom-exclusion-table th,
+.st-custom-exclusion-table td {
+    max-width: unset;
+}
+
+.st-exclusion-custom-form .flex-parent {
+    display: flex;
+    padding-bottom: 5px;
 }
 
 .st-autoterms-single-specific-term {
@@ -1013,6 +1030,12 @@ ul.taxopress-tab li.posttags_display_tab a::before {
     max-height: 430px;
     overflow-y: scroll;
 }
+
+.autoterm-content-settings-link {
+    margin-left: 5px;
+    text-decoration: none;
+}
+
 .taxopress-spinner {
     float: none;
 }

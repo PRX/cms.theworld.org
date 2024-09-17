@@ -96,8 +96,8 @@ class TaxoPress_License
             );
         }
 
-        $before = array_slice($options, 0, array_search('taxopress-ai', array_keys($options)) + 1);
-        $after = array_slice($options, array_search('taxopress-ai', array_keys($options)) + 1);
+        $before = array_slice($options, 0, array_search('metabox', array_keys($options)) + 1);
+        $after = array_slice($options, array_search('metabox', array_keys($options)) + 1);
 
         $newElement = array('licence' => $licence_fields);
 
