@@ -28,7 +28,7 @@ class SimpleTags_Admin
 		// Which taxo ?
 		self::register_taxonomy();
 
-		// Redirect on plugin activation
+		// Plugin installer
 		add_action('admin_init', array(__CLASS__, 'plugin_installer_upgrade_code'));
 
 		// Redirect on plugin activation
@@ -113,9 +113,8 @@ class SimpleTags_Admin
 			require STAGS_DIR . '/inc/autoterms_content.php';
 			SimpleTags_Autoterms::get_instance();
 			SimpleTags_Autoterms_Content::get_instance();
+			self::$enabled_menus['st_autoterms'] = esc_html__('Auto Terms', 'simple-tags');
 		}
-		
-		self::$enabled_menus['st_taxopress_ai'] = esc_html__('TaxoPress AI', 'simple-tags');
 		
 		TaxoPress_AI_Module::get_instance();
 
@@ -436,7 +435,7 @@ class SimpleTags_Admin
 		global $pagenow;
 
 		$select_2_page = false;
-		if (isset($_GET['page']) && in_array($_GET['page'], ['st_posts'])) {
+		if (isset($_GET['page']) && in_array($_GET['page'], ['st_posts', 'st_autolinks'])) {
 			$select_2_page = true;
 		}
 
@@ -481,6 +480,12 @@ class SimpleTags_Admin
 			$script_dependencies[] = 'wp-util';
 		}
 
+		$taxopress_pages = taxopress_admin_pages();
+
+		if (isset($_GET['page']) && in_array($_GET['page'], $taxopress_pages)) {
+			wp_enqueue_media();
+		}
+
 		wp_register_script('st-admin-js', STAGS_URL . '/assets/js/admin.js', $script_dependencies, STAGS_VERSION);
 		wp_enqueue_script('st-admin-js');
 		//localize script
@@ -488,6 +493,10 @@ class SimpleTags_Admin
 			'ajaxurl'     => admin_url('admin-ajax.php'),
 			'select_valid' => esc_html__('Please select a valid', 'simple-tags'),
 			'check_nonce' => wp_create_nonce('st-admin-js'),
+			'select_default_label' => esc_html__('Select Default Post Thumb', 'simple-tags'),
+			'use_media_label' => esc_html__('Use this media', 'simple-tags'),
+			'existing_content_admin_label' => esc_html__('Edit the current setting.', 'simple-tags'),
+			'autoterm_admin_url' => admin_url('admin.php?page=st_autoterms'),
 		]);
 
 
@@ -499,8 +508,6 @@ class SimpleTags_Admin
 		// Register location
 		$wp_post_pages = array('post.php', 'post-new.php');
 		$wp_page_pages = array('page.php', 'page-new.php');
-
-		$taxopress_pages = taxopress_admin_pages();
 
 		wp_enqueue_style('st-admin-global');
 
@@ -795,7 +802,7 @@ class SimpleTags_Admin
 				$pt_index = 0;
 				foreach (TaxoPressAiUtilities::get_post_types_options() as $post_type => $post_type_object) {
 
-					if (!in_array($post_type, ['attachment']) && !empty(get_object_taxonomies($post_type))) {
+					if (!in_array($post_type, ['attachment'])) {
 						$active_pt = ($pt_index === 0) ? 'active' : '';
 						$table_sub_tab_lists[] = '<span class="' . $active_pt . '" data-content=".taxopress-ai-' . $post_type . '-content">' . esc_html($post_type_object->labels->name) . '</span>';
 						$pt_index++;
@@ -829,7 +836,7 @@ class SimpleTags_Admin
 
 				// Helper
 				if ($option[2] == 'helper') {
-					$output .= '<tr style="vertical-align: middle;" class="' . $class . '"><td class="helper" ' . $colspan . '>' . stripslashes($option[4]) . '</td></tr>' . PHP_EOL;
+					$output .= '<tr style="vertical-align: middle;" class="' . $class . '"><td class="helper stpexplan" ' . $colspan . '>' . stripslashes($option[4]) . '</td></tr>' . PHP_EOL;
 					continue;
 				}
 
@@ -964,9 +971,9 @@ class SimpleTags_Admin
 			case 'posts':
 				return esc_html__('Posts', 'simple-tags');
 			case 'taxopress-ai':
-				return esc_html__('TaxoPress AI', 'simple-tags');
-			case 'metabox':
 				return esc_html__('Metaboxes', 'simple-tags');
+			case 'metabox':
+				return esc_html__('Metabox Access', 'simple-tags');
 			case 'linked_terms':
 				return esc_html__('Linked Terms', 'simple-tags');
 			case 'licence':
@@ -1093,7 +1100,7 @@ class SimpleTags_Admin
 	 */
 	public static function plugin_installer_upgrade_code()
 	{
-		if (!get_option('taxopress_3_23_0_upgraded')) {
+		if (!get_option('taxopress_3_23_0_upgrade_completed')) {
 
 			$options = SimpleTags_Plugin::get_option();
 			
@@ -1112,7 +1119,7 @@ class SimpleTags_Admin
 
 			SimpleTags_Plugin::set_option($options);
 
-			update_option('taxopress_3_23_0_upgraded', true);
+			update_option('taxopress_3_23_0_upgrade_completed', true);
 		}
 	}
 

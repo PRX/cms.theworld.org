@@ -650,7 +650,7 @@ class SimpleTags_Autolink
                                                         </table>
 
 
-                                                        <table class="form-table taxopress-table autolink_exceptions" style="<?php echo $active_tab === 'autolink_exceptions' ? '' : 'display:none;'; ?>">
+                                                        <table class="form-table taxopress-table autolink_exceptions fixed" style="<?php echo $active_tab === 'autolink_exceptions' ? '' : 'display:none;'; ?>">
                                                             <?php
                                                             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                                             echo $ui->get_textarea_input([
@@ -706,7 +706,7 @@ class SimpleTags_Autolink
                                                                 'Prevent Auto Links inside elements',
                                                                 'simple-tags'
                                                             ) . '</label><br /><small style=" color: #646970;">' . esc_html__(
-                                                                'Terms inside these html tags will not be auto link.',
+                                                                'Terms inside these HTML tags will not have Auto Links applied.',
                                                                 'simple-tags'
                                                             ) . '</small></th><td>
                                                     <table class="visbile-table st-html-exclusion-table">';
@@ -983,7 +983,7 @@ class SimpleTags_Autolink
                                                 </h3>
                                             </div>
                                             <div class="inside">
-                                                <p><?php echo sprintf(esc_html__('If your website language does not use the A-Z alphabet, %1s please read this documentation. %2s', 'simple-tags'), '<a href="https://taxopress.com/docs/characters/">', '</a>'); ?>
+                                                <p><?php echo sprintf(esc_html__('Please note that this is an automatic tool. It does have limitations around languages, types of content, and other factors. %1s Please read this documentation. %2s', 'simple-tags'), '<a href="https://taxopress.com/docs/characters/">', '</a>'); ?>
                                                 </p>
                                             </div>
                                         </div>

@@ -1,2 +1,0 @@
-# taxopress-pro
-TaxoPress Pro

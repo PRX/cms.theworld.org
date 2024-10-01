@@ -34,6 +34,7 @@ if (!class_exists('TaxoPress_Pro_Init')) {
             add_filter( 'taxopress_autolinks_create_limit', [$this, 'taxopress_action_is_false'] );
             add_filter( 'taxopress_autoterms_create_limit', [$this, 'taxopress_action_is_false'] );
             add_action( 'admin_init', [$this, 'taxopress_pro_only_upgrade_function'] );
+            add_action('wp_ajax_taxopress_blocks_search', [$this, 'handle_blocks_search']);
         }
 
         /** Singleton instance */
@@ -138,6 +139,60 @@ if (!class_exists('TaxoPress_Pro_Init')) {
               update_option('taxopress_pro_3_5_2_upgraded', true);
            }
 
+        }
+
+        /**
+         * Handle an ajax request to search blocks
+         */
+        public static function handle_blocks_search()
+        {
+            header('Content-Type: application/javascript');
+    
+            if (empty($_GET['nonce'])
+                || !wp_verify_nonce(sanitize_key($_GET['nonce']), 'taxopress-blocks-search')
+            ) {
+                wp_send_json_error(null, 403);
+            }
+    
+            if (! current_user_can('simple_tags')) {
+                wp_send_json_error(null, 403);
+            }
+
+            $search = !empty($_GET['q']) ? sanitize_text_field($_GET['q']) : '';
+
+            $blocks  = self::get_all_registered_blocks();
+            $results = [];
+            foreach ($blocks as $block_name => $block_object) {
+                $block_title = !empty($block_object->title) ? $block_object->title : $block_object->name;
+                if (empty($search) || stripos( $block_title, $search ) !== false) {
+                    $results[] = [
+                        'id'   => $block_object->name,
+                        'text' => $block_title,
+                    ];
+                }
+            }
+
+            $response = [
+                'results' => $results,
+            ];
+            echo wp_json_encode($response);
+            exit;
+        }
+
+        public static function get_all_registered_blocks() {
+
+            // Ensure the function exists (it should be available in WordPress 5.0+)
+            if ( ! class_exists( 'WP_Block_Type_Registry' ) ) {
+                return [];
+            }
+        
+            // Get the instance of the block type registry
+            $registry = WP_Block_Type_Registry::get_instance();
+        
+            // Get all registered block types
+            $blocks = $registry->get_all_registered();
+        
+            return $blocks;
         }
 
     }
