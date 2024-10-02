@@ -5,7 +5,11 @@ Closes #[ISSUE_ID]
 ## To Review
 
 - [ ] Checkout Branch.
-- [ ] Run `npm run local` (or `npm run refresh` if you want a fresh database.)
+- [ ] Start Lando, if it is not already running: `lando start`.
+- [ ] (Optional) Update database:
+  - Delete any `.sql.gz` files from your `./reference` directory.
+  - Run `terminus backup:get --element=db --to=./reference -- the-world.live`.
+  - Run `npm run refresh`.
 - [ ] Go to http://the-world-wp.lndo.site/.
 
 > ...then...
