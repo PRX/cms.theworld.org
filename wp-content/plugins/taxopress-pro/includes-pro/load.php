@@ -139,6 +139,78 @@ if (!class_exists('TaxoPress_Pro_Init')) {
               update_option('taxopress_pro_3_5_2_upgraded', true);
            }
 
+           if (
+                empty(get_option('taxopress_pro_last_version')) 
+                || version_compare(get_option('taxopress_pro_last_version'), '3.26.0', '<')
+            ) {
+                // migrate taxopress ai/metabox settings and apis to auto term
+                if (function_exists('taxopress_get_autoterm_data')) {
+                    $autoterm_datas = taxopress_get_autoterm_data();
+                    $tas = get_option('st_taxopress_ai_settings');
+                    if (is_array($tas) && !empty($tas) && is_array($autoterm_datas) && !empty($autoterm_datas)) {
+                        // Existing Terms
+                        $existing_terms_maximum_terms = isset($tas['existing_terms_maximum_terms']) ? $tas['existing_terms_maximum_terms'] : 45;
+                        $existing_terms_orderby = isset($tas['existing_terms_orderby']) ? $tas['existing_terms_orderby'] : 'count';
+                        $existing_terms_order = isset($tas['existing_terms_order']) ? $tas['existing_terms_order'] : 'desc';
+                        $existing_terms_show_post_count = isset($tas['existing_terms_show_post_count']) ? $tas['existing_terms_show_post_count'] : 0;
+                        // open ai
+                        $open_ai_api_key = isset($tas['open_ai_api_key']) ? $tas['open_ai_api_key'] : '';
+                        $open_ai_model = isset($tas['open_ai_model']) ? $tas['open_ai_model'] : 'gpt-3.5-turbo';
+                        $open_ai_tag_prompt = isset($tas['open_ai_tag_prompt']) ? stripslashes_deep($tas['open_ai_tag_prompt']) : "Extract tags from the following content: '{content}'. Tags:";
+                        $open_ai_cache_result = isset($tas['open_ai_cache_result']) ? $tas['open_ai_cache_result'] : 0;
+                        $open_ai_show_post_count = isset($tas['open_ai_show_post_count']) ? $tas['open_ai_show_post_count'] : 0;
+                        // ibm watson
+                        $ibm_watson_api_url = isset($tas['ibm_watson_api_url']) ? $tas['ibm_watson_api_url'] : '';
+                        $ibm_watson_api_key = isset($tas['ibm_watson_api_key']) ? $tas['ibm_watson_api_key'] : '';
+                        $ibm_watson_cache_result = isset($tas['ibm_watson_cache_result']) ? $tas['ibm_watson_cache_result'] : 0;
+                        $ibm_watson_show_post_count = isset($tas['ibm_watson_show_post_count']) ? $tas['ibm_watson_show_post_count'] : 0;
+                        // dandelion
+                        $dandelion_api_token = isset($tas['dandelion_api_token']) ? $tas['dandelion_api_token'] : '';
+                        $dandelion_api_confidence_value = isset($tas['dandelion_api_confidence_value']) ? $tas['dandelion_api_confidence_value'] : '0.6';
+                        $dandelion_cache_result = isset($tas['dandelion_cache_result']) ? $tas['dandelion_cache_result'] : 0;
+                        $dandelion_show_post_count = isset($tas['dandelion_show_post_count']) ? $tas['dandelion_show_post_count'] : 0;
+                        // open calais
+                        $open_calais_api_key = isset($tas['open_calais_api_key']) ? $tas['open_calais_api_key'] : '';
+                        $open_calais_cache_result = isset($tas['open_calais_cache_result']) ? $tas['open_calais_cache_result'] : 0;
+                        $open_calais_show_post_count = isset($tas['open_calais_show_post_count']) ? $tas['open_calais_show_post_count'] : 0;
+
+                        foreach ($autoterm_datas as $index => $data) {
+                            // add Existing Terms
+                            $autoterm_datas[$index]['existing_terms_maximum_terms'] = $existing_terms_maximum_terms;
+                            $autoterm_datas[$index]['suggest_local_terms_orderby'] = $existing_terms_orderby;
+                            $autoterm_datas[$index]['suggest_local_terms_order'] = $existing_terms_order;
+                            $autoterm_datas[$index]['suggest_local_terms_show_post_count'] = $existing_terms_show_post_count;
+
+                            // add open ai
+                            $autoterm_datas[$index]['open_ai_api_key'] = $open_ai_api_key;
+                            $autoterm_datas[$index]['open_ai_model'] = $open_ai_model;
+                            $autoterm_datas[$index]['open_ai_tag_prompt'] = $open_ai_tag_prompt;
+                            $autoterm_datas[$index]['open_ai_cache_result'] = $open_ai_cache_result;
+                            $autoterm_datas[$index]['open_ai_show_post_count'] = $open_ai_show_post_count;
+
+                            // add ibm watson
+                            $autoterm_datas[$index]['ibm_watson_api_url'] = $ibm_watson_api_url;
+                            $autoterm_datas[$index]['ibm_watson_api_key'] = $ibm_watson_api_key;
+                            $autoterm_datas[$index]['ibm_watson_show_post_count'] = $ibm_watson_show_post_count;
+                            $autoterm_datas[$index]['ibm_watson_cache_result'] = $ibm_watson_cache_result;
+
+                            // add dandelion
+                            $autoterm_datas[$index]['dandelion_api_token'] = $dandelion_api_token;
+                            $autoterm_datas[$index]['dandelion_api_confidence_value'] = $dandelion_api_confidence_value;
+                            $autoterm_datas[$index]['dandelion_show_post_count'] = $dandelion_show_post_count;
+                            $autoterm_datas[$index]['dandelion_cache_result'] = $dandelion_cache_result;
+
+                             // add open calais
+                            $autoterm_datas[$index]['open_calais_api_key'] = $open_calais_api_key;
+                            $autoterm_datas[$index]['open_calais_show_post_count'] = $open_calais_show_post_count;
+                            $autoterm_datas[$index]['open_calais_cache_result'] = $open_calais_cache_result;
+                        }
+                        update_option('taxopress_autoterms', $autoterm_datas);
+                    }
+                }
+                update_option('taxopress_pro_last_version', TAXOPRESS_PRO_VERSION);
+          }
+
         }
 
         /**

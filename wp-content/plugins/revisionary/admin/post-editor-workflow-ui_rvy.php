@@ -84,7 +84,7 @@ class PostEditorWorkflowUI {
         } else {
             $vars['revisionEdits'] = '';
         }
-
+                                                                                                        //phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $redirect_arg = ( ! empty($_REQUEST['rvy_redirect']) ) ? "&rvy_redirect=" . esc_url_raw($_REQUEST['rvy_redirect']) : '';
 
         $draft_obj = get_post_status_object('draft-revision');
@@ -141,8 +141,10 @@ class PostEditorWorkflowUI {
         if ($block_editor) {
             $vars['updateCaption'] =  esc_html__('Update Revision', 'revisionary');
         } else {
-            if (!$vars['updateCaption'] = pp_revisions_status_label($post->post_mime_type, 'update')) {
-                $vars['updateCaption'] = pp_revisions_label('update_revision');
+            if (!defined('PUBLISHPRESS_STATUSES_PRO_VERSION')) {
+            	if (!$vars['updateCaption'] = pp_revisions_status_label($post->post_mime_type, 'update')) {
+                	$vars['updateCaption'] = pp_revisions_label('update_revision');
+                }
             }
         }
 
@@ -191,7 +193,7 @@ class PostEditorWorkflowUI {
         } else {
             $vars['scheduledRevisionsURL'] = '';
         }
-
+                                                                                                //phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $redirect_arg = ( ! empty($_REQUEST['rvy_redirect']) ) ? "&rvy_redirect=" . esc_url_raw($_REQUEST['rvy_redirect']) : '';
         $published_post_id = rvy_post_id($post->ID);
 
@@ -207,9 +209,9 @@ class PostEditorWorkflowUI {
                 'creatingCaption' => pp_revisions_status_label('draft-revision', 'submitting'),
                 'completedCaption' => pp_revisions_status_label('draft-revision', 'submitted'),
                 'completedLinkCaption' => (!empty($type_obj->public)) ? $preview_caption : '',
-                'completedURL' => (!empty($type_obj->public)) ? rvy_nc_url( add_query_arg('get_new_revision', $post->ID, admin_url(''))) : '',
+                'completedURL' => (!empty($type_obj->public)) ? rvy_nc_url( wp_nonce_url(add_query_arg('get_new_revision', $post->ID, admin_url('')), 'new-revision') ) : '',
                 'completedEditLinkCaption' => $edit_caption,
-                'completedEditURL' => rvy_nc_url( add_query_arg(['edit_new_revision' => $post->ID, 'published_post' => $post->ID], admin_url('admin.php?page=revisionary-q'))),
+                'completedEditURL' => rvy_nc_url( wp_nonce_url(add_query_arg(['edit_new_revision' => $post->ID, 'published_post' => $post->ID], admin_url('admin.php?page=revisionary-q')), 'edit-new-revision') ),
                 'errorCaption' => esc_html__('Error Creating Revision', 'revisionary'),
                 'ajaxurl' => rvy_admin_url(''),
                 'update' => esc_html__('Update', 'revisionary'),
@@ -229,9 +231,9 @@ class PostEditorWorkflowUI {
                 'scheduleDisabledTitle' => esc_attr(sprintf(esc_html__('For custom field changes, edit a scheduled %s.', 'revisionary'), strtolower(pp_revisions_status_label('draft-revision', 'basic')))),
                 'scheduledCaption' => pp_revisions_status_label('future-revision', 'submitted'),
                 'scheduledLinkCaption' => (!empty($type_obj->public)) ? $preview_caption : '',
-                'scheduledURL' => (!empty($type_obj->public)) ? rvy_nc_url( add_query_arg('get_new_revision', $post->ID, admin_url(''))) : '',
+                'scheduledURL' => (!empty($type_obj->public)) ? rvy_nc_url( wp_nonce_url(add_query_arg('get_new_revision', $post->ID, admin_url('')), 'new-revision') ) : '',
                 'scheduledEditLinkCaption' => $edit_caption,
-                'scheduledEditURL' => rvy_nc_url( add_query_arg(['edit_new_revision' => $post->ID, 'published_post' => $post->ID], admin_url('admin.php?page=revisionary-q'))),
+                'scheduledEditURL' => rvy_nc_url( wp_nonce_url(add_query_arg(['edit_new_revision' => $post->ID, 'published_post' => $post->ID], admin_url('admin.php?page=revisionary-q')), 'edit-new-revision') ),
                 'update' => esc_html__('Update', 'revisionary'),
             ));
 

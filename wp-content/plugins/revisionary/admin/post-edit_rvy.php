@@ -70,12 +70,20 @@ class RvyPostEdit {
             if (rvy_post_revision_supported($post)) {
 	            $status_obj = get_post_status_object($post->post_status);
 
-			    if (('future' != $post->post_status) && (!empty($status_obj->public) || !empty($status_obj->private) || rvy_get_option('pending_revision_unpublished'))) {
-	                wp_enqueue_script('rvy_object_edit', RVY_URLPATH . "/admin/rvy_post-classic-edit{$suffix}.js", ['jquery', 'jquery-form'], PUBLISHPRESS_REVISIONS_VERSION, true);
+                if (('future' != $post->post_status) && (!empty($status_obj->public) || !empty($status_obj->private) || rvy_get_option('pending_revision_unpublished'))) {
+                    wp_enqueue_script('rvy_object_edit', RVY_URLPATH . "/admin/rvy_post-classic-edit{$suffix}.js", ['jquery', 'jquery-form'], PUBLISHPRESS_REVISIONS_VERSION, true);
 
-	                $args = \PublishPress\Revisions\PostEditorWorkflowUI::postLinkParams(compact('post', 'do_pending_revisions', 'do_scheduled_revisions'));
-	                wp_localize_script( 'rvy_object_edit', 'rvyObjEdit', $args );
-	            }
+                    $args = \PublishPress\Revisions\PostEditorWorkflowUI::postLinkParams(compact('post', 'do_pending_revisions', 'do_scheduled_revisions'));
+
+                    $wp_timezone = wp_timezone();
+                    $utc_timezone = new DateTimeZone('UTC');
+                    $wp_time = new DateTime("now", $wp_timezone);
+                    $utc_time = new DateTime("now", new DateTimeZone('UTC'));
+
+                    $args['timezoneOffset'] = 0 - $wp_timezone->getOffset($utc_time);
+
+                    wp_localize_script( 'rvy_object_edit', 'rvyObjEdit', $args );
+                }
             } else {
                 return;
             }
@@ -155,7 +163,7 @@ class RvyPostEdit {
 
         ?>
         <a class="preview button" href="<?php echo esc_url($preview_link); ?>" target="revision-preview" id="revision-preview"
-           tabindex="4" title="<?php echo esc_html($preview_title);?>"><?php echo esc_html($preview_button); ?></a>
+           tabindex="4" title="<?php echo esc_attr($preview_title);?>"><?php echo esc_html($preview_button); ?></a>
         <?php
     }
 
@@ -263,13 +271,13 @@ class RvyPostEdit {
                     + '<label>' + '<?php _e("Author", 'revisionary');?>&nbsp;</label>'
                     + '</div>'
                     + "<div class='rvy-author-selection'>"
-                    + "<?php echo $select_html;?>"
+                    + "<?php echo $select_html;     // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"
                     + '</div></div>'
                 );
             //});
 
             $(document).on('change', 'div.rvy-author-selection select', function(e) {
-                var data = {'rvy_ajax_field': 'author_select', 'rvy_ajax_value': <?php echo $post->ID;?>, 'rvy_selection': $('div.rvy-author-selection select').val(), 'nc': Math.floor(Math.random() * 99999999)};
+                var data = {'rvy_ajax_field': 'author_select', 'rvy_ajax_value': <?php echo esc_attr($post->ID);?>, 'rvy_selection': $('div.rvy-author-selection select').val(), 'nc': Math.floor(Math.random() * 99999999)};
 
                 $('div.rvy-author-selection select').attr('disabled', 'disabled');
 
