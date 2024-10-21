@@ -160,7 +160,10 @@ function revisionary_copy_postmeta($from_post, $to_post_id, $args = []) {
 
     $target_meta_keys = (array) \get_post_custom_keys( $to_post_id );
 
-    $meta_keys = apply_filters('revisionary_create_revision_meta_keys', $meta_keys);
+    $meta_keys = apply_filters(
+        'revisionary_create_revision_meta_keys',    // Bypass problematic Link Whisper plugin postmeta by default
+        array_diff($meta_keys, ['wpil_links_outbound_external_count_data', 'wpil_links_outbound_internal_count_data', 'wpil_links_outbound_external_count'])
+    );
 
     foreach ( $meta_keys as $meta_key ) {
         if ($empty_target_only && !empty($target_meta_keys) && is_array($target_meta_keys)) {
@@ -171,17 +174,19 @@ function revisionary_copy_postmeta($from_post, $to_post_id, $args = []) {
 
         $meta_values = \get_post_custom_values( $meta_key, $from_post->ID );
 
-        if (count($meta_values) > 1) {
-            delete_post_meta($to_post_id, $meta_key);
+        if (!empty($meta_values)) {
+            if (count($meta_values) > 1) {
+                delete_post_meta($to_post_id, $meta_key);
 
-            foreach ( $meta_values as $meta_value ) {
-                $meta_value = maybe_unserialize( $meta_value );
-                add_post_meta( $to_post_id, $meta_key, \PublishPress\Revisions\Utils::recursively_slash_strings( $meta_value ) );
-            }
-        } else {
-            foreach ( $meta_values as $meta_value ) {
-                $meta_value = maybe_unserialize( $meta_value );
-                update_post_meta( $to_post_id, $meta_key, \PublishPress\Revisions\Utils::recursively_slash_strings( $meta_value ) );
+                foreach ( $meta_values as $meta_value ) {
+                    $meta_value = maybe_unserialize( $meta_value );
+                    add_post_meta( $to_post_id, $meta_key, \PublishPress\Revisions\Utils::recursively_slash_strings( $meta_value ) );
+                }
+            } else {
+                foreach ( $meta_values as $meta_value ) {
+                    $meta_value = maybe_unserialize( $meta_value );
+                    update_post_meta( $to_post_id, $meta_key, \PublishPress\Revisions\Utils::recursively_slash_strings( $meta_value ) );
+                }
             }
         }
     }
@@ -216,7 +221,7 @@ function rvy_revision_base_statuses($args = []) {
 	$arr = array_map('sanitize_key', (array) apply_filters('rvy_revision_base_statuses', ['draft', 'pending', 'future']));
 
 	if ('object' == $output) {
-		$status_keys = array_value($arr);
+		$status_keys = array_values($arr);
 		$arr = [];
 
 		foreach($status_keys as $k) {
@@ -237,7 +242,7 @@ function rvy_revision_statuses($args = []) {
 	$arr = array_map('sanitize_key', (array) apply_filters('rvy_revision_statuses', ['draft-revision', 'pending-revision', 'future-revision']));
 
 	if ('object' == $output) {
-		$status_keys = array_value($arr);
+		$status_keys = array_values($arr);
 		$arr = [];
 
 		foreach($status_keys as $k) {
@@ -293,6 +298,8 @@ function rvy_post_id($revision_id) {
 
                 if ($published_id) {
                     global $wpdb;
+
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                     $wpdb->update($wpdb->posts, ['comment_count' => $published_id], ['ID' => $revision_id]);
                 }
             } else {
@@ -342,15 +349,15 @@ function pp_revisions_plugin_updated($current_version) {
     if (version_compare($last_ver, '3.0.1', '<')) {
         // convert pending / scheduled revisions to v3.0 format
 		$revision_status_csv = implode("','", array_map('sanitize_key', rvy_revision_statuses()));
-		$wpdb->query("UPDATE $wpdb->posts SET post_mime_type = post_status WHERE post_status IN ('$revision_status_csv')");
-		$wpdb->query("UPDATE $wpdb->posts SET post_status = 'draft', post_mime_type = 'draft-revision' WHERE post_status IN ('draft-revision')");
-		$wpdb->query("UPDATE $wpdb->posts SET post_status = 'pending', post_mime_type = 'pending-revision' WHERE post_status IN ('pending-revision')");
-		$wpdb->query("UPDATE $wpdb->posts SET post_status = 'pending', post_mime_type = 'future-revision' WHERE post_status IN ('future-revision')");
+		$wpdb->query("UPDATE $wpdb->posts SET post_mime_type = post_status WHERE post_status IN ('$revision_status_csv')");                             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query("UPDATE $wpdb->posts SET post_status = 'draft', post_mime_type = 'draft-revision' WHERE post_status IN ('draft-revision')");       // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query("UPDATE $wpdb->posts SET post_status = 'pending', post_mime_type = 'pending-revision' WHERE post_status IN ('pending-revision')"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query("UPDATE $wpdb->posts SET post_status = 'pending', post_mime_type = 'future-revision' WHERE post_status IN ('future-revision')");   // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     } 
 
     if (version_compare($last_ver, '3.0.7-rc4', '<') && !defined('PRESSPERMIT_DEBUG')) {
         // delete revisions that were erroneously trashed instead of deleted
-        $wpdb->query("DELETE FROM $wpdb->posts WHERE post_mime_type IN ('draft-revision', 'pending-revision', 'future-revision') AND post_status = 'trash'");
+        $wpdb->query("DELETE FROM $wpdb->posts WHERE post_mime_type IN ('draft-revision', 'pending-revision', 'future-revision') AND post_status = 'trash'");   // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     }
 
     if (version_compare($last_ver, '3.0-rc7', '<')) {
@@ -393,6 +400,7 @@ function pp_revisions_plugin_activation() {
     $revision_status_csv = implode("','", array_map('sanitize_key', rvy_revision_statuses()));
 
     if (!defined('REVISIONARY_DISABLE_ACTIVATION_TRASH_QUERY')) {
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $results = $wpdb->get_results("SELECT ID, comment_count FROM $wpdb->posts WHERE post_mime_type IN ('draft-revision', 'pending-revision', 'future-revision') AND post_status = 'trash'");
 
         $trashed_ids = [];
@@ -401,9 +409,12 @@ function pp_revisions_plugin_activation() {
             $trashed_ids[$row->comment_count] = $row->ID;
         }
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $revision_post_ids = $wpdb->get_col("SELECT comment_count FROM $wpdb->posts WHERE post_mime_type IN ('draft-revision', 'pending-revision', 'future-revision')");
 
         $id_csv = implode("','", $revision_post_ids);
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
         $deleted_ids = $wpdb->get_col("SELECT post_id FROM $wpdb->postmeta WHERE post_id NOT IN ('" . $id_csv . "') AND meta_key = '_rvy_base_post_id'");
 
         foreach (array_merge($trashed_ids, $deleted_ids) as $revision_id) {
@@ -419,10 +430,10 @@ function pp_revisions_plugin_activation() {
         }
     }
 
-    $wpdb->query("UPDATE $wpdb->posts SET post_mime_type = post_status WHERE post_status IN ('$revision_status_csv')");
-    $wpdb->query("UPDATE $wpdb->posts SET post_status = 'draft', post_mime_type = 'draft-revision' WHERE post_status IN ('draft-revision')");
-    $wpdb->query("UPDATE $wpdb->posts SET post_status = 'pending', post_mime_type = 'pending-revision' WHERE post_status IN ('pending-revision')");
-    $wpdb->query("UPDATE $wpdb->posts SET post_status = 'pending', post_mime_type = 'future-revision' WHERE post_status IN ('future-revision')");
+    $wpdb->query("UPDATE $wpdb->posts SET post_mime_type = post_status WHERE post_status IN ('$revision_status_csv')");                             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    $wpdb->query("UPDATE $wpdb->posts SET post_status = 'draft', post_mime_type = 'draft-revision' WHERE post_status IN ('draft-revision')");       // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+    $wpdb->query("UPDATE $wpdb->posts SET post_status = 'pending', post_mime_type = 'pending-revision' WHERE post_status IN ('pending-revision')"); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+    $wpdb->query("UPDATE $wpdb->posts SET post_status = 'pending', post_mime_type = 'future-revision' WHERE post_status IN ('future-revision')");   // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 }
 
 function pp_revisions_plugin_deactivation() {
@@ -432,8 +443,8 @@ function pp_revisions_plugin_deactivation() {
 
     // Prevents pending / scheduled revisions from being listed as regular drafts / pending posts after plugin is deactivated
     $revision_status_csv = implode("','", array_map('sanitize_key', rvy_revision_statuses()));
-    $wpdb->query("UPDATE $wpdb->posts SET post_status = post_mime_type WHERE post_mime_type IN ('$revision_status_csv')");
-    $wpdb->query("UPDATE $wpdb->posts SET post_mime_type = '' WHERE post_mime_type IN ('$revision_status_csv')");
+    $wpdb->query("UPDATE $wpdb->posts SET post_status = post_mime_type WHERE post_mime_type IN ('$revision_status_csv')");                          // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    $wpdb->query("UPDATE $wpdb->posts SET post_mime_type = '' WHERE post_mime_type IN ('$revision_status_csv')");                                   // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
     if ($timestamp = wp_next_scheduled('rvy_mail_buffer_hook')) {
         wp_unschedule_event($timestamp,'rvy_mail_buffer_hook');

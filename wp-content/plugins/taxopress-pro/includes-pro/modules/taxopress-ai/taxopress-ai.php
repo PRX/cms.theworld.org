@@ -15,7 +15,7 @@ if (!class_exists('TaxoPress_Pro_AI_Module')) {
         public function __construct()
         {
 
-            add_action('taxopress_ai_fields', [$this, 'filter_taxopress_ai_fields']);
+            //add_action('taxopress_ai_fields', [$this, 'filter_taxopress_ai_fields']);
         }
 
 
@@ -27,6 +27,23 @@ if (!class_exists('TaxoPress_Pro_AI_Module')) {
             }
 
             return self::$instance;
+        }
+
+        /**
+         * Get open ai models
+         *
+         * @return array
+         */
+        public static function get_open_ai_models()
+        {
+            $models = [
+                'gpt-3.5-turbo'     => esc_html__('gpt-3.5-turbo', 'taxopress-pro'),
+                'gpt-4o-mini'       => esc_html__('gpt-4o-mini', 'taxopress-pro'),
+                'gpt-4o'            => esc_html__('gpt-4o', 'taxopress-pro'),
+                'chatgpt-4o-latest' => esc_html__('chatgpt-4o-latest', 'taxopress-pro')
+            ];
+
+            return $models;
         }
 
 
@@ -44,6 +61,15 @@ if (!class_exists('TaxoPress_Pro_AI_Module')) {
                 'label' => esc_html__('API Key', 'taxopress-pro'),
                 'description'  => esc_html__('Enter your OpenAI API Key.', 'taxopress-pro'),
                 'type' => 'text',
+                'tab' => 'open_ai',
+            ];
+            $fields['open_ai_model'] = [
+                'label' => esc_html__('OpenAI Models', 'taxopress-pro'),
+                'description'  => esc_html__('Some models availability depends on your subscription and access.', 'taxopress-pro'),
+                'type' => 'select',
+                'default_value' => 'gpt-3.5-turbo',
+                'classes' => 'taxopress-ai-select2',
+                'options' => self::get_open_ai_models(),
                 'tab' => 'open_ai',
             ];
             $fields['open_ai_show_post_count'] = [
