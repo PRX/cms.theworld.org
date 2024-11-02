@@ -55,7 +55,7 @@ function AudioEditLink({ audio }: AudioEditLinkProps) {
   const audioFilename = audio?.url?.split('/').pop();
 
   return (
-    <a className='inline-flex gap-2 text-primary' href={editLink} target={`edit:${audio.databaseId}`}>{audioFilename} <ExternalLink size={16} /></a>
+    <a className='inline-flex gap-2 text-primary' href={editLink} target={`edit:${audio.databaseId}`} title={audio.url}>{audioFilename} <ExternalLink size={16} /></a>
   )
 }
 
@@ -111,54 +111,23 @@ export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponen
   }
 
   function Filename() {
-    if (!existingAudioMatches && existingPosts) {
+    if (hasExistingAudio && !existingAudioMatches) {
       return (
-        <div className='grid gap-2'>
-          {existingPosts.map(({ audio, type, databaseId }) => {
-            const isAudioUpdated = audio?.url !== enclosure.href;
-
-            return (
-              <div className='flex gap-1' key={databaseId}>
-                {existingPosts.length > 1 && (
-                    <Badge variant='outline' className='capitalize'>{type}</Badge>
-                )}
-                {isAudioUpdated && (
-                  <>
-                    {audio?.url ? (
-                      <AudioEditLink audio={audio} />
-                    ) : (
-                      <>
-                        <Badge variant='secondary' className='whitespace-nowrap capitalize'>No Audio</Badge>
-                      </>
-                    )}
-                    <ArrowBigRight className='text-orange-400' />
-                  </>
-                )}
-                <span>{filename}</span>
-              </div>
-            )
-          })}
+        <div className='flex gap-1'>
+          {existingAudio?.url ? (
+            <AudioEditLink audio={existingAudio} />
+          ) : (
+            <>
+              <Badge variant='secondary' className='whitespace-nowrap capitalize'>No Audio</Badge>
+            </>
+          )}
+          <ArrowBigRight className='text-orange-400' />
+          <span title={audioUrl}>{filename}</span>
         </div>
       )
     }
 
-    if (existingPosts) {
-      const postsAudioMap = new Map<number, ApiAudio>();
-
-      existingPosts.forEach(({ audio }) => {
-        postsAudioMap.set(audio.databaseId, audio);
-      })
-
-      return (
-        <div className='grid gap-2'>
-          {[...postsAudioMap.values()].map((audio) => (
-            <AudioEditLink audio={audio} key={audio.databaseId} />
-          ))}
-        </div>
-      )
-    }
-
-    if (existingAudio) {
+    if (hasExistingAudio) {
       return <AudioEditLink audio={existingAudio} key={existingAudio.databaseId} />
     }
 

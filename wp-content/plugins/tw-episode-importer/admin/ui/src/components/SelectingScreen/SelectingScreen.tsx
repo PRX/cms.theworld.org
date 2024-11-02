@@ -27,7 +27,7 @@ function formatDateKey(date: Date) {
 }
 
 async function getApiData(publishDate?: Date, beforeDate?: Date, noCache?: boolean, controllers?: { [k: string]: AbortController }) {
-  const date = (publishDate || new Date());
+  const date = new Date(publishDate);
   const params = new URLSearchParams( !beforeDate ? {
     on: formatDateKey(date)
   } : {
@@ -80,15 +80,15 @@ async function getApiData(publishDate?: Date, beforeDate?: Date, noCache?: boole
 }
 
 export function SelectingScreen() {
-  const { updateAppData, nextStage, playingAudioUrl } = useContext(AppContext);
+  const { updateAppData, nextStage, playingAudioUrl, playing } = useContext(AppContext);
   const { toast, dismiss: dismissToast } = useToast();
   const [audioPlayerToast, setAudioPlayerToast] = useState<ReturnType<typeof toast>>();
   const today = new Date();
   const [queryMonthDate, setQueryMonthDate] = useState(new Date(today.getFullYear(), today.getMonth()));
-  const [publishDate, setPublishDate] = useState(new Date());
+  const [publishDate, setPublishDate] = useState(today);
   const [month, setMonth] = useState(today);
   const publishDateKey = formatDateKey(publishDate);
-  const [apiData, setApiData] = useState<Map<string, ApiData>>();
+  const [apiData, setApiData] = useState<Map<string, ApiData>>(new Map());
   const publishDateData = apiData?.get(publishDateKey);
   const publishDateDataRefreshTimeout = useRef<ReturnType<typeof setTimeout>>();
   const { episodes, segments } = publishDateData || {};
@@ -126,30 +126,37 @@ export function SelectingScreen() {
       date
     };
   })
+  const loadedDays = datesData.map(({ date }) => date);
+  const loadedClassNames = '!animate-none after:hidden';
   const importableDays = datesData
     .filter((data) => data.hasImportableItems )
     .map(({ date }) => date );
-  const importableClassNames = 'border-2 border-primary';
+  const importableClassNames = 'border-2 border-primary hover:bg-primary/60 ';
   const existsDays = datesData
     .filter((data) => data.hasExistingItems && !data.hasImportableItems)
     .map(({ date }) => date );
-  const existsClasNames = 'border-2 border-lime-500';
+  const existsClassNames = 'border-2 border-lime-500';
   const importedDays = datesData
     .filter((data) => data.hasImportedItems)
     .map(({ date }) => date );
-  const importedClassNames = 'bg-lime-500';
+  const importedClassNames = 'bg-lime-500 hover:!bg-lime-500/60';
   const updatedDays = datesData
     .filter((data) => data.hasUpdateableItems)
     .map(({ date }) => date );
-  const updatedClassNames = 'border-2 border-orange-400';
+  const updatedClassNames = 'border-2 border-orange-400 bg-orange-400 hover:!bg-orange-400/60';
   const partialyImportedDays = datesData
     .filter((data) => data.hasExistingItems && data.hasImportableItems)
     .map(({ date }) => date );
   const partialyImportedClassNames = 'border-2 border-dotted';
   const playingAudioDays = playingAudioUrlItemRow ? [new Date(playingAudioUrlItemRow.data.datePublished)] : [];
-  const playingAudioClassName = 'ring-1 ring-offset-2 ring-orange-500 !rounded-full';
+  const playingAudioClassName = cn(`before:place-content-center before:absolute before:top-[-4px] before:right-[-4px] before:w-4 before:h-4 before:bg-orange-400 before:text-white before:rounded-full before:leading-[0]`, {
+    "before:content-['⏵']": !playing,
+    "before:content-['⏸']": playing,
+  });
   const getEpisodesController = useRef<AbortController>();
   const getSegmentController = useRef<AbortController>();
+
+  console.log('Rendering...', publishDateData);
 
   /**
    * Clean up stuff.
@@ -231,8 +238,6 @@ export function SelectingScreen() {
   }, [publishDate, publishDateKey, apiData, importEpisodeGuid]);
 
   useEffect(() => {
-    setLoading(true);
-
     if (publishDateDataRefreshTimeout.current) {
       clearTimeout(publishDateDataRefreshTimeout.current);
     }
@@ -249,44 +254,60 @@ export function SelectingScreen() {
       }
 
       getEpisodesController.current = controllers.episodes;
-      getSegmentController.current = controllers.segments
+      getSegmentController.current = controllers.segments;
 
-      const data = await getApiData(queryAfterDate, queryBeforeDate, false, controllers);
-      const tempData = new Map<string, ApiData>(apiData);
+      queryBeforeDate.setDate(queryBeforeDate.getDate() - 1);
 
-      data?.episodes?.forEach((episode) => {
-        const dateKey = episode.dateKey || formatDateKey(new Date(episode.datePublished));
-        const dateData = tempData.get(dateKey) || {} as ApiData;
+      const requestDate = new Date(Math.min(...[queryBeforeDate.getTime(), today.getTime()]));
+      const requests = [];
 
-        dateData.date = new Date(`${dateKey}T12:00:00Z`);
-
-        dateData.episodes = dateData?.episodes || [];
-        if (!dateData.episodes.find((e) => e.guid === episode.guid)) {
-          dateData.episodes.push(episode);
-        }
-
-        tempData.set(dateKey, dateData);
-      });
-
-      data?.segments?.forEach((segment) => {
-        const dateKey = segment.dateKey || formatDateKey(new Date(segment.datePublished));
-        const dateData = tempData.get(dateKey) || {} as ApiData;
-
-        dateData.date = new Date(`${dateKey}T12:00:00Z`);
-
-        dateData.segments = dateData?.segments || [];
-        if (!dateData.segments.find((s) => s.guid === segment.guid)) {
-          dateData.segments.push(segment);
-        }
-
-        tempData.set(dateKey, dateData);
-      });
-
-      if (tempData.size) {
-        setApiData(tempData);
+      while (requestDate >= queryAfterDate) {
+        requests.push( getApiData(requestDate, undefined, false, controllers).then(handleData) );
+        requestDate.setDate(requestDate.getDate() - 1);
       }
 
-      setLoading(!data && controllers.episodes.signal.aborted || controllers.segments.signal.aborted);
+      function handleData(data: ApiData) {
+        if (!data) return;
+
+        const tempData = new Map<string, ApiData>(apiData);
+        const dateKey = formatDateKey(new Date(data.date));
+
+        if (!tempData.has(dateKey)) {
+          tempData.set(dateKey, { date: data.date, episodes: [], segments: [] });
+        }
+
+        data?.episodes?.forEach((episode) => {
+          const dateData = tempData.get(dateKey) || {} as ApiData;
+
+          dateData.date = new Date(`${dateKey}T12:00:00Z`);
+
+          dateData.episodes = dateData?.episodes || [];
+          if (!dateData.episodes.find((e) => e.guid === episode.guid)) {
+            dateData.episodes.push(episode);
+          }
+
+          tempData.set(dateKey, dateData);
+        });
+
+        data?.segments?.forEach((segment) => {
+          const dateData = tempData.get(dateKey) || {} as ApiData;
+
+          dateData.date = new Date(`${dateKey}T12:00:00Z`);
+
+          dateData.segments = dateData?.segments || [];
+          if (!dateData.segments.find((s) => s.guid === segment.guid)) {
+            dateData.segments.push(segment);
+          }
+
+          tempData.set(dateKey, dateData);
+        });
+
+        console.log('date data recieved', {...data});
+
+        setApiData((prevData) => new Map([...(prevData || []), ...tempData]));
+      }
+
+      await Promise.all(requests);
     })()
   }, [queryMonthDate]);
 
@@ -366,7 +387,7 @@ export function SelectingScreen() {
       <CardContent className="flex justify-between sticky top-8 z-10 p-6 bg-card/60 backdrop-blur-md shadow">
         <div className='flex gap-2 items-center'>
           <DatePicker
-            disabled={loading}
+            // disabled={loading}
             defaultMonth={publishDate}
             month={month}
             selected={publishDate}
@@ -377,6 +398,7 @@ export function SelectingScreen() {
             onMonthChange={handleMonthChange}
             showOutsideDays={false}
             modifiers={{
+              loaded: loadedDays,
               exists: existsDays,
               imported: importedDays,
               partialyImported: partialyImportedDays,
@@ -385,8 +407,9 @@ export function SelectingScreen() {
               playingAudio: playingAudioDays
             }}
             modifiersClassNames={{
-              selected: 'bg-primary text-primary-foreground hover:!bg-primary/80 hover:!text-primary-foreground',
-              exists: existsClasNames,
+              // selected: 'bg-primary text-primary-foreground hover:!bg-primary/80 hover:!text-primary-foreground',
+              loaded: loadedClassNames,
+              exists: existsClassNames,
               imported: importedClassNames,
               partialyImported: partialyImportedClassNames,
               updated: updatedClassNames,
@@ -410,13 +433,13 @@ export function SelectingScreen() {
             variant='ghost'
             className='rounded-full text-primary hover:bg-primary hover:text-primary-foreground'
             title='Refresh Selected Date Data'
-            disabled={loading}
+            disabled={loading || !publishDateData}
             onClick={() => {
             fetchDateData(publishDate);
           }}>
-            <RefreshCw className={cn({ 'animate-spin': loading })} />
+            <RefreshCw className={cn({ 'animate-spin': loading || !publishDateData })} />
           </Button>
-          {loading && (
+          {(loading || !publishDateData) && (
             <Badge variant='outline' className=' flex gap-2'>
               Loading episodes and segments from Dovetail...
             </Badge>
@@ -444,7 +467,7 @@ export function SelectingScreen() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {!loading || episodes ? (
+              {publishDateData ? (
                 !!episodes?.length ? episodes.map((episode) => {
                   const selected = episode.guid === importEpisodeGuid;
                   return (
@@ -489,7 +512,7 @@ export function SelectingScreen() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {!loading || segments ? (
+            {publishDateData ? (
               !!segments?.length ? segments.sort(sortByEnclosureFilename).map((segment) => {
                 const selected = !!importSegmentGuids?.has(segment.guid);
                 return (

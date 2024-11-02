@@ -31,7 +31,7 @@ async function postApiData(endPoint: string, body: object): Promise<Maybe<ApiEpi
     .then((res) => {
       return res.data || null;
     })
-    .catch((res) => {
+    .catch((): null => {
       return null;
     });
 }
