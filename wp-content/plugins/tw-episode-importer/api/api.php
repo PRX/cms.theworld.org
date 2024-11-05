@@ -782,7 +782,7 @@ function tw_episode_importer_parse_api_item( $api_item, $post_type ) {
 	) : null;
 	$post               = is_array( $post ) && ! empty( $post ) ? array_shift( $post ) : null;
 	$was_imported       = is_array( $post ) && is_array( $audio ) ? true : false;
-	$audio_is_different = is_array( $audio ) && isset( $audio['url'] ) && $api_item->_links->enclosure->href !== $audio['url'];
+	$audio_is_different = is_array( $audio ) && isset( $audio['url'] ) && array_pop( explode( '/', $audio['url'] ) ) !== $audio_filename;
 	$has_updated_audio  = is_array( $audio ) &&
 		isset( $audio['dateUpdated'] ) &&
 		$audio_is_different;
@@ -798,8 +798,8 @@ function tw_episode_importer_parse_api_item( $api_item, $post_type ) {
 		'title'           => trim( $title ),
 		'excerpt'         => property_exists( $api_item, 'subtitle' ) ? trim( $api_item->subtitle ) : null,
 		'content'         => property_exists( $api_item, 'description' ) ? trim( $api_item->description ) : null,
-		'datePublished'   => $date_published,
-		'dateUpdated'     => $date_updated ?? null,
+		'datePublished'   => ( new DateTime( $date_published ) )->format( 'c' ),
+		'dateUpdated'     => $date_updated ? ( new DateTime( $date_published ) )->format( 'c' ) : null,
 		'dateBroadcast'   => $audio_broadcast_date ? $audio_broadcast_date->format( 'c' ) : null,
 		'dateKey'         => $audio_broadcast_date_key,
 		'author'          => property_exists( $api_item, 'author' ) && property_exists( $api_item->author, 'name' ) ? (array) $api_item->author : null,
@@ -938,10 +938,6 @@ function tw_episode_importer_get_existing_post_data( $post_type, $guid, $audio_k
 	$post                 = null;
 	$result               = null;
 
-	error_log( '>>>>>>> ' . $post_type );
-	error_log( '>>>>>>> ' . $guid );
-	error_log( '>>>>>>> ' . $audio_key );
-
 	if ( $audio_id ) {
 		$audio_post = get_post( $audio_id );
 
@@ -975,6 +971,7 @@ function tw_episode_importer_get_existing_post_data( $post_type, $guid, $audio_k
 			// Dovetail guids should not contain a period by default.
 		if ( $row && strpos( $row->guid, '.' ) >= 0 ) {
 			// The found post is not from a previous import and should be safe to work with.
+			$audio_id   = $row->ID;
 			$audio_post = $row;
 		}
 	}
@@ -1033,9 +1030,6 @@ function tw_episode_importer_get_existing_post_data( $post_type, $guid, $audio_k
 		);
 		$parent_posts = get_posts( $posts_args );
 
-		error_log( print_r( $ids, true ) );
-		// error_log( print_r( $parent_posts, true ) );
-
 		foreach ( $parent_posts as $post ) {
 			$post_data = array(
 				'guid'          => $post->guid,
@@ -1054,9 +1048,6 @@ function tw_episode_importer_get_existing_post_data( $post_type, $guid, $audio_k
 			}
 
 			$post_audio_matches = (int) $post_audio_id === (int) $audio_id;
-
-			error_log( $post_audio_id . ' / ' . $audio_id );
-			error_log( $post_audio_matches ? 'exists' : 'missing' );
 
 			if ( $post_audio_matches ) {
 				// Audio is attached and still exists.

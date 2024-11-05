@@ -16,6 +16,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/components/ui/use-toast';
 import { AppContext } from '@/lib/contexts/AppContext';
+import { CalendarDayContent } from '@/components/CalendarDayContent';
 import { cn } from '@/lib/utils';
 
 function formatDateKey(date: Date) {
@@ -149,14 +150,12 @@ export function SelectingScreen() {
     .map(({ date }) => date );
   const partialyImportedClassNames = 'border-2 border-dotted';
   const playingAudioDays = playingAudioUrlItemRow ? [new Date(playingAudioUrlItemRow.data.datePublished)] : [];
-  const playingAudioClassName = cn(`before:place-content-center before:absolute before:top-[-4px] before:right-[-4px] before:w-4 before:h-4 before:bg-orange-400 before:text-white before:rounded-full before:leading-[0]`, {
+  const playingAudioClassName = cn(`before:place-content-center before:absolute before:top-[-4px] before:right-[-4px] before:w-3.5 before:h-3.5 before:bg-orange-400 before:text-white before:rounded-full before:leading-[0]`, {
     "before:content-['⏵']": !playing,
     "before:content-['⏸']": playing,
   });
   const getEpisodesController = useRef<AbortController>();
   const getSegmentController = useRef<AbortController>();
-
-  console.log('Rendering...', publishDateData);
 
   /**
    * Clean up stuff.
@@ -302,8 +301,6 @@ export function SelectingScreen() {
           tempData.set(dateKey, dateData);
         });
 
-        console.log('date data recieved', {...data});
-
         setApiData((prevData) => new Map([...(prevData || []), ...tempData]));
       }
 
@@ -407,13 +404,13 @@ export function SelectingScreen() {
               playingAudio: playingAudioDays
             }}
             modifiersClassNames={{
-              // selected: 'bg-primary text-primary-foreground hover:!bg-primary/80 hover:!text-primary-foreground',
+            //   // selected: 'bg-primary text-primary-foreground hover:!bg-primary/80 hover:!text-primary-foreground',
               loaded: loadedClassNames,
-              exists: existsClassNames,
-              imported: importedClassNames,
-              partialyImported: partialyImportedClassNames,
-              updated: updatedClassNames,
-              importable: importableClassNames,
+            //   exists: existsClassNames,
+            //   imported: importedClassNames,
+            //   partialyImported: partialyImportedClassNames,
+            //   updated: updatedClassNames,
+            //   importable: importableClassNames,
               playingAudio: playingAudioClassName
             }}
             footer={!isSameMonth(today, month) && (
@@ -427,6 +424,9 @@ export function SelectingScreen() {
                 >Most Recent <ArrowRightToLine /></Button>
               </div>
             )}
+            // components={{
+            //   Day: ({ ...props }) => <CalendarDay {...props} />,
+            // }}
           />
           <Button
             size='icon'
