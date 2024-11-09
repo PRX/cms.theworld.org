@@ -80,6 +80,12 @@
       "rlig" 1,
       "calt" 1;
   }
+  a:focus {
+    box-shadow: none;
+  }
+  a:focus-visible {
+    @apply ring ring-offset-2 rounded;
+  }
 }
 
 

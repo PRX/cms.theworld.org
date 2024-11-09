@@ -21,7 +21,6 @@ export function CalendarDayContent(props: CalendarDayContentProps): JSX.Element 
     formatters: { formatDay }
   } = useDayPicker();
   const { activeModifiers } = props;
-  const { loaded, exists, imported, partialyImported, updated, importable } = activeModifiers;
 
   /** Custom Modifiers:
    * - loaded
@@ -32,14 +31,13 @@ export function CalendarDayContent(props: CalendarDayContentProps): JSX.Element 
    * - importable
    * - playingAudio
   */
-
-  console.log(props);
+  const { imported, partialyImported, updated, importable } = activeModifiers;
 
   return (<>
     {formatDay(props.date, { locale })}
     <span className="absolute left-[-4px] right-[-4px] bottom-[-4px] h-2 flex gap-[2px] items-end justify-end">
       {partialyImported && (
-        <span className="w-2 h-2 rounded-full border-2 border-primary"></span>
+        <span className="w-2 h-2 rounded-full bg-primary"></span>
       )}
       {importable && !partialyImported && (
         <span className="w-3.5 h-3.5 rounded-full bg-primary"></span>

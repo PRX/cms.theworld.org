@@ -42,17 +42,22 @@ export type ApiCategory = {
 export type ApiAudio = {
   guid: string,
   databaseId: number,
+  imported: boolean,
   editLink: string,
+  datePublished: string,
+  dateUpdated: string,
   url: string
 }
 
 export type ApiPost = {
   guid: string,
   databaseId: number,
-  editLink: string,
   type: string,
   status: 'publish' | 'future' | 'draft' | 'pending' | 'private' | 'trash' | 'auto-draft' | 'inherit',
-  audio: Maybe<ApiAudio>
+  imported: boolean,
+  editLink: string,
+  datePublished: string,
+  dateUpdated: string,
 }
 
 export type ApiEpisode = {

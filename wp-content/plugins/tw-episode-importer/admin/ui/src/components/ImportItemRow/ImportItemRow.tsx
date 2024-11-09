@@ -65,15 +65,15 @@ function AudioEditLink({ audio }: AudioEditLinkProps) {
 export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponent, selected, onImportDataChange }: ImportItemRowProps) {
   const { state } = useContext(AppContext);
   const [rowData, setRowData] = useState(rd || parseApiEpisode(data));
-  const { existingPosts, existingPost, existingAudio, enclosure, categories, dateBroadcast, datePublished } = rowData?.data || data || {};
+  const { existingPosts, existingPost, existingAudio, enclosure, categories, dateBroadcast, datePublished, dateKey } = rowData?.data || data || {};
   const { data: appData } = state || {};
   const { taxonomies } = appData || {};
   const hasMatchingDates = !dateBroadcast || isSameDay(new Date(dateBroadcast.split('T')[0]), new Date(datePublished.split('T')[0]));
   const existingTermsMap = new Map<string, ApiTerm[]>();
   const hasExisitingPost = !!existingPost;
-  const hasExistingAudio = !!existingAudio;
+  const hasExistingAudio = !!existingAudio?.url;
   const existingAudioMatches = hasExistingAudio && existingAudio.url.split('/').pop() === enclosure?.href.split('/').pop();
-  const completed = hasExisitingPost && existingAudioMatches;
+  const completed = (!dateKey || hasExisitingPost) && existingAudioMatches;
   const fadeOutRow = !(completed) && !selected;
   const hilightUpdatedRow = hasExisitingPost && !existingAudioMatches && selected;
 
@@ -134,7 +134,7 @@ export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponen
       return <AudioEditLink audio={existingAudio} key={existingAudio.databaseId} />
     }
 
-    return filename;
+    return <span title={audioUrl}>{filename}</span>;
   }
 
   if (!rowData) return (
@@ -181,8 +181,11 @@ export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponen
           <div className='font-bold text-wrap-balance'>{title}</div>
           {(terms || existingPosts) && (
             <div className='inline-flex flex-wrap content-start items-center gap-2'>
-              {existingPosts?.map(({ databaseId, editLink, type }) => (
+              {existingPosts?.filter(({ imported }) => imported).map(({ databaseId, editLink, type }) => (
                 <a href={editLink} target={`edit:${databaseId}`} key={databaseId}><Badge className='capitalize inline-flex gap-2'>{type} <ExternalLink className='inline-block' size={16} /></Badge></a>
+              ))}
+              {existingPosts?.filter(({ imported }) => !imported).map(({ databaseId, editLink, type }) => (
+                <a href={editLink} target={`edit:${databaseId}`} key={databaseId}><Badge variant='secondary' className='capitalize inline-flex gap-2 text-primary'>{type} <ExternalLink className='inline-block' size={16} /></Badge></a>
               ))}
               {terms?.filter((term) => !!term.taxonomy).map((term) => (
                 <Badge variant='secondary' className='capitalize' key={term.name}>{term.name} ({term.taxonomy.label})</Badge>
@@ -285,7 +288,7 @@ export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponen
       <TableCell>
         <div className='inline-flex flex-wrap gap-2'>
           {contributors ? contributors.map((contributor) => (
-            <ContributorBadge data={contributor} key={contributor.name} />
+            <ContributorBadge data={contributor} key={`${contributor.name}:${contributor.id}`} />
           )) : (
             <Badge variant='secondary' className='whitespace-nowrap'>No Contributors</Badge>
           )}

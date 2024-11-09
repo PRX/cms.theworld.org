@@ -1,90 +1,31 @@
 import type { ApiData, ApiEpisode } from '@/types/api/api';
 import type { ItemRow } from '@/types/state/itemRow';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import axios, { CanceledError } from 'axios';
 import { isSameMonth, isSameDay } from 'date-fns';
-import { ArrowRight, ArrowRightToLine, FileQuestion, RefreshCw } from 'lucide-react';
+import { ArrowRight, ArrowRightToLine, Check, FileQuestion, RefreshCw, Repeat2, EllipsisVertical, RotateCcw } from 'lucide-react';
 import { DatePicker } from '@/components/DatePicker';
 import { ImportItemRow } from '@/components/ImportItemRow';
 import { PlayButton } from '@/components/PlayButton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/components/ui/use-toast';
 import { AppContext } from '@/lib/contexts/AppContext';
-import { CalendarDayContent } from '@/components/CalendarDayContent';
 import { cn } from '@/lib/utils';
+import { formatDateKey } from '@/lib/utils/format/formatDateKey';
+import { getApiData } from '@/lib/api';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
-function formatDateKey(date: Date) {
-  const year = date.getFullYear();
-  const month = `0${date.getMonth() + 1}`.slice(-2);
-  const day = `0${date.getDate()}`.slice(-2);
-
-  return `${year}-${month}-${day}`;
-}
-
-async function getApiData(publishDate?: Date, beforeDate?: Date, noCache?: boolean, controllers?: { [k: string]: AbortController }) {
-  const date = new Date(publishDate);
-  const params = new URLSearchParams( !beforeDate ? {
-    on: formatDateKey(date)
-  } : {
-    after: formatDateKey(date),
-    before: formatDateKey(beforeDate)
-  })
-  const apiUrlBase = window?.appLocalizer.apiUrl;
-  const episodesApiUrl = new URL('episodes', apiUrlBase);
-  const segmentsApiUrl = new URL('segments', apiUrlBase);
-  const options = {
-    headers: {
-      'X-Wp-Nonce': window.appLocalizer.nonce
-    }
-  };
-  const episodesOptions = {
-    ...options,
-    ...(controllers?.episodes && { signal: controllers.episodes.signal })
-  };
-  const segmentsOptions = {
-    ...options,
-    ...(controllers?.episodes && { signal: controllers.episodes.signal })
-  };
-
-  if (noCache) {
-    params.set('cb', `${(new Date()).getTime()}`);
-  }
-
-  episodesApiUrl.search = params.toString();
-  segmentsApiUrl.search = params.toString();
-
-  async function fetchData(): Promise<ApiData> {
-    return await Promise.all([
-      axios.get<ApiEpisode[]>(episodesApiUrl.toString(), episodesOptions).then((res) => res.status === 200 ? res.data : null),
-      axios.get<ApiEpisode[]>(segmentsApiUrl.toString(), segmentsOptions).then((res) => res.status === 200 ? res.data : null),
-    ])
-    .then((res) => {
-      const [episodes, segments] = res;
-      return {
-        date,
-        episodes,
-        segments
-      }
-    })
-    .catch((res) => {
-      return res instanceof CanceledError ? null : fetchData();
-    });
-  }
-
-  return fetchData();
-}
+const today = new Date();
 
 export function SelectingScreen() {
   const { updateAppData, nextStage, playingAudioUrl, playing } = useContext(AppContext);
   const { toast, dismiss: dismissToast } = useToast();
   const [audioPlayerToast, setAudioPlayerToast] = useState<ReturnType<typeof toast>>();
-  const today = new Date();
   const [queryMonthDate, setQueryMonthDate] = useState(new Date(today.getFullYear(), today.getMonth()));
   const [publishDate, setPublishDate] = useState(today);
   const [month, setMonth] = useState(today);
@@ -93,24 +34,29 @@ export function SelectingScreen() {
   const publishDateData = apiData?.get(publishDateKey);
   const publishDateDataRefreshTimeout = useRef<ReturnType<typeof setTimeout>>();
   const { episodes, segments } = publishDateData || {};
-  const [loading, setLoading] = useState(false);
-  const [importRowsMap, setImportRowsMap] = useState(new Map<string, ItemRow>());
+  console.log(publishDateKey, episodes, segments);
+  const canRollbackEpisodes = !!(episodes || []).find(({ existingAudio, existingPost }) => existingPost?.imported || existingAudio?.imported);
+  const canRollbackSegments = !!(segments || []).find(({ existingAudio, existingPost }) => existingPost?.imported || existingAudio?.imported);
+  const canRollback = canRollbackEpisodes || canRollbackSegments;
+  const [loading, setLoading] = useState<string>();
+  const [importRowsMap, setImportRowsMap] = useState<Map<string, ItemRow>>(new Map());
   const [importEpisodeGuid, setImportEpisodeGuid] = useState<string>();
   const [importSegmentGuids, setImportSegmentGuids] = useState<Set<string>>();
   const importEpisode = importRowsMap.get(importEpisodeGuid);
-  const importSegments = [...(importSegmentGuids || [])].map((guid) => importRowsMap.get(guid));
+  const importSegments = [...(importSegmentGuids || [])].map((guid) => importRowsMap.get(guid)).filter(v => !!v);
   const allImports = [
     ...(importEpisode ? [importEpisode] : []),
     ...importSegments
   ];
-  const haveImports = allImports.find(({ data: { existingPost } }) => !existingPost);
-  const haveUpdates = allImports.find(({ data: { hasUpdatedAudio } }) => hasUpdatedAudio);
+  const haveImports = !!allImports.find(({ data: { wasImported } }) => !wasImported);
+  const haveUpdates = !!allImports.find(({ data: { hasUpdatedAudio, existingAudio, existingPost } }) => hasUpdatedAudio || (existingPost && !existingAudio));
   const buttonLabel = (haveImports && haveUpdates && 'Import & Update') || (haveImports && 'Import') || (haveUpdates && 'Update') || null;
+  const showMenu = canRollback;
   const playingAudioUrlInView = !![...(episodes || []), ...(segments || [])].find(({ enclosure }) => playingAudioUrl === enclosure.href);
   const playingAudioUrlItemRow = [...importRowsMap.values()].find((itemRow) => itemRow.audioUrl === playingAudioUrl);
   const datesData = [...(apiData?.values() || [])].map(({ episodes, segments, date }) => {
     const allItems = [...(episodes || []), ...(segments || [])];
-    const hasImportableItems = !!allItems.find(({ existingPost }) => !existingPost);
+    const hasImportableItems = !!allItems.find(({ wasImported }) => !wasImported);
     const hasExistingItems = !!allItems.find(({ existingPost }) => !!existingPost);
     const hasImportedItems = !!allItems.find(({ wasImported }) => wasImported);
     const hasUpdateableItems = !!allItems.find(({ hasUpdatedAudio }) => hasUpdatedAudio);
@@ -193,48 +139,67 @@ export function SelectingScreen() {
   }, [playingAudioUrlItemRow, playingAudioUrlInView, audioPlayerToast]);
 
   useEffect(() => {
-    const dateData = apiData?.get(publishDateKey);
+    // Make sure import selections are cleared between date changes.
+    setImportRowsMap(new Map());
+  }, [publishDate])
 
-    if (!dateData) {
+  useEffect(() => {
+    if (!publishDateData) {
       setImportEpisodeGuid(null);
       return;
     };
 
-    const importEpisode = dateData.episodes?.find(({ existingPost, hasUpdatedAudio, enclosure: { episodeKey } }) => {
-      const isImportingOrUpdated = !existingPost || hasUpdatedAudio;
-      const hasImportingSegment = !!dateData.segments?.find(({ enclosure, existingPost }) => enclosure.episodeKey === episodeKey && !existingPost);
+    const importEpisode = publishDateData.episodes?.find(({ wasImported, hasUpdatedAudio, enclosure: { episodeKey } }) => {
+      const isImportingOrUpdated = !wasImported || hasUpdatedAudio;
+      const hasImportingSegment = !!publishDateData.segments?.find(({ enclosure, wasImported: segmentImported }) => enclosure.episodeKey === episodeKey && !segmentImported);
       return isImportingOrUpdated || hasImportingSegment;
+    });
+    const importSegments = publishDateData.segments?.filter(({ enclosure, wasImported, hasUpdatedAudio }) => {
+      const episodeIsSelected = !!importEpisode && enclosure.episodeKey === importEpisode.enclosure.episodeKey;
+      return episodeIsSelected || !wasImported || hasUpdatedAudio;
     });
 
     setImportEpisodeGuid(importEpisode?.guid || null);
+    setImportSegmentGuids(new Set(importSegments.map(({ guid }) => guid)));
 
-  }, [publishDate, publishDateKey, apiData]);
+  }, [publishDateData]);
 
   useEffect(() => {
-    const dateData = apiData?.get(publishDateKey);
+    if (!episodes?.length) {
+      setImportEpisodeGuid(null);
+      return;
+    };
 
-    if (!dateData) {
+    const selectableSegments = importSegments?.filter(({ data: { wasImported }}) => !wasImported);
+
+    const importEpisode = episodes.find(({ enclosure: { episodeKey } }) => {
+      const hasImportingSegment = !!selectableSegments?.find(({ data: { enclosure, wasImported } }) => enclosure.episodeKey === episodeKey && !wasImported);
+
+      return hasImportingSegment;
+    });
+
+    setImportEpisodeGuid((currentGuid) => importEpisode?.guid || currentGuid || null);
+
+  }, [episodes, importSegments])
+
+  useEffect(() => {
+    if (!segments?.length) {
       setImportSegmentGuids(null);
       return;
     };
 
-    const episode = dateData.episodes?.find(({ guid }) => guid === importEpisodeGuid);
+    const episode = publishDateData.episodes?.find(({ guid }) => guid === importEpisodeGuid);
 
-    setImportSegmentGuids((guids) => {
-      const newGuids = new Set(guids);
+    const importSegments = segments.filter(({ enclosure }) => {
+      const episodeIsSelected = !!episode && enclosure.episodeKey === episode.enclosure.episodeKey;
+      return episodeIsSelected;
+    });
 
-      newGuids.clear();
+    if (importSegments.length) {
+      setImportSegmentGuids(new Set(importSegments.map(({ guid }) => guid)));
+    }
 
-      const importSegments = dateData.segments?.filter(({ enclosure, existingPost, hasUpdatedAudio }) => {
-        const episodeIsSelected = !!episode && enclosure.episodeKey === episode.enclosure.episodeKey;
-        return episodeIsSelected || !existingPost || hasUpdatedAudio;
-      });
-
-      importSegments?.map((segment) => newGuids.add(segment.guid));
-
-      return newGuids;
-    })
-  }, [publishDate, publishDateKey, apiData, importEpisodeGuid]);
+  }, [segments, importEpisodeGuid]);
 
   useEffect(() => {
     if (publishDateDataRefreshTimeout.current) {
@@ -319,10 +284,10 @@ export function SelectingScreen() {
         fetchDateData(publishDate);
       }, 60000)
     }
-  }, [loading, publishDateData, publishDate]);
+  }, [loading, publishDateData, publishDate, today]);
 
   function fetchDateData(date: Date) {
-    setLoading(true);
+    setLoading(`Refreshing data for ${publishDate.toLocaleDateString(undefined, { dateStyle: 'medium' })}`);
 
     (async () => {
       const dateKey = formatDateKey(date);
@@ -333,9 +298,21 @@ export function SelectingScreen() {
           currentApiData.set(dateKey, data);
           return new Map(currentApiData);
         });
+        setImportRowsMap((currentMap) => {
+          const { episodes : e, segments: s } = data;
+          [...(e || []), ...(s || [])].forEach((d) => {
+            const { guid } = d;
+            const ir = currentMap.get(guid);
+            if (ir) {
+              ir.data = d;
+              currentMap.set(guid, ir);
+            }
+          });
+          return new Map(currentMap);
+        })
       }
 
-      setLoading(false);
+      setLoading(null);
     })()
   }
 
@@ -359,7 +336,7 @@ export function SelectingScreen() {
   function handleRowChange(newData: ItemRow) {
     setImportRowsMap((currentMap) => {
       currentMap.set(newData.guid, newData);
-      return currentMap;
+      return new Map(currentMap);
     });
   }
 
@@ -372,6 +349,8 @@ export function SelectingScreen() {
     });
     nextStage();
   }
+
+  console.log('To be imported >>>', importEpisode, importSegments);
 
   return (
     <Card className='overflow-clip'>
@@ -413,15 +392,24 @@ export function SelectingScreen() {
             //   importable: importableClassNames,
               playingAudio: playingAudioClassName
             }}
-            footer={!isSameMonth(today, month) && (
-              <div className='flex justify-end pt-2'>
-                <Button
-                  size='sm'
-                  className='flex gap-2'
-                  onClick={() => {
-                    setMonth(today);
-                  }}
-                >Most Recent <ArrowRightToLine /></Button>
+            footer={(
+              <div className='divide-y'>
+                <div className='flex gap-2 flex-wrap max-w-[280px] mt-4'>
+                  <Badge variant='outline' className='text-xs capitalize ps-1'><span className='w-4 h-4 rounded-full bg-primary me-2'></span> Has imports</Badge>
+                  <Badge variant='outline' className='text-xs capitalize ps-1'><span className='inline-grid place-items-center w-4 h-4 rounded-full bg-green-500 me-2 text-white'><Check className="w-3 h-3" /></span> Completed imports</Badge>
+                  <Badge variant='outline' className='text-xs capitalize ps-1'><span className='inline-grid place-items-center w-4 h-4 rounded-full bg-orange-400 me-2 text-white'><Repeat2 className="w-3 h-3" /></span> Has updates</Badge>
+                </div>
+                {!isSameMonth(today, month) && (
+                  <div className='flex justify-end mt-4 pt-2'>
+                    <Button
+                      size='sm'
+                      className='flex gap-2'
+                      onClick={() => {
+                        handleMonthChange(today);
+                      }}
+                    >Most Recent <ArrowRightToLine /></Button>
+                  </div>
+                )}
               </div>
             )}
             // components={{
@@ -432,22 +420,65 @@ export function SelectingScreen() {
             size='icon'
             variant='ghost'
             className='rounded-full text-primary hover:bg-primary hover:text-primary-foreground'
-            title='Refresh Selected Date Data'
-            disabled={loading || !publishDateData}
+            title={`Refresh data for ${publishDate.toLocaleDateString(undefined, { dateStyle: 'medium' })}`}
+            disabled={!!loading || !publishDateData}
             onClick={() => {
-            fetchDateData(publishDate);
-          }}>
+              fetchDateData(publishDate);
+            }}
+          >
             <RefreshCw className={cn({ 'animate-spin': loading || !publishDateData })} />
           </Button>
-          {(loading || !publishDateData) && (
-            <Badge variant='outline' className=' flex gap-2'>
-              Loading episodes and segments from Dovetail...
+          {(loading) && (
+            <Badge variant='outline' className='flex gap-2'>
+              {loading}...
             </Badge>
           )}
         </div>
-        {(haveImports || haveUpdates) && (
-          <Button size="lg" onClick={handleImportClick}> {buttonLabel} <ArrowRight /></Button>
-        )}
+        <div className='flex gap-2 items-center'>
+          {(haveImports || haveUpdates) && (
+            <Button onClick={handleImportClick}> {buttonLabel} <ArrowRight /></Button>
+          )}
+          {showMenu && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size='icon' variant='ghost'>
+                  <EllipsisVertical />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align='end' side='right' className='w-56'>
+                <DropdownMenuGroup>
+                  {canRollback && (
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger>
+                        <RotateCcw />
+                        <span>Rollback...</span>
+                      </DropdownMenuSubTrigger>
+                      <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                          {canRollbackEpisodes && canRollbackSegments && (
+                            <DropdownMenuItem>
+                              <span>All</span>
+                            </DropdownMenuItem>
+                          )}
+                          {canRollbackEpisodes && (
+                            <DropdownMenuItem>
+                              <span>Episodes</span>
+                            </DropdownMenuItem>
+                          )}
+                          {canRollbackSegments && (
+                            <DropdownMenuItem>
+                              <span>Segments</span>
+                            </DropdownMenuItem>
+                          )}
+                        </DropdownMenuSubContent>
+                      </DropdownMenuPortal>
+                    </DropdownMenuSub>
+                  )}
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
       </CardContent>
       <CardContent className='pt-6'>
 
@@ -469,14 +500,14 @@ export function SelectingScreen() {
             <TableBody>
               {publishDateData ? (
                 !!episodes?.length ? episodes.map((episode) => {
-                  const selected = episode.guid === importEpisodeGuid;
+                  const selected =  episode.guid === importEpisodeGuid;
                   return (
                     <ImportItemRow data={episode} rowData={importRowsMap.get(episode.guid)}
                       importAs='episode'
                       selectInputComponent={<RadioGroupItem value={episode.guid} checked={selected} />}
                       selected={selected}
                       onImportDataChange={handleRowChange}
-                      key={episode.guid}
+                      key={[episode.guid, episode.existingAudio?.databaseId, episode.existingPost?.databaseId, episode.existingPosts?.length].join(':')}
                     />
                   )
                 }) : (
@@ -515,6 +546,8 @@ export function SelectingScreen() {
             {publishDateData ? (
               !!segments?.length ? segments.sort(sortByEnclosureFilename).map((segment) => {
                 const selected = !!importSegmentGuids?.has(segment.guid);
+                const key = [segment.guid, segment.existingAudio?.databaseId, segment.existingPost?.databaseId, segment.existingPosts?.length].join(':');
+                console.log(key);
                 return (
                   <ImportItemRow data={segment} rowData={importRowsMap.get(segment.guid)}
                     importAs='segment'
@@ -535,7 +568,7 @@ export function SelectingScreen() {
                     )}
                     selected={selected}
                     onImportDataChange={handleRowChange}
-                    key={segment.guid}
+                    key={key}
                   />
                 )
               }) : (

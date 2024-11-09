@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import ConfettiExplosion from 'react-confetti-explosion';
 import axios from 'axios';
 import { ArrowLeft, Edit, RotateCw } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ImportItemRow } from '@/components/ImportItemRow';
 import { Progress } from '@/components/ui/progress';
@@ -28,6 +28,24 @@ async function postApiData(endPoint: string, body: object): Promise<Maybe<ApiEpi
   };
 
   return axios.post<ApiEpisode>(apiUrl.toString(), body, options)
+    .then((res) => {
+      return res.data || null;
+    })
+    .catch((): null => {
+      return null;
+    });
+}
+
+async function putApiData(endPoint: string, body: object): Promise<Maybe<ApiEpisode>> {
+  const apiUrlBase = window?.appLocalizer.apiUrl;
+  const apiUrl = new URL(endPoint, apiUrlBase);
+  const options = {
+    headers: {
+      'X-Wp-Nonce': window.appLocalizer.nonce
+    }
+  };
+
+  return axios.put<ApiEpisode>(apiUrl.toString(), body, options)
     .then((res) => {
       return res.data || null;
     })
@@ -108,12 +126,11 @@ export function ImportScreen() {
 
     // Add stages to import or update segments.
     if (segments?.length) {
-      segments.forEach(({ guid: segmentGuid }) => {
+      segments.filter(({ data: { wasImported, hasUpdatedAudio } }) => !wasImported || hasUpdatedAudio).forEach(({ guid: segmentGuid }) => {
           stages.push(((guid) => (dataMap, imported) => {
             const segment = dataMap.get(guid);
             const { data, title } = segment;
-            const doEpisodeImport = !data.existingPost;
-            const message = `${doEpisodeImport ? 'Importing' : 'Updating'} Segment: "${title}"`;
+            const message = `${data.hasUpdatedAudio || (!data.existingAudio && data.existingPost) ? 'Updating' : 'Importing'} Segment: "${title}"`;
 
             setImportMessage(() => message);
             setImportingGuid(() => guid);
@@ -122,13 +139,21 @@ export function ImportScreen() {
               const body = {
                 terms: getTaxonomiesProps(segment)
               };
-              const { id } = segment.data;
-              const data = await postApiData(`segments/${id}/import`, body);
+              const { id, wasImported, hasUpdatedAudio } = data;
+              let newData: Maybe<ApiEpisode>;
 
-              if (data) {
+              if (!wasImported) {
+                newData = await postApiData(`segments/${id}`, body);
+              }
+
+              if (hasUpdatedAudio) {
+                newData = await putApiData(`segments/${id}`, body);
+              }
+
+              if (newData) {
                 imported.set(guid, {
                   ...segment,
-                  data: data || segment.data
+                  data: newData
                 });
               }
 
@@ -145,8 +170,7 @@ export function ImportScreen() {
       stages.push(((guid) => (dataMap, imported) => {
         const episode = dataMap.get(guid);
         const { data, title } = episode;
-        const doEpisodeImport = !data.existingPost;
-        const message = `${doEpisodeImport ? 'Importing' : 'Updating'} Episode: "${title}"`;
+        const message = `${!data.wasImported ? 'Updating' : 'Importing'} Episode: "${title}"`;
 
         setImportMessage(() => message);
         setImportingGuid(() => guid);
@@ -159,13 +183,19 @@ export function ImportScreen() {
             terms: getTaxonomiesProps(episode),
             segments: importedSegments
           };
-          const { id } = episode.data;
-          const data = await postApiData(`episodes/${id}/import`, body)
+          const { id, wasImported } = data;
+          let newData: Maybe<ApiEpisode>;
 
-          if (data) {
+          if (!wasImported) {
+            newData = await postApiData(`episodes/${id}`, body);
+          }
+
+          newData = await putApiData(`episodes/${id}`, body);
+
+          if (newData) {
             imported.set(guid, {
               ...episode,
-              data: data || episode.data
+              data: newData
             });
           }
 
@@ -201,28 +231,29 @@ export function ImportScreen() {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className='sticky top-8 z-10 mb-6 bg-card/60 backdrop-blur-md shadow'>
         <CardTitle className='flex gap-4 items-center'>
           {isImportComplete && (
             <Button size='icon' variant='ghost' color='' onClick={() => setStage('selecting')}>
               <ArrowLeft />
             </Button>
           )}
-          <span>{importMessage}{isImportComplete && <span className='relative inline-block'><ConfettiExplosion duration={3000} width={2000} zIndex={100000} /></span>}</span></CardTitle>
+          <span>{importMessage}{isImportComplete && <span className='relative inline-block'><ConfettiExplosion duration={3000} width={2000} zIndex={100000} /></span>}</span>
+        </CardTitle>
+        <CardDescription className='!mt-4'>
+          {!isImportComplete ? (
+            <Progress value={progress} />
+          ) : (
+            importedEpisode?.data.existingPost && (
+              <Button className='flex gap-2 rounded-full hover:text-white focus-visible:text-white active:text-white' asChild>
+                <a href={importedEpisode.data.existingPost.editLink}>
+                  Edit Episode <Edit />
+                </a>
+              </Button>
+            )
+          )}
+        </CardDescription>
       </CardHeader>
-      <CardContent>
-        {!isImportComplete ? (
-          <Progress value={progress} />
-        ) : (
-          importedEpisode && (
-            <Button className='flex gap-2 rounded-full hover:text-white focus-visible:text-white active:text-white' asChild>
-              <a href={importedEpisode.data.existingPost.editLink}>
-                Edit Episode <Edit />
-              </a>
-            </Button>
-          )
-        )}
-      </CardContent>
       <CardContent>
 
         {episode && (
