@@ -565,7 +565,7 @@ function tw_episode_importer_api_route_segments_rollback( WP_REST_Request $reque
 	if ( 200 === $status ) {
 
 		$api_body = json_decode( wp_remote_retrieve_body( $api_response ) );
-		$segments = tw_episode_importer_parse_api_items( $api_body, 'episode' );
+		$segments = tw_episode_importer_parse_api_items( $api_body, 'segment' );
 
 		$segments = tw_episode_importer_rollback_segments( $segments );
 
@@ -1002,10 +1002,10 @@ function tw_episode_importer_segment_create( &$item, $options ) {
 			'databaseId'    => $post->ID,
 			'type'          => $post->post_type,
 			'status'        => $post->post_status,
+			'imported'      => (int) $post->post_author === $author_id,
 			'editLink'      => get_edit_post_link( $post, 'link' ),
 			'datePublished' => $post->post_date,
 			'dateUpdated'   => $post->post_modified,
-			'audio'         => $item['existingAudio'],
 		);
 
 		$item['wasImported']     = true;
@@ -1147,10 +1147,10 @@ function tw_episode_importer_episode_create( &$item, $options ) {
 			'databaseId'    => $post->ID,
 			'type'          => $post->post_type,
 			'status'        => $post->post_status,
+			'imported'      => (int) $post->post_author === $author_id,
 			'editLink'      => get_edit_post_link( $post, 'link' ),
 			'datePublished' => $post->post_date,
 			'dateUpdated'   => $post->post_modified,
-			'audio'         => $item['existingAudio'],
 		);
 
 		$item['wasImported']     = true;
@@ -1214,15 +1214,13 @@ function tw_episode_importer_rollback_segments( $segments ) {
 
 	foreach ( $segments as $segment ) {
 		// Delete audio and segment.
-		tw_episode_importer_audio_delete( $segment );
 		tw_episode_importer_segment_delete( $segment );
+		tw_episode_importer_audio_delete( $segment );
 		$result[] = $segment;
 
 		// Remove caches related to this guid.
 		$guid               = $segment['guid'];
-		$post_ids_cache_key = TW_EPISODE_IMPORTER_CACHE_POST_IDS_KEY_PREFIX . ':' . $guid;
 		$audio_id_cache_key = TW_EPISODE_IMPORTER_CACHE_AUDIO_ID_KEY_PREFIX . ':' . $guid;
-		wp_cache_delete( $post_ids_cache_key, TW_EPISODE_IMPORTER_CACHE_GROUP );
 		wp_cache_delete( $audio_id_cache_key, TW_EPISODE_IMPORTER_CACHE_GROUP );
 	}
 
@@ -1239,15 +1237,13 @@ function tw_episode_importer_rollback_episodes( $episodes ) {
 
 	foreach ( $episodes as $episode ) {
 		// Delete audio and episode.
-		tw_episode_importer_audio_delete( $episode );
 		tw_episode_importer_episode_delete( $episode );
+		tw_episode_importer_audio_delete( $episode );
 		$result[] = $episode;
 
 		// Remove caches related to this guid.
 		$guid               = $episode['guid'];
-		$post_ids_cache_key = TW_EPISODE_IMPORTER_CACHE_POST_IDS_KEY_PREFIX . ':' . $guid;
 		$audio_id_cache_key = TW_EPISODE_IMPORTER_CACHE_AUDIO_ID_KEY_PREFIX . ':' . $guid;
-		wp_cache_delete( $post_ids_cache_key, TW_EPISODE_IMPORTER_CACHE_GROUP );
 		wp_cache_delete( $audio_id_cache_key, TW_EPISODE_IMPORTER_CACHE_GROUP );
 	}
 
@@ -1384,6 +1380,7 @@ function tw_episode_importer_parse_api_item( $api_item, $post_type ) {
 		'existingAudio'   => $audio,
 		'wasImported'     => $was_imported,
 		'hasUpdatedAudio' => $has_updated_audio,
+		'type'            => $post_type,
 		'id'              => $api_item->id,
 		'guid'            => $guid,
 		'title'           => trim( $title ),
@@ -1411,8 +1408,9 @@ function tw_episode_importer_parse_api_item( $api_item, $post_type ) {
 			function ( $contributor_name ) {
 				$contributor_terms = get_terms(
 					array(
-						'taxonomy' => 'contributor',
-						'name'     => $contributor_name,
+						'taxonomy'   => 'contributor',
+						'name'       => $contributor_name,
+						'hide_empty' => false,
 					)
 				);
 
@@ -1572,6 +1570,7 @@ function tw_episode_importer_get_existing_post_data( $post_type, $guid, $audio_k
 	// At this point, if we have an audio post, add it to the results and ID cache.
 	if ( ! is_null( $audio_post ) ) {
 		$audio_metadata  = get_metadata( 'post', $audio_post->ID );
+		$audio_url       = isset( $audio_metadata['original_uri'] ) ? $audio_metadata['original_uri'][0] : null;
 		$result['audio'] = array(
 			'guid'          => $audio_post->guid,
 			'databaseId'    => $audio_post->ID,
@@ -1579,7 +1578,7 @@ function tw_episode_importer_get_existing_post_data( $post_type, $guid, $audio_k
 			'editLink'      => get_edit_post_link( $audio_post, 'link' ),
 			'datePublished' => $audio_post->post_date,
 			'dateUpdated'   => $audio_post->post_modified,
-			'url'           => $audio_metadata['original_uri'][0],
+			'url'           => $audio_url,
 		);
 		wp_cache_set( $audio_id_cache_key, $audio_post->ID, TW_EPISODE_IMPORTER_CACHE_GROUP );
 	}
@@ -1596,7 +1595,6 @@ function tw_episode_importer_get_existing_post_data( $post_type, $guid, $audio_k
 				'meta_value'             => $audio_post->ID,
 				'fields'                 => 'ids',
 				'orderby'                => 'type',
-				'no_found_rows'          => true,
 				'update_post_term_cache' => false,
 			)
 		);
@@ -1608,7 +1606,7 @@ function tw_episode_importer_get_existing_post_data( $post_type, $guid, $audio_k
 	}
 
 	// Add parent posts' data to results.
-	if ( is_array( $ids ) ) {
+	if ( is_array( $ids ) && ! empty( $ids ) ) {
 		// At this point, ids will have been newly cached or came from a cache.
 
 		// Parent posts may have been deleted after id's were cached. Create a list of ids to keep in cache.

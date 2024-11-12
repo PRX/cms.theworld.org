@@ -107,6 +107,7 @@ export function ImportScreen() {
   const isImportComplete = progress >= 100;
   const importedEpisode = episode && importedMap.get(episode.guid);
   const stages: ((data: ImportDataMap, imported: ImportDataMap) => Promise<ImportDataMap>)[] = [];
+  const renderEpisode = importedEpisode || episode;
 
   function LoadingIcon({ guid }: { guid: string }) {
     const isLoading = !importedMap?.get(guid)?.data.existingPost;
@@ -246,7 +247,7 @@ export function ImportScreen() {
           ) : (
             importedEpisode?.data.existingPost && (
               <Button className='flex gap-2 rounded-full hover:text-white focus-visible:text-white active:text-white' asChild>
-                <a href={importedEpisode.data.existingPost.editLink}>
+                <a href={importedEpisode.data.existingPost.editLink} target={`edit:${importedEpisode.data.existingPost.databaseId}`}>
                   Edit Episode <Edit />
                 </a>
               </Button>
@@ -256,7 +257,7 @@ export function ImportScreen() {
       </CardHeader>
       <CardContent>
 
-        {episode && (
+        {renderEpisode && (
           <Table className='border'>
             <TableHeader>
               <TableRow>
@@ -269,11 +270,11 @@ export function ImportScreen() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              <ImportItemRow rowData={importedMap.get(episode.guid) || episode}
+              <ImportItemRow rowData={renderEpisode}
                 importAs='episode'
-                selected={importingGuid === episode.guid}
-                selectInputComponent={<LoadingIcon guid={episode.guid} />}
-                key={episode.guid}
+                selected={importingGuid === renderEpisode.guid}
+                selectInputComponent={<LoadingIcon guid={renderEpisode.guid} />}
+                key={[renderEpisode.guid, renderEpisode.data.existingAudio?.databaseId, renderEpisode.data.existingPost?.databaseId, renderEpisode.data.existingPosts?.length].join(':')}
               />
             </TableBody>
           </Table>
@@ -292,14 +293,17 @@ export function ImportScreen() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {segments.map((segment) => (
-                <ImportItemRow rowData={importedMap.get(segment.guid) || segment}
-                  importAs='segment'
-                  selected={importingGuid === segment.guid}
-                  selectInputComponent={<LoadingIcon guid={segment.guid} />}
-                  key={segment.guid}
-                />
-              ))}
+              {segments.map((segment) => {
+                const renderSegment = importedMap.get(segment.guid) || segment;
+                return (
+                  <ImportItemRow rowData={renderSegment}
+                    importAs='segment'
+                    selected={importingGuid === renderSegment.guid}
+                    selectInputComponent={<LoadingIcon guid={renderSegment.guid} />}
+                    key={[renderSegment.guid, renderSegment.data.existingAudio?.databaseId, renderSegment.data.existingPost?.databaseId, renderSegment.data.existingPosts?.length].join(':')}
+                  />
+                );
+              })}
             </TableBody>
           </Table>
         )}

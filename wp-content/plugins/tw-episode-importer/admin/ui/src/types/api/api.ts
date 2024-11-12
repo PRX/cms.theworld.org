@@ -60,12 +60,16 @@ export type ApiPost = {
   dateUpdated: string,
 }
 
+export const ApiEpisodeTypes = ['episode', 'segment'] as const;
+export type ApiEpisodeType = (typeof ApiEpisodeTypes)[number];
+
 export type ApiEpisode = {
   existingPosts?: ApiPost[],
   existingPost: Maybe<ApiPost>,
   existingAudio: Maybe<ApiAudio>,
   wasImported: boolean,
   hasUpdatedAudio: boolean,
+  type: ApiEpisodeType,
   id: string,
   guid: string,
   title: string,
@@ -84,4 +88,9 @@ export type ApiData = {
   date: Date,
   episodes: ApiEpisode[],
   segments: ApiEpisode[]
+};
+
+export type ApiEpisodeDeleteOptions = {
+  deleteAudio: boolean,
+  deleteParent: boolean
 };

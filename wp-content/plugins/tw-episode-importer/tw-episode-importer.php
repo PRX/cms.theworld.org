@@ -57,19 +57,27 @@ if ( ! function_exists( 'tw_episode_importer_before_delete_post' ) ) {
 		}
 
 		if ( $post_audio_id ) {
-			$post_audio         = get_post( $post_audio_id );
-			$guid               = preg_replace( '~$https?://~', '', $post_audio->guid );
-			$post_ids_cache_key = TW_EPISODE_IMPORTER_CACHE_POST_IDS_KEY_PREFIX . ':' . $guid;
-			$ids                = wp_cache_get( $post_ids_cache_key, TW_EPISODE_IMPORTER_CACHE_GROUP );
+			$post_audio = get_post( $post_audio_id );
+			if ( $post_audio && strpos( $post_audio->guid, '.' ) === false ) {
+				$guid = preg_replace( '~^https?://~', '', $post_audio->guid );
 
-			if ( $ids ) {
-				$cache_ids = array_filter(
-					$ids,
-					function ( $id ) use ( $post_id ) {
-						return ( $id !== $post_id );
+				$post_ids_cache_key = TW_EPISODE_IMPORTER_CACHE_POST_IDS_KEY_PREFIX . ':' . $guid;
+				$ids                = wp_cache_get( $post_ids_cache_key, TW_EPISODE_IMPORTER_CACHE_GROUP );
+
+				if ( $ids ) {
+					$cached_ids = array_filter(
+						$ids,
+						function ( $id ) use ( $post_id ) {
+							return ( $id !== $post_id );
+						}
+					);
+
+					if ( empty( $cached_ids ) ) {
+						wp_cache_delete( $post_ids_cache_key, TW_EPISODE_IMPORTER_CACHE_GROUP );
+					} else {
+						wp_cache_set( $post_ids_cache_key, $cached_ids, TW_EPISODE_IMPORTER_CACHE_GROUP );
 					}
-				);
-				wp_cache_set( $post_ids_cache_key, $cached_ids, TW_EPISODE_IMPORTER_CACHE_GROUP );
+				}
 			}
 		}
 	}

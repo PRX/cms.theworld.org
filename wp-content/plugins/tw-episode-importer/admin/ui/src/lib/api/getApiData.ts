@@ -1,12 +1,6 @@
 import axios, { CanceledError } from "axios";
 import { formatDateKey } from "@/lib/utils/format/formatDateKey";
-import { ApiData, ApiEpisode } from "@/types/api/api";
-
-export const AbortControllerHashKeys = ['episodes', 'segments'] as const;
-export type AbortControllerHashKey = (typeof AbortControllerHashKeys)[number];
-export type AbortControllerHash = {
-  [k in AbortControllerHashKey]: AbortController
-}
+import { AbortControllerHash, ApiData, ApiEpisode } from "@/types/api";
 
 /**
  * Fetch API data for a give publish date, or date range between publish date and before date.

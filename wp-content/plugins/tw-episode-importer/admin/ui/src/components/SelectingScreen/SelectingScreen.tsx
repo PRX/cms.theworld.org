@@ -1,4 +1,4 @@
-import type { ApiData, ApiEpisode } from '@/types/api/api';
+import type { ApiData, ApiEpisode, ApiEpisodeType } from '@/types/api/api';
 import type { ItemRow } from '@/types/state/itemRow';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { isSameMonth, isSameDay } from 'date-fns';
@@ -19,6 +19,7 @@ import { cn } from '@/lib/utils';
 import { formatDateKey } from '@/lib/utils/format/formatDateKey';
 import { getApiData } from '@/lib/api';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { deleteApiData, deleteApiEpisodes, deleteApiSegments } from '@/lib/api/deleteApiData';
 
 const today = new Date();
 
@@ -38,7 +39,7 @@ export function SelectingScreen() {
   const canRollbackEpisodes = !!(episodes || []).find(({ existingAudio, existingPost }) => existingPost?.imported || existingAudio?.imported);
   const canRollbackSegments = !!(segments || []).find(({ existingAudio, existingPost }) => existingPost?.imported || existingAudio?.imported);
   const canRollback = canRollbackEpisodes || canRollbackSegments;
-  const [loading, setLoading] = useState<string>();
+  const [loadingMessage, setLoadingMessage] = useState<string>();
   const [importRowsMap, setImportRowsMap] = useState<Map<string, ItemRow>>(new Map());
   const [importEpisodeGuid, setImportEpisodeGuid] = useState<string>();
   const [importSegmentGuids, setImportSegmentGuids] = useState<Set<string>>();
@@ -137,11 +138,6 @@ export function SelectingScreen() {
       setAudioPlayerToast(null);
     }
   }, [playingAudioUrlItemRow, playingAudioUrlInView, audioPlayerToast]);
-
-  useEffect(() => {
-    // Make sure import selections are cleared between date changes.
-    setImportRowsMap(new Map());
-  }, [publishDate])
 
   useEffect(() => {
     if (!publishDateData) {
@@ -274,7 +270,7 @@ export function SelectingScreen() {
   }, [queryMonthDate]);
 
   useEffect(() => {
-    if (!loading && isSameDay(publishDate, today)) {
+    if (!loadingMessage && isSameDay(publishDate, today)) {
 
       if (publishDateDataRefreshTimeout.current) {
         clearTimeout(publishDateDataRefreshTimeout.current);
@@ -284,10 +280,10 @@ export function SelectingScreen() {
         fetchDateData(publishDate);
       }, 60000)
     }
-  }, [loading, publishDateData, publishDate, today]);
+  }, [loadingMessage, publishDateData, publishDate, today]);
 
   function fetchDateData(date: Date) {
-    setLoading(`Refreshing data for ${publishDate.toLocaleDateString(undefined, { dateStyle: 'medium' })}`);
+    setLoadingMessage(`Refreshing data for ${publishDate.toLocaleDateString(undefined, { dateStyle: 'medium' })}`);
 
     (async () => {
       const dateKey = formatDateKey(date);
@@ -312,8 +308,49 @@ export function SelectingScreen() {
         })
       }
 
-      setLoading(null);
+      setLoadingMessage(null);
     })()
+  }
+
+  function rollbackDateData(date: Date, episodeType: ApiEpisodeType | 'all' = 'all') {
+    setLoadingMessage(`Rolling back ${episodeType} data for ${publishDate.toLocaleDateString(undefined, { dateStyle: 'medium' })}`);
+
+    const rolbackFnMap = new Map<string, (arg0: Date) => Promise<Partial<ApiData>>>([
+      ['all', deleteApiData],
+      ['episode', deleteApiEpisodes],
+      ['segment', deleteApiSegments]
+    ]);
+
+    (async (fn) => {
+      const dateKey = formatDateKey(date);
+      const data = await fn(date);
+      const hasData = data?.episodes?.length || data?.segments?.length
+
+      if (hasData) {
+        setApiData((currentApiData) => {
+          const dateData = currentApiData.get(dateKey);
+          currentApiData.set(dateKey, {
+            ...dateData,
+            ...data
+          });
+          return new Map(currentApiData);
+        });
+        setImportRowsMap((currentMap) => {
+          const { episodes : e, segments: s } = data;
+          [...(e || []), ...(s || [])].forEach((d) => {
+            const { guid } = d;
+            const ir = currentMap.get(guid);
+            if (ir) {
+              ir.data = d;
+              currentMap.set(guid, ir);
+            }
+          });
+          return new Map(currentMap);
+        })
+      }
+
+      setLoadingMessage(null);
+    })(rolbackFnMap.get(episodeType))
   }
 
   function sortByEnclosureFilename(ea: ApiEpisode, eb: ApiEpisode) {
@@ -325,6 +362,7 @@ export function SelectingScreen() {
 
   function handleDateSelect(newDate: Date) {
     if (!newDate) return;
+    setImportRowsMap(new Map());
     setPublishDate(newDate);
   }
 
@@ -355,7 +393,7 @@ export function SelectingScreen() {
   return (
     <Card className='overflow-clip'>
       <CardHeader className='pb-0'>
-        <CardTitle>Select Epsiode and Segments</CardTitle>
+        <CardTitle>Select Episode and Segments</CardTitle>
         <CardDescription className='max-w-[120ch]'>
             Select the Dovetail Publish Date of the episode and segments you want to import. If multiple episodes were publish on the date, select which episode to import. Deselect any segments that should not be imported for the selected episode.
         </CardDescription>
@@ -363,7 +401,7 @@ export function SelectingScreen() {
       <CardContent className="flex justify-between sticky top-8 z-10 p-6 bg-card/60 backdrop-blur-md shadow">
         <div className='flex gap-2 items-center'>
           <DatePicker
-            // disabled={loading}
+            disabled={!!loadingMessage}
             defaultMonth={publishDate}
             month={month}
             selected={publishDate}
@@ -421,16 +459,16 @@ export function SelectingScreen() {
             variant='ghost'
             className='rounded-full text-primary hover:bg-primary hover:text-primary-foreground'
             title={`Refresh data for ${publishDate.toLocaleDateString(undefined, { dateStyle: 'medium' })}`}
-            disabled={!!loading || !publishDateData}
+            disabled={!!loadingMessage || !publishDateData}
             onClick={() => {
               fetchDateData(publishDate);
             }}
           >
-            <RefreshCw className={cn({ 'animate-spin': loading || !publishDateData })} />
+            <RefreshCw className={cn({ 'animate-spin': loadingMessage || !publishDateData })} />
           </Button>
-          {(loading) && (
+          {(loadingMessage) && (
             <Badge variant='outline' className='flex gap-2'>
-              {loading}...
+              {loadingMessage}...
             </Badge>
           )}
         </div>
@@ -449,24 +487,30 @@ export function SelectingScreen() {
                 <DropdownMenuGroup>
                   {canRollback && (
                     <DropdownMenuSub>
-                      <DropdownMenuSubTrigger>
+                      <DropdownMenuSubTrigger disabled={!!loadingMessage}>
                         <RotateCcw />
                         <span>Rollback...</span>
                       </DropdownMenuSubTrigger>
                       <DropdownMenuPortal>
                         <DropdownMenuSubContent>
                           {canRollbackEpisodes && canRollbackSegments && (
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => {
+                              rollbackDateData(publishDate);
+                            }}>
                               <span>All</span>
                             </DropdownMenuItem>
                           )}
                           {canRollbackEpisodes && (
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => {
+                              rollbackDateData(publishDate, 'episode');
+                            }}>
                               <span>Episodes</span>
                             </DropdownMenuItem>
                           )}
                           {canRollbackSegments && (
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => {
+                              rollbackDateData(publishDate, 'segment');
+                            }}>
                               <span>Segments</span>
                             </DropdownMenuItem>
                           )}
@@ -547,7 +591,6 @@ export function SelectingScreen() {
               !!segments?.length ? segments.sort(sortByEnclosureFilename).map((segment) => {
                 const selected = !!importSegmentGuids?.has(segment.guid);
                 const key = [segment.guid, segment.existingAudio?.databaseId, segment.existingPost?.databaseId, segment.existingPosts?.length].join(':');
-                console.log(key);
                 return (
                   <ImportItemRow data={segment} rowData={importRowsMap.get(segment.guid)}
                     importAs='segment'
