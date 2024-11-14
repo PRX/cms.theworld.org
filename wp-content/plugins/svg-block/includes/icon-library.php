@@ -19,7 +19,7 @@ if ( is_readable( SVG_BLOCK_PATH . '/vendor/autoload.php' ) ) {
 /**
  * SVG allowed tags
  */
-class SVGBockAllowedTags extends \enshrined\svgSanitize\data\AllowedTags {
+class SVGBlockAllowedTags extends \enshrined\svgSanitize\data\AllowedTags {
 	/**
 	 * Returns an array of tags
 	 *
@@ -109,6 +109,9 @@ if ( ! class_exists( IconLibrary::class ) ) :
 				// Allow SVG upload.
 				add_filter( 'upload_mimes', [ $this, 'mime_types_support_svg' ] );
 
+				// Handle upload via REST API.
+				add_filter( 'wp_handle_sideload_prefilter', [ $this, 'handle_svg_upload' ] );
+
 				// Handle SVG upload.
 				add_filter( 'wp_handle_upload_prefilter', [ $this, 'handle_svg_upload' ] );
 
@@ -195,6 +198,7 @@ if ( ! class_exists( IconLibrary::class ) ) :
 
 			if ( $images ) {
 				foreach ( $images as $image ) {
+					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 					$icon = file_get_contents( get_attached_file( $image->ID ) );
 					if ( $icon ) {
 						$media_svgs[] = [
@@ -273,7 +277,8 @@ if ( ! class_exists( IconLibrary::class ) ) :
 		 * @return bool|int
 		 */
 		private function sanitize( $file ) {
-			$dirty = file_get_contents( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			$dirty = file_get_contents( $file );
 
 			// Is the SVG gzipped?
 			$is_zipped = $this->is_gzipped( $dirty );
@@ -288,7 +293,7 @@ if ( ! class_exists( IconLibrary::class ) ) :
 				}
 			}
 
-			$this->sanitizer->setAllowedTags( new SVGBockAllowedTags() );
+			$this->sanitizer->setAllowedTags( new SVGBlockAllowedTags() );
 			$this->sanitizer->setAllowedAttrs( new SVGBlockAllowedAttributes() );
 
 			$clean = $this->sanitizer->sanitize( $dirty );
@@ -302,7 +307,8 @@ if ( ! class_exists( IconLibrary::class ) ) :
 				$clean = gzencode( $clean );
 			}
 
-			file_put_contents( $file, $clean ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+			file_put_contents( $file, $clean );
 
 			return true;
 		}

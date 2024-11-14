@@ -122,12 +122,12 @@ if (!class_exists('Taxopress_Linked_Terms_List')) {
         {
             $columns = [
                 'cb'                        => '<input type="checkbox" />',
-                'term_name'                 => esc_html__('Term Name', 'taxopress-pro'),
-                'linked_term_name'          => esc_html__('Linked Term Name', 'taxopress-pro'),
-                'term_taxonomy'             => esc_html__('Term Taxonomy', 'taxopress-pro'),
-                'linked_term_taxonomy'      => esc_html__('Linked Term Taxonomy', 'taxopress-pro'),
-                'term_counts'               => esc_html__('Term Post Counts', 'taxopress-pro'),
-                'linked_term_counts'        => esc_html__('Linked Term Post Counts', 'taxopress-pro')
+                'term_name'                 => esc_html__('Primary Term Name', 'taxopress-pro'),
+                'linked_term_name'          => esc_html__('Secondary Term Name', 'taxopress-pro'),
+                'term_taxonomy'             => esc_html__('Primary Term Taxonomy', 'taxopress-pro'),
+                'linked_term_taxonomy'      => esc_html__('Secondary Term Taxonomy', 'taxopress-pro'),
+                'term_counts'               => esc_html__('Primary Term Post Count', 'taxopress-pro'),
+                'linked_term_counts'        => esc_html__('Secondary Term Post Count', 'taxopress-pro')
             ];
 
             return $columns;
@@ -170,8 +170,8 @@ if (!class_exists('Taxopress_Linked_Terms_List')) {
         protected function get_bulk_actions()
         {
             $actions = [
-                'taxopress-linked-terms-add-linked-terms' => esc_html__('Add main term to posts with Linked Term', 'taxopress-pro'),
-                'taxopress-linked-terms-add-terms' => esc_html__('Add Linked Term to post with main term', 'taxopress-pro'),
+                'taxopress-linked-terms-add-linked-terms' => esc_html__('Add primary term to posts with secondary term', 'taxopress-pro'),
+                'taxopress-linked-terms-add-terms' => esc_html__('Add secondary term to post with primary term', 'taxopress-pro'),
                 'taxopress-linked-terms-delete-relationship' => esc_html__('Delete Relationship', 'taxopress-pro')
             ];
 
@@ -450,7 +450,7 @@ if (!class_exists('Taxopress_Linked_Terms_List')) {
                         ],
                         admin_url('admin.php')
                     ),
-                    esc_html__('Add main term to posts with Linked Term', 'taxopress-pro')
+                    esc_html__('Add primary term to posts with secondary term', 'taxopress-pro')
                 );
 
                 $actions['add_term_post'] = sprintf(
@@ -464,7 +464,7 @@ if (!class_exists('Taxopress_Linked_Terms_List')) {
                         ],
                         admin_url('admin.php')
                     ),
-                    esc_html__('Add Linked Term to post with main term', 'taxopress-pro')
+                    esc_html__('Add secondary term to post with primary term', 'taxopress-pro')
                 );
 
                 $actions['delete'] = sprintf(

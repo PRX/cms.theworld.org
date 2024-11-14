@@ -20,8 +20,9 @@ if (!class_exists('TaxoPress_Taxonomy_Synonyms')) {
 
 
             add_action('admin_init', function () {
-                foreach (array_keys(get_taxonomies()) as $taxonomy) {
-                    if (!in_array($taxonomy, $this->excluded_synonyms_taxonomy())) {
+                $synonyms_taxonomies = SimpleTags_Plugin::get_option_value('synonyms_taxonomies');
+                if (is_array($synonyms_taxonomies)) {
+                    foreach ($synonyms_taxonomies as $taxonomy) {
                         add_action($taxonomy . '_add_form_fields', [$this, 'add_term_fields']);
                         add_action($taxonomy . '_edit_form_fields', [$this, 'edit_term_fields'], 10, 2);
                         add_action('created_' . $taxonomy, [$this, 'save_term_fields']);
@@ -33,17 +34,6 @@ if (!class_exists('TaxoPress_Taxonomy_Synonyms')) {
             add_filter('pre_insert_term', [$this, 'filter_pre_insert_term'], 10, 2);
 
             add_action('wp_ajax_duplicate_synonyms_validation', [$this, 'handle_duplicate_synonyms_validation']);
-        }
-
-        public function excluded_synonyms_taxonomy()
-        {
-
-            $excluded_taxonomy = [];
-            $excluded_taxonomy[] = 'author';
-
-            $excluded_taxonomy = apply_filters('taxopress_synonyms_excluded_taxonomy', $excluded_taxonomy);
-
-            return $excluded_taxonomy;
         }
 
 

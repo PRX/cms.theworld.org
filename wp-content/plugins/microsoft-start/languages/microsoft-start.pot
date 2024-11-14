@@ -2,51 +2,47 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Microsoft Start 2.7.19\n"
+"Project-Id-Version: MSN Partner Hub 2.8\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/__translate_cache\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-05-27T09:51:15+00:00\n"
+"POT-Creation-Date: 2024-11-07T11:58:08+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.10.0\n"
+"X-Generator: WP-CLI 2.9.0\n"
 
 #. Plugin Name of the plugin
 #. translators: Name of plugin, appears in menu bar and edit bar, or in connection page when user tries to connect
-#: index.php
-#: infrastructure/Page.php:34
+#: infrastructure/Page.php:32
+#: assets/js/dashboard.js:1
 #: assets/js/editorSidebar.js:1
-msgid "Microsoft Start"
+msgid "MSN Partner Hub"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: index.php
 msgid "https://www.msn.com/"
 msgstr ""
 
 #. Description of the plugin
-#: index.php
-msgid "Microsoft Start WordPress plugin to help WordPress content creators to share content to Microsoft Start News feed."
+msgid "MSN Partner Hub WordPress plugin to help WordPress content creators to share content to MSN News feed."
 msgstr ""
 
 #. Author of the plugin
-#: index.php
 msgid "Microsoft"
 msgstr ""
 
 #. Author URI of the plugin
-#: index.php
 msgid "https://www.microsoft.com/"
 msgstr ""
 
 #. translators: table header for a column of publishing status of articles
 #: includes/posts.php:39
-msgid "Microsoft Start publish status"
+msgid "MSN publish status"
 msgstr ""
 
-#: infrastructure/Page.php:32
+#: infrastructure/Page.php:30
 msgid "General"
 msgstr ""
 
@@ -57,7 +53,7 @@ msgstr ""
 
 #. translators: Notification of update plugin
 #: services/MSNClient.php:208
-msgid "A new version of Microsoft Start is available."
+msgid "A new version of MSN Partner Hub is available."
 msgstr ""
 
 #. translators: Update button in banner
@@ -67,7 +63,7 @@ msgstr ""
 
 #. translators: Notification of publish post
 #: services/MSNClient.php:235
-msgid "Some of your posts haven't been submitted to Microsoft Start yet."
+msgid "Some of your posts haven't been submitted to MSN yet."
 msgstr ""
 
 #. translators: Batch submit button
@@ -195,7 +191,7 @@ msgstr ""
 #. translators: Detail display info about notification for partner account be suspended.
 #: assets/js/callback.js:1
 #: assets/js/dashboard.js:1
-msgid "This brand is currently suspended by Microsoft Start.{delimiter} Content, settings, and feed can still be viewed, but can't be changed."
+msgid "This brand is currently suspended by MSN.{delimiter} Content, settings, and feed can still be viewed, but can't be changed."
 msgstr ""
 
 #. translators: Notification button
@@ -552,7 +548,7 @@ msgstr ""
 
 #. translators: Alert message in batch submission page
 #: assets/js/dashboard.js:1
-msgid "Your brand is currently suspended by Microsoft Start. You can't publish content to Microsoft Start."
+msgid "Your brand is currently suspended by MSN. You can't publish content to MSN."
 msgstr ""
 
 #. translators: Notice description when user use the feed mode but open the batch submission page
@@ -562,7 +558,7 @@ msgstr ""
 
 #. translators: Text in toast when user click the submit button but don't select any post
 #: assets/js/dashboard.js:1
-msgid "You don't have any posts to be submitted to Microsoft Start"
+msgid "You don't have any posts to be submitted to MSN"
 msgstr ""
 
 #. translators: Title of Batch submission
@@ -604,12 +600,12 @@ msgstr ""
 
 #. translators: Title in batch submit all dialog
 #: assets/js/dashboard.js:1
-msgid "Submit all $1 posts to Microsoft Start?"
+msgid "Submit all $1 posts to MSN?"
 msgstr ""
 
 #. translators: Title in batch all dialog
 #: assets/js/dashboard.js:1
-msgid "Submit $1 post(s) to Microsoft Start?"
+msgid "Submit $1 post(s) to MSN?"
 msgstr ""
 
 #. translators: Submission progress
@@ -619,7 +615,7 @@ msgstr ""
 
 #. translators: Notice description when posts are submitting
 #: assets/js/dashboard.js:1
-msgid "Batch submission can take a few minutes. Once submitted, content will need to pass our review before being published to Microsoft Start."
+msgid "Batch submission can take a few minutes. Once submitted, content will need to pass our review before being published to MSN."
 msgstr ""
 
 #. translators: Submit next batch button
@@ -809,7 +805,7 @@ msgstr ""
 
 #. translators: Text inviting users to join
 #: assets/js/dashboard.js:1
-msgid "You've been invited to join Microsoft Start Partner Hub. With this new program, you can make your WordPress posts available to the millions of people who use Microsoft Start."
+msgid "You've been invited to join MSN Partner Hub. With this new program, you can make your WordPress posts available to the millions of people who use MSN."
 msgstr ""
 
 #. translators: Tooltip text for sign in hint under Edge browser
@@ -824,7 +820,7 @@ msgstr ""
 
 #. translators: Card description of onboarding transparency
 #: assets/js/dashboard.js:1
-msgid "Create a new post and publish it to Microsoft Start"
+msgid "Create a new post and publish it to MSN"
 msgstr ""
 
 #. translators: Card button text of onboarding transparency
@@ -862,11 +858,6 @@ msgstr ""
 msgid "Select batch"
 msgstr ""
 
-#. translators: wording of a hyper link on dashboard linking to MSPH
-#: assets/js/dashboard.js:1
-msgid "Microsoft Start Partner Hub"
-msgstr ""
-
 #. translators: The content in home page's welcome section.
 #: assets/js/dashboard.js:1
 msgid "See how to publish your content to our global feed with millions of daily active users. Attract new fans, expand your business, and get paid by Microsoft."
@@ -897,14 +888,14 @@ msgstr ""
 msgid "Health Check"
 msgstr ""
 
-#. translators: Header of microsoft start plugin version health check block
+#. translators: Header of MSN Partner Hub plugin version health check block
 #: assets/js/dashboard.js:1
-msgid "Microsoft Start plugin version"
+msgid "MSN Partner Hub plugin version"
 msgstr ""
 
-#. translators: microsoft start plugin available version
+#. translators: MSN Partner Hub plugin available version
 #: assets/js/dashboard.js:1
-msgid "Microsoft Start v%s is available. "
+msgid "MSN Partner Hub v%s is available. "
 msgstr ""
 
 #. translators: upgrade version link
@@ -912,14 +903,14 @@ msgstr ""
 msgid "Upgrade it now."
 msgstr ""
 
-#. translators: tips when Microsoft Start plugin version is supported
+#. translators: tips when MSN Partner Hub plugin version is supported
 #: assets/js/dashboard.js:1
-msgid "You're using Microsoft Start plugin v%s, which is supported here."
+msgid "You're using MSN Partner Hub plugin v%s, which is supported here."
 msgstr ""
 
-#. translators: tips when Microsoft Start plugin version is lower
+#. translators: tips when MSN Partner Hub plugin version is lower
 #: assets/js/dashboard.js:1
-msgid "You're using Microsoft Start plugin v%s. This may cause compatibility issues."
+msgid "You're using MSN Partner Hub plugin v%s. This may cause compatibility issues."
 msgstr ""
 
 #. translators: header of wordpress version health check block
@@ -964,7 +955,7 @@ msgstr ""
 
 #. translators: header of plugins list health check
 #: assets/js/dashboard.js:1
-msgid "Plugins compatibility with Microsoft Start"
+msgid "Plugins compatibility with MSN Partner Hub"
 msgstr ""
 
 #. translators: tip of plugin list health check
@@ -1010,12 +1001,12 @@ msgstr ""
 
 #. translators: connection message
 #: assets/js/dashboard.js:1
-msgid "Your WordPress website is connected with Microsoft Start Partner Hub"
+msgid "Your WordPress website is connected with MSN Partner Hub"
 msgstr ""
 
 #. translators: connection message
 #: assets/js/dashboard.js:1
-msgid "To easily publish your WordPress posts to Microsoft Start,  sign in your Microsoft account here."
+msgid "To easily publish your WordPress posts to MSN, sign in your Microsoft account here."
 msgstr ""
 
 #. translators: text on hyperlink to edit profile
@@ -1050,12 +1041,12 @@ msgstr ""
 
 #. translators: Error message on changing feed settings when feed is suspended
 #: assets/js/dashboard.js:1
-msgid "This feed is suspended by Microsoft Start for not meeting our {publishingGuideline}. You can't make any changes. Contact MSPH support for more information."
+msgid "This feed is suspended by MSN for not meeting our {publishingGuideline}. You can't make any changes. Contact MSPH support for more information."
 msgstr ""
 
 #. translators: Error message on changing feed settings when feed is deleted
 #: assets/js/dashboard.js:1
-msgid "This feed has been deleted by Microsoft Start for not meeting our {publishingGuideline}. You can't make changes. Contact MSPH support for more information."
+msgid "This feed has been deleted by MSN for not meeting our {publishingGuideline}. You can't make changes. Contact MSPH support for more information."
 msgstr ""
 
 #. translators: text on editor mode toggle
@@ -1082,12 +1073,12 @@ msgstr ""
 
 #. translators: settings text
 #: assets/js/dashboard.js:1
-msgid "These settings help target your content to the right audience. They will be applied to new WordPress posts you share with Microsoft Start."
+msgid "These settings help target your content to the right audience. They will be applied to new WordPress posts you share with MSN."
 msgstr ""
 
 #. translators: Warning in content setting page when batch submission in progress
 #: assets/js/dashboard.js:1
-msgid "You cannot change content settings while importing posts to Microsoft Start."
+msgid "You cannot change content settings while importing posts to MSN."
 msgstr ""
 
 #. translators: error message displayed when settings cannot be displayed
@@ -1127,7 +1118,7 @@ msgstr ""
 
 #. translators: Usage tip for users using feed mode
 #: assets/js/dashboard.js:1
-msgid "Microsoft Start plugin users can set up an RSS feed to automatically ingest new content to the Microsoft Start Partner Hub."
+msgid "MSN Partner Hub plugin users can set up an RSS feed to automatically ingest new content to the MSN Partner Hub."
 msgstr ""
 
 #. translators: Usage tip for users using feed mode
@@ -1137,17 +1128,17 @@ msgstr ""
 
 #. translators: Usage tip for users using feed mode
 #: assets/js/dashboard.js:1
-msgid "Select 'Save' to start automatic content ingestion. The Microsoft Start Partner Hub will ingest your content and update every few minutes."
+msgid "Select 'Save' to start automatic content ingestion. The MSN Partner Hub will ingest your content and update every few minutes."
 msgstr ""
 
-#. translators: Usage tip for users using feed mode, %s will be replaced by "Microsoft Start Partner Hub feed page", no need for translation
+#. translators: Usage tip for users using feed mode, %s will be replaced by "MSN Partner Hub feed page", no need for translation
 #: assets/js/dashboard.js:1
 msgid "Visit the %s to see the status of an  individual post and other details."
 msgstr ""
 
 #. translators: Usage tip for users using feed mode
 #: assets/js/dashboard.js:1
-msgid "Microsoft Start Partner Hub feed page"
+msgid "MSN Partner Hub feed page"
 msgstr ""
 
 #. translators: One of feed configuration fields
@@ -1223,7 +1214,7 @@ msgstr ""
 
 #. translators: introdction text for Profile section, %s will be replaced by "edit file", no need for translation
 #: assets/js/dashboard.js:1
-msgid "This is how your profile and byline appear on Microsoft Start. Select %s to make changes."
+msgid "This is how your profile and byline appear on MSN. Select %s to make changes."
 msgstr ""
 
 #. translators: introdction text for Profile section
@@ -1382,7 +1373,7 @@ msgstr ""
 
 #. translators: text for hyper link to MSPH
 #: assets/js/editorSidebar.js:1
-msgid "View post on Microsoft Start"
+msgid "View post on MSN Partner Hub"
 msgstr ""
 
 #. translators: explanation text for button
@@ -1404,7 +1395,7 @@ msgstr ""
 
 #. translators: description of featured image in posteditor panel
 #: assets/js/editorSidebar.js:1
-msgid "This image will be used to promote this post in the Microsoft Start feed. If there is no featured image, the first image in the post will be used."
+msgid "This image will be used to promote this post in the MSN feed. If there is no featured image, the first image in the post will be used."
 msgstr ""
 
 #. translators: label text for add featured image as first image in post
@@ -1787,13 +1778,13 @@ msgstr ""
 #. translators: reminder message for users to connect to MSPH
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
-msgid "To use Microsoft Start Partner Hub, connect your WordPress website"
+msgid "To use MSN Partner Hub, connect your WordPress website"
 msgstr ""
 
 #. translators: Alert message in editor sidebar
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
-msgid "Your brand was suspended by Microsoft Start and content can't be published."
+msgid "Your brand was suspended by MSN and content can't be published."
 msgstr ""
 
 #. translators: Account not approved description in editor sidebar
@@ -1811,7 +1802,7 @@ msgstr ""
 #. translators: explanation text for users not approved yet
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
-msgid "Once your profile is approved, you can automatically publish your WordPress posts to Microsoft Start. Your work will appear alongside content from individual creators and established media brands."
+msgid "Once your profile is approved, you can automatically publish your WordPress posts to MSN. Your work will appear alongside content from individual creators and established media brands."
 msgstr ""
 
 #. translators: explanation text for admin when the brand hasn't added a payment account yet
@@ -1859,7 +1850,7 @@ msgstr ""
 #. translators: Notification text when appeal is pending. %s will be replaced by link to refresh status
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
-msgid "If your appeal is approved, this will be published to Microsoft Start. If denied, you can edit and submit again. %s for status updates."
+msgid "If your appeal is approved, this will be published to MSN. If denied, you can edit and submit again. %s for status updates."
 msgstr ""
 
 #. translators: Link text to refresh appeal status
@@ -1883,7 +1874,7 @@ msgstr ""
 #. translators: Notification text when appeal is approved
 #: assets/js/editorSidebar.js:1
 #: assets/js/status.js:1
-msgid "This post meets our publishing guidelines. It has been published to Microsoft Start."
+msgid "This post meets our publishing guidelines. It has been published to MSN."
 msgstr ""
 
 #. translators: Title text of requesting appeal dialog
@@ -1923,12 +1914,12 @@ msgstr ""
 
 #. translators: header text for category selection
 #: assets/js/status.js:1
-msgid "Microsoft Start category"
+msgid "MSN category"
 msgstr ""
 
 #. translators: Tips in sidebar
 #: assets/js/status.js:1
-msgid "Once you click the \"Publish to Microsoft\" button, your content will be individually published to Microsoft Start Partner Hub. It will not change anything of your website"
+msgid "Once you click the \"Publish to Microsoft\" button, your content will be individually published to MSN Partner Hub. It will not change anything of your website"
 msgstr ""
 
 #. translators: Post update error notice
@@ -1946,7 +1937,7 @@ msgstr ""
 msgid "About the post"
 msgstr ""
 
-#. translators: Label text of last updated time in Microsoft Start Partner Hub
+#. translators: Label text of last updated time in MSN Partner Hub
 #: assets/js/status.js:1
 msgid "Last updated in MSPH"
 msgstr ""

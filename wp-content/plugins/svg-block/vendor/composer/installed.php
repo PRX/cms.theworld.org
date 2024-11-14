@@ -5,7 +5,7 @@
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '74de3cad92e47fc9bf0cd8416472351e9febba12',
+        'reference' => 'a4a0564435ed60c4fe36bc7ef04d23dd9c0f946e',
         'name' => 'mr2p/svg-block',
         'dev' => true,
     ),
@@ -20,12 +20,12 @@
             'dev_requirement' => true,
         ),
         'enshrined/svg-sanitize' => array(
-            'pretty_version' => '0.18.0',
-            'version' => '0.18.0.0',
+            'pretty_version' => '0.20.0',
+            'version' => '0.20.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../enshrined/svg-sanitize',
             'aliases' => array(),
-            'reference' => '6a2c069dab3843ca4d887ff09c972fc7033888d0',
+            'reference' => '068d9fcf912c88a0471d101d95a2caa87c50aee7',
             'dev_requirement' => false,
         ),
         'grogy/php-parallel-lint' => array(
@@ -46,7 +46,7 @@
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '74de3cad92e47fc9bf0cd8416472351e9febba12',
+            'reference' => 'a4a0564435ed60c4fe36bc7ef04d23dd9c0f946e',
             'dev_requirement' => false,
         ),
         'php-parallel-lint/php-parallel-lint' => array(

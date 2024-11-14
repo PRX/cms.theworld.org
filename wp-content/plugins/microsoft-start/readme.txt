@@ -1,18 +1,18 @@
-=== Microsoft Start ===
-Tags: Microsoft, Microsoft Start
+=== MSN Partner Hub ===
+Tags: Microsoft, MSN, MSN Partner Hub
 Requires at least: 5.4
 Requires PHP: 7.3
-Stable tag: 2.7.19
+Stable tag: 2.8
 Tested up to: 6.5
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Contributors: Microsoft
 
 == Description ==
-Microsoft Start WordPress plugin is developed by Microsoft. It helps WordPress content creators to share content to Microsoft Start directly from their sites.
+MSN Partner Hub WordPress plugin is developed by Microsoft. It helps WordPress content creators to share content to MSN directly from their sites.
 
-### Tell your stories with Microsoft Start
-Microsoft operates the world’s largest cross-platform service covering news, entertainment and lifestyle content. Our audience is growing, and we want to help you share your stories. Our personalized content feed is used by millions of active users each day through Windows, Bing, Edge, and Microsoft Start.
+### Tell your stories with MSN
+Microsoft operates the world’s largest cross-platform service covering news, entertainment and lifestyle content. Our audience is growing, and we want to help you share your stories. Our personalized content feed is used by millions of active users each day through Windows, Bing, Edge, and MSN.
 
 **Invite Code**: Participation is limited right now while this pilot program is in the early stages. Please apply to the program by filling out our application, and we’ll notify you if your content is a good fit.
 [Apply here.](https://aka.ms/startcreating)
@@ -24,7 +24,7 @@ Let us do the hard work. Automatically sync your content to our feed and benefit
 Build your brand and share your mission alongside some of the most important media outlets in news, entertainment, and lifestyle. You choose what to syndicate while retaining full ownership of your content.
 
 ### Go big
-Microsoft Start has millions of daily users on Windows, in Microsoft Edge, and a lot more.  Publish with the existing tools you use today and Microsoft matches your stories with interested readers.
+MSN has millions of daily users on Windows, in Microsoft Edge, and a lot more.  Publish with the existing tools you use today and Microsoft matches your stories with interested readers.
 
 ### Get Paid
 It’s your work—you deserve all the credit and the rewards without unfair fees. Earn ad revenue from high-quality ad placements across our network. You can also opt into reader support, which allows people to send you money directly or convert Microsoft Rewards points into cash.
@@ -38,16 +38,19 @@ Data Collection. The software may collect information about you and your use of 
 
 == Screenshots ==
 
-1. Tell your stories with Microsoft Start
-2. Sign up Microsoft Start Partner Hub account
+1. Tell your stories with MSN
+2. Sign up MSN Partner Hub account
 3. Check overview on dashboard.
-4. Share to Microsoft Start.
+4. Share to MSN.
 
 == Frequently Asked Questions ==
 = Where can I find out more information? =
-For more information be sure to check out the [Microsoft Start Help Center](https://helpcenter.microsoftstart.com)
+For more information be sure to check out the [MSN Partner Help Center](https://helpcenter.microsoftstart.com)
 
 == Changelog ==
+
+= 2.8 =
+* Renamed to "MSN Partner Hub" for consistency. No other changes.
 
 = 2.7.11 =
 * Provide a clear indication that the content has expired in MSPH or will expire within 90 days.
