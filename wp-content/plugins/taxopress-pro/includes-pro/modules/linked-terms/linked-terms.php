@@ -146,7 +146,7 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
                 <div id="">
                     <h1 class="wp-heading-inline"><?php esc_html_e('Linked Terms', 'taxopress-pro'); ?></h1>
                     <div class="taxopress-description">
-                        <?php esc_html_e('This feature allows you to connect terms. When the main term or any Linked Term is added to a post, all the other terms will be added also.', 'taxopress-pro'); ?>
+                        <?php esc_html_e('This feature allows you to connect terms. When the primary or secondary term is added to a post, the other term can be added also.', 'taxopress-pro'); ?>
                     </div>
     
                     <?php
@@ -357,7 +357,7 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
             <div class="form-field">
                 <label for="text"><?php esc_html_e('Linked Terms', 'taxopress-pro'); ?></label>
                 <input type="text" class="taxopress-linked-terms-input term-linked-terms linked-term-autocomplete-input" placeholder="<?php esc_attr_e('Start typing to choose existing terms.', 'taxopress-pro'); ?>" />
-                <p><?php esc_html_e('These terms are linked to the main term. When the main term or any of these terms are added to the post, all the other terms will be added also.', 'taxopress-pro'); ?></p>
+                <p><?php esc_html_e('These terms are linked to the main term. When the primary or secondary term is added to a post, the other term can be added also.', 'taxopress-pro'); ?></p>
                 <ul class="taxopress-term-linked-terms wrapper"></ul>
             </div>
         <?php
@@ -379,10 +379,11 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
                 </th>
                 <td>
                     <input type="text" class="taxopress-linked-terms-input term-linked-terms linked-term-autocomplete-input" placeholder="<?php esc_attr_e('Start typing to choose existing terms.', 'taxopress-pro'); ?>" />
-                    <p><?php esc_html_e('These terms are linked to the main term. When the main term or any of these terms are added to the post, all the other terms will be added also.', 'taxopress-pro'); ?></p>
+                    <p><?php esc_html_e('These terms are linked to the main term. When the primary or secondary term is added to a post, the other term can be added also.', 'taxopress-pro'); ?></p>
                     <ul class="taxopress-term-linked-terms wrapper">
                         <?php if (!empty($linked_terms)) : ?>
                             <?php foreach ($linked_terms as $linked_term_option) : 
+                            $linked_term_tag = ((int)$linked_term_option->term_id === (int)$term->term_id) ? '2' : '1';
                             $actual_linked_term_data = taxopress_get_linked_term_data($linked_term_option, $term->term_id);
                             
                             $taxopress_linked_term_id       = $actual_linked_term_data->term_id;
@@ -391,7 +392,7 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
 
                             $existing_linked_term_ids[] = $taxopress_linked_term_id;
                                 ?>
-                                <li class="taxopress-term-li <?php echo esc_attr($taxopress_linked_term_taxonomy); ?>-<?php echo esc_attr($taxopress_linked_term_id); ?>">
+                                <li class="taxopress-term-li <?php echo esc_attr($taxopress_linked_term_taxonomy); ?>-<?php echo esc_attr($taxopress_linked_term_id); ?>" data-position="<?php echo esc_attr($linked_term_tag); ?>">
                                     <span class="display-text"><?php echo esc_html($taxopress_linked_term_name); ?> (<?php echo esc_html($taxopress_linked_term_taxonomy); ?>)</span>
                                     <span class="remove-linked_term">
                                         <span class="dashicons dashicons-no-alt"></span>
@@ -406,6 +407,18 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
                     <?php foreach ($existing_linked_term_ids as $existing_linked_term_id) : ?>
                         <input type="hidden" name="taxopress_existing_linked_term_id[]" value="<?php echo esc_attr($existing_linked_term_id); ?>">
                     <?php endforeach; ?>
+                    <?php if (!empty($linked_terms)) : ?>
+                        <p class="taxopress-term-position-msg">
+                            <?php 
+                            printf(
+                                /* translators: %1$s and %2$s are superscript numbers. */
+                                __('The superscript %1$s indicates the linked term being the primary term, while %2$s is shown when the linked term is the secondary term. You can delete the relationship and re-add it from your preferred term edit screen to make them the primary term.', 'taxopress-pro'),
+                                '<strong>1</strong>',
+                                '<strong>2</strong>'
+                            ); 
+                            ?>
+                        </p>
+                    <?php endif; ?>
                 </td>
             </tr>
 <?php
@@ -485,7 +498,8 @@ if (!class_exists('TaxoPress_Linked_Terms')) {
                 if (!empty($terms)) {
                     foreach ($terms as $term) {
                         // Add linked term
-                        $linked_terms = taxopress_get_linked_terms($term->term_id);
+                        $linked_terms_type = SimpleTags_Plugin::get_option_value('linked_terms_type');
+                        $linked_terms = taxopress_get_linked_terms($term->term_id, '', false, $linked_terms_type);
                         if (!empty($linked_terms)) {
                             foreach($linked_terms as $linked_term) {
                                 $linked_term_data = taxopress_get_linked_term_data($linked_term, $term->term_id);
