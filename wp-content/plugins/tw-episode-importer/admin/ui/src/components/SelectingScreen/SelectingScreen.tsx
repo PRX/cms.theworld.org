@@ -35,7 +35,6 @@ export function SelectingScreen() {
   const publishDateData = apiData?.get(publishDateKey);
   const publishDateDataRefreshTimeout = useRef<ReturnType<typeof setTimeout>>();
   const { episodes, segments } = publishDateData || {};
-  console.log(publishDateKey, episodes, segments);
   const canRollbackEpisodes = !!(episodes || []).find(({ existingAudio, existingPost }) => existingPost?.imported || existingAudio?.imported);
   const canRollbackSegments = !!(segments || []).find(({ existingAudio, existingPost }) => existingPost?.imported || existingAudio?.imported);
   const canRollback = canRollbackEpisodes || canRollbackSegments;
@@ -387,8 +386,6 @@ export function SelectingScreen() {
     });
     nextStage();
   }
-
-  console.log('To be imported >>>', importEpisode, importSegments);
 
   return (
     <Card className='overflow-clip'>
