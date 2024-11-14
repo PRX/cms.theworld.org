@@ -188,8 +188,8 @@ class MSNClient
 
     static function get_wp_notification()
     {
-        // 1. Microsoft Start new version is available. 
-        // 2. You have articles which have not been published to Microsoft.
+        // 1. MSN Partner Hub new version is available.
+        // 2. You have articles which have not been published to MSN.
         $wpNotifications = array();
         $currentVersion = MSPH_PLUGIN_VERSION;
         $latestVersion = Util::get_latest_plugin_version();
@@ -205,7 +205,7 @@ class MSNClient
                     'severity' => "information",
                     'wpNotificationType' => 'version_update',
                     'propertyBag' => array(
-                        'title' => /* translators: Notification of update plugin */ __('A new version of Microsoft Start is available.', 'microsoft-start'),
+                        'title' => /* translators: Notification of update plugin */ __('A new version of MSN Partner Hub is available.', 'microsoft-start'),
                         "action" => "[{\"Text\":\"" ./* translators: Update button in banner */ __("Update Now", 'microsoft-start') . "\",\"Href\":\"./plugins.php?s=microsoft-start\",\"IsExternalLink\":false}]"
                     )
                 ));
@@ -232,7 +232,7 @@ class MSNClient
                     'severity' => "information",
                     'wpNotificationType' => 'publish_article',
                     'propertyBag' => array(
-                        'title' => /* translators: Notification of publish post */ __("Some of your posts haven't been submitted to Microsoft Start yet.", 'microsoft-start'),
+                        'title' => /* translators: Notification of publish post */ __("Some of your posts haven't been submitted to MSN yet.", 'microsoft-start'),
                         "action" => "[{\"Text\":\"" ./* translators: Batch submit button */ __("Submit all", "microsoft-start") . "\",\"Href\":\"./admin.php?page=microsoft-start#/batch-submit\",\"IsExternalLink\":false},{\"Text\":\"" ./* translators: Submit button in banner */ __("Edit and submit one by one", "microsoft-start") . "\",\"Href\":\"./edit.php\",\"IsExternalLink\":false}]"
                     )
                 ));
