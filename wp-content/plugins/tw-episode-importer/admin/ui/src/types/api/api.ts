@@ -42,18 +42,26 @@ export type ApiCategory = {
 export type ApiAudio = {
   guid: string,
   databaseId: number,
+  imported: boolean,
   editLink: string,
+  datePublished: string,
+  dateUpdated: string,
   url: string
 }
 
 export type ApiPost = {
   guid: string,
   databaseId: number,
-  editLink: string,
   type: string,
   status: 'publish' | 'future' | 'draft' | 'pending' | 'private' | 'trash' | 'auto-draft' | 'inherit',
-  audio: Maybe<ApiAudio>
+  imported: boolean,
+  editLink: string,
+  datePublished: string,
+  dateUpdated: string,
 }
+
+export const ApiEpisodeTypes = ['episode', 'segment'] as const;
+export type ApiEpisodeType = (typeof ApiEpisodeTypes)[number];
 
 export type ApiEpisode = {
   existingPosts?: ApiPost[],
@@ -61,6 +69,7 @@ export type ApiEpisode = {
   existingAudio: Maybe<ApiAudio>,
   wasImported: boolean,
   hasUpdatedAudio: boolean,
+  type: ApiEpisodeType,
   id: string,
   guid: string,
   title: string,
@@ -79,4 +88,9 @@ export type ApiData = {
   date: Date,
   episodes: ApiEpisode[],
   segments: ApiEpisode[]
+};
+
+export type ApiEpisodeDeleteOptions = {
+  deleteAudio: boolean,
+  deleteParent: boolean
 };

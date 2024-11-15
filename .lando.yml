@@ -1,5 +1,9 @@
 name: the-world-wp
 recipe: pantheon
+excludes:
+  - vendor
+  - node_modules
+  - wp-content/plugins/tw-episode-importer/admin/ui/node_modules
 env_file:
   - .env
 config:

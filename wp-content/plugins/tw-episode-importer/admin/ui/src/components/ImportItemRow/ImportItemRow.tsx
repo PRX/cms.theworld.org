@@ -1,6 +1,7 @@
 import type { ApiAudio, ApiEpisode, ApiTerm } from '@/types/api/api';
 import type { ItemRow, ItemRowTerm } from '@/types/state/itemRow';
 import React, { useContext, useEffect, useState } from 'react';
+import isSameDay from "date-fns/isSameDay";
 import { ContributorBadge } from '@/components/ContributorBadge';
 import { PlayButton } from '@/components/PlayButton';
 import { Badge } from '@/components/ui/badge';
@@ -8,10 +9,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { AppContext } from '@/lib/contexts/AppContext';
 import { cn, formatDuration } from '@/lib/utils';
-import { ArrowBigRight, CheckCircle, Edit, ExternalLink } from 'lucide-react';
+import { ArrowBigRight, CheckCircle, Edit, ExternalLink, AlertTriangle } from 'lucide-react';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 type ImportItemRowProps = {
   data?: ApiEpisode,
@@ -55,22 +58,22 @@ function AudioEditLink({ audio }: AudioEditLinkProps) {
   const audioFilename = audio?.url?.split('/').pop();
 
   return (
-    <a className='inline-flex gap-2 text-primary' href={editLink} target={`edit:${audio.databaseId}`}>{audioFilename} <ExternalLink size={16} /></a>
+    <a className='inline-flex gap-2 text-primary' href={editLink} target={`edit:${audio.databaseId}`} title={audio.url}>{audioFilename} <ExternalLink size={16} /></a>
   )
 }
 
 export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponent, selected, onImportDataChange }: ImportItemRowProps) {
   const { state } = useContext(AppContext);
   const [rowData, setRowData] = useState(rd || parseApiEpisode(data));
-  const { existingPosts, existingPost, existingAudio, enclosure, wasImported, categories } = rowData?.data || data || {};
+  const { existingPosts, existingPost, existingAudio, enclosure, categories, dateBroadcast, datePublished, dateKey } = rowData?.data || data || {};
   const { data: appData } = state || {};
   const { taxonomies } = appData || {};
+  const hasMatchingDates = !dateBroadcast || isSameDay(new Date(dateBroadcast.split('T')[0]), new Date(datePublished.split('T')[0]));
   const existingTermsMap = new Map<string, ApiTerm[]>();
-  const hasExisitingPosts = !!existingPosts;
   const hasExisitingPost = !!existingPost;
-  const hasExistingAudio = !!existingAudio;
-  const existingAudioMatches = hasExistingAudio && existingAudio.url === enclosure?.href;
-  const completed = hasExisitingPost && existingAudioMatches;
+  const hasExistingAudio = !!existingAudio?.url;
+  const existingAudioMatches = hasExistingAudio && existingAudio.url.split('/').pop() === enclosure?.href.split('/').pop();
+  const completed = (!dateKey || hasExisitingPost) && existingAudioMatches;
   const fadeOutRow = !(completed) && !selected;
   const hilightUpdatedRow = hasExisitingPost && !existingAudioMatches && selected;
 
@@ -111,58 +114,27 @@ export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponen
   }
 
   function Filename() {
-    if (!existingAudioMatches && existingPosts) {
+    if (hasExistingAudio && !existingAudioMatches) {
       return (
-        <div className='grid gap-2'>
-          {existingPosts.map(({ audio, type, databaseId }) => {
-            const isAudioUpdated = audio?.url !== enclosure.href;
-
-            return (
-              <div className='flex gap-1' key={databaseId}>
-                {existingPosts.length > 1 && (
-                    <Badge variant='outline' className='capitalize'>{type}</Badge>
-                )}
-                {isAudioUpdated && (
-                  <>
-                    {audio?.url ? (
-                      <AudioEditLink audio={audio} />
-                    ) : (
-                      <>
-                        <Badge variant='secondary' className='whitespace-nowrap capitalize'>No Audio</Badge>
-                      </>
-                    )}
-                    <ArrowBigRight className='text-orange-400' />
-                  </>
-                )}
-                <span>{filename}</span>
-              </div>
-            )
-          })}
+        <div className='flex gap-1'>
+          {existingAudio?.url ? (
+            <AudioEditLink audio={existingAudio} />
+          ) : (
+            <>
+              <Badge variant='secondary' className='whitespace-nowrap capitalize'>No Audio</Badge>
+            </>
+          )}
+          <ArrowBigRight className='text-orange-400' />
+          <span title={audioUrl}>{filename}</span>
         </div>
       )
     }
 
-    if (existingPosts) {
-      const postsAudioMap = new Map<number, ApiAudio>();
-
-      existingPosts.forEach(({ audio }) => {
-        postsAudioMap.set(audio.databaseId, audio);
-      })
-
-      return (
-        <div className='grid gap-2'>
-          {[...postsAudioMap.values()].map((audio) => (
-            <AudioEditLink audio={audio} key={audio.databaseId} />
-          ))}
-        </div>
-      )
-    }
-
-    if (existingAudio) {
+    if (hasExistingAudio) {
       return <AudioEditLink audio={existingAudio} key={existingAudio.databaseId} />
     }
 
-    return filename;
+    return <span title={audioUrl}>{filename}</span>;
   }
 
   if (!rowData) return (
@@ -209,8 +181,11 @@ export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponen
           <div className='font-bold text-wrap-balance'>{title}</div>
           {(terms || existingPosts) && (
             <div className='inline-flex flex-wrap content-start items-center gap-2'>
-              {existingPosts?.map(({ databaseId, editLink, type }) => (
+              {existingPosts?.filter(({ imported }) => imported).map(({ databaseId, editLink, type }) => (
                 <a href={editLink} target={`edit:${databaseId}`} key={databaseId}><Badge className='capitalize inline-flex gap-2'>{type} <ExternalLink className='inline-block' size={16} /></Badge></a>
+              ))}
+              {existingPosts?.filter(({ imported }) => !imported).map(({ databaseId, editLink, type }) => (
+                <a href={editLink} target={`edit:${databaseId}`} key={databaseId}><Badge variant='secondary' className='capitalize inline-flex gap-2 text-primary'>{type} <ExternalLink className='inline-block' size={16} /></Badge></a>
               ))}
               {terms?.filter((term) => !!term.taxonomy).map((term) => (
                 <Badge variant='secondary' className='capitalize' key={term.name}>{term.name} ({term.taxonomy.label})</Badge>
@@ -313,14 +288,32 @@ export function ImportItemRow({ data, rowData: rd, importAs, selectInputComponen
       <TableCell>
         <div className='inline-flex flex-wrap gap-2'>
           {contributors ? contributors.map((contributor) => (
-            <ContributorBadge data={contributor} key={contributor.name} />
+            <ContributorBadge data={contributor} key={`${contributor.name}:${contributor.id}`} />
           )) : (
             <Badge variant='secondary' className='whitespace-nowrap'>No Contributors</Badge>
           )}
         </div>
       </TableCell>
       <TableCell className='whitespace-nowrap'>
-        <Filename />
+        <div className='flex items-center gap-2'>
+          {!hasMatchingDates && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <AlertTriangle className='text-orange-500' />
+                </TooltipTrigger>
+                <TooltipContent className='p-0'>
+                  <Alert variant='warn' className='border-none'>
+                    <AlertTriangle className='w-4 h-4 text-orange-500' />
+                    <AlertTitle>Incorrect broadcast date in filename!</AlertTitle>
+                    <AlertDescription>Please correct date portion of filename and reupload episode in Dovetail.</AlertDescription>
+                  </Alert>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+          <Filename />
+        </div>
       </TableCell>
       <TableCell className='text-center'>{duration}</TableCell>
       <TableCell className='pe-6'>
