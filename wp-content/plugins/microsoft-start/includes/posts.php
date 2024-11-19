@@ -36,7 +36,7 @@ class Posts
         // add the staus column after date
         $index_of_date = array_search("date", array_keys($defaults));
         $index_of_insertion = $index_of_date !== false ? $index_of_date + 1 : count($defaults);
-        $defaults = array_merge(array_slice($defaults, 0, $index_of_insertion), ['msn-status' => /* translators: table header for a column of publishing status of articles*/ __("Microsoft Start publish status", "microsoft-start")], array_slice($defaults, $index_of_insertion));
+        $defaults = array_merge(array_slice($defaults, 0, $index_of_insertion), ['msn-status' => /* translators: table header for a column of publishing status of articles*/ __("MSN publish status", "microsoft-start")], array_slice($defaults, $index_of_insertion));
         return $defaults;
     }
 

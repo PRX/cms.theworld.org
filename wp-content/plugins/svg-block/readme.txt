@@ -1,12 +1,13 @@
 === SVG Block ===
 Contributors:      Mr2P
 Tags:              block, SVG, image, icon, button
-Requires PHP:      7.0.0
-Requires at least: 6.3
-Tested up to:      6.6
-Stable tag:        1.1.23
+Requires PHP:      7.1
+Requires at least: 6.5
+Tested up to:      6.7
+Stable tag:        1.1.25
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
+Donate link:       https://boldblocks.net?utm_source=wp.org&utm_campaign=readme&utm_medium=link&utm_content=SVG+Block+Donate
 
 Display an SVG image as a block, which can be used for displaying images, icons, dividers, buttons
 
@@ -45,13 +46,13 @@ If this plugin is useful for you, please do a quick review and [rate it](https:/
 
 Please check out my other plugins if you're interested:
 
-* [Content Blocks Builder](https://wordpress.org/plugins/content-blocks-builder) - A tool to create blocks, patterns or variations easily for your site directly on the Block Editor.
-* [Meta Field Block](https://wordpress.org/plugins/display-a-meta-field-as-block) - A block to display a meta field or an ACF field as a block. It can also be used in the Query Loop block.
-* [Block Enhancements](https://wordpress.org/plugins/block-enhancements) - A plugin to add more useful features to blocks like icons, box-shadow, transform, hover style, etc.
-* [Icon separator](https://wordpress.org/plugins/icon-separator) - A tiny block just like the core/separator block but with the ability to add an icon to it.
-* [Counting Number Block](https://wordpress.org/plugins/counting-number-block) - A block to display a number that has the number-counting effect.
-* [Breadcrumb Block](https://wordpress.org/plugins/breadcrumb-block) - A simple breadcrumb trail block that supports JSON-LD structured data.
-* [Better YouTube Embed Block](https://wordpress.org/plugins/better-youtube-embed-block) - Embed YouTube videos without slowing down your site.
+- **[Content Blocks Builder](https://wordpress.org/plugins/content-blocks-builder)** - This plugin turns the Block Editor into a powerful page builder by allowing you to create blocks, variations, and patterns directly in the Block Editor without needing a code editor.
+- **[Meta Field Block](https://wordpress.org/plugins/display-a-meta-field-as-block)** - A block to display custom fields as blocks on the front end. It supports custom fields for posts, terms, users, and setting fields. It can also be used in the Query Loop block.
+- **[Icon separator](https://wordpress.org/plugins/icon-separator)** - A tiny block just like the core/separator block but with the ability to add an icon.
+- **[Breadcrumb Block](https://wordpress.org/plugins/breadcrumb-block)** - A simple breadcrumb trail block that supports JSON-LD structured data and is compatible with WooCommerce.
+- **[Block Enhancements](https://wordpress.org/plugins/block-enhancements)** - Adds practical features to blocks like icons, box shadows, transforms, etc.
+- **[Counting Number Block](https://wordpress.org/plugins/counting-number-block)** - A block to display numbers with a counting effect
+- **[Better YouTube Embed Block](https://wordpress.org/plugins/better-youtube-embed-block)** - A block to solve the performance issue with embedded YouTube videos. It can also embed multiple videos and playlists.
 
 The plugin is developed using @wordpress/create-block.
 
@@ -99,6 +100,20 @@ Anyone can use this plugin.
 7. Block's placeholder
 
 == Changelog ==
+
+= 1.1.25 =
+*Release Date - 14 November 2024*
+
+* Added    - Add typography support feature when using the block as a button
+* Security - Sanitize the SVG files upload via REST API
+* Updated  - Required PHP 7.1
+
+= 1.1.24 =
+*Release Date - 24 October 2024*
+
+* Updated  - SDK to implement minor UI changes and remove deprecated code
+* Improved - Replaced classnames with clsx
+* Updated  - Tested compatibility with WP 6.7 and set minimum requirement to WP 6.5
 
 = 1.1.23 =
 *Release Date - 03 July 2024*

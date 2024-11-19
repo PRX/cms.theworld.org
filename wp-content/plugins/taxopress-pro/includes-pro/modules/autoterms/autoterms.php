@@ -360,7 +360,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
             $selected           = (isset($current) && isset($current['autoterm_use_open_ai'])) ? taxopress_disp_boolean($current['autoterm_use_open_ai']) : '';
             $select['selected'] = !empty($selected) ? $current['autoterm_use_open_ai'] : '';
 
-            $description_text = esc_html__('This will automatically add new terms from the OpenAI service. Please test carefully before use.', 'taxopress-pro');
+            $description_text = esc_html__('This will automatically add new terms from the OpenAI service. Before use, please test carefully using the preview feature.', 'taxopress-pro');
             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             echo $ui->get_select_checkbox_input([
                 'namearray'  => 'taxopress_autoterm',
@@ -511,7 +511,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
             $selected           = (isset($current) && isset($current['autoterm_use_ibm_watson'])) ? taxopress_disp_boolean($current['autoterm_use_ibm_watson']) : '';
             $select['selected'] = !empty($selected) ? $current['autoterm_use_ibm_watson'] : '';
 
-            $description_text = esc_html__('This will automatically add new terms from the IBM Watson service. Please test carefully before use.', 'taxopress-pro');
+            $description_text = esc_html__('This will automatically add new terms from the IBM Watson service. Before use, please test carefully using the preview feature.', 'taxopress-pro');
             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             echo $ui->get_select_checkbox_input([
                 'namearray'  => 'taxopress_autoterm',
@@ -621,7 +621,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
             $selected           = (isset($current) && isset($current['autoterm_use_dandelion'])) ? taxopress_disp_boolean($current['autoterm_use_dandelion']) : '';
             $select['selected'] = !empty($selected) ? $current['autoterm_use_dandelion'] : '';
 
-            $description_text = esc_html__('This will automatically add new terms from the Dandelion service. Please test carefully before use.', 'taxopress-pro');
+            $description_text = esc_html__('This will automatically add new terms from the Dandelion service. Before use, please test carefully using the preview feature.', 'taxopress-pro');
             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             echo $ui->get_select_checkbox_input([
                 'namearray'  => 'taxopress_autoterm',
@@ -733,7 +733,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
             $selected           = (isset($current) && isset($current['autoterm_use_opencalais'])) ? taxopress_disp_boolean($current['autoterm_use_opencalais']) : '';
             $select['selected'] = !empty($selected) ? $current['autoterm_use_opencalais'] : '';
 
-            $description_text = esc_html__('This will automatically add new terms from the LSEG / Refinitiv service. Please test carefully before use.', 'taxopress-pro');
+            $description_text = esc_html__('This will automatically add new terms from the LSEG / Refinitiv service. Before use, please test carefully using the preview feature.', 'taxopress-pro');
             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             echo $ui->get_select_checkbox_input([
                 'namearray'  => 'taxopress_autoterm',
@@ -836,7 +836,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                 'name'       => 'autoterm_use_regex',
                 'class'      => 'autoterm_use_regex',
                 'labeltext'  => esc_html__('Regular Expressions', 'taxopress-pro'),
-                'aftertext'  => esc_html__('Use Regular Expressions to change how Auto Terms analyzes your posts.', 'taxopress-pro'),
+                'aftertext'  => esc_html__('Use Regular Expressions to change how Auto Terms analyzes your posts for Existing Terms.', 'taxopress-pro'),
                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 'selections' => $select,
             ]);
