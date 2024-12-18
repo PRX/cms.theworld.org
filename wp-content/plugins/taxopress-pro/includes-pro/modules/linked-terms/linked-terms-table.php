@@ -171,7 +171,7 @@ if (!class_exists('Taxopress_Linked_Terms_List')) {
         {
             $actions = [
                 'taxopress-linked-terms-add-linked-terms' => esc_html__('Add primary term to posts with secondary term', 'taxopress-pro'),
-                'taxopress-linked-terms-add-terms' => esc_html__('Add secondary term to post with primary term', 'taxopress-pro'),
+                'taxopress-linked-terms-add-terms' => esc_html__('Add secondary term to posts with primary term', 'taxopress-pro'),
                 'taxopress-linked-terms-delete-relationship' => esc_html__('Delete Relationship', 'taxopress-pro')
             ];
 
@@ -464,7 +464,7 @@ if (!class_exists('Taxopress_Linked_Terms_List')) {
                         ],
                         admin_url('admin.php')
                     ),
-                    esc_html__('Add secondary term to post with primary term', 'taxopress-pro')
+                    esc_html__('Add secondary term to posts with primary term', 'taxopress-pro')
                 );
 
                 $actions['delete'] = sprintf(

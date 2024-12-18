@@ -14,13 +14,8 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
          */
         public function __construct()
         {
-            add_action( 'taxopress_autoterms_after_autoterm_schedule', [$this, 'taxopress_pro_autoterm_schedule_field'] );
-            add_action( 'taxopress_cron_autoterms_hourly', [$this, 'taxopress_cron_autoterms_hourly_execution'] );
-            add_action( 'taxopress_cron_autoterms_daily', [$this, 'taxopress_cron_autoterms_daily_execution'] );
             add_action( 'taxopress_autoterms_after_autoterm_terms_to_use', [$this, 'taxopress_autoterms_after_autoterm_terms_to_use_field'] );
             add_action( 'taxopress_autoterms_after_autoterm_advanced', [$this, 'taxopress_pro_autoterm_advanced_field'] );
-            // Schedule cron events
-            add_action( 'init', [$this, 'schedule_taxopress_cron_events'] );
         }
 
 
@@ -32,302 +27,6 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
             }
 
             return self::$instance;
-        }
-
-        /**
-         * Schedule taxopress cron events
-         *
-         * @return void
-         */
-        public function schedule_taxopress_cron_events() {
-            if ( ! wp_next_scheduled( 'taxopress_cron_autoterms_hourly' ) ) {
-                wp_schedule_event( time(), 'hourly', 'taxopress_cron_autoterms_hourly' );
-            }            
-            
-            if ( ! wp_next_scheduled( 'taxopress_cron_autoterms_daily' ) ) {
-                wp_schedule_event( time(), 'daily', 'taxopress_cron_autoterms_daily' );
-            }
-        }
-
-        public function taxopress_pro_autoterm_schedule_field($current)
-        {
-
-            $ui = new taxopress_admin_ui();
-
-            $cron_options = [
-                'disable' => __('None', 'taxopress-pro'),
-                'hourly' => __('Hourly', 'taxopress-pro'),
-                'daily'  => __('Daily', 'taxopress-pro'),
-            ];
-
-            ?>
-            <tr valign="top">
-                <th scope="row"><label><?php echo esc_html__('Schedule Auto Terms for your content', 'taxopress-pro'); ?></label></th>
-
-                <td>
-                    <?php
-                    $cron_schedule               = (!empty($current['cron_schedule'])) ? $current['cron_schedule'] : 'disable';
-                    foreach ($cron_options as $option => $label) {
-                        $checked_status = ($option === $cron_schedule)  ? 'checked' : ''; 
-                        ?>
-                        <label> 
-                            <input 
-                                class="autoterm_cron" 
-                                type="radio" 
-                                id="autoterm_cron_<?php echo esc_attr($option); ?>" 
-                                name="taxopress_autoterm[cron_schedule]" 
-                                value="<?php echo esc_attr($option); ?>"
-                                <?php echo esc_html($checked_status); ?>
-                            /> <?php echo esc_html($label); ?>
-                            </label> 
-                            <br /><br />
-                    <?php
-                    }
-                    ?>
-                </td>
-            </tr>
-            <?php
-
-            $select             = [
-                'options' => [
-                    [
-                        'attr'    => '0',
-                        'text'    => esc_attr__('False', 'taxopress-pro'),
-                        'default' => 'true',
-                    ],
-                    [
-                        'attr' => '1',
-                        'text' => esc_attr__('True', 'taxopress-pro'),
-                    ],
-                ],
-            ];
-            $selected           = (isset($current) && isset($current['autoterm_schedule_exclude'])) ? taxopress_disp_boolean($current['autoterm_schedule_exclude']) : '';
-            $select['selected'] = !empty($selected) ? $current['autoterm_schedule_exclude'] : '';
-            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-            echo $ui->get_select_checkbox_input([
-                'namearray'  => 'taxopress_autoterm',
-                'name'       => 'autoterm_schedule_exclude',
-                'class'      => '',
-                'labeltext'  => esc_html__('Exclude previously analyzed content', 'taxopress-pro'),
-                'aftertext'  => esc_html__('This enables you to skip posts that have already been analyzed by the Schedule feature.', 'taxopress-pro'),
-                'selections' => $select, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-            ]);
-            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-            echo $ui->get_number_input([
-                'namearray' => 'taxopress_autoterm',
-                'name'      => 'schedule_terms_batches',
-                'textvalue' => isset($current['schedule_terms_batches']) ? esc_attr($current['schedule_terms_batches']) : '20',
-                'labeltext' => esc_html__(
-                    'Limit per batches',
-                    'taxopress-pro'
-                ),
-                'helptext'  => esc_html__('This enables your scheduled Auto Terms to run in batches. If you have a lot of content, set this to a lower number to avoid timeouts.', 'taxopress-pro'),
-                'min'       => '1',
-                'required'  => true,
-            ]);
-
-            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-            echo $ui->get_number_input([
-                'namearray' => 'taxopress_autoterm',
-                'name'      => 'schedule_terms_sleep',
-                'textvalue' => isset($current['schedule_terms_sleep']) ? esc_attr($current['schedule_terms_sleep']) : '10',
-                'labeltext' => esc_html__('Batches wait time', 'taxopress-pro'),
-                'helptext'  => esc_html__('This is the wait time (in seconds) between processing batches of Auto Terms. If you have a lot of existing content, set this to a higher number to avoid timeouts.', 'taxopress-pro'),
-                'min'       => '0',
-                'required'  => true,
-            ]);
-
-            $select             = [
-                'options' => [
-                    [
-                        'attr' => '1',
-                        'text' => esc_attr__('24 hours ago', 'taxopress-pro')
-                    ],
-                    [
-                        'attr' => '7',
-                        'text' => esc_attr__('7 days ago', 'taxopress-pro')
-                    ],
-                    [
-                        'attr' => '14',
-                        'text' => esc_attr__('2 weeks ago', 'taxopress-pro')
-                    ],
-                    [
-                        'attr' => '30',
-                        'text' => esc_attr__('1 month ago', 'taxopress-pro'),
-                        'default' => 'true'
-                    ],
-                    [
-                        'attr' => '180',
-                        'text' => esc_attr__('6 months ago', 'taxopress-pro')
-                    ],
-                    [
-                        'attr' => '365',
-                        'text' => esc_attr__('1 year ago', 'taxopress-pro')
-                    ],
-                    [
-                        'attr'    => '0',
-                        'text'    => esc_attr__('No limit', 'taxopress-pro')
-                    ],
-                ],
-            ];
-
-            if (isset($current) && is_array($current)) {
-                $select             = [
-                    'options' => [
-                        [
-                            'attr' => '1',
-                            'text' => esc_attr__('24 hours ago', 'taxopress-pro')
-                        ],
-                        [
-                            'attr' => '7',
-                            'text' => esc_attr__('7 days ago', 'taxopress-pro')
-                        ],
-                        [
-                            'attr' => '14',
-                            'text' => esc_attr__('2 weeks ago', 'taxopress-pro')
-                        ],
-                        [
-                            'attr' => '30',
-                            'text' => esc_attr__('1 month ago', 'taxopress-pro'),
-                        ],
-                        [
-                            'attr' => '180',
-                            'text' => esc_attr__('6 months ago', 'taxopress-pro')
-                        ],
-                        [
-                            'attr' => '365',
-                            'text' => esc_attr__('1 year ago', 'taxopress-pro')
-                        ],
-                        [
-                            'attr'    => '0',
-                            'text'    => esc_attr__('No limit', 'taxopress-pro'),
-                            'default' => 'true'
-                        ],
-                    ],
-                ];
-            }
-
-            $selected           = (isset($current) && isset($current['schedule_terms_limit_days'])) ? taxopress_disp_boolean($current['schedule_terms_limit_days']) : '';
-            $select['selected'] = !empty($selected) ? $current['schedule_terms_limit_days'] : '';
-            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-            echo $ui->get_select_number_select([
-                'namearray'  => 'taxopress_autoterm',
-                'name'       => 'schedule_terms_limit_days',
-                'labeltext'  => esc_html__(
-                    'Limit Auto Terms, based on published date',
-                    'taxopress-pro'
-                ),
-                'aftertext'  => esc_html__('This setting can limit your scheduled Auto Terms query to only recent content. We recommend using this feature to avoid timeouts on large sites.', 'taxopress-pro'),
-                'selections' => $select, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-            ]);
-        }
-
-        public function taxopress_cron_autoterms_hourly_execution()
-        {
-
-            global $wpdb;
-
-            $autoterms = taxopress_get_autoterm_data();
-
-            $flag = false;
-            foreach ($autoterms as $autoterm_key => $autoterm_data) {
-                $cron_schedule = isset($autoterm_data['cron_schedule']) ? $autoterm_data['cron_schedule'] : 'disable';
-                $post_types = isset($autoterm_data['post_types']) ? (array)$autoterm_data['post_types'] : [];
-                $post_status = isset($autoterm_data['post_status']) && is_array($autoterm_data['post_status']) ? $autoterm_data['post_status'] : ['publish'];
-                $autoterm_schedule_exclude = isset($autoterm_data['autoterm_schedule_exclude']) ? (int)$autoterm_data['autoterm_schedule_exclude'] : 0;
-
-                if ($cron_schedule !== 'hourly') {
-                    continue;
-                }
-
-                if (empty($post_types)) {
-                    continue;
-                }
-
-                $schedule_terms_limit_days     = (int) $autoterm_data['schedule_terms_limit_days'];
-                $schedule_terms_limit_days_sql = '';
-                if ($schedule_terms_limit_days > 0) {
-                    $schedule_terms_limit_days_sql = 'AND post_date > "' . date('Y-m-d H:i:s', time() - $schedule_terms_limit_days * 86400) . '"';
-                }
-
-
-                $limit = (isset($autoterm_data['schedule_terms_batches']) && (int)$autoterm_data['schedule_terms_batches'] > 0) ? (int)$autoterm_data['schedule_terms_batches'] : 20;
-
-                $sleep = (isset($autoterm_data['schedule_terms_sleep']) && (int)$autoterm_data['schedule_terms_sleep'] > 0) ? (int)$autoterm_data['schedule_terms_sleep'] : 0;
-
-                if ($autoterm_schedule_exclude > 0) {
-                    $objects = (array) $wpdb->get_results("SELECT ID, post_title, post_content FROM {$wpdb->posts} LEFT JOIN {$wpdb->postmeta} ON ( ID = {$wpdb->postmeta}.post_id AND {$wpdb->postmeta}.meta_key = '_taxopress_autotermed' ) WHERE post_type IN ('" . implode("', '", $post_types) . "') AND {$wpdb->postmeta}.post_id IS NULL AND post_status IN ('" . implode("', '", $post_status) . "') {$schedule_terms_limit_days_sql} ORDER BY ID DESC LIMIT {$limit}");
-                } else {
-                    $objects = (array) $wpdb->get_results("SELECT ID, post_title, post_content FROM {$wpdb->posts} WHERE post_type IN ('" . implode("', '", $post_types) . "') AND post_status IN ('" . implode("', '", $post_status) . "') {$schedule_terms_limit_days_sql} ORDER BY ID DESC LIMIT {$limit}");
-                }
-
-                if (!empty($objects)) {
-                    $current_post = 0;
-                    foreach ($objects as $object) {
-                        $current_post++;
-                        update_post_meta($object->ID, '_taxopress_autotermed', 1);
-                        SimpleTags_Client_Autoterms::auto_terms_post($object, $autoterm_data['taxonomy'], $autoterm_data, true, 'hourly_cron_schedule', 'st_autoterms');
-                        unset($object);
-                        if ($sleep > 0 && $current_post % $limit == 0) {
-                            sleep($sleep);
-                        }
-                    }
-                }
-            }
-        }
-
-        public function taxopress_cron_autoterms_daily_execution()
-        {
-
-            global $wpdb;
-
-            $autoterms = taxopress_get_autoterm_data();
-
-            $flag = false;
-            foreach ($autoterms as $autoterm_key => $autoterm_data) {
-                $cron_schedule = isset($autoterm_data['cron_schedule']) ? $autoterm_data['cron_schedule'] : 'disable';
-                $post_types = isset($autoterm_data['post_types']) ? (array)$autoterm_data['post_types'] : [];
-                $post_status = isset($autoterm_data['post_status']) && is_array($autoterm_data['post_status']) ? $autoterm_data['post_status'] : ['publish'];
-                $autoterm_schedule_exclude = isset($autoterm_data['autoterm_schedule_exclude']) ? (int)$autoterm_data['autoterm_schedule_exclude'] : 0;
-
-
-                if ($cron_schedule !== 'daily') {
-                    continue;
-                }
-
-                if (empty($post_types)) {
-                    continue;
-                }
-
-                $schedule_terms_limit_days     = (int) $autoterm_data['schedule_terms_limit_days'];
-                $schedule_terms_limit_days_sql = '';
-                if ($schedule_terms_limit_days > 0) {
-                    $schedule_terms_limit_days_sql = 'AND post_date > "' . date('Y-m-d H:i:s', time() - $schedule_terms_limit_days * 86400) . '"';
-                }
-
-                $limit = (isset($autoterm_data['schedule_terms_batches']) && (int)$autoterm_data['schedule_terms_batches'] > 0) ? (int)$autoterm_data['schedule_terms_batches'] : 20;
-
-                $sleep = (isset($autoterm_data['schedule_terms_sleep']) && (int)$autoterm_data['schedule_terms_sleep'] > 0) ? (int)$autoterm_data['schedule_terms_sleep'] : 0;
-
-                if ($autoterm_schedule_exclude > 0) {
-                    $objects = (array) $wpdb->get_results("SELECT ID, post_title, post_content FROM {$wpdb->posts} LEFT JOIN {$wpdb->postmeta} ON ( ID = {$wpdb->postmeta}.post_id AND {$wpdb->postmeta}.meta_key = '_taxopress_autotermed' ) WHERE post_type IN ('" . implode("', '", $post_types) . "') AND {$wpdb->postmeta}.post_id IS NULL AND post_status IN ('" . implode("', '", $post_status) . "') {$schedule_terms_limit_days_sql} ORDER BY ID DESC LIMIT {$limit}");
-                } else {
-                    $objects = (array) $wpdb->get_results("SELECT ID, post_title, post_content FROM {$wpdb->posts} WHERE post_type IN ('" . implode("', '", $post_types) . "') AND post_status IN ('" . implode("', '", $post_status) . "') {$schedule_terms_limit_days_sql} LIMIT {$limit}");
-                }
-
-                if (!empty($objects)) {
-                    $current_post = 0;
-                    foreach ($objects as $object) {
-                        $current_post++;
-                        update_post_meta($object->ID, '_taxopress_autotermed', 1);
-                        SimpleTags_Client_Autoterms::auto_terms_post($object, $autoterm_data['taxonomy'], $autoterm_data, true, 'daily_cron_schedule', 'st_autoterms');
-                        unset($object);
-                        if ($sleep > 0 && $current_post % $limit == 0) {
-                            sleep($sleep);
-                        }
-                    }
-                }
-            }
         }
 
         public function taxopress_autoterms_after_autoterm_terms_to_use_field($current)
@@ -486,6 +185,31 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                     'helptext'  => sprintf(esc_html__('%1s Click here for prompt documentation. %2s', 'taxopress-pro'), '<a target="_blank" href="https://taxopress.com/docs/openai-prompts/">', '</a>'),
                     'required'  => false,
                 ]);
+
+                $select             = [
+                    'options' => [
+                        [
+                            'attr'    => '0',
+                            'text'    => esc_attr__('False', 'taxopress-pro'),
+                            'default' => 'true',
+                        ],
+                        [
+                            'attr' => '1',
+                            'text' => esc_attr__('True', 'taxopress-pro'),
+                        ],
+                    ],
+                ];
+                $selected           = ( isset($current) && isset($current['open_ai_exclude_post_terms']) ) ? taxopress_disp_boolean($current['open_ai_exclude_post_terms']) : '';
+                $select['selected'] = !empty($selected) ? $current['open_ai_exclude_post_terms'] : '';
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo $ui->get_select_checkbox_input([
+                        'namearray'  => 'taxopress_autoterm',
+                        'name'       => 'open_ai_exclude_post_terms',
+                        'labeltext'  => esc_html__('Exclude Terms not in {post_terms}', 'taxopress-pro'),
+                        'aftertext'  => esc_html__('Exclude terms that are not in the post terms. This is useful for excluding terms that are in {post_terms} when trying to limit suggested terms to only {post_terms} via custom prompt.', 'taxopress-pro'),
+                        'class'      => 'autoterm-terms-to-use-field autoterm-terms-use-openai',
+                        'selections' => $select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    ]);
             ?>
             <tr class="autoterm-description-tr">
                 <td colspan="2">
@@ -836,7 +560,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                 'name'       => 'autoterm_use_regex',
                 'class'      => 'autoterm_use_regex',
                 'labeltext'  => esc_html__('Regular Expressions', 'taxopress-pro'),
-                'aftertext'  => esc_html__('Use Regular Expressions to change how Auto Terms analyzes your posts for Existing Terms.', 'taxopress-pro'),
+                'aftertext'  => esc_html__('Use Regular Expressions to change how Auto Terms analyzes your posts. This works for terms added when posts are saved or added via the "Schedule" feature.', 'taxopress-pro'),
                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 'selections' => $select,
             ]);
@@ -851,7 +575,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                 'labeltext'  => '',
                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 'helptext'  => __(
-                    'Example <code>/\b({term})\b/i</code> will match whole word while <code>/({term})/i</code> will match at any location even if it\'s part of another word. <code>{term}</code> will be replaced with the term name before the regex action.',
+                    'Example: <code>/\b({term})\b/i</code> will match the whole word while <code>/({term})/i</code> will match at any location even if it\'s part of another word. <code>{term}</code> will be replaced with the term name before the regex action.',
                     'taxopress-pro'
                 ),
                 'required'  => false,

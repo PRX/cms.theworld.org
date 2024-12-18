@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaxoPress Pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-08 09:57+0000\n"
-"PO-Revision-Date: 2024-10-09 14:49+0200\n"
+"POT-Creation-Date: 2024-11-05 07:07+0000\n"
+"PO-Revision-Date: 2024-11-07 09:22+0100\n"
 "Last-Translator: \n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Loco-Version: 2.6.3; wp-6.1.1\n"
 "X-Domain: taxopress-pro\n"
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:284
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:274
 #, php-format
 msgid "%1$s can't be added as a tag because %2$s is already used as a synonym."
 msgstr ""
@@ -307,8 +307,8 @@ msgstr ""
 "IBM Watson est un service externe qui peut analyser votre contenu et "
 "suggérer des termes pertinents. %1sCliquer ici pour plus de détails%2s."
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:92
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:112
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:82
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:102
 msgid ""
 "If TaxoPress scans your content and finds a synonym, it will act as if it "
 "has found the main term."
@@ -398,7 +398,6 @@ msgstr ""
 
 #: includes-pro/modules/autoterms/autoterms.php:417
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:67
-#| msgid "OpenAI"
 msgid "OpenAI Models"
 msgstr "Modèles OpenAI"
 
@@ -415,7 +414,7 @@ msgstr "Code Regex"
 msgid "Regular Expressions"
 msgstr "Expressions régulières"
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:306
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:296
 msgid "Request status."
 msgstr "État de la demande."
 
@@ -445,7 +444,7 @@ msgstr "Rechercher des termes"
 msgid "Search..."
 msgstr "Rechercher…"
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:314
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:304
 msgid "Security error. Kindly reload this page and try again"
 msgstr "Erreur de sécurité. Veuillez recharger cette page et réessayer"
 
@@ -512,8 +511,8 @@ msgstr "Nom du terme"
 msgid "Term Post Counts"
 msgstr "Nombre de publications du terme"
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:90
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:108
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:80
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:98
 msgid "Term Synonyms"
 msgstr "Synonymes du terme"
 
@@ -521,8 +520,22 @@ msgstr "Synonymes du terme"
 msgid "Term Taxonomy"
 msgstr "Taxonomie du terme"
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:264
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:360
+#. %1$s and %2$s are superscript numbers.
+#: includes-pro/modules/linked-terms/linked-terms.php:415
+#, php-format
+msgid ""
+"The superscript %1$s indicates the linked term being the primary term, while "
+"%2$s is shown when the linked term is the secondary term. You can delete the "
+"relationship and re-add it from your preferred term edit screen to make them "
+"the primary term."
+msgstr ""
+"L’exposant %1$s indique que le terme lié est le terme principal, tandis que "
+"%2$s est affiché lorsque le terme lié est le terme secondaire. Vous pouvez "
+"supprimer le lien et le rétablir à partir de l’écran de modification de "
+"votre terme préféré pour en faire le terme principal."
+
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:254
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:350
 #, php-format
 msgid ""
 "These synonyms can't be added because %1$s are already added to another term."
@@ -530,8 +543,8 @@ msgstr ""
 "Ces synonymes ne peuvent pas être ajoutés car %1$s il sont déjà ajoutés à un "
 "autre terme."
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:240
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:335
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:230
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:325
 #, php-format
 msgid "These synonyms can't be added because %1$s are terms on this site."
 msgstr ""
@@ -544,7 +557,7 @@ msgid ""
 "These terms are linked to the main term. When the main term or any of these "
 "terms are added to the post, all the other terms will be added also."
 msgstr ""
-"Ces termes sont liés au terme principal. Lorsque le terme principal ou l'un "
+"Ces termes sont liés au terme principal. Lorsque le terme principal ou l’un "
 "de ces termes est ajouté à une publication, tous les autres termes seront "
 "également ajoutés."
 
@@ -581,7 +594,7 @@ msgid ""
 "Term is added to a post, all the other terms will be added also."
 msgstr ""
 "Cette fonctionnalité vous permet de relier des termes. Lorsque le terme "
-"principal ou l'un de ces termes liés est ajouté à une publication, tous les "
+"principal ou l’un de ces termes liés est ajouté à une publication, tous les "
 "autres termes seront également ajoutés."
 
 #: includes-pro/load.php:88
@@ -590,7 +603,7 @@ msgid ""
 "terms are added to the post, all the other terms will be added also."
 msgstr ""
 "Cette fonctionnalité vous permet de relier des termes. Lorsque le terme "
-"principal ou l'un de ces termes liés est ajouté à une publication, tous les "
+"principal ou l’un de ces termes liés est ajouté à une publication, tous les "
 "autres termes seront également ajoutés."
 
 #: includes-pro/modules/autoterms/autoterms.php:135
@@ -612,14 +625,14 @@ msgstr ""
 "au contenu récent. Nous recommandons d’utiliser cette fonctionnalité pour "
 "éviter les les temps dépassés sur les sites de grande taille."
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:235
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:330
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:225
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:320
 #, php-format
 msgid "This synonym can't be added because %1$s is a term on this site."
 msgstr "Ce synonyme ne peut pas être ajouté car %1$s est un terme du site."
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:259
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:355
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:249
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:345
 #, php-format
 msgid ""
 "This synonym can't be added because %1$s is already added to another term."
@@ -629,35 +642,39 @@ msgstr ""
 
 #: includes-pro/modules/autoterms/autoterms.php:624
 msgid ""
-"This will automatically add new terms from the Dandelion service. Please "
-"test carefully before use."
+"This will automatically add new terms from the Dandelion service. Before "
+"use, please test carefully using the preview feature."
 msgstr ""
 "Cela ajoutera automatiquement de nouveaux termes à partir du service de "
-"Dandelion. Veuillez vérifier soigneusement avant de l’utiliser."
+"Dandelion. Avant de l’utiliser, veuillez le tester avec soin à l’aide de la "
+"fonctionnalité de prévisualisation."
 
 #: includes-pro/modules/autoterms/autoterms.php:514
 msgid ""
-"This will automatically add new terms from the IBM Watson service. Please "
-"test carefully before use."
+"This will automatically add new terms from the IBM Watson service. Before "
+"use, please test carefully using the preview feature."
 msgstr ""
 "Cela ajoutera automatiquement de nouveaux termes à partir du service de IBM "
-"Watson. Veuillez vérifier soigneusement avant de l’utiliser."
+"Watson. Avant de l’utiliser, veuillez le tester avec soin à l’aide de la "
+"fonctionnalité de prévisualisation."
 
 #: includes-pro/modules/autoterms/autoterms.php:736
 msgid ""
 "This will automatically add new terms from the LSEG / Refinitiv service. "
-"Please test carefully before use."
+"Before use, please test carefully using the preview feature."
 msgstr ""
 "Cela ajoutera automatiquement de nouveaux termes à partir du service de "
-"LSEG / Refinitiv. Veuillez vérifier soigneusement avant de l’utiliser."
+"LSEG / Refinitiv. Avant de l’utiliser, veuillez le tester avec soin à l’aide "
+"de la fonctionnalité de prévisualisation."
 
 #: includes-pro/modules/autoterms/autoterms.php:363
 msgid ""
-"This will automatically add new terms from the OpenAI service. Please test "
-"carefully before use."
+"This will automatically add new terms from the OpenAI service. Before use, "
+"please test carefully using the preview feature."
 msgstr ""
 "Cela ajoutera automatiquement de nouveaux termes à partir du service de "
-"OpenAI. Veuillez vérifier soigneusement avant de l’utiliser."
+"OpenAI. Avant de l’utiliser, veuillez le tester avec soin à l’aide de la "
+"fonctionnalité de prévisualisation."
 
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:77
 #: includes-pro/modules/taxopress-ai/taxopress-ai.php:113
@@ -670,7 +687,6 @@ msgstr "Cela affichera le nombre de publications attachées au terme."
 #: includes-pro/modules/autoterms/autoterms.php:568
 #: includes-pro/modules/autoterms/autoterms.php:680
 #: includes-pro/modules/autoterms/autoterms.php:779
-#| msgid "This will show number of posts attached to the term."
 msgid "This will show the number of posts attached to the terms."
 msgstr "Ceci affichera le nombre de publications liées aux termes."
 
@@ -691,16 +707,18 @@ msgstr "Ceci affichera le nombre de publications liées aux termes."
 msgid "True"
 msgstr "Vrai"
 
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:91
-#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:111
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:81
+#: includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php:101
 msgid "Type the synonym name and then click Enter or Return."
 msgstr "Saisissez le nom du synonyme, puis cliquez sur Entrée ou Retour."
 
 #: includes-pro/modules/autoterms/autoterms.php:839
-msgid "Use Regular Expressions to change how Auto Terms analyzes your posts."
+msgid ""
+"Use Regular Expressions to change how Auto Terms analyzes your posts for "
+"Existing Terms."
 msgstr ""
 "Utilisez des expressions régulières pour modifier la façon dont les termes "
-"automatiques analysent vos publications."
+"automatiques analysent vos publications pour les termes existants."
 
 #: includes-pro/classes/licence.php:76
 msgid "Your license key provides access to updates and support."

@@ -6,6 +6,8 @@ require_once (TAXOPRESS_ABSPATH . '/includes-pro/modules/taxonomy-synonyms/taxon
 require_once (TAXOPRESS_ABSPATH . '/includes-pro/modules/linked-terms/linked-terms.php');
 require_once (TAXOPRESS_ABSPATH . '/includes-pro/modules/autolinks/autolinks.php');
 require_once (TAXOPRESS_ABSPATH . '/includes-pro/modules/autoterms/autoterms.php');
+require_once (TAXOPRESS_ABSPATH . '/includes-pro/modules/autoterms/schedule.php');
+require_once (TAXOPRESS_ABSPATH . '/includes-pro/modules/autoterms/schedule-logs-table.php');
 require_once (TAXOPRESS_ABSPATH . '/includes-pro/modules/taxopress-ai/taxopress-ai.php');
 
 if (!class_exists('TaxoPress_Pro_Init')) {
@@ -22,8 +24,8 @@ if (!class_exists('TaxoPress_Pro_Init')) {
          */
         public function __construct()
         {
-            add_action( 'plugins_loaded', [$this, 'taxopress_load_module_classes'] );
-            add_action( 'plugins_loaded', [$this, 'taxopress_load_admin_licence_menu'] );
+            add_action( 'init', [$this, 'taxopress_load_module_classes'] );
+            add_action( 'init', [$this, 'taxopress_load_admin_licence_menu'] );
             add_filter( 'taxopress_admin_pages', [$this, 'taxopress_pro_admin_pages'] );
             add_filter( 'taxopress_dashboard_features', [$this, 'taxopress_pro_dashboard_features'] );
             add_action( 'taxopress_admin_class_before_assets_register', [$this, 'taxopress_load_admin_pro_assets'] );
@@ -35,6 +37,7 @@ if (!class_exists('TaxoPress_Pro_Init')) {
             add_filter( 'taxopress_autoterms_create_limit', [$this, 'taxopress_action_is_false'] );
             add_action( 'admin_init', [$this, 'taxopress_pro_only_upgrade_function'] );
             add_action('wp_ajax_taxopress_blocks_search', [$this, 'handle_blocks_search']);
+            add_action('init', [$this, 'init_pro_translation']);
         }
 
         /** Singleton instance */
@@ -46,6 +49,10 @@ if (!class_exists('TaxoPress_Pro_Init')) {
 
             return self::$instance;
         }
+
+        public function init_pro_translation(){
+            load_plugin_textdomain( 'taxopress-pro', false, basename( TAXOPRESS_ABSPATH ) . '/languages' );
+        }  
 
         public function taxopress_load_module_classes(){
             if (taxopress_is_synonyms_enabled()) {
@@ -59,6 +66,7 @@ if (!class_exists('TaxoPress_Pro_Init')) {
             }
             if (1 === (int) SimpleTags_Plugin::get_option_value('active_auto_terms')) {
                 TaxoPress_Pro_Auto_Terms::get_instance();
+                TaxoPress_Pro_Auto_Terms_Schedule::get_instance();
             }
             TaxoPress_Pro_AI_Module::get_instance();
         }
@@ -71,6 +79,7 @@ if (!class_exists('TaxoPress_Pro_Init')) {
 
             $taxopress_pages[] = 'st_licence';
             $taxopress_pages[] = 'st_linked_terms';
+            $taxopress_pages[] = 'st_autoterms_schedule';
 
             return $taxopress_pages;
         }

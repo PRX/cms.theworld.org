@@ -51,6 +51,6 @@
     overflow-wrap: normal;
 }
 
-.st_wrap.manage-taxopress-linked-terms table.linkedterms th.column-primary {
-    width: 25%;
+.taxopress-split-wrap.taxopress-autoterm-schedule .fixed .column-date {
+    width: auto;
 }
