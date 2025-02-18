@@ -7,7 +7,7 @@ Tags: revision, submit changes, duplicate post, approve changes, scheduled chang
 Requires at least: 5.5
 Requires PHP: 7.2.5
 Tested up to: 6.7
-Stable tag: 3.5.16
+Stable tag: 3.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -244,8 +244,18 @@ Fixed: Security issue. Please update.
 
 == Changelog ==
 
+= 3.6.0 - 29 Jan 2025 =
+* Compat : PublishPress Planner - Fix Revision Status display and selection in Calendar, Content Board, Overview (requires Planner 4.6)
+* Compat : PublishPress Statuses Pro (Custom Revision Statuses)
+* Compat : PublishPress Permissions Pro - Option for Access Circle restrictions to apply to Revisions
+* Fixed : Page Parent revision was not applied to published page
+* Fixed : Revision Archive - Schedule Revision approver was not recorded
+* Fixed : Revision Archive - Scheduled Revisions did not show scheduling time
+* Fixed : Revision Archive - Recent entries had incorrect time display
+* Feature : Revision Archive - Option to store custom fields from submitted, scheduled revisions
+
 = 3.5.16 - 19 Nov 2024 =
-* Security : Under some plugin configurations, Revisors could view other users' revisions inappropriately
+* Security : Under some plugin configurations, Revisors could view other users' revisions (draft, submitted or scheduled) inappropriately
 * Fixed : Revision read capabilities did not limit slider positions on Compare Revisions screen
 * Fixed : WP 6.7 - Avoid early loading of plugin textdomain under some conditions
 
