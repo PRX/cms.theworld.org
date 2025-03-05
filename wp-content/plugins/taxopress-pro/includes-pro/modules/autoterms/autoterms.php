@@ -205,8 +205,8 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                     echo $ui->get_select_checkbox_input([
                         'namearray'  => 'taxopress_autoterm',
                         'name'       => 'open_ai_exclude_post_terms',
-                        'labeltext'  => esc_html__('Exclude Terms not in {post_terms}', 'taxopress-pro'),
-                        'aftertext'  => esc_html__('Exclude terms that are not in the post terms. This is useful for excluding terms that are in {post_terms} when trying to limit suggested terms to only {post_terms} via custom prompt.', 'taxopress-pro'),
+                        'labeltext'  => esc_html__('Use only existing terms (Beta)', 'taxopress-pro'),
+                        'aftertext'  => esc_html__('This will request that OpenAI only suggests existing terms. Check this box and include {post_terms} in the prompt.', 'taxopress-pro'),
                         'class'      => 'autoterm-terms-to-use-field autoterm-terms-use-openai',
                         'selections' => $select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                     ]);

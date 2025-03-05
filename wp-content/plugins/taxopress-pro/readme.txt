@@ -3,7 +3,7 @@ Contributors: publishpress, kevinB, stevejburge, andergmartins, olatechpro, ojop
 Tags: category, tag, taxonomy, related posts, tag cloud, terms, tagging, navigation, tag manager, tags manager, term manager, terms manager
 Requires at least: 3.3
 Tested up to: 6.7
-Stable tag: 3.28.1
+Stable tag: 3.30.0
 Requires PHP: 7.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -224,6 +224,21 @@ If you have a busy WooCommerce site, it can be difficult to organize all your pr
 6. If you have a term called “WordPress”, the Auto Links feature will find any instances of “WordPress” in your content and add a link to the archive page for that tag.
 
 == Changelog ==
+
+v3.30.0- 2025-01-29
+* Update: Add settings to Control how the metgabox Taxonomy box appears:  Select / Dropdown / Checkbox, #2128
+* Update: Allow users to merge multiple terms with the same name, #2357
+* Fixed: Issue with commas in "Use only some terms in the selected taxonomy.", #2301
+* Update: Update {post_terms} text, #2389
+* Update: Improve metabox permission error message, #2433
+* Fixed: Update and sanitize legacy widgets title, #2435
+* Update: Add a configuration link on Metabox description, #2440
+* Update: Small text update for Auto Term preview area, #2416
+* Update: Add back a "Display automatically" option to Related Posts, #2413
+* Update: Remove extra space in Existing Content "Stop" button link, #2414
+* Update: Text update for Related Posts, #2408
+* Update: remove the "required" label from maximum number of categories and tags, #2409
+* Update: TaxoPress v.3.28.0 Italian French Spanish translation updates, #2407
 
 v3.28.1- 2024-12-04
 * Fixes: Missing Taxonomies after v3.28.0 upgrade, #2401
