@@ -1,10 +1,10 @@
 === Faust.js ===
-Contributors: antpb, apmatthe, blakewpe, chriswiegman, claygriffiths, jasonkonen, joefusco, markkelnar, matthewguywright, mindctrl, modernnerd, rfmeier, TeresaGobble, thdespou, wpengine
+Contributors: antpb, apmatthe, blakewpe, chriswiegman, claygriffiths, colin-murphy, jasonkonen, joefusco, markkelnar, matthewguywright, mindctrl, modernnerd, rfmeier, TeresaGobble, thdespou, wpengine,
 Tags: faustjs, faust, headless, decoupled, composable-architecture
 Requires at least: 5.7
-Tested up to: 6.6.1
-Stable tag: 1.4.1
-Requires PHP: 7.2
+Tested up to: 6.7.2
+Stable tag: 1.8.0
+Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,22 +54,25 @@ plugins/faustwp/.wordpress-org/screenshot-3.png
 
 == Changelog ==
 
-= 1.4.1 =
-
-### Patch Changes
-
-- e80d80af: Tested up to WordPress v6.6.1
-
-= 1.4.0 =
+= 1.8.0 =
 
 ### Minor Changes
 
-- 9ff1df86: Introduces a new setting on the Faust settings page that allows users to opt-in or out of Faust removing Nav Menu Locations that are not registered on the Faust Settings page.
+- aedd100: chore: Updated FaustWP to create a preview link for all draft post types.
 
-= 1.3.2 =
+  Removed actions `rest_prepare_post` and `rest_prepare_page` from the callback functions.
+  Added a new action for `rest_api_init` to add `rest_prepare_{$post_type}` action for all publicably queryable post types including custom post types.
+
+= 1.7.5 =
 
 ### Patch Changes
 
-- 84076cd1: Bug: Fixes issue with blocks not showing in the block editor when running blockset command on WP >=v6.5
+- 413fe9a: Added tested up to WordPress 6.7.2 for the FaustWP plugin.
+
+= 1.7.4 =
+
+### Patch Changes
+
+- 3bf8104: Added author for FaustWP plugin.
 
 [View the full changelog](https://github.com/wpengine/faustjs/blob/canary/plugins/faustwp/CHANGELOG.md)

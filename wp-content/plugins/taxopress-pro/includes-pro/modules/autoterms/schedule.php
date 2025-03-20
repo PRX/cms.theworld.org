@@ -104,7 +104,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms_Schedule')) {
             && wp_verify_nonce(sanitize_text_field($_POST['_nonce']), 'taxopress_autoterm_schedule_nonce')
             && current_user_can('simple_tags')
         ) {
-            $auto_term_id = !empty($_POST['taxopress_autoterm_schedule']['autoterm_id']) ? (int)$_POST['taxopress_autoterm_schedule']['autoterm_id'] : 0;
+            $auto_term_ids = !empty($_POST['taxopress_autoterm_schedule']['autoterm_id']) ? array_map('intval', (array)$_POST['taxopress_autoterm_schedule']['autoterm_id']) : [];
 
             $cron_schedule = !empty($_POST['taxopress_autoterm_schedule']['cron_schedule']) ? taxopress_sanitize_text_field($_POST['taxopress_autoterm_schedule']['cron_schedule']) : 'disable';
             $schedule_terms_batches = !empty($_POST['taxopress_autoterm_schedule']['schedule_terms_batches']) ? (int)$_POST['taxopress_autoterm_schedule']['schedule_terms_batches'] : '';
@@ -120,7 +120,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms_Schedule')) {
                 $response_message = esc_html__('Batches wait time is required.', 'taxopress-pro');
             } else {
                 $auto_term_schedule_settings = [
-                    'autoterm_id' => $auto_term_id,
+                    'autoterm_id' => $auto_term_ids,
                     'cron_schedule' => $cron_schedule,
                     'schedule_terms_batches' => $schedule_terms_batches,
                     'schedule_terms_sleep' => $schedule_terms_sleep,
@@ -142,12 +142,29 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms_Schedule')) {
                 }
 
                 $autoterm_data = taxopress_get_autoterm_data();
-                $autoterm_data = !empty($autoterm_data[$auto_term_id]) ? $autoterm_data[$auto_term_id] : [];
+                $autoterm_data_selected = [];
 
-                if (empty($autoterm_data['autoterm_for_schedule'])) {    
-                    $response_message = esc_html__('Schedule is not enabled for the selected Auto Term.', 'taxopress-pro');
+                if (!empty($auto_term_ids)) {
+                    foreach ($auto_term_ids as $term_id) {
+                        if (isset($autoterm_data[$term_id])) {
+                            $autoterm_data_selected[$term_id] = $autoterm_data[$term_id];
+                        }
+                    }
+                }
+                $autoterm_data = $autoterm_data_selected;
+
+                $schedule_enabled = false;
+                foreach ($autoterm_data_selected as $term_data) {
+                    if (!empty($term_data['autoterm_for_schedule'])) {
+                        $schedule_enabled = true;
+                        break;
+                    }
+                }
+
+                if (!$schedule_enabled) {    
+                    $response_message = esc_html__('Schedule is not enabled for selected Auto Terms.', 'taxopress-pro');
                     $response_sucess  = false;
-                } else {               
+                } else {            
                     $response_message = esc_html__('Settings updated successfully.', 'taxopress-pro');
                     $response_sucess  = true;
                 }
@@ -202,7 +219,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms_Schedule')) {
                                     <table class="form-table taxopress-table autoterm_schedule">
                                         <?php
                                         $autoterm_data = taxopress_get_autoterm_data();
-                                        $selected_autoterm = !empty($autoterms_schedule['autoterm_id']) ? (int)$autoterms_schedule['autoterm_id'] : '';
+                                        $selected_autoterm = !empty($autoterms_schedule['autoterm_id']) ? array_map('intval', (array)$autoterms_schedule['autoterm_id']) : [];
                                         if (empty($autoterm_data)) :
                                             $auto_term_opionts = [
                                                 [
@@ -216,7 +233,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms_Schedule')) {
                                                 $current_option = [];
                                                 $current_option['attr'] = $autoterm_settings['ID'];
                                                 $current_option['text'] = $autoterm_settings['title'];
-                                                if ($selected_autoterm == $autoterm_settings['ID']) {
+                                                if (in_array($autoterm_settings['ID'], $selected_autoterm)) {
                                                     $current_option['default'] = 'true';
                                                 }
                                                 $auto_term_opionts[] = $current_option;
@@ -230,10 +247,12 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms_Schedule')) {
                                         echo $ui->get_select_checkbox_input_main([
                                             'namearray'  => 'taxopress_autoterm_schedule',
                                             'name'       => 'autoterm_id',
+                                            'class'      => 'taxopress-multi-select2',
                                             'labeltext'  => esc_html__('Auto Terms setting',
                                                 'taxopress-pro'),
-                                                'aftertext'  => esc_html__('Select an Auto Terms configuration to use when running the "Schedule" feature.', 'taxopress-pro') . ' ',
-                                            'selections' => $select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                                                'aftertext'  => esc_html__('Select Auto Terms settings to use when running the "Schedule" feature.', 'taxopress-pro') . ' ',
+                                            'selections' => $select,
+                                            'multiple'   => true, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                         ]);
 
                                         $cron_options = [
@@ -485,8 +504,14 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms_Schedule')) {
 
             $autoterms_schedule = taxopress_get_autoterms_schedule_data();
             $autoterms = taxopress_get_autoterm_data();
-            $autoterm_schedule_id = isset($autoterms_schedule['autoterm_id']) ? $autoterms_schedule['autoterm_id'] : '';
-            $autoterm_data = isset($autoterms[$autoterm_schedule_id]) ? $autoterms[$autoterm_schedule_id] : [];
+            $autoterm_schedule_ids = isset($autoterms_schedule['autoterm_id']) ? (array)$autoterms_schedule['autoterm_id'] : [];
+            $autoterm_data = [];
+
+            foreach ($autoterm_schedule_ids as $autoterm_schedule_id) {
+                if (!empty($autoterms[$autoterm_schedule_id])) {
+                    $autoterm_data[$autoterm_schedule_id] = $autoterms[$autoterm_schedule_id];
+                }
+            } 
 
             if (!empty($autoterm_data)) {
             
@@ -536,7 +561,9 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms_Schedule')) {
                 foreach ($objects as $object) {
                     $current_post++;
                         update_post_meta($object->ID, '_taxopress_autotermed', 1);
-                        SimpleTags_Client_Autoterms::auto_terms_post($object, $autoterm_data['taxonomy'], $autoterm_data, true, 'hourly_cron_schedule', 'st_autoterms');
+                        foreach ($autoterm_data as $autoterm) {
+                            SimpleTags_Client_Autoterms::auto_terms_post($object, $autoterm['taxonomy'], $autoterm, true, 'hourly_cron_schedule', 'st_autoterms');
+                        }  
                         unset($object);
                     if ($sleep > 0 && $current_post % $limit == 0) {
                         sleep($sleep);
@@ -552,8 +579,13 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms_Schedule')) {
 
             $autoterms_schedule = taxopress_get_autoterms_schedule_data();
             $autoterms = taxopress_get_autoterm_data();
-            $autoterm_schedule_id = isset($autoterms_schedule['autoterm_id']) ? $autoterms_schedule['autoterm_id'] : '';
-            $autoterm_data = isset($autoterms[$autoterm_schedule_id]) ? $autoterms[$autoterm_schedule_id] : [];
+            $autoterm_schedule_ids = isset($autoterms_schedule['autoterm_id']) ? (array)$autoterms_schedule['autoterm_id'] : [];
+            $autoterm_data = [];
+            foreach ($autoterm_schedule_ids as $autoterm_schedule_id) {
+                if (!empty($autoterms[$autoterm_schedule_id])) {
+                    $autoterm_data[$autoterm_schedule_id] = $autoterms[$autoterm_schedule_id];
+                }
+            }
 
             if (!empty($autoterm_data)) {
                 $cron_schedule = isset($autoterms_schedule['cron_schedule']) ? $autoterms_schedule['cron_schedule'] : 'disable';
