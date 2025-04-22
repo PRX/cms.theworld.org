@@ -16,6 +16,9 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
         {
             add_action( 'taxopress_autoterms_after_autoterm_terms_to_use', [$this, 'taxopress_autoterms_after_autoterm_terms_to_use_field'] );
             add_action( 'taxopress_autoterms_after_autoterm_advanced', [$this, 'taxopress_pro_autoterm_advanced_field'] );
+
+            add_action('admin_init', [$this, 'taxopress_pro_copy_autoterm']);
+            add_filter('taxopress_autoterm_row_actions', [$this, 'taxopress_pro_copy_action'], 10, 2);
         }
 
 
@@ -580,6 +583,84 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                 ),
                 'required'  => false,
             ]);
+        }
+
+        public function taxopress_action_copy_autoterm($autoterm_id) {
+            $autoterms = taxopress_get_autoterm_data();
+
+            if (array_key_exists($autoterm_id, $autoterms)) {
+                $new_autoterm = $autoterms[$autoterm_id];
+                $new_autoterm['title'] .= '-copy';
+
+                $new_id = (int) get_option('taxopress_autoterm_ids_increament') + 1;
+                $new_autoterm['ID'] = $new_id;
+
+                $autoterms[$new_id] = $new_autoterm;
+
+                update_option('taxopress_autoterms', $autoterms);
+                update_option('taxopress_autoterm_ids_increament', $new_id);
+            }
+
+            wp_safe_redirect(
+                add_query_arg([
+                    'page' => 'st_autoterms',
+                    'copied_autoterm' => 1,
+                ], taxopress_admin_url('admin.php'))
+            );
+            exit();
+        }
+
+        public function taxopress_autoterms_copy_success_admin_notice() {
+            echo taxopress_admin_notices_helper(esc_html__('Auto Terms successfully copied.', 'simple-tags'), true);
+        }
+
+        public function taxopress_copied_autoterm_filter_removable_query_args(array $args) {
+            return array_merge($args, ['copied_autoterm']);
+        }
+
+        public function taxopress_copy_autoterm_filter_removable_query_args(array $args) {
+            return array_merge($args, ['action', 'taxopress_autoterm', '_wpnonce']);
+        }
+
+        public function taxopress_pro_copy_autoterm() {
+            if (isset($_GET['copied_autoterm']) && (int) $_GET['copied_autoterm'] === 1) {
+                add_action('admin_notices', [$this, 'taxopress_autoterms_copy_success_admin_notice']);
+                add_filter('removable_query_args', [$this, 'taxopress_copied_autoterm_filter_removable_query_args']);
+            }
+
+            if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'taxopress-copy-autoterm') {
+                $nonce = sanitize_text_field($_REQUEST['_wpnonce']);
+                if (wp_verify_nonce($nonce, 'autoterm-action-request-nonce')) {
+                    $this->taxopress_action_copy_autoterm(sanitize_text_field($_REQUEST['taxopress_autoterm']));
+                }
+                add_filter('removable_query_args', [$this, 'taxopress_copy_autoterm_filter_removable_query_args']);
+            }
+        }
+
+        public function taxopress_pro_copy_action($actions, $item) {
+            $actions['copy'] = sprintf(
+                '<a href="%s" class="copy-autoterm">%s</a>',
+                add_query_arg([
+                    'page' => 'st_autoterms',
+                    'action' => 'taxopress-copy-autoterm',
+                    'taxopress_autoterm' => esc_attr($item['ID']),
+                    '_wpnonce' => wp_create_nonce('autoterm-action-request-nonce')
+                ], admin_url('admin.php')),
+                __('Copy', 'simple-tags')
+            );
+
+            if (isset($actions['delete'])) {
+                $new_actions = [];
+                foreach ($actions as $key => $action) {
+                    if ($key === 'delete') {
+                        $new_actions['copy'] = $actions['copy'];
+                    }
+                    $new_actions[$key] = $action;
+                }
+                return $new_actions;
+            }
+
+            return $actions;
         }
     }
 }

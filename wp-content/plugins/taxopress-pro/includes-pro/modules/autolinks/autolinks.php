@@ -17,6 +17,8 @@ if (!class_exists('TaxoPress_Pro_Auto_Links')) {
             
             add_action('taxopress_autolinks_after_html_exclusions', [$this, 'taxopress_pro_autolinks_after_html_exclusions'], 10, 2);
             add_action('taxopress_autolinks_after_html_exclusions_tr', [$this, 'taxopress_pro_autolinks_after_html_exclusions_tr'], 10, 2);
+            add_action('admin_init', [$this, 'taxopress_pro_copy_autolink']);
+            add_filter('taxopress_autolink_row_actions', [$this, 'taxopress_pro_copy_action'], 10, 2);
         }
 
 
@@ -167,6 +169,95 @@ if (!class_exists('TaxoPress_Pro_Auto_Links')) {
             echo '<tr valign="top" class="html-exclusions-customs-row html-exclusions-customs-add"><th style="padding: 0;" scope="row"><br />' . esc_html__('Add Element', 'taxopress-pro') . '</th><td style="padding: 0;text-align: right;"><br /><button class="button show-autolink-custom-html-exclusions">' . esc_html__('New Element', 'taxopress-pro') . '</button></td></tr>';
 
 
+        }
+
+        public function taxopress_pro_copy_autolink()
+        {
+            if (isset($_GET['copied_autolink']) && (int) $_GET['copied_autolink'] === 1) {
+                add_action('admin_notices', [$this, 'taxopress_autolink_copy_success_admin_notice']);
+                add_filter('removable_query_args', [$this, 'taxopress_copied_autolink_filter_removable_query_args']);
+            }
+
+            if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'taxopress-copy-autolink') {
+                $nonce = sanitize_text_field($_REQUEST['_wpnonce']);
+                if (wp_verify_nonce($nonce, 'autolink-action-request-nonce')) {
+                    $this->taxopress_action_copy_autolink(sanitize_text_field($_REQUEST['taxopress_autolink']));
+                }
+                add_filter('removable_query_args', [$this, 'taxopress_copy_autolink_filter_removable_query_args']);
+            }
+        }
+
+        public function taxopress_action_copy_autolink($autolink_id)
+        {
+            if (!taxopress_is_pro_version()) {
+                wp_safe_redirect(admin_url('admin.php?page=st_autolinks&add=new_item'));
+                exit;
+            }
+
+            $autolinks = taxopress_get_autolink_data();
+
+            if (array_key_exists($autolink_id, $autolinks)) {
+                $new_autolink = $autolinks[$autolink_id];
+                $new_autolink['title'] .= '-copy';
+
+                $new_id = (int) get_option('taxopress_autolink_ids_increament') + 1;
+                $new_autolink['ID'] = $new_id;
+
+                $autolinks[$new_id] = $new_autolink;
+
+                update_option('taxopress_autolinks', $autolinks);
+                update_option('taxopress_autolink_ids_increament', $new_id);
+            }
+
+            wp_safe_redirect(
+                add_query_arg([
+                    'page'             => 'st_autolinks',
+                    'copied_autolink'  => 1,
+                ], taxopress_admin_url('admin.php'))
+            );
+            exit();
+        }
+
+        public function taxopress_autolink_copy_success_admin_notice()
+        {
+            echo taxopress_admin_notices_helper(esc_html__('Autolink successfully copied.', 'simple-tags'), true);
+        }
+
+        public function taxopress_copied_autolink_filter_removable_query_args(array $args)
+        {
+            return array_merge($args, ['copied_autolink']);
+        }
+
+        public function taxopress_copy_autolink_filter_removable_query_args(array $args)
+        {
+            return array_merge($args, ['action', 'taxopress_autolink', '_wpnonce']);
+        }
+
+        public function taxopress_pro_copy_action($actions, $item)
+        {
+            $actions['copy'] = sprintf(
+                '<a href="%s" class="copy-autolink">%s</a>',
+                add_query_arg([
+                    'page'             => 'st_autolinks',
+                    'action'           => 'taxopress-copy-autolink',
+                    'taxopress_autolink' => esc_attr($item['ID']),
+                    '_wpnonce'         => wp_create_nonce('autolink-action-request-nonce')
+                ], admin_url('admin.php')),
+                esc_html__('Copy', 'simple-tags')
+            );
+
+            if (isset($actions['delete'])) {
+                $new_actions = [];
+                foreach ($actions as $key => $action) {
+                    if ($key === 'delete') {
+                        $new_actions['copy'] = $actions['copy'];
+                    }
+                    $new_actions[$key] = $action;
+                }
+                return $new_actions;
+            }
+
+            return $actions;
         }
     }
 }

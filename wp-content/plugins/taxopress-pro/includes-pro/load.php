@@ -4,6 +4,9 @@ require_once (TAXOPRESS_ABSPATH . '/includes-pro/classes/licence.php');
 //include pro modules
 require_once (TAXOPRESS_ABSPATH . '/includes-pro/modules/taxonomy-synonyms/taxonomy-synonyms.php');
 require_once (TAXOPRESS_ABSPATH . '/includes-pro/modules/linked-terms/linked-terms.php');
+require_once (TAXOPRESS_ABSPATH . '/includes-pro/modules/tag-clouds/tag-clouds.php');
+require_once (TAXOPRESS_ABSPATH . '/includes-pro/modules/related-posts/related-posts.php');
+require_once (TAXOPRESS_ABSPATH . '/includes-pro/modules/post-tags/post-tags.php');
 require_once (TAXOPRESS_ABSPATH . '/includes-pro/modules/autolinks/autolinks.php');
 require_once (TAXOPRESS_ABSPATH . '/includes-pro/modules/autoterms/autoterms.php');
 require_once (TAXOPRESS_ABSPATH . '/includes-pro/modules/autoterms/schedule.php');
@@ -63,6 +66,15 @@ if (!class_exists('TaxoPress_Pro_Init')) {
             }
             if (1 === (int) SimpleTags_Plugin::get_option_value('active_auto_links')) {
                 TaxoPress_Pro_Auto_Links::get_instance();
+            }
+            if (1 === (int) SimpleTags_Plugin::get_option_value('active_terms_display')){
+                TaxoPress_Pro_Tag_Clouds::get_instance();
+            }
+            if (1 === (int) SimpleTags_Plugin::get_option_value('active_related_posts')){
+                TaxoPress_Pro_Related_Posts::get_instance();
+            }
+            if (1 === (int) SimpleTags_Plugin::get_option_value('active_post_tags')){
+                TaxoPress_Pro_Post_Tags::get_instance();
             }
             if (1 === (int) SimpleTags_Plugin::get_option_value('active_auto_terms')) {
                 TaxoPress_Pro_Auto_Terms::get_instance();
