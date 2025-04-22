@@ -2,40 +2,42 @@
 
 namespace Sabre\VObject\Recur\EventIterator;
 
-use
-    DateTime,
-    DateTimeZone,
-    Sabre\VObject\Component\VCalendar,
-    Sabre\VObject\Recur;
+use DateTimeImmutable;
+use DateTimeZone;
+use PHPUnit\Framework\TestCase;
+use Sabre\VObject\Component\VCalendar;
+use Sabre\VObject\InvalidDataException;
+use Sabre\VObject\Recur;
 
-class EventIteratorInfiniteLoopProblemTest extends \PHPUnit_Framework_TestCase {
+class InfiniteLoopProblemTest extends TestCase
+{
+    /** @var VCalendar */
+    private $vcal;
 
-    public function setUp() {
-
+    public function setUp(): void
+    {
         $this->vcal = new VCalendar();
-
     }
 
     /**
      * This bug came from a Fruux customer. This would result in a never-ending
      * request.
      */
-    function testFastForwardTooFar() {
-
+    public function testFastForwardTooFar()
+    {
         $ev = $this->vcal->createComponent('VEVENT');
         $ev->UID = 'foobar';
         $ev->DTSTART = '20090420T180000Z';
         $ev->RRULE = 'FREQ=WEEKLY;BYDAY=MO;UNTIL=20090704T205959Z;INTERVAL=1';
 
-        $this->assertFalse($ev->isInTimeRange(new DateTime('2012-01-01 12:00:00'),new DateTime('3000-01-01 00:00:00')));
-
+        $this->assertFalse($ev->isInTimeRange(new DateTimeImmutable('2012-01-01 12:00:00'), new DateTimeImmutable('3000-01-01 00:00:00')));
     }
 
     /**
      * Different bug, also likely an infinite loop.
      */
-    function testYearlyByMonthLoop() {
-
+    public function testYearlyByMonthLoop()
+    {
         $ev = $this->vcal->createComponent('VEVENT');
         $ev->UID = 'uuid';
         $ev->DTSTART = '20120101T154500';
@@ -52,48 +54,42 @@ class EventIteratorInfiniteLoopProblemTest extends \PHPUnit_Framework_TestCase {
         // way to specify this, and could have certainly been a lot easier.
         $this->vcal->add($ev);
 
-        $it = new Recur\EventIterator($this->vcal,'uuid');
-        $it->fastForward(new DateTime('2012-01-29 23:00:00', new DateTimeZone('UTC')));
+        $it = new Recur\EventIterator($this->vcal, 'uuid');
+        $it->fastForward(new DateTimeImmutable('2012-01-29 23:00:00', new DateTimeZone('UTC')));
 
-        $collect = array();
+        $collect = [];
 
-        while($it->valid()) {
-            $collect[] = $it->getDTSTART();
-            if ($it->getDTSTART() > new DateTime('2013-02-05 22:59:59', new DateTimeZone('UTC'))) {
+        while ($it->valid()) {
+            $collect[] = $it->getDtStart();
+            if ($it->getDtStart() > new DateTimeImmutable('2013-02-05 22:59:59', new DateTimeZone('UTC'))) {
                 break;
             }
             $it->next();
-
         }
 
         $this->assertEquals(
-            array(new DateTime('2012-02-01 15:45:00', new DateTimeZone('Europe/Berlin'))),
+            [new DateTimeImmutable('2012-02-01 15:45:00', new DateTimeZone('Europe/Berlin'))],
             $collect
         );
-
     }
 
     /**
      * Something, somewhere produced an ics with an interval set to 0. Because
      * this means we increase the current day (or week, month) by 0, this also
      * results in an infinite loop.
-     *
-     * @expectedException InvalidArgumentException
-     * @return void
      */
-    function testZeroInterval() {
-
+    public function testZeroInterval()
+    {
+        $this->expectException(InvalidDataException::class);
         $ev = $this->vcal->createComponent('VEVENT');
         $ev->UID = 'uuid';
         $ev->DTSTART = '20120824T145700Z';
         $ev->RRULE = 'FREQ=YEARLY;INTERVAL=0';
         $this->vcal->add($ev);
 
-        $it = new Recur\EventIterator($this->vcal,'uuid');
-        $it->fastForward(new DateTime('2013-01-01 23:00:00', new DateTimeZone('UTC')));
+        $it = new Recur\EventIterator($this->vcal, 'uuid');
+        $it->fastForward(new DateTimeImmutable('2013-01-01 23:00:00', new DateTimeZone('UTC')));
 
         // if we got this far.. it means we are no longer infinitely looping
-
     }
-
 }

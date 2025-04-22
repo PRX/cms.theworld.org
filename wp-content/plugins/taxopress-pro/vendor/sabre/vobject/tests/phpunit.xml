@@ -4,18 +4,24 @@
   convertErrorsToExceptions="true"
   convertNoticesToExceptions="true"
   convertWarningsToExceptions="true"
-  strict="true"
+  beStrictAboutTestsThatDoNotTestAnything="true"
+  beStrictAboutOutputDuringTests="true"
+  failOnRisky="true"
+  failOnWarning="true"
+  enforceTimeLimit="true"
   >
-  <testsuite name="Sabre\VObject">
-    <directory>VObject/</directory>
-  </testsuite>
+  <php>
+    <ini name="error_reporting" value="E_ALL"/>
+  </php>
+  <testsuites>
+    <testsuite name="Sabre\VObject">
+      <directory>.</directory>
+    </testsuite>
+  </testsuites>
 
   <filter>
     <whitelist addUncoveredFilesFromWhitelist="true">
         <directory suffix=".php">../lib/</directory>
-        <exclude>
-            <file>../lib/Sabre/VObject/includes.php</file>
-        </exclude>
    </whitelist>
   </filter>
 </phpunit>

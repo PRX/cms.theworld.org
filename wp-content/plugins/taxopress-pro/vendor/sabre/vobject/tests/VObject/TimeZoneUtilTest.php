@@ -2,50 +2,52 @@
 
 namespace Sabre\VObject;
 
-class TimezoneUtilTest extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
 
-    function setUp() {
-
-        // clearning the tz cache
-        TimezoneUtil::$map = null;
-
+class TimeZoneUtilTest extends TestCase
+{
+    public function setUp(): void
+    {
+        TimeZoneUtil::clean();
     }
 
     /**
      * @dataProvider getMapping
      */
-    function testCorrectTZ($timezoneName) {
-
+    public function testCorrectTZ($timezoneName)
+    {
         try {
             $tz = new \DateTimeZone($timezoneName);
             $this->assertInstanceOf('DateTimeZone', $tz);
         } catch (\Exception $e) {
-            if (strpos($e->getMessage(), "Unknown or bad timezone")!==false) {
-                $this->markTestSkipped($timezoneName . ' is not (yet) supported in this PHP version. Update pecl/timezonedb');
+            if (false !== strpos($e->getMessage(), 'Unknown or bad timezone')) {
+                $this->markTestSkipped($timezoneName.' is not (yet) supported in this PHP version. Update pecl/timezonedb');
             } else {
                 throw $e;
             }
-
         }
-
     }
 
-    function getMapping() {
-
-        TimeZoneUtil::loadTzMaps();
+    public function getMapping()
+    {
+        $map = array_merge(
+            include __DIR__.'/../../lib/timezonedata/windowszones.php',
+            include __DIR__.'/../../lib/timezonedata/lotuszones.php',
+            include __DIR__.'/../../lib/timezonedata/exchangezones.php',
+            include __DIR__.'/../../lib/timezonedata/php-workaround.php'
+        );
 
         // PHPUNit requires an array of arrays
         return array_map(
-            function($value) {
-                return array($value);
+            function ($value) {
+                return [$value];
             },
-            TimeZoneUtil::$map
+            $map
         );
-
     }
 
-    function testExchangeMap() {
-
+    public function testExchangeMap()
+    {
         $vobj = <<<HI
 BEGIN:VCALENDAR
 METHOD:REQUEST
@@ -82,11 +84,10 @@ HI;
         $ex = new \DateTimeZone('Europe/Lisbon');
 
         $this->assertEquals($ex->getName(), $tz->getName());
-
     }
 
-    function testWetherMicrosoftIsStillInsane() {
-
+    public function testWhetherMicrosoftIsStillInsane()
+    {
         $vobj = <<<HI
 BEGIN:VCALENDAR
 METHOD:REQUEST
@@ -108,11 +109,10 @@ HI;
         $ex = new \DateTimeZone('Europe/Sarajevo');
 
         $this->assertEquals($ex->getName(), $tz->getName());
-
     }
 
-    function testUnknownExchangeId() {
-
+    public function testUnknownExchangeId()
+    {
         $vobj = <<<HI
 BEGIN:VCALENDAR
 METHOD:REQUEST
@@ -149,67 +149,79 @@ HI;
         $tz = TimeZoneUtil::getTimeZone('foo', Reader::read($vobj));
         $ex = new \DateTimeZone(date_default_timezone_get());
         $this->assertEquals($ex->getName(), $tz->getName());
-
     }
 
-    function testWindowsTimeZone() {
+    public function testEmptyTimeZone()
+    {
+        $tz = TimeZoneUtil::getTimeZone('');
+        $ex = new \DateTimeZone('UTC');
+        $this->assertEquals($ex->getName(), $tz->getName());
+    }
 
+    public function testWindowsTimeZone()
+    {
         $tz = TimeZoneUtil::getTimeZone('Eastern Standard Time');
         $ex = new \DateTimeZone('America/New_York');
         $this->assertEquals($ex->getName(), $tz->getName());
-
     }
 
     /**
      * @dataProvider getPHPTimeZoneIdentifiers
      */
-    function testTimeZoneIdentifiers($tzid) {
-
+    public function testTimeZoneIdentifiers($tzid)
+    {
         $tz = TimeZoneUtil::getTimeZone($tzid);
         $ex = new \DateTimeZone($tzid);
 
         $this->assertEquals($ex->getName(), $tz->getName());
-
     }
 
     /**
      * @dataProvider getPHPTimeZoneBCIdentifiers
      */
-    function testTimeZoneBCIdentifiers($tzid) {
-
+    public function testTimeZoneBCIdentifiers($tzid)
+    {
+        /*
+         * A regression was introduced in PHP 8.1.14 and 8.2.1
+         * Timezone ids containing a "+" like "GMT+10" do not work.
+         * See https://github.com/php/php-src/issues/10218
+         * The regression should be fixed in the next patch releases of PHP
+         * that should be released in Feb 2023.
+         */
+        $versionOfPHP = \phpversion();
+        if ((('8.1.14' == $versionOfPHP) || ('8.2.1' == $versionOfPHP)) && \str_contains($tzid, '+')) {
+            $this->markTestSkipped("Timezone ids containing '+' do not work on PHP $versionOfPHP");
+        }
         $tz = TimeZoneUtil::getTimeZone($tzid);
         $ex = new \DateTimeZone($tzid);
 
         $this->assertEquals($ex->getName(), $tz->getName());
-
     }
 
-    function getPHPTimeZoneIdentifiers() {
-
+    public function getPHPTimeZoneIdentifiers()
+    {
         // PHPUNit requires an array of arrays
         return array_map(
-            function($value) {
-                return array($value);
+            function ($value) {
+                return [$value];
             },
             \DateTimeZone::listIdentifiers()
         );
-
     }
 
-    function getPHPTimeZoneBCIdentifiers() {
-
+    public function getPHPTimeZoneBCIdentifiers()
+    {
         // PHPUNit requires an array of arrays
         return array_map(
-            function($value) {
-                return array($value);
+            function ($value) {
+                return [$value];
             },
-            TimeZoneUtil::getIdentifiersBC()
+            include __DIR__.'/../../lib/timezonedata/php-bc.php'
         );
-
     }
 
-    function testTimezoneOffset() {
-
+    public function testTimezoneOffset()
+    {
         $tz = TimeZoneUtil::getTimeZone('GMT-0400', null, true);
 
         if (version_compare(PHP_VERSION, '5.5.10', '>=') && !defined('HHVM_VERSION')) {
@@ -218,20 +230,16 @@ HI;
             $ex = new \DateTimeZone('Etc/GMT-4');
         }
         $this->assertEquals($ex->getName(), $tz->getName());
-
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    function testTimezoneFail() {
-
+    public function testTimezoneFail()
+    {
+        $this->expectException(\InvalidArgumentException::class);
         $tz = TimeZoneUtil::getTimeZone('FooBar', null, true);
-
     }
 
-    function testFallBack() {
-
+    public function testFallBack()
+    {
         $vobj = <<<HI
 BEGIN:VCALENDAR
 METHOD:REQUEST
@@ -266,11 +274,10 @@ HI;
         $tz = TimeZoneUtil::getTimeZone('foo', Reader::read($vobj));
         $ex = new \DateTimeZone(date_default_timezone_get());
         $this->assertEquals($ex->getName(), $tz->getName());
-
     }
 
-    function testLjubljanaBug() {
-
+    public function testLjubljanaBug()
+    {
         $vobj = <<<HI
 BEGIN:VCALENDAR
 CALSCALE:GREGORIAN
@@ -310,16 +317,14 @@ END:VCALENDAR
 
 HI;
 
-
         $tz = TimeZoneUtil::getTimeZone('/freeassociation.sourceforge.net/Tzfile/Europe/Ljubljana', Reader::read($vobj));
         $ex = new \DateTimeZone('Europe/Ljubljana');
         $this->assertEquals($ex->getName(), $tz->getName());
-
     }
 
-    function testWeirdSystemVLICs() {
-
-$vobj = <<<HI
+    public function testWeirdSystemVLICs()
+    {
+        $vobj = <<<HI
 BEGIN:VCALENDAR
 CALSCALE:GREGORIAN
 PRODID:-//Ximian//NONSGML Evolution Calendar//EN
@@ -363,7 +368,12 @@ HI;
         $tz = TimeZoneUtil::getTimeZone('/freeassociation.sourceforge.net/Tzfile/SystemV/EST5EDT', Reader::read($vobj), true);
         $ex = new \DateTimeZone('America/New_York');
         $this->assertEquals($ex->getName(), $tz->getName());
-
     }
 
+    public function testPrefixedOffsetExchangeIdentifier()
+    {
+        $tz = TimeZoneUtil::getTimeZone('(UTC-05:00) Eastern Time (US & Canada)');
+        $ex = new \DateTimeZone('America/New_York');
+        $this->assertEquals($ex->getName(), $tz->getName());
+    }
 }

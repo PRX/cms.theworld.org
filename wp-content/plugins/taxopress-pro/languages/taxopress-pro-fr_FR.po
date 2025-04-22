@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaxoPress Pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-26 10:11+0000\n"
-"PO-Revision-Date: 2025-02-28 09:18+0100\n"
+"POT-Creation-Date: 2025-03-03 09:19+0000\n"
+"PO-Revision-Date: 2025-03-03 19:39+0100\n"
 "Last-Translator: \n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -538,17 +538,16 @@ msgstr "Taxonomie du terme secondaire"
 msgid "Security error. Kindly reload this page and try again"
 msgstr "Erreur de sécurité. Veuillez recharger cette page et réessayer"
 
-#: includes-pro/modules/autoterms/schedule.php:253
-msgid ""
-"Select an Auto Terms configuration to use when running the \"Schedule\" "
-"feature."
-msgstr ""
-"Sélectionner une configuration de termes automatiques à utiliser lors de "
-"l’exécution de la fonctionnalité « Planifier »."
-
 #: includes-pro/modules/autoterms/schedule.php:227
 msgid "Select an option..."
 msgstr "Sélectionner une option…"
+
+#: includes-pro/modules/autoterms/schedule.php:253
+msgid ""
+"Select Auto Terms settings to use when running the \"Schedule\" feature."
+msgstr ""
+"Sélectionner les réglages de termes automatiques à utiliser lors de "
+"l’exécution de la fonctionnalité « Planifier »."
 
 #: includes-pro/modules/autoterms/schedule.php:215
 msgid "Settings"

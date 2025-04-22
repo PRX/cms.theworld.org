@@ -2,15 +2,17 @@
 
 namespace Sabre\VObject\ICalendar;
 
+use PHPUnit\Framework\TestCase;
+use Sabre\VObject\Property\Uri;
 use Sabre\VObject\Reader;
 
-class AttachParseTest extends \PHPUnit_Framework_TestCase {
-
+class AttachParseTest extends TestCase
+{
     /**
      * See issue #128 for more info.
      */
-    function testParseAttach() {
-
+    public function testParseAttach()
+    {
         $vcal = <<<ICS
 BEGIN:VCALENDAR
 BEGIN:VEVENT
@@ -22,10 +24,7 @@ ICS;
         $vcal = Reader::read($vcal);
         $prop = $vcal->VEVENT->ATTACH;
 
-        $this->assertInstanceOf('Sabre\\VObject\\Property\\URI', $prop);
+        $this->assertInstanceOf(Uri::class, $prop);
         $this->assertEquals('ftp://example.com/pub/reports/r-960812.ps', $prop->getValue());
-
-
     }
-
 }

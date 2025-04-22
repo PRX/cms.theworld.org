@@ -2,11 +2,12 @@
 
 namespace Sabre\VObject\ITip;
 
+use PHPUnit\Framework\TestCase;
 use Sabre\VObject\Reader;
 
-class BrokerTimezoneInParseEventInfoWithoutMasterTest extends \PHPUnit_Framework_TestCase {
-
-    function testTimezoneInParseEventInfoWithoutMaster()
+class BrokerTimezoneInParseEventInfoWithoutMasterTest extends TestCase
+{
+    public function testTimezoneInParseEventInfoWithoutMaster()
     {
         $calendar = <<<ICS
 BEGIN:VCALENDAR

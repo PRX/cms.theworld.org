@@ -2,9 +2,9 @@
 Contributors: publishpress, kevinB, stevejburge, andergmartins, olatechpro, ojopaul
 Tags: category, tag, taxonomy, related posts, tag cloud, terms, tagging, navigation, tag manager, tags manager, term manager, terms manager
 Requires at least: 3.3
-Tested up to: 6.7
-Stable tag: 3.32.0
-Requires PHP: 7.2.5
+Tested up to: 6.8
+Stable tag: 3.34.0
+Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -224,6 +224,33 @@ If you have a busy WooCommerce site, it can be difficult to organize all your pr
 6. If you have a term called “WordPress”, the Auto Links feature will find any instances of “WordPress” in your content and add a link to the archive page for that tag.
 
 == Changelog ==
+
+v3.34.0- 2025-04-21
+* Update: Remove Hidden Terms from Auto Links, #2582
+* Update: Clarify the Exclusions message, #2573
+* Feature: Allow Users to disable Custom URL Field for Taxonomies, #2568
+* Update: Allow users to see the slug, not just the name in the Merge feture, #2567
+* Feature: Add a Parent / Child display format, #2526
+* Feature: Allow users to specify maximum or minimum length for new terms, #2525
+* Update: Reposition filters on the Manage Terms screen, #2475
+* Update: Add Ajax Support for merging large terms, #2438
+* Fixed: Add simple-tags/vendor/publishpress/wordpress-version-notices/tests/ to ignore directory list #2566
+
+v3.33.0- 2025-03-24
+* Update: Change "Metaboxes" to "Fast Update" and make it share same look as post metabox, #2493
+* Feature: Allow users to prevent some characters from being added to terms, #2500
+* Feature: Allow admins to control which terms users can add, #2259
+* Update: Move extra options to the "Settings" area, #2497
+* Update: Move the remaining "Metaboxes" settings, #2439
+* Update: Add button to delete edited taxonomies data from TaxoPress/fix deleted taxonomy data showing in TaxoPress, #2547
+* Update: Add support for new OpenAI models, #2534
+* Update: Update Create Terms capability requirement text for metabox create tab, #2523
+* Fixed: PHP 8 phpcs error in vendor/sabre/vobject, #2533
+* Update: Update the "Hide unused terms" feature, #2326
+* Update: Small visual fixes for metabox filters, #2529
+* Update: Update widget message, #2518
+* Fixed: Maxiumum terms to display is ignored for Non-Hierarchical Taxonomies, #2519
+* Update: TaxoPress v.3.32.0 Translation Update ES-FR-IT, #2517
 
 v3.32.0- 2025-03-03
 * Fixed: PHP Parse error: syntax error, unexpected ‘=>’ on PHP 5.6 or lower, #2505
