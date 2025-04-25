@@ -1,18 +1,19 @@
 <?php
 
-namespace Sabre\VObject\Recur;
+namespace Sabre\VObject\Recur\EventIterator;
 
-use
-    Sabre\VObject\Reader,
-    DateTime;
+use DateTime;
+use PHPUnit\Framework\TestCase;
+use Sabre\VObject\Component\VCalendar;
+use Sabre\VObject\Reader;
 
-class ByMonthInDailyTest extends \PHPUnit_Framework_TestCase {
-
+class ByMonthInDailyTest extends TestCase
+{
     /**
-     * This tests the expansion of dates with DAILY frequency in RRULE with BYMONTH restrictions
+     * This tests the expansion of dates with DAILY frequency in RRULE with BYMONTH restrictions.
      */
-    function testExpand() {
-
+    public function testExpand()
+    {
         $ics = <<<ICS
 BEGIN:VCALENDAR
 VERSION:2.0
@@ -36,24 +37,24 @@ END:VCALENDAR
 ICS;
 
         $vcal = Reader::read($ics);
-        $this->assertInstanceOf('Sabre\\VObject\\Component\\VCalendar', $vcal);
+        $this->assertInstanceOf(VCalendar::class, $vcal);
 
-        $vcal->expand(new DateTime('2013-09-28'), new DateTime('2014-09-11'));
+        $vcal = $vcal->expand(new DateTime('2013-09-28'), new DateTime('2014-09-11'));
 
+        $dates = [];
         foreach ($vcal->VEVENT as $event) {
             $dates[] = $event->DTSTART->getValue();
         }
 
-        $expectedDates = array(
-            "20130929T160000Z",
-            "20131006T160000Z",
-            "20131013T160000Z",
-            "20131020T160000Z",
-            "20131027T160000Z",
-            "20140907T160000Z"
-        );
+        $expectedDates = [
+            '20130929T160000Z',
+            '20131006T160000Z',
+            '20131013T160000Z',
+            '20131020T160000Z',
+            '20131027T160000Z',
+            '20140907T160000Z',
+        ];
 
         $this->assertEquals($expectedDates, $dates, 'Recursed dates are restricted by month');
     }
-
 }

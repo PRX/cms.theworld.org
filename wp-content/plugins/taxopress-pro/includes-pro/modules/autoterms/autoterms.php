@@ -89,7 +89,11 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                 'gpt-3.5-turbo'     => esc_html__('gpt-3.5-turbo', 'taxopress-pro'),
                 'gpt-4o-mini'       => esc_html__('gpt-4o-mini', 'taxopress-pro'),
                 'gpt-4o'            => esc_html__('gpt-4o', 'taxopress-pro'),
-                'chatgpt-4o-latest' => esc_html__('chatgpt-4o-latest', 'taxopress-pro')
+                'chatgpt-4o-latest' => esc_html__('chatgpt-4o-latest', 'taxopress-pro'),
+                'gpt-4.5-preview'            => esc_html__('gpt-4.5-preview', 'taxopress-pro'),
+                'o3-mini'            => esc_html__('o3-mini', 'taxopress-pro'),
+                'o1-mini'            => esc_html__('o1-mini', 'taxopress-pro'),
+                'o1'            => esc_html__('o1', 'taxopress-pro'),
             ];
             foreach ($open_ai_models as $model_name => $model_label) {
                 if ($model_name == 'gpt-3.5-turbo') {

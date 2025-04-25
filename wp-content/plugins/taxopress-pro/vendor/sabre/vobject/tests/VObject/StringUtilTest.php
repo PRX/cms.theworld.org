@@ -2,54 +2,50 @@
 
 namespace Sabre\VObject;
 
-class StringUtilTest extends \PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
 
-    function testNonUTF8() {
-
+class StringUtilTest extends TestCase
+{
+    public function testNonUTF8()
+    {
         $string = StringUtil::isUTF8(chr(0xbf));
 
         $this->assertEquals(false, $string);
-
     }
 
-    function testIsUTF8() {
-
+    public function testIsUTF8()
+    {
         $string = StringUtil::isUTF8('I 💚 SabreDAV');
 
         $this->assertEquals(true, $string);
-
     }
 
-    function testUTF8ControlChar() {
-
+    public function testUTF8ControlChar()
+    {
         $string = StringUtil::isUTF8(chr(0x00));
 
         $this->assertEquals(false, $string);
-
     }
 
-    function testConvertToUTF8nonUTF8() {
+    public function testConvertToUTF8nonUTF8()
+    {
+        // 0xBF is an ASCII upside-down question mark
+        $string = StringUtil::convertToUTF8(chr(0xBF));
 
-        $string = StringUtil::convertToUTF8(chr(0xbf));
-
-        $this->assertEquals(utf8_encode(chr(0xbf)), $string);
-
+        $this->assertEquals(mb_convert_encoding(chr(0xBF), 'UTF-8', 'ISO-8859-1'), $string);
     }
 
-    function testConvertToUTF8IsUTF8() {
-
+    public function testConvertToUTF8IsUTF8()
+    {
         $string = StringUtil::convertToUTF8('I 💚 SabreDAV');
 
         $this->assertEquals('I 💚 SabreDAV', $string);
-
     }
 
-    function testConvertToUTF8ControlChar() {
-
+    public function testConvertToUTF8ControlChar()
+    {
         $string = StringUtil::convertToUTF8(chr(0x00));
 
         $this->assertEquals('', $string);
-
     }
-
 }

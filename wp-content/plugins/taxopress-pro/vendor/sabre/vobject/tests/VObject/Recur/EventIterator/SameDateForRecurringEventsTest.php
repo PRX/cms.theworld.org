@@ -1,18 +1,18 @@
 <?php
 
-namespace Sabre\VObject\Recur;
+namespace Sabre\VObject\Recur\EventIterator;
 
-use Sabre\VObject\Recur\EventIterator;
+use PHPUnit\Framework\TestCase;
 use Sabre\VObject\Reader;
+use Sabre\VObject\Recur\EventIterator;
 
 /**
  * Testing case when overridden recurring events have same start date.
  *
  * Class SameDateForRecurringEventsTest
  */
-class SameDateForRecurringEventsTest extends \PHPUnit_Framework_TestCase
+class SameDateForRecurringEventsTest extends TestCase
 {
-
     /**
      * Checking is all events iterated by EventIterator.
      */

@@ -2,20 +2,22 @@
 
 namespace Sabre\VObject\Splitter;
 
-use Sabre\VObject;
+use PHPUnit\Framework\TestCase;
+use Sabre\VObject\ParseException;
 
-class VCardTest extends \PHPUnit_Framework_TestCase {
-
-    function createStream($data) {
-
-        $stream = fopen('php://memory','r+');
+class VCardTest extends TestCase
+{
+    public function createStream($data)
+    {
+        $stream = fopen('php://memory', 'r+');
         fwrite($stream, $data);
         rewind($stream);
-        return $stream;
 
+        return $stream;
     }
 
-    function testVCardImportValidVCard() {
+    public function testVCardImportValidVCard()
+    {
         $data = <<<EOT
 BEGIN:VCARD
 UID:foo
@@ -26,17 +28,15 @@ EOT;
         $objects = new VCard($tempFile);
 
         $count = 0;
-        while($objects->getNext()) {
-            $count++;
+        while ($objects->getNext()) {
+            ++$count;
         }
         $this->assertEquals(1, $count);
-
     }
 
-    /**
-     * @expectedException Sabre\VObject\ParseException
-     */
-    function testVCardImportWrongType() {
+    public function testVCardImportWrongType()
+    {
+        $this->expectException(ParseException::class);
         $event[] = <<<EOT
 BEGIN:VEVENT
 UID:foo1
@@ -45,7 +45,7 @@ DTSTART:20140101T050000Z
 END:VEVENT
 EOT;
 
-$event[] = <<<EOT
+        $event[] = <<<EOT
 BEGIN:VEVENT
 UID:foo2
 DTSTAMP:20140122T233226Z
@@ -64,12 +64,12 @@ EOT;
 
         $splitter = new VCard($tempFile);
 
-        while($object=$splitter->getNext()) {
+        while ($object = $splitter->getNext()) {
         }
-
     }
 
-    function testVCardImportValidVCardsWithCategories() {
+    public function testVCardImportValidVCardsWithCategories()
+    {
         $data = <<<EOT
 BEGIN:VCARD
 UID:card-in-foo1-and-foo2
@@ -93,14 +93,58 @@ EOT;
         $splitter = new VCard($tempFile);
 
         $count = 0;
-        while($object=$splitter->getNext()) {
-            $count++;
+        while ($object = $splitter->getNext()) {
+            ++$count;
         }
         $this->assertEquals(4, $count);
-
     }
 
-    function testVCardImportEndOfData() {
+    public function testVCardImportVCardNoComponent()
+    {
+        $this->expectException(ParseException::class);
+        $data = <<<EOT
+BEGIN:VCARD
+FN:first card
+
+BEGIN:VCARD
+FN:ok
+END:VCARD
+EOT;
+        $tempFile = $this->createStream($data);
+
+        $splitter = new VCard($tempFile);
+
+        $this->expectException(ParseException::class);
+        $this->expectExceptionMessage('Invalid MimeDir file. Unexpected component: "BEGIN:VCARD" in document type VCARD');
+        while ($object = $splitter->getNext()) {
+        }
+    }
+
+    public function testVCardImportQuotedPrintableOptionForgivingLeading()
+    {
+        $data = <<<EOT
+BEGIN:VCARD
+FN;card
+TITLE;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:=D0=D0=D0=D0=D0=D0=D0=D0=D0=D0=D0=D0=D0=D0=D0=D0=D0=D0=D0=D0=D0=D0=D0=
+
+END:VCARD
+BEGIN:VCARD
+FN;card
+END:VCARD
+EOT;
+        $tempFile = $this->createStream($data);
+
+        $splitter = new VCard($tempFile, \Sabre\VObject\Parser\Parser::OPTION_FORGIVING);
+
+        $count = 0;
+        while ($object = $splitter->getNext()) {
+            ++$count;
+        }
+        $this->assertEquals(2, $count);
+    }
+
+    public function testVCardImportEndOfData()
+    {
         $data = <<<EOT
 BEGIN:VCARD
 UID:foo
@@ -109,17 +153,14 @@ EOT;
         $tempFile = $this->createStream($data);
 
         $objects = new VCard($tempFile);
-        $object=$objects->getNext();
+        $object = $objects->getNext();
 
         $this->assertNull($objects->getNext());
-
-
     }
 
-    /**
-     * @expectedException \Sabre\VObject\ParseException
-     */
-    function testVCardImportCheckInvalidArgumentException() {
+    public function testVCardImportCheckInvalidArgumentException()
+    {
+        $this->expectException(ParseException::class);
         $data = <<<EOT
 BEGIN:FOO
 END:FOO
@@ -127,11 +168,12 @@ EOT;
         $tempFile = $this->createStream($data);
 
         $objects = new VCard($tempFile);
-        while($objects->getNext()) { }
-
+        while ($objects->getNext()) {
+        }
     }
 
-    function testVCardImportMultipleValidVCards() {
+    public function testVCardImportMultipleValidVCards()
+    {
         $data = <<<EOT
 BEGIN:VCARD
 UID:foo
@@ -145,14 +187,14 @@ EOT;
         $objects = new VCard($tempFile);
 
         $count = 0;
-        while($objects->getNext()) {
-            $count++;
+        while ($objects->getNext()) {
+            ++$count;
         }
         $this->assertEquals(2, $count);
-
     }
 
-    function testImportMultipleSeparatedWithNewLines() {
+    public function testImportMultipleSeparatedWithNewLines()
+    {
         $data = <<<EOT
 BEGIN:VCARD
 UID:foo
@@ -170,12 +212,13 @@ EOT;
 
         $count = 0;
         while ($objects->getNext()) {
-            $count++;
+            ++$count;
         }
         $this->assertEquals(2, $count);
     }
 
-    function testVCardImportVCardWithoutUID() {
+    public function testVCardImportVCardWithoutUID()
+    {
         $data = <<<EOT
 BEGIN:VCARD
 END:VCARD
@@ -185,11 +228,10 @@ EOT;
         $objects = new VCard($tempFile);
 
         $count = 0;
-        while($objects->getNext()) {
-            $count++;
+        while ($objects->getNext()) {
+            ++$count;
         }
 
         $this->assertEquals(1, $count);
     }
-
 }
