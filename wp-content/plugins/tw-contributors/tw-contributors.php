@@ -56,3 +56,53 @@ function tw_contributors_taxonomy() {
 	register_taxonomy( 'contributor', array( 'post', 'attachment', 'segment' ), $args );
 }
 add_action( 'init', 'tw_contributors_taxonomy', 0 );
+
+/**
+ * Change RSS feed author name.
+ *
+ * @param string $author
+ *
+ * @return string
+ */
+function tw_contributors_rss_author( $author ) {
+
+	if ( is_feed() ) {
+
+		global $post;
+
+		$author = tw_contributors_get_post_contributors_string( $post->ID );
+	}
+
+	return $author;
+}
+add_filter( 'the_author', 'tw_contributors_rss_author' );
+
+/**
+ * Get author byline.
+ *
+ * @param int $post_id The post ID.
+ *
+ * @return string The author byline.
+ */
+function tw_contributors_get_post_contributors_string( $post_id ) {
+
+	$contributors = '';
+
+	// Get contributor taxonomy terms.
+	$contributor_terms = get_the_terms( $post_id, 'contributor' );
+
+	// Bail early if no contributor terms are found.
+	if (
+		! $contributor_terms
+		||
+		! is_array( $contributor_terms )
+	) {
+		return $contributors;
+	}
+
+	$contributor_titles = wp_list_pluck( $contributor_terms, 'name' );
+
+	$author_byline = implode( ', ', $contributor_titles );
+
+	return $author_byline;
+}
