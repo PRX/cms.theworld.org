@@ -40,6 +40,7 @@ define(
 		'tw-qa-block/tw-qa-block.php',
 		'tw-datawrapper-block/tw-datawrapper-block.php',
 		'tw-resource-development-tags/tw-resource-development-tags.php',
+		'tw-rss-helper/tw-rss-helper.php',
 		'tw-scroll-gallery/tw-scroll-gallery.php',
 		'tw-sitemap-mask/tw-sitemap-mask.php',
 		'tw-segments/tw-segments.php',
