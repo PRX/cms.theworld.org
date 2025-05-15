@@ -66,9 +66,23 @@ add_action( 'init', 'tw_contributors_taxonomy', 0 );
  */
 function tw_contributors_rss_author( $author ) {
 
+	// Check if we're in a feed.
 	if ( is_feed() ) {
 
 		global $post;
+
+		// Bail early if not a post.
+		if ( ! $post instanceof WP_Post ) {
+			return $author;
+		}
+
+		// List of affected post types.
+		$affected_post_types = array( 'post', 'episode', 'segment' );
+
+		// Bail early if not an affected post type.
+		if ( ! in_array( $post->post_type, $affected_post_types, true ) ) {
+			return $author;
+		}
 
 		$author = tw_contributors_get_post_contributors_string( $post->ID );
 	}
