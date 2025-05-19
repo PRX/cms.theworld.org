@@ -63,7 +63,10 @@ class RevisionaryActivation {
 
             $new_revision_id = (int)$wpdb->insert_id;
             
-            add_post_meta($new_revision_id, '_rvy_base_post_id', $new['comment_count']);
+            if ($new['comment_count'] != $new_revision_id) {
+                add_post_meta($new_revision_id, '_rvy_base_post_id', $new['comment_count']);
+            }
+
             add_post_meta($new_revision_id, '_rvy_imported_revision', $old->rev_ID);
 
             if ($new['comment_count'] != $last_post_id) {  // avoid redundant update for same post

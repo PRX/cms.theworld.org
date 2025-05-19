@@ -18,8 +18,9 @@ do_action( 'xmlsf_sitemap_index' );
 $disabled = get_option( 'xmlsf_disabled_providers', XMLSF\get_default_settings( 'disabled_providers' ) );
 
 // Public post types.
-$post_types = XMLSF\get_post_types_settings();
-foreach ( $post_types as $the_post_type => $settings ) :
+$post_types = xmlsf()->sitemap->get_post_types();
+foreach ( $post_types as $the_post_type ) :
+	$settings = xmlsf()->sitemap->post_type_settings( $the_post_type );
 	$archive_type = isset( $settings['archive'] ) ? $settings['archive'] : '';
 	$archive_data = apply_filters( 'xmlsf_index_archive_data', array(), $the_post_type, $archive_type );
 
@@ -34,7 +35,7 @@ endforeach;
 
 // Public taxonomies.
 if ( empty( $disabled ) || ! in_array( 'taxonomies', (array) $disabled, true ) ) {
-	$taxonomies = XMLSF\get_taxonomies();
+	$taxonomies = xmlsf()->sitemap->get_taxonomies();
 	foreach ( $taxonomies as $the_taxonomy ) :
 		$settings = (array) get_option( 'xmlsf_taxonomy_settings' );
 		$defaults = XMLSF\get_default_settings( 'taxonomy_settings' );
@@ -52,7 +53,7 @@ if ( empty( $disabled ) || ! in_array( 'taxonomies', (array) $disabled, true ) )
 		);
 		if ( wp_count_terms( $args ) ) {
 			$url     = xmlsf()->sitemap->get_sitemap_url( 'taxonomy', array( 'type' => $the_taxonomy ) );
-			$lastmod = XMLSF\get_taxonomy_modified( $the_taxonomy );
+			$lastmod = xmlsf()->sitemap->get_taxonomy_modified( $the_taxonomy );
 			echo '<sitemap><loc>' . esc_xml( $url ) . '</loc>';
 			if ( $lastmod ) {
 				echo '<lastmod>' . esc_xml( get_date_from_gmt( $lastmod, DATE_W3C ) ) . '</lastmod>';

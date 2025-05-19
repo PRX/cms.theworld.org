@@ -18,21 +18,17 @@ class Sitemap {
 
 	/**
 	 * Update actions for General Settings
-	 *
-	 * @param mixed $old   Old option value.
-	 * @param mixed $value Saved option value.
 	 */
-	public static function update_server( $old, $value ) {
-		if ( $old !== $value ) {
-			// Check static file.
-			$slug     = \is_object( \xmlsf()->sitemap ) ? \xmlsf()->sitemap->slug() : ( \xmlsf()->sitemap->uses_core_server() ? 'wp-sitemap' : 'sitemap' );
-			$filename = $slug . '.xml';
-
-			\XMLSF\Admin\Admin::check_static_files( $filename, 1 );
-
-			// Flush rewrite rules on next init.
-			\delete_option( 'rewrite_rules' );
+	public static function update_server() {
+		if ( ! xmlsf()->using_permalinks() ) {
+			return;
 		}
+
+		// Set transients for flushing.
+		set_transient( 'xmlsf_flush_rewrite_rules', true );
+
+		// Set transients for flushing.
+		set_transient( 'xmlsf_check_static_file', true );
 	}
 
 	/**
@@ -126,10 +122,9 @@ class Sitemap {
 			// Reset ignored warnings.
 			\delete_user_meta( \get_current_user_id(), 'xmlsf_dismissed' );
 
-			// When core sitemap server is used.
-			if ( \is_object( \xmlsf()->sitemap ) ) {
-				\XMLSF\Admin\Admin::check_static_files( \xmlsf()->sitemap->slug() . '.xml', 2 );
-			}
+			// Check static file.
+			$slug = \is_object( \xmlsf()->sitemap ) ? \xmlsf()->sitemap->slug() : 'sitemap';
+			\XMLSF\Admin\Admin::check_static_file( $slug . '.xml', 2 );
 		}
 
 		if ( isset( $_POST['xmlsf-clear-settings-sitemap'] ) ) {
@@ -184,6 +179,11 @@ class Sitemap {
 	 * Compare versions to known compatibility.
 	 */
 	public static function compatible_with_advanced() {
+		// Return if plugin is not active.
+		if ( ! is_plugin_active( 'xml-sitemap-feed-advanced/xml-sitemap-advanced.php' ) ) {
+			return true;
+		}
+
 		// Check version.
 		\defined( 'XMLSF_ADV_VERSION' ) || \define( 'XMLSF_ADV_VERSION', XMLSF_ADV_MIN_VERSION );
 
@@ -200,9 +200,8 @@ class Sitemap {
 
 		// XML Sitemap Advanced incompatibility notice.
 		if (
-			is_plugin_active( 'xml-sitemap-feed-advanced/xml-sitemap-advanced.php' ) &&
-			! \in_array( 'xmlsf_advanced', (array) get_user_meta( get_current_user_id(), 'xmlsf_dismissed' ), true ) &&
-			! self::compatible_with_advanced()
+			! self::compatible_with_advanced() &&
+			! \in_array( 'xmlsf_advanced', (array) get_user_meta( get_current_user_id(), 'xmlsf_dismissed' ), true )
 		) {
 			\add_action(
 				'admin_notices',
@@ -219,19 +218,13 @@ class Sitemap {
 		if ( \is_plugin_active( 'wordpress-seo/wp-seo.php' ) ) {
 			// check date archive redirection.
 			$wpseo_titles = \get_option( 'wpseo_titles' );
-			if ( ! empty( $wpseo_titles['disable-date'] ) && ! \xmlsf()->sitemap->uses_core_server() ) {
-				// check if Split by option is set anywhere.
-				foreach ( \XMLSF\get_post_types_settings() as $type => $settings ) {
-					if ( ! empty( $settings['active'] ) && ! empty( $settings['archive'] ) ) {
-						\add_action(
-							'admin_notices',
-							function () {
-								include XMLSF_DIR . '/views/admin/notice-wpseo-date-redirect.php';
-							}
-						);
-						break;
+			if ( ! empty( $wpseo_titles['disable-date'] ) && ! \xmlsf()->sitemap->uses_date_archives() ) {
+				\add_action(
+					'admin_notices',
+					function () {
+						include XMLSF_DIR . '/views/admin/notice-wpseo-date-redirect.php';
 					}
-				}
+				);
 			}
 
 			// check wpseo sitemap option.
@@ -255,19 +248,13 @@ class Sitemap {
 			$seopress_toggle = \get_option( 'seopress_toggle' );
 
 			$seopress_titles = \get_option( 'seopress_titles_option_name' );
-			if ( ! empty( $seopress_toggle['toggle-titles'] ) && ! empty( $seopress_titles['seopress_titles_archives_date_disable'] ) && ! \xmlsf()->sitemap->uses_core_server() ) {
-				// check if Split by option is set anywhere.
-				foreach ( \XMLSF\get_post_types_settings() as $type => $settings ) {
-					if ( ! empty( $settings['active'] ) && ! empty( $settings['archive'] ) ) {
-						\add_action(
-							'admin_notices',
-							function () {
-								include XMLSF_DIR . '/views/admin/notice-seopress-date-redirect.php';
-							}
-						);
-						break;
+			if ( ! empty( $seopress_toggle['toggle-titles'] ) && ! empty( $seopress_titles['seopress_titles_archives_date_disable'] ) && ! \xmlsf()->sitemap->uses_date_archives() ) {
+				\add_action(
+					'admin_notices',
+					function () {
+						include XMLSF_DIR . '/views/admin/notice-seopress-date-redirect.php';
 					}
-				}
+				);
 			}
 
 			// check seopress sitemap option.
@@ -289,19 +276,13 @@ class Sitemap {
 
 			// check date archive redirection.
 			$rankmath_titles = \get_option( 'rank-math-options-titles' );
-			if ( ! empty( $rankmath_titles['disable_date_archives'] ) && 'on' === $rankmath_titles['disable_date_archives'] && ! \xmlsf()->sitemap->uses_core_server() ) {
-				// check if Split by option is set anywhere.
-				foreach ( \XMLSF\get_post_types_settings() as $type => $settings ) {
-					if ( ! empty( $settings['active'] ) && ! empty( $settings['archive'] ) ) {
-						\add_action(
-							'admin_notices',
-							function () {
-								include XMLSF_DIR . '/views/admin/notice-rankmath-date-redirect.php';
-							}
-						);
-						break;
+			if ( ! empty( $rankmath_titles['disable_date_archives'] ) && 'on' === $rankmath_titles['disable_date_archives'] && ! \xmlsf()->sitemap->uses_date_archives() ) {
+				\add_action(
+					'admin_notices',
+					function () {
+						include XMLSF_DIR . '/views/admin/notice-rankmath-date-redirect.php';
 					}
-				}
+				);
 			}
 
 			// check rank math sitemap option.
@@ -348,7 +329,7 @@ class Sitemap {
 		if ( \is_plugin_active( 'slim-seo/slim-seo.php' ) && ! \in_array( 'slim_seo_sitemap', (array) \get_user_meta( \get_current_user_id(), 'xmlsf_dismissed' ), true ) ) {
 			$slimseo = \get_option( 'slim_seo' );
 
-			if ( empty( $slimseo ) || isset( $slimseo['features'] ) && in_array( 'sitemaps', (array) $slimseo['features'], true ) ) {
+			if ( empty( $slimseo ) || ( isset( $slimseo['features'] ) && in_array( 'sitemaps', (array) $slimseo['features'], true ) ) ) {
 				\add_action(
 					'admin_notices',
 					function () {
@@ -417,12 +398,12 @@ class Sitemap {
 	 * Adds a XML Sitemap box to the side column
 	 */
 	public static function add_meta_box() {
-		$post_types = \XMLSF\get_post_types_settings();
+		$post_types = \xmlsf()->sitemap->get_post_types();
 		if ( empty( $post_types ) ) {
 			return;
 		}
 
-		foreach ( $post_types as $post_type => $settings ) {
+		foreach ( $post_types as $post_type ) {
 			// Only include metaboxes on post types that are included.
 			\add_meta_box(
 				'xmlsf_section',
@@ -626,7 +607,7 @@ class Sitemap {
 				\add_settings_field(
 					'xmlsf_sitemap_name',
 					'<label for="xmlsf_sitemap_name">' . __( 'XML Sitemap URL', 'xml-sitemap-feed' ) . '</label>',
-					array( __NAMESPACE__ . '\Fields', 'xmlsf_sitemap_name_field' ),
+					array( __NAMESPACE__ . '\Fields', 'xmlsf_sitemap_slug_field' ),
 					'xmlsf_advanced',
 					'xml_sitemap_advanced_section'
 				);
@@ -739,14 +720,29 @@ class Sitemap {
 		);
 
 		// Settings ACTIONS & CHECKS.
-		\add_action( 'update_option_xmlsf_server', array( __CLASS__, 'update_server' ), 10, 2 );
+		\add_action( 'update_option_xmlsf_server', array( __CLASS__, 'update_server' ) );
 		\add_action( 'update_option_xmlsf_disabled_providers', array( __CLASS__, 'update_disabled_providers' ), 10, 2 );
 		\add_action( 'update_option_xmlsf_post_types', array( __CLASS__, 'update_post_types' ), 10, 2 );
+
+		// Maybe flush rewrite rules.
+		\add_action( 'settings_page_xmlsf', array( '\XMLSF\Admin\Admin', 'maybe_flush_rewrite_rules' ), 11 );
+
+		// Maybe check static file.
+		\add_action( 'load-settings_page_xmlsf', array( __CLASS__, 'maybe_check_static_file' ), 11 );
 	}
 
 	/**
-	 * XML SITEMAP SECTION
+	 * Maybe check static file.
+	 *
+	 * Checks $_GET['settings-updated'] and transient 'xmlsf_check_static_file'. Hooked into settings page load actions.
 	 */
+	public static function maybe_check_static_file() {
+		if ( ! empty( $_GET['settings-updated'] ) && xmlsf()->using_permalinks() && get_transient( 'xmlsf_check_static_file' ) ) {
+			$slug = \is_object( \xmlsf()->sitemap ) ? \xmlsf()->sitemap->slug() : 'sitemap';
+			\XMLSF\Admin\Admin::check_static_file( $slug . '.xml' );
+			delete_transient( 'xmlsf_check_static_file' );
+		}
+	}
 
 	/**
 	 * Help tabs
@@ -892,6 +888,9 @@ class Sitemap {
 				break;
 		}
 
+		// Hook for additional/advanced help tab.
+		\do_action( 'xmlsf_sitemap_help_tabs', $screen, $active_tab );
+
 		\ob_start();
 		include XMLSF_DIR . '/views/admin/help-tab-sidebar.php';
 		$content = \ob_get_clean();
@@ -906,9 +905,7 @@ class Sitemap {
 	 * @since 5.7
 	 */
 	public static function add_columns() {
-		include_once \XMLSF_DIR . '/inc/functions-sitemap.php';
-
-		foreach ( \XMLSF\get_post_types_settings() as $post_type => $settings ) {
+		foreach ( \xmlsf()->sitemap->get_post_types() as $post_type ) {
 			\add_filter( "manage_{$post_type}_posts_columns", array( __CLASS__, 'quick_edit_columns' ) );
 			\add_action( "manage_{$post_type}_posts_custom_column", array( __CLASS__, 'populate_columns' ) );
 		}
