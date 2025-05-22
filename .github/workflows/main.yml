@@ -53,7 +53,7 @@ jobs:
 
       - name: Install Terminus
         run: |
-          curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar && php installer.phar install
+          curl -O https://github.com/pantheon-systems/terminus/releases/download/4.0.1/terminus.phar && php installer.phar install
           echo "$GITHUB_WORKSPACE/vendor/bin" >> $GITHUB_PATH
 
       - name: Clone Pantheon repository
