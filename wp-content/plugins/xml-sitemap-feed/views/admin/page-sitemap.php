@@ -39,9 +39,13 @@
 	<div class="main">
 		<form id="xmlsf-settings-form" method="post" action="options.php">
 
+			<?php do_action( 'xmlsf_settings_before', $active_tab ); ?>
+
 			<?php settings_fields( 'xmlsf_' . $active_tab ); ?>
 
 			<?php do_settings_sections( 'xmlsf_' . $active_tab ); ?>
+
+			<?php do_action( 'xmlsf_settings_after', $active_tab ); ?>
 
 			<?php submit_button(); ?>
 
@@ -50,9 +54,10 @@
 
 	<div class="sidebar">
 		<?php
-		if ( is_plugin_active( 'xml-sitemap-feed-advanced/xml-sitemap-advanced.php' ) && ! $this->compatible_with_advanced() ) {
-			$class = 'notice notice-error notice-alt';
+		if ( ! self::compatible_with_advanced() ) {
+			echo '<div style="background:rgb(252, 229, 231); margin-left: -14px; padding: 5px 10px; border: 4px solid rgb(214, 73, 54); border-radius: 3px; margin-bottom: 20px; font-weight: bold;">';
 			include XMLSF_DIR . '/views/admin/section-advanced-compat-message.php';
+			echo '</div>';
 		}
 		?>
 

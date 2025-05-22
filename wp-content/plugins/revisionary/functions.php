@@ -4,14 +4,11 @@ function revisionary() {
 }
 
 function revisionary_unrevisioned_postmeta() {
-	$exclude = array_fill_keys( array( '_rvy_base_post_id', '_rvy_has_revisions', '_rvy_published_gmt', '_rvy_approved_by', '_pp_is_autodraft', '_pp_last_parent', '_edit_lock', '_edit_last', '_wp_old_slug', '_wp_attached_file', '_menu_item_classes', '_menu_item_menu_item_parent', '_menu_item_object', '_menu_item_object_id', '_menu_item_target', '_menu_item_type', '_menu_item_url', '_menu_item_xfn', '_rs_file_key', '_scoper_custom', '_scoper_last_parent', '_wp_attachment_backup_sizes', '_wp_attachment_metadata', '_wp_trash_meta_status', '_wp_trash_meta_time', '_last_attachment_ids', '_last_category_ids', '_encloseme', '_pingme', '_pp_statuses_last_main_status', 'peepso_postnotify' ), true );
-	$exclude = apply_filters( 'revisionary_unrevisioned_postmeta', $exclude );
+	$exclude = (array) apply_filters( 'revisionary_unrevisioned_postmeta', [] );
+
 	$exclude = array_merge(
 		$exclude, 
-		array_fill_keys(  // These cannot be revisioned without breaking plugin functionality
-			['_rvy_base_post_id', '_rvy_has_revisions', '_rvy_published_gmt', '_pp_is_autodraft'],
-			true
-		)
+        array_fill_keys(['_rvy_base_post_id', '_rvy_has_revisions', '_rvy_published_gmt', '_rvy_approved_by', '_rvy_updated_by', '_pp_is_autodraft', '_pp_last_parent', '_edit_lock', '_edit_last', '_wp_old_slug', '_wp_attached_file', '_menu_item_classes', '_menu_item_menu_item_parent', '_menu_item_object', '_menu_item_object_id', '_menu_item_target', '_menu_item_type', '_menu_item_url', '_menu_item_xfn', '_rs_file_key', '_scoper_custom', '_scoper_last_parent', '_wp_attachment_backup_sizes', '_wp_attachment_metadata', '_wp_trash_meta_status', '_wp_trash_meta_time', '_last_attachment_ids', '_last_category_ids', '_encloseme', '_pingme', '_pp_statuses_last_main_status', 'peepso_postnotify', '_peepso_postnotify', '_rvy_subpost_original_source_id', 'jr_listing_views', '_jr_listing_views'], true)
 	);
 	
 	return array_keys(array_filter($exclude));
@@ -269,6 +266,25 @@ function rvy_in_revision_workflow($post, $args = []) {
     return rvy_is_revision_status($post->post_mime_type) ? $post->post_mime_type : false;
 }
 
+function rvy_from_revision_workflow($post, $args=[]) {
+    if (!empty($post) && is_numeric($post)) {
+		$post = get_post($post);
+	}
+
+	if (empty($post) || ('revision' != $post->post_type) || ('inherit' != $post->post_status)) {
+		return false;
+	}
+
+    if ($prev_revision_status = get_post_meta($post->ID, '_rvy_prev_revision_status', true)) {
+        return $prev_revision_status;
+    
+    } elseif (get_post_meta($post->ID, '_rvy_published_gmt', true)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function rvy_status_revisions_active($post_type = '') {
     if (defined('PUBLISHPRESS_STATUSES_PRO_VERSION') && class_exists('PublishPress_Statuses')) {
         if ($post_type) {
@@ -304,7 +320,7 @@ function rvy_post_id($revision_id) {
                 $published_id = rvy_get_post_meta( $revision_id, '_rvy_base_post_id', true );
                 $busy = false;
 
-                if ($published_id) {
+                if ($published_id && ($published_id != $revision_id)) {
                     global $wpdb;
 
                     // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -330,7 +346,104 @@ function rvy_admin_url($partial_admin_url) {
     return rvy_nc_url( admin_url($partial_admin_url) );
 }
 
-function pp_revisions_plugin_updated($current_version) {
+function publishpress_revisions_post_updated($post) {
+    global $revisionary;
+
+    if (empty($revisionary)) {
+        return false;
+    }
+
+    if (!empty($post) && is_numeric($post)) {
+		$post = get_post($post);
+	}
+
+    if (empty($post)) {
+        return 0;
+    }
+
+    $date_gmt = $post->post_modified_gmt;
+    $updated_by = 0;
+
+    if (rvy_in_revision_workflow($post)) {
+        $is_revision = $post->post_mime_type;
+
+        $updaters = get_post_meta($post->ID, '_rvy_updated_by', true);
+
+        if (!empty($updaters)) {
+            $updated_by = end($updaters);
+        }
+    } elseif ('revision' == $post->post_type) {
+        $is_revision = $post->post_status;
+        
+        if ('inherit' == $post->post_status) {
+            $is_archive = true;
+            $updated_by = $post->post_author;
+
+            $prev_revision_status = get_post_meta($post->ID, '_rvy_prev_revision_status', true);
+            $revision_publication = get_post_meta($post->ID, '_rvy_published_gmt', true);
+        }
+
+    } else {
+        if ($revisions = wp_get_post_revisions($post)) {
+            $last_revision = reset($revisions);
+
+            $updated_by = $last_revision->post_author;
+            $date_gmt = $last_revision->post_modified_gmt;
+
+            $prev_revision_status = get_post_meta($last_revision->ID, '_rvy_prev_revision_status', true);
+            $revision_publication = get_post_meta($last_revision->ID, '_rvy_published_gmt', true);
+        }
+    }
+
+    if (!empty($prev_revision_status) || !empty($revision_publication)) {
+        switch ($prev_revision_status) {
+            case 'future-revision':
+                $update_type = esc_html__('Scheduled Rev.', 'revisionary');
+                break;
+
+            case 'pending-revision':
+            case 'draft-revision':
+                $update_type = esc_html__('Submitted Rev.', 'revisionary');
+                break;
+
+            default:
+                if (!empty($revision_publication)) {
+                    $update_type = esc_html__('Submitted Rev.', 'revisionary');
+                }
+        }
+    }
+
+    if (empty($update_type)) {
+        $update_type = esc_html__('Direct Edit', 'revisionary');
+        $direct_update = true;
+    }
+
+    $user = (!empty($updated_by)) ? (array) new WP_User($updated_by) : [];
+
+    if (!empty($user) && !empty($user['data'])) {
+        $user = (object) array_merge(
+            array_intersect_key(
+                (array) $user['data'],
+                array_fill_keys(['ID', 'display_name', 'user_email', 'user_url', 'user_login', 'user_nicename'], true)
+            ),
+            ['roles' => $user['roles']]
+        );
+    } else {
+        $user = (object) ['ID' => 0, 'display_name' => '', 'user_email' => '', 'user_url' => '', 'user_login' => '', 'user_nicename' => ''];
+    }
+
+    return [
+        'user' => $user,
+        'date_gmt' => $date_gmt,
+        'date' => get_date_from_gmt($date_gmt),
+        'is_revision' => !empty($is_revision),
+        'is_archive' => !empty($is_archive),
+        'direct_update' => !empty($direct_update),
+        'update_type' => $update_type,
+    ];
+}
+
+function pp_revisions_plugin_updated($current_version, $args = []) {
     global $wpdb;
     
     $last_ver = get_option('revisionary_last_version');
@@ -339,10 +452,19 @@ function pp_revisions_plugin_updated($current_version) {
         return;
     }
 
-    if (defined('PUBLISHPRESS_REVISIONS_PRO_VERSION') && version_compare($last_ver, '3.6.0-rc6', '<')) {
-        update_option('revisionary_pro_flush_notifications', true);
-        delete_option('_pp_statuses_planner_default_revision_notifications');
-        delete_option('_pp_statuses_default_revision_notifications');
+    do_action('revisionary_plugin_updated', $last_ver, $current_version);
+
+    if ((defined('PUBLISHPRESS_REVISIONS_PRO_VERSION') || !empty($args['is_pro'])) && version_compare($last_ver, '3.6.6-rc3', '<')) {
+        update_option('revisionary_pro_fix_revision_scheduled_notification', true);
+        update_option('revisionary_pro_fix_default_notifications_meta_key', true);
+    }
+
+    if ((defined('PUBLISHPRESS_REVISIONS_PRO_VERSION') || !empty($args['is_pro'])) && version_compare($last_ver, '3.6.6-beta5', '<')) {
+        update_option('revisionary_pro_fix_default_notification_shortcodes', true);
+    }
+
+    if ((defined('PUBLISHPRESS_REVISIONS_PRO_VERSION') || !empty($args['is_pro'])) && version_compare($last_ver, '3.6.4-beta3', '<')) {
+        update_option('revisionary_pro_restore_notifications', true);
     }
 
     if (version_compare($last_ver, '3.0.12-rc4', '<')) {

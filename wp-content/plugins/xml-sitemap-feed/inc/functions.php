@@ -170,7 +170,6 @@ function load_template( $is_comment_feed, $feed ) {
 	 *
 	 * Examples:
 	 * sitemap.php
-	 * sitemap-root.php
 	 * sitemap-posttype.php
 	 * * sitemap-posttype-post.php
 	 * * sitemap-posttype-page.php
@@ -244,7 +243,7 @@ function sanitize_number( $number, $min = .1, $max = 1, $decimals = 1 ) {
  *
  * @param string $type The metadata type to clear.
  */
-function clear_metacache( $type = 'all' ) {
+function clear_metacache( $type = '' ) {
 	switch ( $type ) {
 		case 'images':
 			// Clear all images meta caches...
@@ -266,7 +265,6 @@ function clear_metacache( $type = 'all' ) {
 			\delete_metadata( 'user', 0, 'user_modified', '', true );
 			break;
 
-		case 'all':
 		default:
 			$all_types = array( 'images', 'comments', 'terms', 'users' );
 			foreach ( $all_types as $_type ) {
@@ -283,25 +281,9 @@ function clear_metacache( $type = 'all' ) {
  * @return string
  */
 function robots_txt( $output ) {
-
-	// CUSTOM ROBOTS.
-	$robots_custom = \get_option( 'xmlsf_robots' );
-	$output       .= $robots_custom ? $robots_custom . PHP_EOL : '';
-
-	// SITEMAPS.
-
-	$output .= PHP_EOL . '# XML Sitemap & Google News version ' . XMLSF_VERSION . ' - https://status301.net/wordpress-plugins/xml-sitemap-feed/' . PHP_EOL;
-	if ( 1 !== (int) \get_option( 'blog_public' ) ) {
-		$output .= '# XML Sitemaps are disabled because of this site\'s visibility settings.' . PHP_EOL;
-	} elseif ( ! namespace\sitemaps_enabled() ) {
-		$output .= '# No XML Sitemaps are enabled.' . PHP_EOL;
-	} else {
-		if ( namespace\sitemaps_enabled( 'sitemap' ) && ! \xmlsf()->sitemap->uses_core_server() ) {
-			$output .= 'Sitemap: ' . \xmlsf()->sitemap->get_sitemap_url() . PHP_EOL;
-		}
-		if ( namespace\sitemaps_enabled( 'news' ) ) {
-			$output .= 'Sitemap: ' . \xmlsf()->sitemap_news->get_sitemap_url() . PHP_EOL;
-		}
+	$robots = \trim( \get_option( 'xmlsf_robots', '' ) );
+	if ( $robots ) {
+		$output .= PHP_EOL . $robots . PHP_EOL;
 	}
 
 	return $output;
@@ -313,6 +295,7 @@ function robots_txt( $output ) {
 function plugin_compat() {
 	$active_plugins = (array) get_option( 'active_plugins', array() );
 
+	// Polylang compatibility.
 	if ( in_array( 'polylang/polylang.php', $active_plugins, true ) ) {
 		\add_filter( 'xmlsf_blogpages', array( __NAMESPACE__ . '\Compat\Polylang', 'get_translations' ) );
 		\add_filter( 'xmlsf_frontpages', array( __NAMESPACE__ . '\Compat\Polylang', 'get_translations' ) );
@@ -329,25 +312,22 @@ function plugin_compat() {
 		\add_filter( 'xmlsf_sitemap_subtype', array( __NAMESPACE__ . '\Compat\Polylang', 'filter_sitemap_subtype' ) );
 	}
 
+	// WPML compatibility.
 	if ( in_array( 'sitepress-multilingual-cms/sitepress.php', $active_plugins, true ) ) {
-		\add_filter( 'xmlsf_blogpages', array( __NAMESPACE__ . '\Compat\WPML', 'get_translations' ) );
-		\add_filter( 'xmlsf_frontpages', array( __NAMESPACE__ . '\Compat\WPML', 'get_translations' ) );
-		\add_action( 'xmlsf_add_settings', array( __NAMESPACE__ . '\Compat\WPML', 'remove_home_url_filter' ) );
-		\add_action( 'xmlsf_news_add_settings', array( __NAMESPACE__ . '\Compat\WPML', 'remove_home_url_filter' ) );
-		\add_filter( 'xmlsf_request', array( __NAMESPACE__ . '\Compat\WPML', 'filter_request' ) );
-		\add_filter( 'xmlsf_core_request', array( __NAMESPACE__ . '\Compat\WPML', 'filter_request' ) );
-		\add_action( 'xmlsf_sitemap_loaded', array( __NAMESPACE__ . '\Compat\Polylang', 'request_actions' ) );
-		\add_filter( 'xmlsf_news_request', array( __NAMESPACE__ . '\Compat\WPML', 'filter_request' ) );
-		\add_action( 'xmlsf_url', array( __NAMESPACE__ . '\Compat\WPML', 'language_switcher' ) );
-		\add_action( 'xmlsf_news_url', array( __NAMESPACE__ . '\Compat\WPML', 'language_switcher' ) );
-		\add_filter( 'xmlsf_root_data', array( __NAMESPACE__ . '\Compat\WPML', 'root_data' ) );
+		// Make sure we get the correct sitemap URL in language context.
+		\add_filter( 'xmlsf_sitemap_url', array( __NAMESPACE__ . '\Compat\WPML', 'convert_url' ), 10, 2 );
+		\add_filter( 'xmlsf_sitemap_news_url', array( __NAMESPACE__ . '\Compat\WPML', 'convert_url' ) );
+		// Add sitemap in Robots TXT.
+		\add_filter( 'robots_txt', array( __NAMESPACE__ . '\Compat\WPML', 'robots_txt' ), 9 );
 	}
 
+	// bbPress compatibility.
 	if ( in_array( 'bbpress/bbpress.php', $active_plugins, true ) ) {
 		\add_filter( 'xmlsf_request', array( __NAMESPACE__ . '\Compat\BBPress', 'filter_request' ) );
 		\add_filter( 'xmlsf_news_request', array( __NAMESPACE__ . '\Compat\BBPress', 'filter_request' ) );
 	}
 
+	// XMLSM compatibility.
 	if ( in_array( 'xml-sitemaps-manager/xml-sitemaps-manager.php', $active_plugins, true ) ) {
 		\add_filter( 'plugins_loaded', array( __NAMESPACE__ . '\Compat\XMLSM', 'disable' ), 11 );
 	}
@@ -370,14 +350,4 @@ function get_default_settings( $key = false ) {
 	}
 
 	return \apply_filters( 'xmlsf_defaults', $return, $key, $defaults );
-}
-
-/**
- * Generator info
- */
-function generator() {
-	echo '<!-- generated-on="' . \esc_xml( \gmdate( 'c' ) ) . '" -->' . PHP_EOL;
-	echo '<!-- generator="XML Sitemap & Google News for WordPress" -->' . PHP_EOL;
-	echo '<!-- generator-url="https://status301.net/wordpress-plugins/xml-sitemap-feed/" -->' . PHP_EOL;
-	echo '<!-- generator-version="' . \esc_xml( XMLSF_VERSION ) . '" -->' . PHP_EOL;
 }

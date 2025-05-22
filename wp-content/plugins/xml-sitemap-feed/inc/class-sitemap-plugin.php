@@ -17,21 +17,9 @@ class Sitemap_Plugin extends Sitemap {
 	 * Runs on init
 	 */
 	public function __construct() {
-		$this->slug = 'sitemap';
-		$post_types = \get_option( 'xmlsf_post_types', array() );
-		if ( is_array( $post_types ) ) {
-			$this->post_types = $post_types;
-		}
+		$this->slug               = \sanitize_key( (string) \apply_filters( 'xmlsf_sitemap_slug', 'sitemap' ) );
+		$this->server_type        = 'plugin';
 		$this->post_type_settings = (array) \get_option( 'xmlsf_post_type_settings', array() );
-		$this->rewrite_rules      = array(
-			'^' . $this->slug . '\.xml$' => 'index.php?feed=sitemap',
-			'^' . $this->slug . '-([a-z]+?)?(-[a-z0-9\-_]+?)?(?:\.([0-9]{4,8}))?(?:\.([0-9]{1,2}))?\.xml$' => 'index.php?feed=sitemap-$matches[1]$matches[2]&m=$matches[3]&w=$matches[4]',
-		);
-
-		\add_action( 'init', array( $this, 'register_rewrites' ) );
-
-		// Redirect wp-sitemap.xml requests.
-		\add_action( 'template_redirect', array( $this, 'redirect' ), 0 );
 
 		// Cache clearance.
 		\add_action( 'clean_post_cache', array( $this, 'clean_post_cache' ), 99, 2 );
@@ -57,6 +45,53 @@ class Sitemap_Plugin extends Sitemap {
 
 		// Add RT Camp Nginx Helper NGINX HELPER PURGE URLS filter.
 		\add_filter( 'rt_nginx_helper_purge_urls', array( $this, 'nginx_helper_purge_urls' ) );
+
+		// Add sitemap image tags.
+		\add_action( 'xmlsf_urlset', array( $this, 'image_schema' ) );
+		\add_action( 'xmlsf_tags_after', array( $this, 'image_tag' ), 10, 2 );
+
+		// Add sitemap in Robots TXT.
+		add_filter( 'robots_txt', array( $this, 'robots_txt' ), 8 );
+	}
+
+	/**
+	 * Registers sitemap rewrite tags and routing rules.
+	 *
+	 * @since 5.4.5
+	 */
+	public function register_rewrites() {
+		global $wp_rewrite;
+
+		if ( ! $wp_rewrite->using_permalinks() || 0 === strpos( \get_option( 'permalink_structure' ), '/index.php' ) ) {
+			// Nothing to do.
+			return;
+		}
+
+		$slug = $this->slug();
+
+		\add_rewrite_rule( '^' . $slug . '\.xml$', 'index.php?feed=sitemap', 'top' );
+		\add_rewrite_rule( '^' . $slug . '-([a-z]+?)?(-[a-z0-9\-_]+?)?(?:\.([0-9]{4,8}))?(?:\.([0-9]{1,2}))?\.xml$', 'index.php?feed=sitemap-$matches[1]$matches[2]&m=$matches[3]&w=$matches[4]', 'top' );
+		\add_rewrite_rule( 'wp-sitemap\.xml', 'index.php?feed=sitemap', 'top' );
+	}
+
+	/**
+	 * Unregisters sitemap rewrite tags and routing rules.
+	 *
+	 * @since 5.5
+	 */
+	public function unregister_rewrites() {
+		global $wp_rewrite;
+
+		if ( ! $wp_rewrite->using_permalinks() || 0 === strpos( \get_option( 'permalink_structure' ), '/index.php' ) ) {
+			// Nothing to do.
+			return;
+		}
+
+		$slug = $this->slug();
+
+		unset( $wp_rewrite->extra_rules_top[ '^' . $slug . '\.xml$' ] );
+		unset( $wp_rewrite->extra_rules_top[ '^' . $slug . '-([a-z]+?)?(-[a-z0-9\-_]+?)?(?:\.([0-9]{4,8}))?(?:\.([0-9]{1,2}))?\.xml$' ] );
+		unset( $wp_rewrite->extra_rules_top['wp-sitemap\.xml'] );
 	}
 
 	/**
@@ -74,8 +109,6 @@ class Sitemap_Plugin extends Sitemap {
 	 * @return string|false The sitemap URL or false if the sitemap doesn't exist.
 	 */
 	public function get_sitemap_url( $sitemap = 'index', $args = array() ) {
-		global $wp_rewrite;
-
 		// Get our arguments.
 		$args = \apply_filters(
 			'xmlsf_index_url_args',
@@ -89,30 +122,30 @@ class Sitemap_Plugin extends Sitemap {
 			)
 		);
 
-		$index_php = 0 === strpos( get_option( 'permalink_structure' ), '/index.php' ) ? 'index.php' : '';
-
-		if ( $wp_rewrite->using_permalinks() && ! $index_php ) {
+		if ( xmlsf()->using_permalinks() ) {
 			// Construct file name.
-			$name = $this->slug();
+			$basename = $this->slug();
 			if ( 'index' !== $sitemap ) {
-				$name .= '-' . $sitemap;
-				$name .= $args['type'] ? '-' . $args['type'] : '';
-				$name .= $args['m'] ? '.' . $args['m'] : '';
-				$name .= $args['w'] ? '.' . $args['w'] : '';
+				$basename .= '-' . $sitemap;
+				$basename .= $args['type'] ? '-' . $args['type'] : '';
+				$basename .= $args['m'] ? '.' . $args['m'] : '';
+				$basename .= $args['w'] ? '.' . $args['w'] : '';
 			}
-			$name .= '.xml';
+			$basename .= '.xml';
 		} else {
 			// Construct request string.
-			$name = $index_php . '?feed=sitemap';
+			$basename = '?feed=sitemap';
 			if ( 'index' !== $sitemap ) {
-				$name .= '-' . $sitemap;
-				$name .= $args['type'] ? '-' . $args['type'] : '';
-				$name .= $args['m'] ? '&m=' . $args['m'] : '';
-				$name .= $args['w'] ? '&w=' . $args['w'] : '';
+				$basename .= '-' . $sitemap;
+				$basename .= $args['type'] ? '-' . $args['type'] : '';
+				$basename .= $args['m'] ? '&m=' . $args['m'] : '';
+				$basename .= $args['w'] ? '&w=' . $args['w'] : '';
 			}
 		}
 
-		return \esc_url( \trailingslashit( \home_url() ) . $name );
+		$sitemap_url = \apply_filters( 'xmlsf_sitemap_url', \home_url( $basename ), $sitemap, $args );
+
+		return \esc_url( $sitemap_url );
 	}
 
 	/**
@@ -471,6 +504,71 @@ class Sitemap_Plugin extends Sitemap {
 	}
 
 	/**
+	 * Do image tag
+	 *
+	 * @param string  $type Post type.
+	 * @param WP_Post $post Post object.
+	 *
+	 * @return void
+	 */
+	public function image_tag( $type, $post = null ) {
+		if ( 'post_type' !== $type || null === $post || ! $this->active_post_type( $post->post_type ) ) {
+			return;
+		}
+
+		$settings = $this->post_type_settings( $post->post_type );
+
+		if (
+			isset( $settings['tags'] ) &&
+			\is_array( $settings['tags'] ) &&
+			! empty( $settings['tags']['image'] ) &&
+			\is_string( $settings['tags']['image'] )
+		) {
+			$images = \get_post_meta( $post->ID, '_xmlsf_image_' . $settings['tags']['image'] );
+			foreach ( $images as $img ) {
+				if ( empty( $img['loc'] ) ) {
+					continue;
+				}
+
+				echo '<image:image><image:loc>' . \esc_xml( \utf8_uri_encode( $img['loc'] ) ) . '</image:loc>';
+				if ( ! empty( $img['title'] ) ) {
+					echo '<image:title><![CDATA[' . \esc_xml( $img['title'] ) . ']]></image:title>';
+				}
+				if ( ! empty( $img['caption'] ) ) {
+					echo '<image:caption><![CDATA[' . \esc_xml( $img['caption'] ) . ']]></image:caption>';
+				}
+				\do_action( 'xmlsf_image_tags_inner', 'post_type' );
+				echo '</image:image>';
+			}
+		}
+	}
+
+	/**
+	 * Image schema
+	 *
+	 * @param string $type Type.
+	 * @uses WP_Post $post
+	 * @return void
+	 */
+	public function image_schema( $type ) {
+		global $wp_query;
+
+		if ( 'post_type' !== $type || empty( $wp_query->query_vars['post_type'] ) || ! $this->active_post_type( $wp_query->query_vars['post_type'] ) ) {
+			return;
+		}
+
+		$settings = $this->post_type_settings( $wp_query->query_vars['post_type'] );
+
+		if (
+			isset( $settings['tags'] ) &&
+			\is_array( $settings['tags'] ) &&
+			! empty( $settings['tags']['image'] )
+		) {
+			echo 'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"';
+		}
+	}
+
+	/**
 	 * Nginx helper purge urls
 	 * adds sitemap urls to the purge array.
 	 *
@@ -480,18 +578,21 @@ class Sitemap_Plugin extends Sitemap {
 	 * @return $urls array
 	 */
 	public function nginx_helper_purge_urls( $urls = array(), $wildcard = false ) {
+		$slug = $this->slug();
+
 		if ( $wildcard ) {
 			// Wildcard makes everything simple.
-			$urls[] = '/sitemap*.xml';
+			$urls[] = '/' . $slug . '*.xml';
 		} else {
 			// No wildcard, go through the motions.
-			$urls[] = '/sitemap.xml';
-			$urls[] = '/sitemap-author.xml';
-			$urls[] = '/sitemap-custom.xml';
+			$urls[] = '/' . $slug . '.xml';
+			$urls[] = '/' . $slug . '-author.xml';
+			$urls[] = '/' . $slug . '-custom.xml';
 
 			// Add public post types sitemaps.
-			$post_types = namespace\get_post_types_settings();
-			foreach ( $post_types as $post_type => $settings ) :
+			$post_types = $this->get_post_types();
+			foreach ( $post_types as $post_type ) :
+				$settings     = $this->post_type_settings( $post_type );
 				$archive      = isset( $settings['archive'] ) ? $settings['archive'] : '';
 				$archive_data = \apply_filters( 'xmlsf_index_archive_data', array(), $post_type, $archive );
 
@@ -504,7 +605,7 @@ class Sitemap_Plugin extends Sitemap {
 			endforeach;
 
 			// Add public post taxonomies sitemaps.
-			$taxonomies = namespace\get_taxonomies();
+			$taxonomies = $this->get_taxonomies();
 			foreach ( $taxonomies as $taxonomy ) {
 				$path = \wp_parse_url( $this->get_sitemap_url( 'taxonomy', array( 'type' => $taxonomy ) ), PHP_URL_PATH );
 				if ( $path ) {
@@ -519,18 +620,14 @@ class Sitemap_Plugin extends Sitemap {
 	}
 
 	/**
-	 * Do WP core sitemap index redirect
+	 * Filter robots.txt rules
 	 *
-	 * @uses wp_redirect()
+	 * @since 5.5
+	 *
+	 * @param string $output Output.
+	 * @return string
 	 */
-	public function redirect() {
-		// Sadly, we cannot get this info from $wp->request.
-		if ( ! isset( $_SERVER['REQUEST_URI'] ) || ( 0 !== \strpos( \wp_unslash( $_SERVER['REQUEST_URI'] ), '/wp-sitemap.xml' ) && 0 !== \strpos( \wp_unslash( $_SERVER['REQUEST_URI'] ), '/?sitemap=' ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			return;
-		}
-
-		\wp_safe_redirect( $this->get_sitemap_url(), 301, 'XML Sitemap & Google News for WordPress' );
-
-		exit();
+	public function robots_txt( $output ) {
+		return $output . PHP_EOL . 'Sitemap: ' . $this->get_sitemap_url() . PHP_EOL;
 	}
 }

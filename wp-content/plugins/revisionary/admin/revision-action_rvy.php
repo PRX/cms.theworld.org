@@ -104,7 +104,6 @@ function rvy_revision_submit($revision_id = 0) {
 		if ( empty($status_obj->public) && empty($status_obj->private) ) {
 			$revision_before = (object) (array) $revision;
 			
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$post_mime_type = 'pending-revision';
 			$status = (rvy_get_option('permissions_compat_mode')) ? $post_mime_type : 'pending';
 
@@ -210,10 +209,13 @@ function rvy_revision_decline($revision_id = 0) {
 
 		$status_obj = get_post_status_object( $revision->post_mime_type );
 
-		$post_mime_type = 'draft-revision';
-		$status = apply_filters('revisionary_post_revision_status', 'draft', $post_mime_type, $revision_id);
+		$post_mime_type = apply_filters('revisionary_revision_decline_status', 'draft-revision', $revision_id);
 
-		$status = apply_filters('revisionary_revision_decline_status', $status, $revision_id);
+		if (($post_mime_type != 'draft-revision') && rvy_get_option('use_publishpress_notifications')) {
+			$status = $post_mime_type;
+		} else {
+			$status = apply_filters('revisionary_post_revision_status', 'draft', $post_mime_type, $revision_id);
+		}
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->update(
@@ -224,7 +226,7 @@ function rvy_revision_decline($revision_id = 0) {
 			], 
 			['ID' => $revision_id]
 		);
-
+		
 		$revision->post_status = $status;
 		$revision->post_mime_type = $post_mime_type;
 
@@ -262,8 +264,8 @@ function rvy_revision_decline($revision_id = 0) {
 	clean_post_cache($revision->ID);
 
 	if (empty($decline_error)) {
-		do_action( 'revision_declined', $revision->post_parent, $revision->ID );
-		do_action( 'revisionary_declined', $revision->post_parent, $revision, $revision_before );
+		do_action( 'revision_declined', $published_id, $revision->ID );
+		do_action( 'revisionary_declined', $published_id, $revision, $revision_before );
 	}
 
 	if (!$batch_process) {
@@ -956,7 +958,7 @@ function rvy_apply_revision( $revision_id, $actual_revision_status = '' ) {
 		}
 	}
 	
-	rvy_update_post_meta($revision_id, '_rvy_published_gmt', $post_modified_gmt);
+	rvy_update_post_meta($revision_id, '_rvy_published_gmt', current_time('mysql', 1));
 
 	rvy_update_post_meta($revision_id, '_rvy_prev_revision_status', $actual_revision_status);
 
@@ -1053,9 +1055,11 @@ function rvy_apply_revision( $revision_id, $actual_revision_status = '' ) {
 		);
 	}
 
-	rvy_delete_past_revisions($revision_id);
+	if (!rvy_get_option('extended_archive')) {
+		rvy_delete_past_revisions($revision_id);
 
-	rvy_delete_redundant_revisions($revision);
+		rvy_delete_redundant_revisions($revision);
+	}
 
 	clean_post_cache($revision_id);
 	clean_post_cache($published->ID);

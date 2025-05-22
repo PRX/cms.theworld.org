@@ -17,8 +17,7 @@ if ( $db_version ) {
 
 update_option( 'xmlsf_version', XMLSF_VERSION );
 
-// Flush rewrite rules on next init.
-delete_option( 'rewrite_rules' );
+add_action( 'init', 'flush_rewrite_rules', 11 );
 
 /**
  * Update from defaults.

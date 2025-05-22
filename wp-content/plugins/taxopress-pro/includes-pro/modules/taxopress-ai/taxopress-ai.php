@@ -54,8 +54,9 @@ if (!class_exists('TaxoPress_Pro_AI_Module')) {
             );
 
             // Get the index of 'taxopress_ai_post_metabox_default_taxonomy' if it exists
+            $field_to_find = 'taxopress_ai_' . $post_type . '_metabox_default_taxonomy';
             $keys = array_column($taxopress_ai_fields, 0);
-            $insert_after_key = array_search('taxopress_ai_post_metabox_default_taxonomy', $keys);
+            $insert_after_key = array_search($field_to_find, $keys);
         
             // Determine the insertion position adding fallback incase the setting doesn't exist
             $position = ($insert_after_key !== false) ? $insert_after_key + 1 : count($taxopress_ai_fields);

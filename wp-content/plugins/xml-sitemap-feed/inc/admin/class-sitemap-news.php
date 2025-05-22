@@ -30,25 +30,8 @@ class Sitemap_News {
 	 * Tools actions
 	 */
 	public static function tools_actions() {
-		// Skip if no advanced plugin or dismissed.
-		if (
-			\wp_doing_ajax() ||
-			! \is_plugin_active( 'xml-sitemap-feed-advanced-news/xml-sitemap-advanced-news.php' ) ||
-			\in_array( 'xmlsf_advanced_news', (array) get_user_meta( get_current_user_id(), 'xmlsf_dismissed' ), true )
-		) {
-			return;
-		}
-
-		if ( ! self::compatible_with_advanced() ) {
-			\add_action(
-				'admin_notices',
-				function () {
-					include XMLSF_DIR . '/views/admin/notice-xmlsf-advanced-news.php';
-				}
-			);
-		}
-
-		if ( ! isset( $_POST['_xmlsf_help_nonce'] ) || ! \wp_verify_nonce( sanitize_key( $_POST['_xmlsf_help_nonce'] ), XMLSF_BASENAME . '-help' ) ) {
+		// Skip if doing ajax or no valid nonce.
+		if ( \wp_doing_ajax() || ! isset( $_POST['_xmlsf_help_nonce'] ) || ! \wp_verify_nonce( sanitize_key( $_POST['_xmlsf_help_nonce'] ), XMLSF_BASENAME . '-help' ) ) {
 			return;
 		}
 
@@ -56,7 +39,7 @@ class Sitemap_News {
 			// Reset ignored warnings.
 			\delete_user_meta( \get_current_user_id(), 'xmlsf_dismissed' );
 
-			\XMLSF\Admin\Admin::check_static_files( 'sitemap-news.xml', 2 );
+			\XMLSF\Admin\Admin::check_static_file( 'sitemap-news.xml', 2 );
 		}
 
 		if ( isset( $_POST['xmlsf-clear-settings-news'] ) ) {
@@ -78,6 +61,11 @@ class Sitemap_News {
 	 * Compare versions to known compatibility.
 	 */
 	public static function compatible_with_advanced() {
+		// Return true if plugin is not active.
+		if ( ! \is_plugin_active( 'xml-sitemap-feed-advanced-news/xml-sitemap-advanced-news.php' ) ) {
+			return true;
+		}
+
 		// Check version.
 		\defined( 'XMLSF_NEWS_ADV_VERSION' ) || \define( 'XMLSF_NEWS_ADV_VERSION', '0' );
 
@@ -94,9 +82,8 @@ class Sitemap_News {
 
 		// Google News Advanced incompatibility notice.
 		if (
-			\is_plugin_active( 'xml-sitemap-feed-advanced-news/xml-sitemap-advanced-news.php' ) &&
-			! \in_array( 'xmlsf_advanced_news', (array) get_user_meta( get_current_user_id(), 'xmlsf_dismissed' ), true ) &&
-			! self::compatible_with_advanced()
+			! self::compatible_with_advanced() &&
+			! \in_array( 'xmlsf_advanced_news', (array) get_user_meta( get_current_user_id(), 'xmlsf_dismissed' ), true )
 		) {
 			\add_action(
 				'admin_notices',
@@ -367,6 +354,25 @@ class Sitemap_News {
 			'xmlsf_news_advanced',
 			''
 		);
+
+		// Maybe flush rewrite rules.
+		\add_action( 'load-settings_page_xmlsf_news', array( '\XMLSF\Admin\Admin', 'maybe_flush_rewrite_rules' ), 11 );
+
+		// Maybe check static file.
+		\add_action( 'load-settings_page_xmlsf_news', array( __CLASS__, 'maybe_check_static_file' ), 11 );
+	}
+
+	/**
+	 * Maybe check static file.
+	 *
+	 * Checks $_GET['settings-updated'] and transient 'xmlsf_check_static_file'. Hooked into settings page load actions.
+	 */
+	public static function maybe_check_static_file() {
+		if ( ! empty( $_GET['settings-updated'] ) && xmlsf()->using_permalinks() && get_transient( 'xmlsf_check_static_file' ) ) {
+			$slug = \is_object( \xmlsf()->sitemap_news ) ? \xmlsf()->sitemap_news->slug() : 'sitemap-news';
+			\XMLSF\Admin\Admin::check_static_file( $slug . '.xml' );
+			delete_transient( 'xmlsf_check_static_file' );
+		}
 	}
 
 	/**

@@ -3,7 +3,7 @@
  * Plugin Name: XML Sitemap & Google News
  * Plugin URI: https://status301.net/wordpress-plugins/xml-sitemap-feed/
  * Description: Feed the hungry spiders in compliance with the XML Sitemap and Google News protocols. Happy with the results? Please leave me a <strong><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ravanhagen%40gmail%2ecom&item_name=XML%20Sitemap%20Feed">tip</a></strong> for continued development and support. Thanks :)
- * Version: 5.5.3
+ * Version: 5.5.4
  * Text Domain: xml-sitemap-feed
  * Requires at least: 4.4
  * Requires PHP: 5.6
@@ -12,10 +12,6 @@
  *
  * @package XML Sitemap & Google News
  */
-
-define( 'XMLSF_VERSION', '5.5.3' );
-define( 'XMLSF_ADV_MIN_VERSION', '0.1' );
-define( 'XMLSF_NEWS_ADV_MIN_VERSION', '1.3.5' );
 
 /**
  * Copyright 2025 RavanH
@@ -49,9 +45,12 @@ define( 'XMLSF_NEWS_ADV_MIN_VERSION', '1.3.5' );
  */
 
 defined( 'WPINC' ) || die;
+defined( 'XMLSF_GOOGLE_NEWS_NAME' ) || define( 'XMLSF_GOOGLE_NEWS_NAME', false );
 
+define( 'XMLSF_VERSION', '5.5.4' );
+define( 'XMLSF_ADV_MIN_VERSION', '0.1' );
+define( 'XMLSF_NEWS_ADV_MIN_VERSION', '1.3.5' );
 define( 'XMLSF_DIR', __DIR__ );
-
 define( 'XMLSF_BASENAME', plugin_basename( __FILE__ ) );
 
 // Pluggable functions.
@@ -100,15 +99,13 @@ function xmlsf_deactivate() {
 	XMLSF\clear_metacache();
 
 	// Remove old rules.
-	if ( is_object( xmlsf()->sitemap ) && method_exists( xmlsf()->sitemap, 'unregister_rewrites' ) ) {
-		xmlsf()->sitemap->unregister_rewrites();
-	}
-	if ( is_object( xmlsf()->sitemap_news ) && method_exists( xmlsf()->sitemap_news, 'unregister_rewrites' ) ) {
-		xmlsf()->sitemap_news->unregister_rewrites();
-	}
+	xmlsf()->unregister_rewrites();
 
 	// Re-add core rules.
-	function_exists( 'wp_sitemaps_get_server' ) && wp_sitemaps_get_server();
+	if ( function_exists( 'wp_sitemaps_get_server' ) ) {
+		$sitemaps = wp_sitemaps_get_server();
+		$sitemaps->register_rewrites();
+	}
 
 	// Then flush.
 	flush_rewrite_rules( false );
@@ -123,11 +120,23 @@ register_deactivation_hook( __FILE__, 'xmlsf_deactivate' );
  * @return void
  */
 function xmlsf_activate() {
+	// Load sitemap.
+	xmlsf()->get_server( 'sitemap' );
+
+	// Add core rules if needed.
+	if ( function_exists( 'wp_sitemaps_get_server' ) && 'core' === \xmlsf()->sitemap->server_type ) {
+		$sitemaps = wp_sitemaps_get_server();
+		$sitemaps->register_rewrites();
+	}
+
+	// Register new plugin rules.
+	xmlsf()->register_rewrites();
+
+	// Then flush.
 	flush_rewrite_rules( false );
 }
 
 register_activation_hook( __FILE__, 'xmlsf_activate' );
-
 
 /**
  * Register XMLSF autoloader
@@ -160,7 +169,7 @@ function xmlsf_autoloader( $class_name ) {
 spl_autoload_register( 'xmlsf_autoloader' );
 
 /**
- * Init. That's deprecated, innit?
+ * Deprecated, innit?
  *
  * Keep for backwards compatibility with Google News Advanced pre 1.3.6
  */
