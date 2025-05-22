@@ -56,3 +56,204 @@ function tw_contributors_taxonomy() {
 	register_taxonomy( 'contributor', array( 'post', 'attachment', 'segment' ), $args );
 }
 add_action( 'init', 'tw_contributors_taxonomy', 0 );
+
+/**
+ * Change RSS feed author name.
+ *
+ * @param string $author
+ *
+ * @return string
+ */
+function tw_contributors_rss_author( $author ) {
+
+	// Check if we're in a feed.
+	if ( is_feed() ) {
+
+		$post_id   = get_the_ID();
+		$post_type = get_post_type( $post_id );
+
+		// List of affected post types.
+		$affected_post_types = array( 'post', 'episode', 'segment' );
+
+		// Bail early if not an affected post type.
+		if ( ! in_array( $post_type, $affected_post_types, true ) ) {
+			return $author;
+		}
+
+		$contributors = tw_contributors_get_post_contributors( $post_id );
+
+		// Set first contributor as author.
+		$author = reset( $contributors );
+
+		// If more than one contributor, add action to rss2 action.
+		if ( count( $contributors ) > 1 ) {
+			add_action( 'rss2_item', 'tw_contributors_rss_extra_contributors' );
+		}
+	}
+
+	// Trim whitespace.
+	return $author;
+}
+add_filter( 'the_author', 'tw_contributors_rss_author' );
+
+/**
+ * Add extra contributors to RSS feed.
+ *
+ * @return void
+ */
+function tw_contributors_rss_extra_contributors() {
+
+	// Get contributors.
+	$post_id      = get_the_ID();
+	$contributors = tw_contributors_get_post_contributors( $post_id );
+
+	// Bail early if no contributors or only one contributor.
+	if ( empty( $contributors ) || 1 === count( $contributors ) ) {
+		return;
+	}
+
+	// Get all contributor beyond the first one.
+	$extra_contributors = array_slice( $contributors, 1 );
+
+	ob_start();
+
+	// Print the remaining contributors.
+	foreach ( $extra_contributors as $contributor ) {
+
+		/**
+		 * Filter the extra contributors HTML.
+		 *
+		 * @param string $contributors_html The contributors HTML.
+		 * @param string $contributor The contributor name.
+		 * @param int    $post_id The post ID.
+		 *
+		 * @return string
+		 */
+		$contributor_xml = apply_filters(
+			'tw_contributors_rss_extra_contributors',
+			wp_sprintf(
+				'<dc:creator><![CDATA[%s]]></dc:creator>',
+				$contributor
+			),
+			$contributor,
+			$post_id
+		);
+
+		// Pretty tabbed output.
+		echo "\n\t\t" . $contributor_xml;
+	}
+
+	echo ob_get_clean() . "\n";
+}
+
+/**
+ * Get contributors based on post type.
+ *
+ * @param int $post_id The post ID.
+ *
+ * @return array The contributor terms.
+ */
+function tw_contributors_get_post_contributors( $post_id ) {
+
+	$contributors = array();
+
+	switch ( get_post_type( $post_id ) ) {
+
+		case 'episode':
+			$contributors = tw_contributors_get_post_contributors_by_meta(
+				$post_id,
+				array(
+					'hosts',
+					'producers',
+					'reporters',
+					'guests',
+				)
+			);
+			break;
+
+		case 'post':
+		case 'segment':
+			$contributors = tw_contributors_get_post_contributors_by_taxonomy( $post_id );
+			break;
+	}
+
+	// Escape HTML and trim whitespace.
+	$contributors = array_map( 'esc_html', $contributors );
+	$contributors = array_map( 'trim', $contributors );
+
+	return $contributors;
+}
+
+/**
+ * Get contributor terms by taxonomy.
+ *
+ * @param int $post_id The post ID.
+ *
+ * @return array The contributor terms.
+ */
+function tw_contributors_get_post_contributors_by_taxonomy( $post_id ) {
+
+	$contributors = array();
+
+	// Get contributor taxonomy terms.
+	$contributor_terms = get_the_terms( $post_id, 'contributor' );
+
+	// Bail early if no contributor terms are found.
+	if (
+		! $contributor_terms
+		||
+		! is_array( $contributor_terms )
+	) {
+		return $contributors;
+	}
+
+	$contributor_names = wp_list_pluck( $contributor_terms, 'name' );
+
+	return $contributor_names;
+}
+
+/**
+ * Get contributor terms by meta.
+ *
+ * @param int   $post_id The post ID.
+ * @param array $meta_keys The meta keys to get the contributor terms from.
+ *
+ * @return array The contributor terms.
+ */
+function tw_contributors_get_post_contributors_by_meta( $post_id, $meta_keys ) {
+
+	$contributors_meta = array();
+
+	// Pool all contributor meta values.
+	foreach ( $meta_keys as $meta_key ) {
+
+		$meta_value = get_post_meta( $post_id, $meta_key, true );
+
+		// Continue if no meta value or not an array.
+		if ( empty( $meta_value ) || ! is_array( $meta_value ) ) {
+			continue;
+		}
+
+		foreach ( $meta_value as $contributor_term_id ) {
+
+			// Add term name to contributors meta.
+			$term = get_term( $contributor_term_id );
+
+			// Bail if no term.
+			if ( ! $term || is_wp_error( $term ) ) {
+				continue;
+			}
+
+			// Add term to contributors meta.
+			$contributors_meta[] = $term;
+		}
+	}
+
+	// Flatten the contributor meta values.
+	$contributors_names = wp_list_pluck( $contributors_meta, 'name' );
+
+	// Remove duplicates.
+	$contributors_names = array_unique( $contributors_names );
+
+	return $contributors_names;
+}
