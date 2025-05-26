@@ -17,15 +17,12 @@ class Sitemap_Core extends Sitemap {
 	 * Runs on init
 	 */
 	public function __construct() {
-		$this->slug = 'wp-sitemap';
-		$post_types = \get_option( 'xmlsf_post_types', array() );
-		if ( is_array( $post_types ) ) {
-			$this->post_types = $post_types;
-		}
+		$this->slug               = \sanitize_key( (string) \apply_filters( 'xmlsf_sitemap_slug', 'wp-sitemap' ) );
+		$this->server_type        = 'core';
 		$this->post_type_settings = (array) \get_option( 'xmlsf_post_type_settings', array() );
 
-		// Redirect sitemap.xml requests.
-		\add_action( 'template_redirect', array( $this, 'redirect' ), 0 );
+		// Render sitemaps early. Prevents costly extra DB query.
+		\add_action( 'parse_request', array( $this, 'render_sitemaps' ), 9 );
 
 		// Cache clearance.
 		\add_action( 'clean_post_cache', array( $this, 'clean_post_cache' ), 99, 2 );
@@ -63,7 +60,7 @@ class Sitemap_Core extends Sitemap {
 		// Maybe disable taxonomy or author sitemaps.
 		\add_filter( 'wp_sitemaps_add_provider', array( $this, 'add_provider' ), 10, 2 );
 		// Maybe disable certain post type sitemaps.
-		\add_filter( 'wp_sitemaps_post_types', array( $this, 'post_types' ) );
+		\add_filter( 'wp_sitemaps_post_types', array( $this, 'filter_post_types' ) );
 		// Maybe exclude individual posts.
 		\add_filter( 'wp_sitemaps_posts_query_args', array( $this, 'posts_query_args' ) );
 
@@ -87,6 +84,45 @@ class Sitemap_Core extends Sitemap {
 	}
 
 	/**
+	 * Registers sitemap rewrite tags and routing rules.
+	 *
+	 * @since 5.4.5
+	 */
+	public function register_rewrites() {
+		global $wp_rewrite;
+
+		if ( ! $wp_rewrite->using_permalinks() || 0 === strpos( \get_option( 'permalink_structure' ), '/index.php' ) ) {
+			// Nothing to do.
+			return;
+		}
+
+		\add_rewrite_rule( '^' . $this->slug() . '\.xml$', 'index.php?sitemap=index', 'top' );
+	}
+
+	/**
+	 * Unregisters sitemap rewrite tags and routing rules.
+	 *
+	 * @since 5.5
+	 */
+	public function unregister_rewrites() {
+		global $wp_rewrite;
+
+		if ( ! $wp_rewrite->using_permalinks() || 0 === strpos( \get_option( 'permalink_structure' ), '/index.php' ) ) {
+			// Nothing to do.
+			return;
+		}
+
+		// Compose key.
+		$key = '^' . $this->slug() . '\.xml$';
+		unset( $wp_rewrite->extra_rules_top[ $key ] );
+		unset( $wp_rewrite->extra_rules_top['^wp-sitemap\.xml$'] );
+		unset( $wp_rewrite->extra_rules_top['^wp-sitemap\.xsl$'] );
+		unset( $wp_rewrite->extra_rules_top['^wp-sitemap-index\.xsl$'] );
+		unset( $wp_rewrite->extra_rules_top['^wp-sitemap-([a-z]+?)-([a-z\d_-]+?)-(\d+?)\.xml$'] );
+		unset( $wp_rewrite->extra_rules_top['^wp-sitemap-([a-z]+?)-(\d+?)\.xml$'] );
+	}
+
+	/**
 	 * Get the public XML sitemap url.
 	 *
 	 * @since 5.5
@@ -96,8 +132,17 @@ class Sitemap_Core extends Sitemap {
 	 * @return string|false The sitemap URL or false if the sitemap doesn't exist.
 	 */
 	public function get_sitemap_url( $sitemap = 'index' ) {
-		// Use core function get_sitemap_url if using core sitemaps.
-		return \get_sitemap_url( $sitemap );
+		$slug = $this->slug();
+
+		if ( 'index' === $sitemap && 'wp-sitemap' !== $slug && xmlsf()->using_permalinks() ) {
+			$sitemap_url = \home_url( $slug . '.xml' );
+		} else {
+			$sitemap_url = \get_sitemap_url( $sitemap );
+		}
+
+		$sitemap_url = \apply_filters( 'xmlsf_sitemap_url', $sitemap_url, $sitemap );
+
+		return \esc_url( $sitemap_url );
 	}
 
 	/**
@@ -117,6 +162,37 @@ class Sitemap_Core extends Sitemap {
 		}
 
 		\do_action( 'xmlsf_register_sitemap_provider_after' );
+	}
+
+	/**
+	 * Loads the WordPress XML Sitemap Server
+	 *
+	 * @see https://core.trac.wordpress.org/ticket/51912
+	 *
+	 * @since 5.6
+	 *
+	 * @param  WP $wp             Current WordPress environment instance.
+	 * @global WP_Query $wp_query WordPress Query.
+	 * @return void
+	 */
+	public static function render_sitemaps( $wp ) {
+		global $wp_query;
+
+		if ( empty( $wp->query_vars['sitemap'] ) && empty( $wp->query_vars['sitemap-stylesheet'] ) ) {
+			return;
+		}
+
+		// Prepare query variables.
+		$query_vars           = $wp_query->query_vars;
+		$wp_query->query_vars = $wp->query_vars;
+
+		// Render the sitemap.
+		\wp_sitemaps_get_server()->render_sitemaps();
+
+		// Still here? Then it was an invalid sitemap request after all. Undo everything and carry on...
+		$wp_query->is_sitemap            = false;
+		$wp_query->is_sitemap_stylesheet = false;
+		$wp_query->query_vars            = $query_vars;
 	}
 
 	/**
@@ -142,7 +218,7 @@ class Sitemap_Core extends Sitemap {
 			 * Use add_filter( 'xmlsf_core_request', 'your_filter_function' );
 			 *
 			 * Filters hooked here already:
-			 * ! functions-sitemap.php
+			 * XMLSF\Compat\WPML::filter_request()
 			 */
 			$request = \apply_filters( 'xmlsf_core_request', $request );
 
@@ -268,7 +344,7 @@ class Sitemap_Core extends Sitemap {
 				break;
 
 			case 'term':
-				$lastmod = namespace\get_taxonomy_modified( \apply_filters( 'xmlsf_sitemap_subtype', $subtype ) );
+				$lastmod = $this->get_taxonomy_modified( \apply_filters( 'xmlsf_sitemap_subtype', $subtype ) );
 				if ( $lastmod ) {
 					$entry['lastmod'] = \get_date_from_gmt( $lastmod, DATE_W3C );
 				}
@@ -316,12 +392,12 @@ class Sitemap_Core extends Sitemap {
 	 */
 	public function users_entry( $entry, $user_object ) {
 		// Add priority.
-		$priority = namespace\get_user_priority( $user_object );
+		$priority = $this->get_user_priority( $user_object );
 		if ( $priority ) {
 			$entry['priority'] = $priority;
 		}
 		// Add lastmod.
-		$lastmod = namespace\get_user_modified( $user_object );
+		$lastmod = $this->get_user_modified( $user_object );
 		if ( $lastmod ) {
 			$entry['lastmod'] = \get_date_from_gmt( $lastmod, DATE_W3C );
 		}
@@ -348,13 +424,13 @@ class Sitemap_Core extends Sitemap {
 		}
 
 		// Add priority.
-		$priority = namespace\get_term_priority( $term_object );
+		$priority = $this->get_term_priority( $term_object );
 		if ( $priority ) {
 			$entry['priority'] = $priority;
 		}
 
 		// Add lastmod.
-		$lastmod = namespace\get_term_modified( $term_object );
+		$lastmod = $this->get_term_modified( $term_object );
 		if ( $lastmod ) {
 			$entry['lastmod'] = \get_date_from_gmt( $lastmod, DATE_W3C );
 		}
@@ -401,14 +477,14 @@ class Sitemap_Core extends Sitemap {
 	 */
 	public function posts_entry( $entry, $post_object, $post_type ) {
 		// Add priority.
-		$priority = namespace\get_post_priority( $post_object );
+		$priority = $this->get_post_priority( $post_object );
 		if ( ! empty( $priority ) ) {
 			$entry['priority'] = $priority;
 		}
 
 		// Add lastmod.
 		if ( empty( $entry['lastmod'] ) ) {
-			$lastmod = namespace\get_post_modified( $post_object );
+			$lastmod = $this->get_post_modified( $post_object );
 			if ( $lastmod ) {
 				$entry['lastmod'] = \get_date_from_gmt( $lastmod, DATE_W3C );
 			}
@@ -428,7 +504,7 @@ class Sitemap_Core extends Sitemap {
 	 * @return array
 	 */
 	public function posts_show_on_front_entry( $entry ) {
-		$priority = namespace\get_home_priority();
+		$priority = $this->get_home_priority();
 		if ( $priority ) {
 			$entry['priority'] = $priority;
 		}
@@ -509,14 +585,16 @@ class Sitemap_Core extends Sitemap {
 	 *
 	 * @return array
 	 */
-	public function post_types( $post_types ) {
+	public function filter_post_types( $post_types ) {
+		$enabled_post_types = $this->get_post_types();
+
 		// No disabled post types.
-		if ( empty( $this->post_types ) ) {
+		if ( empty( $enabled_post_types ) ) {
 			return $post_types;
 		}
 
 		foreach ( $post_types as $name => $pt_obj ) {
-			if ( ! in_array( $name, $this->post_types ) ) {
+			if ( ! in_array( $name, $enabled_post_types ) ) {
 				unset( $post_types[ $name ] );
 			}
 		}
@@ -542,7 +620,7 @@ class Sitemap_Core extends Sitemap {
 			),
 		);
 
-		// Update meta cache in one query instead of many, coming from get_post_meta() in XMLSF\get_post_priority().
+		// Update meta cache in one query instead of many, coming from get_post_meta() in $this->get_post_priority().
 		$args['update_post_meta_cache'] = true;
 
 		return $args;
@@ -593,13 +671,15 @@ class Sitemap_Core extends Sitemap {
 	 * @return array $urls
 	 */
 	public function nginx_helper_purge_urls( $urls = array(), $wildcard = false ) {
+		$slug = $this->slug();
+
 		if ( $wildcard ) {
 			// Wildcard allowed, this makes everything simple.
-			$urls[] = '/wp-sitemap*.xml';
+			$urls[] = '/' . $slug . '*.xml';
 		} else {
 			// No wildcard, go through the motions.
-			$urls[] = '/wp-sitemap.xml';
-			$urls[] = '/wp-sitemap-custom.xml';
+			$urls[] = '/' . $slug . '.xml';
+			$urls[] = '/' . $slug . '-custom.xml';
 
 			// TODO use wp_get_sitemap_providers for array of provider names (where array key is provider name)
 			// then use $provider->get_sitemap_type_data() for nested arrays with max number of sitemaps for each subtype
@@ -615,21 +695,5 @@ class Sitemap_Core extends Sitemap {
 		\do_action( 'xmlsf_nginx_helper_purge_urls', $urls );
 
 		return $urls;
-	}
-
-	/**
-	 * Do WP plugin sitemap index redirect
-	 *
-	 * @uses wp_redirect()
-	 */
-	public function redirect() {
-		// Sadly, we cannot get the full info from $wp->request or get_query_var().
-		if ( ! isset( $_SERVER['REQUEST_URI'] ) || ( 0 !== \strpos( \wp_unslash( $_SERVER['REQUEST_URI'] ), '/sitemap.xml' ) && ( 0 !== \strpos( \wp_unslash( $_SERVER['REQUEST_URI'] ), '/?feed=sitemap' ) || 0 === \strpos( \wp_unslash( $_SERVER['REQUEST_URI'] ), '/?feed=sitemap-news' ) ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			return;
-		}
-
-		\wp_safe_redirect( $this->get_sitemap_url(), 301, 'XML Sitemap & Google News for WordPress' );
-
-		exit();
 	}
 }

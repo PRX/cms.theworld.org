@@ -14,7 +14,9 @@ class RevisionaryFront {
 		add_action('parse_query', [$this, 'actSetQueriedObject'], 20);
 		add_action('parse_query', [$this, 'actFlagHomeRevision'], 20);
 
-		add_filter('posts_clauses_request', [$this, 'fltHomePreviewRequest'], 99, 3);
+		if (!defined('ET_BUILDER_VERSION') || defined('REVISIONARY_DIVI_HOME_PREVIEW_FILTER')) {
+			add_filter('posts_clauses_request', [$this, 'fltHomePreviewRequest'], 99, 3);
+		}
 
 		add_filter('body_class', [$this, 'fltBodyClass'], 20, 2);
 
@@ -536,7 +538,7 @@ class RevisionaryFront {
 				$edit_button = '';
 			}
 
-			if ( !in_array( $post->post_mime_type, array( 'pending-revision', 'revision-approved' ) ) ) {
+			if ( !in_array( $post->post_mime_type, array( 'pending-revision', 'revision-approved', 'future-revision', 'inherit' ) ) ) {
 				if ($can_edit = current_user_can('edit_post', $revision_id)) {
 					$submit_url = wp_nonce_url( rvy_admin_url("admin.php?page=rvy-revisions&revision=$revision_id&action=submit$redirect_arg"), "submit-post_$published_post_id|$revision_id" );
 					$publish_url =  wp_nonce_url( rvy_admin_url("admin.php?page=rvy-revisions&revision=$revision_id&action=approve$redirect_arg"), "approve-post_$published_post_id|$revision_id" );
@@ -662,7 +664,7 @@ class RevisionaryFront {
 						$class = 'future';
 						
 						$edit_url = rvy_admin_url("post.php?action=edit&amp;post=$revision_id");
-						$publish_button = ($can_publish) ? '<a href="' . $publish_url . '" class="button button-primary">' . esc_html__( 'Approve', 'revisionary' ) . '</a>' : '';
+						$publish_button = ($can_publish) ? '<a href="' . $publish_url . '" class="button button-primary">' . esc_html__( 'Publish Now', 'revisionary' ) . '</a>' : '';
 						
 						if (!empty($_REQUEST['elementor-preview'])) {													//phpcs:ignore WordPress.Security.NonceVerification.Recommended
 							$message = sprintf( esc_html__('This is a %s (for publication on %s). %s %s %s', 'revisionary'), pp_revisions_status_label('future-revision', 'name'), $date, '', '', '' );

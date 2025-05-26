@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: TaxoPress Pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-03 09:19+0000\n"
-"PO-Revision-Date: 2025-03-03 19:39+0100\n"
+"POT-Creation-Date: 2025-03-18 10:46+0000\n"
+"PO-Revision-Date: 2025-04-22 21:03+0200\n"
 "Last-Translator: \n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.6\n"
 "X-Loco-Version: 2.6.3; wp-6.1.1\n"
 "X-Domain: taxopress-pro\n"
 
@@ -21,8 +21,7 @@ msgid "%1$s can't be added as a tag because %2$s is already used as a synonym."
 msgstr ""
 "%1$s ne peut pas être ajouté car %2$s est déjà utilisé comme un synonyme."
 
-#: includes-pro/modules/autoterms/autoterms.php:188
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:91
+#: includes-pro/modules/autoterms/autoterms.php:192
 #, php-format
 msgid "%1s Click here for prompt documentation. %2s"
 msgstr "%1s Cliquer ici pour la documentation rapide. %2s"
@@ -92,27 +91,21 @@ msgstr "Ajouter le terme secondaire à la publication avec le terme principal"
 msgid "An error occured."
 msgstr "Une erreur s’est produite."
 
-#: includes-pro/modules/autoterms/autoterms.php:380
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:134
+#: includes-pro/modules/autoterms/autoterms.php:384
 msgid "API Confidence Value"
 msgstr "Valeur de confiance de l’API"
 
 #: includes-pro/modules/autoterms/autoterms.php:82
-#: includes-pro/modules/autoterms/autoterms.php:270
-#: includes-pro/modules/autoterms/autoterms.php:481
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:61
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:106
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:158
+#: includes-pro/modules/autoterms/autoterms.php:274
+#: includes-pro/modules/autoterms/autoterms.php:485
 msgid "API Key"
 msgstr "Clé API"
 
-#: includes-pro/modules/autoterms/autoterms.php:369
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:127
+#: includes-pro/modules/autoterms/autoterms.php:373
 msgid "API Token"
 msgstr "Jeton de l’API"
 
-#: includes-pro/modules/autoterms/autoterms.php:259
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:99
+#: includes-pro/modules/autoterms/autoterms.php:263
 msgid "API URL"
 msgstr "URL de l’API"
 
@@ -140,14 +133,10 @@ msgstr "Temps d’attente pour les lots"
 msgid "Batches wait time is required."
 msgstr "Le temps d’attente pour les lots est obligatoire."
 
-#: includes-pro/modules/autoterms/autoterms.php:171
-#: includes-pro/modules/autoterms/autoterms.php:321
-#: includes-pro/modules/autoterms/autoterms.php:433
-#: includes-pro/modules/autoterms/autoterms.php:532
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:84
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:120
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:150
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:172
+#: includes-pro/modules/autoterms/autoterms.php:175
+#: includes-pro/modules/autoterms/autoterms.php:325
+#: includes-pro/modules/autoterms/autoterms.php:437
+#: includes-pro/modules/autoterms/autoterms.php:536
 msgid ""
 "By caching the results locally, new API requests will not be made unless the "
 "post title or content changes. This saves API usage."
@@ -156,24 +145,22 @@ msgstr ""
 "seront pas effectuées à moins que le titre ou le contenu de la publication "
 "ne soit modifié. Cela permet d’économiser l’utilisation de l’API."
 
-#: includes-pro/modules/autoterms/autoterms.php:170
-#: includes-pro/modules/autoterms/autoterms.php:320
-#: includes-pro/modules/autoterms/autoterms.php:432
-#: includes-pro/modules/autoterms/autoterms.php:531
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:83
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:119
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:149
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:171
+#: includes-pro/modules/autoterms/autoterms.php:174
+#: includes-pro/modules/autoterms/autoterms.php:324
+#: includes-pro/modules/autoterms/autoterms.php:436
+#: includes-pro/modules/autoterms/autoterms.php:535
 msgid "Cache Results"
 msgstr "Résultats du cache"
 
 #: includes-pro/modules/autoterms/autoterms.php:92
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:43
 msgid "chatgpt-4o-latest"
 msgstr "chatgpt-4o-latest"
 
-#: includes-pro/modules/autoterms/autoterms.php:381
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:135
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:43
+msgid "Checkbox"
+msgstr "Case à cocher"
+
+#: includes-pro/modules/autoterms/autoterms.php:385
 msgid ""
 "Choose a value between 0 and 1. A high value such as 0.8 will provide a few, "
 "accurate suggestions. A low value such as 0.2 will produce more suggestions, "
@@ -191,7 +178,7 @@ msgstr "Planification de Cron"
 msgid "Daily"
 msgstr "Quotidien"
 
-#: includes-pro/modules/autoterms/autoterms.php:330
+#: includes-pro/modules/autoterms/autoterms.php:334
 #, php-format
 msgid ""
 "Dandelion is an external service that can scan your content and suggest "
@@ -203,6 +190,10 @@ msgstr ""
 #: includes-pro/modules/autoterms/schedule-logs-table.php:77
 msgid "Date"
 msgstr "Date"
+
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:41
+msgid "Default"
+msgstr "Par défaut"
 
 #: includes-pro/modules/autoterms/schedule-logs-table.php:122
 msgid "Delete"
@@ -221,6 +212,10 @@ msgstr "Supprimer la relation"
 msgid "Description here."
 msgstr "Description ici."
 
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:42
+msgid "Dropdown"
+msgstr "Menu déroulant"
+
 #: includes-pro/modules/autoterms/schedule-logs-table.php:192
 msgid "Edit Main Post"
 msgstr "Modifier la publication principale"
@@ -229,15 +224,15 @@ msgstr "Modifier la publication principale"
 msgid "Element tag"
 msgstr "Étiquette d’élément"
 
-#: includes-pro/modules/autoterms/autoterms.php:357
+#: includes-pro/modules/autoterms/autoterms.php:361
 msgid "Enable Dandelion"
 msgstr "Activer Dandelion"
 
-#: includes-pro/modules/autoterms/autoterms.php:247
+#: includes-pro/modules/autoterms/autoterms.php:251
 msgid "Enable IBM Watson"
 msgstr "Activer IBM Watson"
 
-#: includes-pro/modules/autoterms/autoterms.php:469
+#: includes-pro/modules/autoterms/autoterms.php:473
 msgid "Enable LSEG / Refinitiv"
 msgstr "Activer LSEG / Refinitiv"
 
@@ -249,28 +244,23 @@ msgstr "Activer OpenAI"
 msgid "Enter the shortcode name without [ ] or parameters."
 msgstr "Saisir le nom du code court sans [ ] ni paramètres."
 
-#: includes-pro/modules/autoterms/autoterms.php:370
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:128
+#: includes-pro/modules/autoterms/autoterms.php:374
 msgid "Enter your Dandelion API Key."
 msgstr "Saisissez votre clé de l’API de Dandelion."
 
-#: includes-pro/modules/autoterms/autoterms.php:271
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:107
+#: includes-pro/modules/autoterms/autoterms.php:275
 msgid "Enter your IBM Watson API Key."
 msgstr "Saisissez votre clé de l’API de IBM Watson."
 
-#: includes-pro/modules/autoterms/autoterms.php:260
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:100
+#: includes-pro/modules/autoterms/autoterms.php:264
 msgid "Enter your IBM Watson API URL."
 msgstr "Saisissez votre clé de l’URL de IBM Watson."
 
-#: includes-pro/modules/autoterms/autoterms.php:482
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:159
+#: includes-pro/modules/autoterms/autoterms.php:486
 msgid "Enter your LSEG / Refinitiv API Key."
 msgstr "Saisissez votre clé de l’API de LSEG / Refinitiv."
 
 #: includes-pro/modules/autoterms/autoterms.php:83
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:62
 msgid "Enter your OpenAI API Key."
 msgstr "Saisissez votre clé de l’API de OpenAI"
 
@@ -278,7 +268,7 @@ msgstr "Saisissez votre clé de l’API de OpenAI"
 msgid "Error deleting linked term relationship."
 msgstr "Erreur lors de la suppression d’une relation de terme lié."
 
-#: includes-pro/modules/autoterms/autoterms.php:580
+#: includes-pro/modules/autoterms/autoterms.php:584
 msgid ""
 "Example: <code>/\\b({term})\\b/i</code> will match the whole word while "
 "<code>/({term})/i</code> will match at any location even if it's part of "
@@ -295,19 +285,19 @@ msgid "Exclude previously analyzed content"
 msgstr "Exclure le contenu précédemment analysé"
 
 #: includes-pro/modules/autoterms/autoterms.php:53
-#: includes-pro/modules/autoterms/autoterms.php:129
-#: includes-pro/modules/autoterms/autoterms.php:155
-#: includes-pro/modules/autoterms/autoterms.php:196
-#: includes-pro/modules/autoterms/autoterms.php:229
-#: includes-pro/modules/autoterms/autoterms.php:279
-#: includes-pro/modules/autoterms/autoterms.php:305
-#: includes-pro/modules/autoterms/autoterms.php:339
-#: includes-pro/modules/autoterms/autoterms.php:391
-#: includes-pro/modules/autoterms/autoterms.php:417
-#: includes-pro/modules/autoterms/autoterms.php:451
-#: includes-pro/modules/autoterms/autoterms.php:490
-#: includes-pro/modules/autoterms/autoterms.php:516
-#: includes-pro/modules/autoterms/autoterms.php:549
+#: includes-pro/modules/autoterms/autoterms.php:133
+#: includes-pro/modules/autoterms/autoterms.php:159
+#: includes-pro/modules/autoterms/autoterms.php:200
+#: includes-pro/modules/autoterms/autoterms.php:233
+#: includes-pro/modules/autoterms/autoterms.php:283
+#: includes-pro/modules/autoterms/autoterms.php:309
+#: includes-pro/modules/autoterms/autoterms.php:343
+#: includes-pro/modules/autoterms/autoterms.php:395
+#: includes-pro/modules/autoterms/autoterms.php:421
+#: includes-pro/modules/autoterms/autoterms.php:455
+#: includes-pro/modules/autoterms/autoterms.php:494
+#: includes-pro/modules/autoterms/autoterms.php:520
+#: includes-pro/modules/autoterms/autoterms.php:553
 #: includes-pro/modules/autoterms/schedule.php:295
 msgid "False"
 msgstr "Faux"
@@ -317,17 +307,18 @@ msgid "Filter"
 msgstr "Filtrer"
 
 #: includes-pro/modules/autoterms/autoterms.php:89
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:40
 msgid "gpt-3.5-turbo"
 msgstr "gpt-3.5-turbo"
 
+#: includes-pro/modules/autoterms/autoterms.php:93
+msgid "gpt-4.5-preview"
+msgstr "gpt-4.5-aperçu"
+
 #: includes-pro/modules/autoterms/autoterms.php:91
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:42
 msgid "gpt-4o"
 msgstr "gpt-4o"
 
 #: includes-pro/modules/autoterms/autoterms.php:90
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:41
 msgid "gpt-4o-mini"
 msgstr "gpt-4o-mini"
 
@@ -343,7 +334,7 @@ msgstr "https://taxopress.com"
 msgid "https://wordpress.org/plugins/simple-tags/"
 msgstr "https://wordpress.org/plugins/simple-tags/"
 
-#: includes-pro/modules/autoterms/autoterms.php:220
+#: includes-pro/modules/autoterms/autoterms.php:224
 #, php-format
 msgid ""
 "IBM Watson is an external service that can scan your content and suggest "
@@ -394,7 +385,7 @@ msgstr "Termes liés"
 msgid "Linked terms deleted successfully."
 msgstr "Les termes liés ont bien été supprimés."
 
-#: includes-pro/modules/autoterms/autoterms.php:442
+#: includes-pro/modules/autoterms/autoterms.php:446
 #, php-format
 msgid ""
 "LSEG / Refinitiv is an external service that can scan your content and "
@@ -402,6 +393,10 @@ msgid ""
 msgstr ""
 "LSEG / Refinitiv est un service externe qui peut analyser votre contenu et "
 "suggérer des termes pertinents. %1sCliquer ici pour plus de détails%2s."
+
+#: includes-pro/modules/taxopress-ai/taxopress-ai.php:49
+msgid "Metabox Taxonomy Display"
+msgstr "Afficher la taxonomie de la boîte méta"
 
 #: includes-pro/modules/autolinks/autolinks.php:169
 msgid "New Element"
@@ -426,6 +421,20 @@ msgstr "Aucun"
 msgid "Number of items per page"
 msgstr "Nombre d’éléments par page"
 
+#: includes-pro/modules/autoterms/autoterms.php:96
+msgid "o1"
+msgstr "o1"
+
+#: includes-pro/modules/autoterms/autoterms.php:95
+#| msgid "gpt-4o-mini"
+msgid "o1-mini"
+msgstr "o1-mini"
+
+#: includes-pro/modules/autoterms/autoterms.php:94
+#| msgid "gpt-4o-mini"
+msgid "o3-mini"
+msgstr "o3-mini"
+
 #: includes-pro/modules/autoterms/autoterms.php:44
 #, php-format
 msgid ""
@@ -435,13 +444,11 @@ msgstr ""
 "OpenAI est un service externe qui peut analyser votre contenu et suggérer "
 "des termes pertinents. %1sCliquer ici pour plus de détails%2s."
 
-#: includes-pro/modules/autoterms/autoterms.php:119
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:67
+#: includes-pro/modules/autoterms/autoterms.php:123
 msgid "OpenAI Models"
 msgstr "Modèles OpenAI"
 
-#: includes-pro/modules/autoterms/autoterms.php:184
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:90
+#: includes-pro/modules/autoterms/autoterms.php:188
 msgid "OpenAI Prompt (Beta)"
 msgstr "Fenêtre surgissante d’OpenAI (Beta)"
 
@@ -469,11 +476,11 @@ msgstr "Taxonomie du terme principal"
 msgid "Recent Schedule Runs"
 msgstr "Exécutions récentes de la planification"
 
-#: includes-pro/modules/autoterms/autoterms.php:577
+#: includes-pro/modules/autoterms/autoterms.php:581
 msgid "Regex code"
 msgstr "Code Regex"
 
-#: includes-pro/modules/autoterms/autoterms.php:565
+#: includes-pro/modules/autoterms/autoterms.php:569
 msgid "Regular Expressions"
 msgstr "Expressions régulières"
 
@@ -561,19 +568,14 @@ msgstr "Les réglages ont bien été mises à jour."
 msgid "Shortcode Name"
 msgstr "Nom du code court"
 
-#: includes-pro/modules/autoterms/autoterms.php:144
-#: includes-pro/modules/autoterms/autoterms.php:294
-#: includes-pro/modules/autoterms/autoterms.php:406
-#: includes-pro/modules/autoterms/autoterms.php:505
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:76
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:112
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:142
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:164
+#: includes-pro/modules/autoterms/autoterms.php:148
+#: includes-pro/modules/autoterms/autoterms.php:298
+#: includes-pro/modules/autoterms/autoterms.php:410
+#: includes-pro/modules/autoterms/autoterms.php:509
 msgid "Show Term Post Count"
 msgstr "Afficher le nombre de publications du terme"
 
-#: includes-pro/modules/autoterms/autoterms.php:120
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:68
+#: includes-pro/modules/autoterms/autoterms.php:124
 msgid "Some models availability depends on your subscription and access."
 msgstr ""
 "La disponibilité de certains modèles dépend de votre abonnement et de votre "
@@ -754,7 +756,7 @@ msgstr ""
 "Ce synonyme ne peut pas être ajouté car %1$s est déjà ajouté à un autre "
 "terme."
 
-#: includes-pro/modules/autoterms/autoterms.php:351
+#: includes-pro/modules/autoterms/autoterms.php:355
 msgid ""
 "This will automatically add new terms from the Dandelion service. Before "
 "use, please test carefully using the preview feature."
@@ -763,7 +765,7 @@ msgstr ""
 "Dandelion. Avant de l’utiliser, veuillez le tester avec soin à l’aide de la "
 "fonctionnalité de prévisualisation."
 
-#: includes-pro/modules/autoterms/autoterms.php:241
+#: includes-pro/modules/autoterms/autoterms.php:245
 msgid ""
 "This will automatically add new terms from the IBM Watson service. Before "
 "use, please test carefully using the preview feature."
@@ -772,7 +774,7 @@ msgstr ""
 "Watson. Avant de l’utiliser, veuillez le tester avec soin à l’aide de la "
 "fonctionnalité de prévisualisation."
 
-#: includes-pro/modules/autoterms/autoterms.php:463
+#: includes-pro/modules/autoterms/autoterms.php:467
 msgid ""
 "This will automatically add new terms from the LSEG / Refinitiv service. "
 "Before use, please test carefully using the preview feature."
@@ -790,7 +792,7 @@ msgstr ""
 "OpenAI. Avant de l’utiliser, veuillez le tester avec soin à l’aide de la "
 "fonctionnalité de prévisualisation."
 
-#: includes-pro/modules/autoterms/autoterms.php:212
+#: includes-pro/modules/autoterms/autoterms.php:216
 msgid ""
 "This will request that OpenAI only suggests existing terms. Check this box "
 "and include {post_terms} in the prompt."
@@ -798,34 +800,27 @@ msgstr ""
 "Ceci demandera à OpenAI de ne suggérer que des termes existants. Cocher "
 "cette case et inclure {post_terms} dans le prompt."
 
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:77
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:113
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:143
-#: includes-pro/modules/taxopress-ai/taxopress-ai.php:165
-msgid "This will show number of posts attached to the term."
-msgstr "Cela affichera le nombre de publications attachées au terme."
-
-#: includes-pro/modules/autoterms/autoterms.php:145
-#: includes-pro/modules/autoterms/autoterms.php:295
-#: includes-pro/modules/autoterms/autoterms.php:407
-#: includes-pro/modules/autoterms/autoterms.php:506
+#: includes-pro/modules/autoterms/autoterms.php:149
+#: includes-pro/modules/autoterms/autoterms.php:299
+#: includes-pro/modules/autoterms/autoterms.php:411
+#: includes-pro/modules/autoterms/autoterms.php:510
 msgid "This will show the number of posts attached to the terms."
 msgstr "Ceci affichera le nombre de publications liées aux termes."
 
 #: includes-pro/modules/autoterms/autoterms.php:58
-#: includes-pro/modules/autoterms/autoterms.php:134
-#: includes-pro/modules/autoterms/autoterms.php:160
-#: includes-pro/modules/autoterms/autoterms.php:201
-#: includes-pro/modules/autoterms/autoterms.php:234
-#: includes-pro/modules/autoterms/autoterms.php:284
-#: includes-pro/modules/autoterms/autoterms.php:310
-#: includes-pro/modules/autoterms/autoterms.php:344
-#: includes-pro/modules/autoterms/autoterms.php:396
-#: includes-pro/modules/autoterms/autoterms.php:422
-#: includes-pro/modules/autoterms/autoterms.php:456
-#: includes-pro/modules/autoterms/autoterms.php:495
-#: includes-pro/modules/autoterms/autoterms.php:521
-#: includes-pro/modules/autoterms/autoterms.php:554
+#: includes-pro/modules/autoterms/autoterms.php:138
+#: includes-pro/modules/autoterms/autoterms.php:164
+#: includes-pro/modules/autoterms/autoterms.php:205
+#: includes-pro/modules/autoterms/autoterms.php:238
+#: includes-pro/modules/autoterms/autoterms.php:288
+#: includes-pro/modules/autoterms/autoterms.php:314
+#: includes-pro/modules/autoterms/autoterms.php:348
+#: includes-pro/modules/autoterms/autoterms.php:400
+#: includes-pro/modules/autoterms/autoterms.php:426
+#: includes-pro/modules/autoterms/autoterms.php:460
+#: includes-pro/modules/autoterms/autoterms.php:499
+#: includes-pro/modules/autoterms/autoterms.php:525
+#: includes-pro/modules/autoterms/autoterms.php:558
 #: includes-pro/modules/autoterms/schedule.php:300
 msgid "True"
 msgstr "Vrai"
@@ -835,11 +830,11 @@ msgstr "Vrai"
 msgid "Type the synonym name and then click Enter or Return."
 msgstr "Saisissez le nom du synonyme, puis cliquez sur Entrée ou Retour."
 
-#: includes-pro/modules/autoterms/autoterms.php:211
+#: includes-pro/modules/autoterms/autoterms.php:215
 msgid "Use only existing terms (Beta)"
 msgstr "Utiliser uniquement des termes existants (beta)"
 
-#: includes-pro/modules/autoterms/autoterms.php:566
+#: includes-pro/modules/autoterms/autoterms.php:570
 msgid ""
 "Use Regular Expressions to change how Auto Terms analyzes your posts. This "
 "works for terms added when posts are saved or added via the \"Schedule\" "
@@ -859,6 +854,9 @@ msgstr "Vous pouvez voir tous les détails du journal sur l’écran %1s"
 msgid "Your license key provides access to updates and support."
 msgstr ""
 "Votre clé de licence vous donne accès aux mises à jour et à le support."
+
+#~ msgid "This will show number of posts attached to the term."
+#~ msgstr "Cela affichera le nombre de publications attachées au terme."
 
 #~ msgid "Exclude Terms not in {post_terms}"
 #~ msgstr "Exclure les termes non contenus dans {post_terms}"

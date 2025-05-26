@@ -27,10 +27,9 @@ class Admin {
 		\add_action( 'rest_api_init', array( __CLASS__, 'register_settings' ) );
 		\add_action( 'admin_init', array( __CLASS__, 'tools_actions' ), 9 );
 		\add_action( 'admin_init', array( __CLASS__, 'notices_actions' ), 9 );
-		\add_action( 'admin_init', array( __CLASS__, 'maybe_flush_rewrite_rules' ), 11 );
 
 		\add_action( 'admin_notices', array( __CLASS__, 'check_conflicts' ), 0 );
-		\add_action( 'update_option_xmlsf_sitemaps', array( __CLASS__, 'update_sitemaps' ), 10, 2 );
+		\add_action( 'update_option_xmlsf_sitemaps', array( __CLASS__, 'update_sitemaps' ) );
 
 		// ACTION LINK.
 		\add_filter( 'plugin_action_links_' . XMLSF_BASENAME, array( __CLASS__, 'add_action_link' ) );
@@ -78,7 +77,6 @@ class Admin {
 	 * Add options page
 	 */
 	public static function add_settings_pages() {
-
 		if ( \XMLSF\sitemaps_enabled( 'sitemap' ) ) {
 			// This page will be under "Settings".
 			$screen_id = \add_options_page(
@@ -115,13 +113,15 @@ class Admin {
 	}
 
 	/**
-	 * Maybe flush rewrite rules
+	 * Maybe flush rewrite rules.
 	 *
-	 * Uses $wp_rewrite->wp_rewrite_rules() which checks for empty rewrite_rules option.
+	 * Checks $_GET['settings-updated'] and transient 'xmlsf_flush_rewrite_rules'. Hooked into settings page load actions.
 	 */
 	public static function maybe_flush_rewrite_rules() {
-		global $wp_rewrite;
-		$wp_rewrite->wp_rewrite_rules(); // Recreates rewrite rules only when needed.
+		if ( ! empty( $_GET['settings-updated'] ) && get_transient( 'xmlsf_flush_rewrite_rules' ) ) {
+			\flush_rewrite_rules( false );
+			delete_transient( 'xmlsf_flush_rewrite_rules' );
+		}
 	}
 
 	/**
@@ -130,20 +130,24 @@ class Admin {
 
 	/**
 	 * Update actions for Sitemaps
-	 *
-	 * @param mixed $old   Old option value.
-	 * @param mixed $value Saved option value.
 	 */
-	public static function update_sitemaps( $old, $value ) {
-		$old   = (array) $old;
-		$value = (array) $value;
+	public static function update_sitemaps() {
+		if ( ! xmlsf()->using_permalinks() ) {
+			return;
+		}
 
-		if ( $old !== $value ) {
-			// Check static files.
-			self::check_static_files();
+		// Set transients for flushing.
+		set_transient( 'xmlsf_flush_rewrite_rules', '1' );
 
-			// Flush rewrite rules on upcoming init.
-			\delete_option( 'rewrite_rules' );
+		// Check static files.
+		$sitemaps = (array) \get_option( 'xmlsf_sitemaps' );
+		if ( ! empty( $sitemaps['sitemap'] ) ) {
+			$slug = \is_object( \xmlsf()->sitemap ) ? \xmlsf()->sitemap->slug() : 'sitemap';
+			self::check_static_file( $slug . '.xml' );
+		}
+		if ( ! empty( $sitemaps['sitemap-news'] ) ) {
+			$slug = \is_object( \xmlsf()->sitemap_news ) ? \xmlsf()->sitemap_news->slug() : 'sitemap-news';
+			self::check_static_file( $slug . '.xml' );
 		}
 	}
 
@@ -151,7 +155,6 @@ class Admin {
 	 * Register settings and add settings fields
 	 */
 	public static function register_settings() {
-
 		// Sitemaps.
 		\register_setting(
 			'reading',
@@ -165,10 +168,10 @@ class Admin {
 		);
 
 		// Help tab.
-		\add_action(
-			'load-options-reading.php',
-			array( __CLASS__, 'xml_sitemaps_help' )
-		);
+		\add_action( 'load-options-reading.php', array( __CLASS__, 'xml_sitemaps_help' ) );
+
+		// Maybe flush rewrite rules.
+		\add_action( 'load-options-reading.php', array( __CLASS__, 'maybe_flush_rewrite_rules' ), 11 );
 
 		// Robots rules.
 		\register_setting(
@@ -183,10 +186,6 @@ class Admin {
 			'reading'
 		);
 	}
-
-	/**
-	 * SITEMAPS
-	 */
 
 	/**
 	 * Sitemaps help tabs
@@ -241,8 +240,7 @@ class Admin {
 		global $wp_rewrite;
 
 		$rules  = (array) \get_option( 'rewrite_rules' );
-		$found  = self::check_static_files( 'robots.txt', 0 );
-		$static = ! empty( $found ) && \in_array( 'robots.txt', $found, true );
+		$static = self::check_static_file( 'robots.txt', 0 );
 
 		// The actual fields for data entry.
 		include XMLSF_DIR . '/views/admin/field-robots.php';
@@ -263,42 +261,30 @@ class Admin {
 	}
 
 	/**
-	 * Check for static sitemap files
+	 * Check for static file
 	 *
-	 * @param mixed $files     Filename or array of filenames.
+	 * @param mixed $file      Filename to check for.
 	 * @param bool  $verbosity Verbosity level: 0|false (no messages), 1|true (warnings only) or 2 (warnings or success).
 	 *
-	 * @return array Found static files.
+	 * @return bool Found static file.
 	 */
-	public static function check_static_files( $files = array(), $verbosity = 1 ) {
-		if ( empty( $files ) ) { // TODO a better way of getting file names.
-			$sitemaps = (array) \get_option( 'xmlsf_sitemaps', \XMLSF\get_default_settings( 'sitemaps' ) );
-			foreach ( $sitemaps as $type => $file ) {
-				$files[] = $file;
-			}
-		}
+	public static function check_static_file( $file, $verbosity = 1 ) {
+		$found = \file_exists( \trailingslashit( \get_home_path() ) . $file );
 
-		$home_path = \trailingslashit( \get_home_path() );
-		$found     = array();
-
-		foreach ( (array) $files as $pretty ) {
-			if ( ! empty( $pretty ) && \file_exists( $home_path . $pretty ) ) {
-				$found[] = $pretty;
-				$verbosity && \add_settings_error(
-					'static_files_notice',
-					'static_files',
-					\sprintf( /* translators: %1$s file name, %2$s is XML Sitemap (linked to options-reading.php) */
-						\esc_html__( 'A conflicting static file has been found: %1$s. Either delete it or disable the corresponding %2$s.', 'xml-sitemap-feed' ),
-						\esc_html( $pretty ),
-						'<a href="' . \esc_url( \admin_url( 'options-reading.php' ) ) . '#xmlsf_sitemaps">' . \esc_html__( 'XML Sitemap', 'xml-sitemap-feed' ) . '</a>'
-					),
-					'warning'
-				);
-			}
-		}
+		// Tell me if anything was found.
+		$verbosity && $found && \add_settings_error(
+			'static_files_notice',
+			'static_file_' . $file,
+			\sprintf( /* translators: %1$s file name, %2$s is XML Sitemap (linked to options-reading.php) */
+				\esc_html__( 'A conflicting static file has been found: %1$s. Either delete it or disable the corresponding %2$s.', 'xml-sitemap-feed' ),
+				\esc_html( $file ),
+				'<a href="' . \esc_url( \admin_url( 'options-reading.php' ) ) . '#xmlsf_sitemaps">' . \esc_html__( 'XML Sitemap', 'xml-sitemap-feed' ) . '</a>'
+			),
+			'warning'
+		);
 
 		// Tell me if all is OK.
-		$verbosity > 1 && empty( $found ) && \add_settings_error(
+		$verbosity > 1 && ! $found && \add_settings_error(
 			'static_files_notice',
 			'static_files',
 			__( 'No conflicting static files found.', 'xml-sitemap-feed' ),

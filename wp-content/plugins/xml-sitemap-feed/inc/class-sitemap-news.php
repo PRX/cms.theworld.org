@@ -16,7 +16,7 @@ class Sitemap_News {
 	 *
 	 * @var string
 	 */
-	private $slug = 'sitemap-news';
+	private $slug;
 
 	/**
 	 * CONSTRUCTOR
@@ -24,7 +24,7 @@ class Sitemap_News {
 	 * Runs on init
 	 */
 	public function __construct() {
-		\add_action( 'init', array( $this, 'register_rewrites' ) );
+		$this->slug = \sanitize_key( (string) \apply_filters( 'xmlsf_sitemap_news_slug', 'sitemap-news' ) );
 
 		// MAIN REQUEST filter.
 		\add_filter( 'request', array( $this, 'filter_request' ), 0 );
@@ -35,6 +35,13 @@ class Sitemap_News {
 		// Add news sitemap to the index.
 		\add_filter( 'xmlsf_sitemap_index_after', array( $this, 'news_in_plugin_index' ) );
 		\add_action( 'wp_sitemaps_init', array( $this, 'news_in_core_index' ), 11 );
+
+		\add_filter( 'nocache_headers', array( $this, 'news_nocache_headers' ) );
+
+		\add_filter( 'xmlsf_news_language', array( $this, 'parse_language_string' ), 99 );
+
+		// Add sitemap in Robots TXT.
+		add_filter( 'robots_txt', array( $this, 'robots_txt' ), 9 );
 	}
 
 	/**
@@ -45,16 +52,12 @@ class Sitemap_News {
 	public function register_rewrites() {
 		global $wp_rewrite;
 
-		if ( ! $wp_rewrite->using_permalinks() ) {
+		if ( ! $wp_rewrite->using_permalinks() || 0 === strpos( get_option( 'permalink_structure' ), '/index.php' ) ) {
+			// Nothing to do.
 			return;
 		}
 
-		// Register news sitemap provider route.
-		\add_rewrite_rule(
-			'^' . $this->slug() . '\.xml$',
-			'index.php?feed=sitemap-news',
-			'top'
-		);
+		\add_rewrite_rule( '^' . $this->slug() . '\.xml$', 'index.php?feed=sitemap-news', 'top' );
 	}
 
 	/**
@@ -65,17 +68,12 @@ class Sitemap_News {
 	public function unregister_rewrites() {
 		global $wp_rewrite;
 
-		if ( empty( $this->rewrite_rules ) || ! $wp_rewrite->using_permalinks() || 0 === strpos( get_option( 'permalink_structure' ), '/index.php' ) ) {
+		if ( ! $wp_rewrite->using_permalinks() || 0 === strpos( get_option( 'permalink_structure' ), '/index.php' ) ) {
 			// Nothing to do.
 			return;
 		}
 
-		// Unregister news sitemap provider route.
-		\remove_rewrite_rule(
-			'^' . $this->slug() . '\.xml$',
-			'index.php?feed=sitemap-news',
-			'top'
-		);
+		unset( $wp_rewrite->extra_rules_top[ '^' . $this->slug() . '\.xml$' ] );
 	}
 
 	/**
@@ -84,14 +82,7 @@ class Sitemap_News {
 	 * @since 5.5
 	 */
 	public function slug() {
-		$slug = (string) \apply_filters( 'xmlsf_sitemap_news_slug', $this->slug );
-
-		// Clean filename if altered.
-		if ( $this->slug !== $slug ) {
-			$slug = \sanitize_key( $slug );
-		}
-
-		return ! empty( $slug ) ? $slug : $this->slug;
+		return $this->slug;
 	}
 
 	/**
@@ -123,18 +114,17 @@ class Sitemap_News {
 	 * @return string The sitemap URL.
 	 */
 	public function get_sitemap_url() {
-		global $wp_rewrite;
+		$slug = $this->slug();
 
-		$slug      = $this->slug();
-		$index_php = 0 === strpos( get_option( 'permalink_structure' ), '/index.php' ) ? 'index.php' : '';
-
-		if ( $wp_rewrite->using_permalinks() && ! $index_php ) {
-			$basename = '/' . $slug . '.xml';
+		if ( xmlsf()->using_permalinks() ) {
+			$basename = $slug . '.xml';
 		} else {
-			$basename = '/' . $index_php . '?feed=' . $slug;
+			$basename = '?feed=' . $slug;
 		}
 
-		return \esc_url( \home_url( $basename ) );
+		$sitemap_url = \apply_filters( 'xmlsf_sitemap_news_url', \home_url( $basename ) );
+
+		return \esc_url( $sitemap_url );
 	}
 
 	/**
@@ -221,33 +211,82 @@ class Sitemap_News {
 			$request['cat'] = \implode( ',', $options['categories'] );
 		}
 
-		// Set up query filters.
-		$live = false;
-		foreach ( $post_types as $post_type ) {
-			$lastpostdate = \get_lastpostdate( 'gmt', $post_type );
-			if ( $lastpostdate && \strtotime( $lastpostdate ) > \strtotime( \gmdate( 'Y-m-d H:i:s', \strtotime( '-48 hours' ) ) ) ) {
-				$live = true;
-				break;
-			}
-		}
-		if ( $live ) {
-			\add_filter(
-				'post_limits',
-				function () {
-					return 'LIMIT 0, 1000';
-				}
-			);
-			\add_filter( 'posts_where', 'XMLSF\news_filter_where', 10, 1 );
-		} else {
-			\add_filter(
-				'post_limits',
-				function () {
-					return 'LIMIT 0, 1';
-				}
-			);
-		}
+		\add_filter( 'post_limits', array( $this, 'post_limits' ) );
+
+		\add_filter( 'posts_where', array( $this, 'posts_where' ), 10, 1 );
 
 		return $request;
+	}
+
+	/**
+	 * Response headers filter
+	 * Does not check if we are really in a sitemap feed.
+	 *
+	 * @param array $headers The headers array.
+	 *
+	 * @return array
+	 */
+	public function news_nocache_headers( $headers ) {
+		// Prevent proxy caches serving a cached news sitemap.
+		$headers['Cache-Control'] .= ', no-store';
+
+		return $headers;
+	}
+
+	/**
+	 * Filter post LIMIT
+	 *
+	 * Max 1000 posts
+	 */
+	public function post_limits() {
+		return 'LIMIT 0, 1000';
+	}
+
+	/**
+	 * Filter news WHERE
+	 * only posts from the last 48 hours
+	 *
+	 * @param string $where DB Query where clause.
+	 *
+	 * @return string
+	 */
+	public function posts_where( $where = '' ) {
+		$hours  = (int) \apply_filters( 'xmlsf_news_hours_old', 48 );
+		$hours  = \XMLSF\sanitize_number( $hours, 1, 168, 0 );
+		$where .= ' AND post_date_gmt > \'' . \gmdate( 'Y-m-d H:i:s', \strtotime( '-' . $hours . ' hours' ) ) . '\'';
+
+		return $where;
+	}
+
+	/**
+	 * Parse language string into two or three letter ISO 639 code.
+	 *
+	 * @param string $lang Unformatted language string.
+	 *
+	 * @return string
+	 */
+	public function parse_language_string( $lang ) {
+		// Lower case, no tags.
+		$lang = \convert_chars( \strtolower( \wp_strip_all_tags( $lang ) ) );
+
+		// Convert underscores.
+		$lang = \str_replace( '_', '-', $lang );
+
+		// No hyphens except...
+		if ( \strpos( $lang, '-' ) ) :
+			if ( 0 === \strpos( $lang, 'zh' ) ) {
+				$lang = \strpos( $lang, 'hk' ) || \strpos( $lang, 'tw' ) || \strpos( $lang, 'hant' ) ? 'zh-tw' : 'zh-cn';
+			} else {
+				// Explode on hyphen and use only first part.
+				$expl = \explode( '-', $lang );
+				$lang = $expl[0];
+			}
+		endif;
+
+		// Make sure it's max 3 letters.
+		$lang = \substr( $lang, 0, 2 );
+
+		return $lang;
 	}
 
 	/**
@@ -261,7 +300,22 @@ class Sitemap_News {
 	 * @return array
 	 */
 	public function nginx_helper_purge_urls( $urls = array() ) {
-		$urls[] = '/sitemap-news.xml';
+		$slug = $this->slug();
+
+		$urls[] = '/' . $slug . '.xml';
+
 		return $urls;
+	}
+
+	/**
+	 * Filter robots.txt rules
+	 *
+	 * @since 5.5
+	 *
+	 * @param string $output Output.
+	 * @return string
+	 */
+	public function robots_txt( $output ) {
+		return $output . PHP_EOL . 'Sitemap: ' . $this->get_sitemap_url() . PHP_EOL;
 	}
 }
