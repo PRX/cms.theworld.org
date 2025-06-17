@@ -58,7 +58,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                 'namearray'  => 'taxopress_autoterm',
                 'name'       => 'autoterm_for_schedule',
                 'class'      => 'autoterm_for_schedule autoterm-terms-when-to-field autoterm-terms-when-schedule fields-control',
-                'labeltext'  => esc_html__('Schedule', 'simple-tags'),
+                'labeltext'  => esc_html__('Schedule', 'taxopress-pro'),
                 'aftertext'  => esc_html__('Enable Auto Terms for the "Schedule" feature.', 'taxopress-pro'),
                 'selections' => $default_select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 'required'    => false,
@@ -71,7 +71,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                 'textvalue' => isset($current['schedule_terms_limit']) ? esc_attr($current['schedule_terms_limit']) : '5',
                 'class'      => 'autoterm_for_schedule autoterm-terms-when-to-field autoterm-terms-when-schedule',
                 'labeltext' => esc_html__('Auto Terms Limit',
-                    'simple-tags'),
+                    'taxopress-pro'),
                 'helptext'  => esc_html__('Limit the number of generated Auto Terms. \'0\' for unlimited terms', 'taxopress-pro'),
                 'min'       => '0',
                 'required'  => false,
@@ -85,7 +85,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                 'namearray'  => 'taxopress_autoterm',
                 'name'       => 'schedule_autoterm_target',
                 'class'      => 'autoterm_for_schedule autoterm-terms-when-to-field autoterm-terms-when-schedule',
-                'labeltext'  => esc_html__('Target content', 'simple-tags'),
+                'labeltext'  => esc_html__('Target content', 'taxopress-pro'),
                 'aftertext'  => esc_html__('Only use Auto Terms on schedules with no added terms.', 'taxopress-pro'),
                 'selections' => $default_select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             ]);
@@ -98,7 +98,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                 'namearray'  => 'taxopress_autoterm',
                 'name'       => 'schedule_autoterm_word',
                 'class'      => 'autoterm_for_schedule autoterm-terms-when-to-field autoterm-terms-when-schedule',
-                'labeltext'  => esc_html__('Whole words', 'simple-tags'),
+                'labeltext'  => esc_html__('Whole words', 'taxopress-pro'),
                 'aftertext'  => esc_html__('Only add terms when the word is an exact match. Do not make matches for partial words.', 'taxopress-pro'),
                 'selections' => $default_select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             ]);
@@ -111,7 +111,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                 'namearray'  => 'taxopress_autoterm',
                 'name'       => 'schedule_autoterm_hash',
                 'class'      => 'autoterm_for_schedule autoterm-terms-when-to-field autoterm-terms-when-schedule',
-                'labeltext'  => esc_html__('Hashtags', 'simple-tags'),
+                'labeltext'  => esc_html__('Hashtags', 'taxopress-pro'),
                 'aftertext'  => esc_html__('Support hashtags symbols # in Auto Terms.', 'taxopress-pro'),
                 'selections' => $default_select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             ]);
@@ -138,7 +138,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                 'name'       => 'schedule_replace_type',
                 'class'      => 'autoterm_for_schedule autoterm-terms-when-to-field autoterm-terms-when-schedule',
                 'labeltext'  => esc_html__('Auto Terms replacement settings',
-                    'simple-tags'),
+                    'taxopress-pro'),
                     'aftertext'  => esc_html__('This option determines what happens when adding new terms to posts.', 'taxopress-pro'),
                 'selections' => $taxonomy_replace_options,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             ]);
@@ -331,6 +331,10 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                         'selections' => $select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                     ]);
             ?>
+            
+            <?php
+            if (!empty(SimpleTags_Plugin::get_option_value('enable_ibm_watson_ai_source'))) {
+                ?>
             <tr class="autoterm-description-tr">
                 <td colspan="2">
                     <p class="taxopress-field-description description autoterm-terms-use-ibm-watson-notice">
@@ -439,8 +443,21 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                 'class'      => 'autoterm-terms-to-use-field autoterm-terms-use-ibm-watson',
                 'selections' => $select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             ]);
-            
+            } else {
+                 ?>
+            <tr class="autoterm-description-tr">
+                <td colspan="2">
+                    <p class="taxopress-field-description description autoterm-terms-use-ibm-watson-notice">
+                        <?php printf(esc_html__('This integration is no longer actively supported. If you still need to use it, you can enable it in the Legacy AI Sources settings.', 'taxopress-pro')); ?>
+                    </p>
+                </td>
+            </tr>
+            <?php
+            }
             ?>
+            <?php
+            if (!empty(SimpleTags_Plugin::get_option_value('enable_dandelion_ai_source'))) {
+                ?>
             <tr class="autoterm-description-tr">
                 <td colspan="2">
                     <p class="taxopress-field-description description autoterm-terms-use-dandelion-notice">
@@ -551,8 +568,21 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                 'class'      => 'autoterm-terms-to-use-field autoterm-terms-use-dandelion',
                 'selections' => $select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             ]);
-
+        } else {
+                ?>
+            <tr class="autoterm-description-tr">
+                <td colspan="2">
+                    <p class="taxopress-field-description description autoterm-terms-use-dandelion-notice">
+                        <?php printf(esc_html__('This integration is no longer actively supported. If you still need to use it, you can enable it in the Legacy AI Sources settings.', 'taxopress-pro')); ?>
+                    </p>
+                </td>
+            </tr>
+            <?php
+        }
             ?>
+            <?php
+            if (!empty(SimpleTags_Plugin::get_option_value('enable_lseg_ai_source'))) {
+                ?>
             <tr class="autoterm-description-tr">
                 <td colspan="2">
                     <p class="taxopress-field-description description autoterm-terms-use-lseg-refinitiv-notice">
@@ -650,6 +680,17 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                 'class'      => 'autoterm-terms-to-use-field autoterm-terms-use-lseg-refinitiv',
                 'selections' => $select,// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             ]);
+        } else {
+                ?>
+            <tr class="autoterm-description-tr">
+                <td colspan="2">
+                    <p class="taxopress-field-description description autoterm-terms-use-lseg-refinitiv-notice">
+                        <?php printf(esc_html__('This integration is no longer actively supported. If you still need to use it, you can enable it in the Legacy AI Sources settings.', 'taxopress-pro')); ?>
+                    </p>
+                </td>
+            </tr>
+            <?php
+        }
         }
 
 
@@ -728,7 +769,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
         }
 
         public function taxopress_autoterms_copy_success_admin_notice() {
-            echo taxopress_admin_notices_helper(esc_html__('Auto Terms successfully copied.', 'simple-tags'), true);
+            echo taxopress_admin_notices_helper(esc_html__('Auto Terms successfully copied.', 'taxopress-pro'), true);
         }
 
         public function taxopress_copied_autoterm_filter_removable_query_args(array $args) {
@@ -763,7 +804,7 @@ if (!class_exists('TaxoPress_Pro_Auto_Terms')) {
                     'taxopress_autoterm' => esc_attr($item['ID']),
                     '_wpnonce' => wp_create_nonce('autoterm-action-request-nonce')
                 ], admin_url('admin.php')),
-                __('Copy', 'simple-tags')
+                __('Copy', 'taxopress-pro')
             );
 
             if (isset($actions['delete'])) {

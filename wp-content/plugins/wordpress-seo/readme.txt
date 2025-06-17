@@ -1,12 +1,12 @@
-=== Yoast SEO ===
+=== Yoast SEO - Advanced SEO with real-time guidance and built-in AI ===
 Contributors: yoast, joostdevalk, tdevalk
 Donate link: https://yoa.st/1up
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: SEO, XML sitemap, Content analysis, Readability, Schema
-Tested up to: 6.7
-Stable tag: 24.4
-Requires PHP: 7.2.5
+Tested up to: 6.8
+Stable tag: 25.3
+Requires PHP: 7.4
 
 Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.
 
@@ -274,39 +274,35 @@ Your question has most likely been answered on our help center: [yoast.com/help/
 
 == Changelog ==
 
-= 24.4 =
+= 25.3 =
 
-Release date: 2025-02-04
+Release date: 2025-06-10
 
-Yoast SEO 24.4 brings more enhancements and bugfixes. [Find more information about our software releases and updates here](https://yoa.st/releases).
-
-#### Bugfixes
-
-* Fixes a bug where editing a link in the block editor would have unexpected consequences when using undo.
-* Fixes a bug where the `article:modified_time` meta tag would show an earlier time than the `article:published_time` meta tag for scheduled posts.
-* Fixes a bug where the Schema type of the product would not be locked when Yoast WooCommerce SEO is enabled.
-* Fixes a bug where using hyphens at the start or end of a sentence would cripple the content analysis when editing a post.
-
-= 24.3 =
-
-Release date: 2025-01-21
-
-Yoast SEO 24.3 brings more enhancements and bugfixes. [Find more information about our software releases and updates here](https://yoa.st/releases).
+*New:* Yoast SEO 25.3 introduces llms.txt support to help AI tools understand your site better. [Read the full release post here!](https://yoa.st/release-10-6-25)
 
 #### Enhancements
 
-* Introduces more robust HTML processing and highlighting for the _sentence length_ and _paragraph length_ assessments.
+* Introduces the llms.txt feature, which gives site owners the opportunity to automatically generate an llms.txt file. This file helps LLMs to better understand the site's content.
+
+= 25.2 =
+
+Release date: 2025-05-27
+
+Yoast SEO 25.2 brings more enhancements and bugfixes. [Find more information about our software releases and updates here](https://yoa.st/releases).
+
+#### Enhancements
+
+* Makes the _keyphrase in image alt attributes_ assessment  available when no content has been added.
+* Renames _image keyphrase_ assessment to _keyphrase in image alt attributes_ assessment.
 
 #### Bugfixes
 
-* Fixes a bug where the Semrush request would be executed twice when opening the related keyphrases modal.
-* Fixes a bug where the text color in the search on our settings page would not change correctly when active, resulting in bad contrast.
-* Fixes a bug where the _View_ button label in the Yoast dashboard would not be available for translation.
+* Fixes a bug in the retrieval of post categories titles where a non-existent term might be referenced. Props to [@bor0](https://github.com/bor0).
+* Fixes a bug where the Yoast introduction in the Elementor editor would not be positioned correctly when on Elementor version 3.30.0.
 
 #### Other
 
-* Improves contrast in the related keyphrase suggestions table.
-* Improves contrast in the RSS supported variables explainer table.
+* Excludes gallery, embed and playlist shortcodes from the _keyphrase in introduction_ analysis in Classic editor.
 
 = Earlier versions =
 For the changelog of earlier versions, please refer to [the changelog on yoast.com](https://yoa.st/yoast-seo-changelog).
