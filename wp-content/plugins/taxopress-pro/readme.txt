@@ -3,7 +3,7 @@ Contributors: publishpress, kevinB, stevejburge, andergmartins, olatechpro, ojop
 Tags: category, tag, taxonomy, related posts, tag cloud, terms, tagging, navigation, tag manager, tags manager, term manager, terms manager
 Requires at least: 3.3
 Tested up to: 6.8
-Stable tag: 3.35.1
+Stable tag: 3.36.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -225,6 +225,17 @@ If you have a busy WooCommerce site, it can be difficult to organize all your pr
 
 == Changelog ==
 
+v3.36.0- 2025-06-02
+* Update: Add "Edited with TaxoPress" row in taxonomies table, #2640
+* Update: Show the "Delete TaxoPress Edit Data" button for only taxonomies edited with taxopress, #2639
+* Update: Add a Loco.xml file to the Pro Version, #2634
+* Update: Move IBM Watson / Dandelion / LSEG to a Legacy status, #2577
+* Update: Update message "Posts tagged with X", #2576
+* Update: Add support for term descriptions in displays, #2429
+* Feature: Allow users to copy terms with metadata, #2522
+* Feature: Add previews feature to related posts, current posts and terms display, #2521
+* Fixed: PHP error with the Rank Math SEO plugin, #2626
+
 v3.35.1- 2025-05-12
 * Fixed: "Maximum terms to display" issue with Hidden Terms, #2625
 * Fixed: Hide "Link Categories", #2608
@@ -241,22 +252,6 @@ v3.35.1- 2025-05-12
 * Feature: Setting for showing the slugs, #2595
 * Update: TaxoPress v3.33.0 Translation Update ES-FR-IT, #2563, #2564
 * Update: TaxoPress v3.34.0 Translation Update ES-FR-IT, #2601, #2602
-
-v3.35.0- 2025-05-07
-* Fixed: Hide "Link Categories", #2608
-* Fixed: Missing the Free banner on the Fast Update screen, #2591
-* Fixed: Conflict between TaxoPress and Amelia, #2584
-* Update: Update the copyright, #2600
-* Update: Visual clean up of Metaboxes tab, #2593
-* Update: Visual clean up of Merge tab and Manage Terms screen. #2592
-* Update: Pro nudge for Metabox Taxonomy Display, #2581
-* Update: Pro nudge for the Schedule feature, #2580
-* Update: Pro nudge for Linked Terms and Synonyms, #2578
-* Update: Text description for Linked Terms and Synonyms, #2579
-* Update: Make sure all Pro features are promoted in the Free version, #2528
-* Feature: Setting for showing the slugs, #2595
-* Update: TaxoPress v3.33.0 Transaltion Update ES-FR-IT, #2563, #2564
-* Update: TaxoPress v3.34.0 Transaltion Update ES-FR-IT, #2601, #2602
 
 v3.34.0- 2025-04-22
 * Update: Remove Hidden Terms from Auto Links, #2582
