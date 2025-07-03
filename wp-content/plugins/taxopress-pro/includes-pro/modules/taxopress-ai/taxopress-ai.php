@@ -16,6 +16,8 @@ if (!class_exists('TaxoPress_Pro_AI_Module')) {
         {
 
             add_filter('taxopress_settings_post_type_ai_fields', [$this, 'filter_settings_post_type_ai_fields'], 10, 2);
+
+            add_filter('taxopress_admin_options', [$this, 'add_legacy_ai_sources_tab'], 20);
         }
 
 
@@ -69,6 +71,40 @@ if (!class_exists('TaxoPress_Pro_AI_Module')) {
             );
 
             return $taxopress_ai_fields;
+        }
+
+         /**
+         * Add the Legacy AI Sources tab to the settings
+         */
+        public function add_legacy_ai_sources_tab($options)
+        {
+            $options['legacy_ai_sources'] = array(
+                array(
+                    'enable_ibm_watson_ai_source',
+                    __('Enable IBM Watson integration', 'taxopress-pro'),
+                    'checkbox',
+                    '1',
+                    __('Show IBM Watson as an AI source for Auto Terms', 'taxopress-pro'),
+                    ''
+                ),
+                array(
+                                        'enable_dandelion_ai_source',
+                    __('Enable Dandelion integration', 'taxopress-pro'),
+                    'checkbox',
+                    '1',
+                    __('Show Dandelion as an AI source for Auto Terms.', 'taxopress-pro'),
+                    ''
+                ),
+                array(
+                    'enable_lseg_ai_source',
+                    __('Enable LSEG/Refinitiv integration', 'taxopress-pro'),
+                    'checkbox',
+                    '1',
+                    __('Show LSEG/Refinitiv as an AI source for Auto Terms', 'taxopress-pro'),
+                    ''
+                ),
+            );
+            return $options;
         }
     }
 }
