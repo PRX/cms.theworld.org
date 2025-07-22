@@ -3,6 +3,28 @@
     "title": "Station info",
     "fields": [
         {
+            "key": "field_687faf4846e84",
+            "label": "Call Letters",
+            "name": "call_letters",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "show_in_graphql": 1,
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
             "key": "field_687ea33a3f5b0",
             "label": "Frequency",
             "name": "frequency",
@@ -182,5 +204,5 @@
     "graphql_field_name": "stations",
     "map_graphql_types_from_location_rules": 0,
     "graphql_types": "",
-    "modified": 1753130364
+    "modified": 1753198668
 }
