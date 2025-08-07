@@ -11,11 +11,11 @@ elif [ ${#SQLFILE} -gt 0 ];
   lando db-import $SQLFILE
 else
   echo "Import Pantheon Dev database"
-  lando pull --database=dev --files=none --code=none
+  lando pull --database=live --files=none --code=none
 fi
 echo "Sync ACF Groups automatically from JSON files."
 lando wp tw acf-sync-field-groups
 
 echo "Create local admin user"
-lando wp user create local-admin local-admin@the-world-wp.com
+lando wp user create local-admin local-admin@the-world.com
 lando wp user set-role local-admin administrator
