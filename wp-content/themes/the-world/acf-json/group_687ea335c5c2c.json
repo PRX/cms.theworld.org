@@ -119,16 +119,16 @@
                 "id": ""
             },
             "show_in_graphql": 1,
-            "taxonomy": "category",
+            "taxonomy": "province_or_state",
             "add_term": 1,
             "save_terms": 0,
             "load_terms": 0,
             "return_format": "id",
-            "field_type": "checkbox",
+            "field_type": "select",
+            "allow_null": 0,
             "allow_in_bindings": 0,
             "bidirectional": 0,
             "multiple": 0,
-            "allow_null": 0,
             "bidirectional_target": []
         },
         {
@@ -151,11 +151,11 @@
             "save_terms": 0,
             "load_terms": 0,
             "return_format": "id",
-            "field_type": "checkbox",
+            "field_type": "select",
+            "allow_null": 0,
             "allow_in_bindings": 0,
             "bidirectional": 0,
             "multiple": 0,
-            "allow_null": 0,
             "bidirectional_target": []
         },
         {
@@ -219,5 +219,5 @@
     "graphql_field_name": "stations",
     "map_graphql_types_from_location_rules": 0,
     "graphql_types": "",
-    "modified": 1754943232
+    "modified": 1754943512
 }
