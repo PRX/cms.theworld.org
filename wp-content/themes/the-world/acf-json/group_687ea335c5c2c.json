@@ -78,11 +78,11 @@
             "save_options": 0
         },
         {
-            "key": "field_687ea4493f5b2",
+            "key": "field_689a4ce0b6e60",
             "label": "City",
             "name": "city",
             "aria-label": "",
-            "type": "text",
+            "type": "taxonomy",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -92,19 +92,24 @@
                 "id": ""
             },
             "show_in_graphql": 1,
-            "default_value": "",
-            "maxlength": "",
+            "taxonomy": "city",
+            "add_term": 1,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "id",
+            "field_type": "select",
+            "allow_null": 0,
             "allow_in_bindings": 0,
-            "placeholder": "",
-            "prepend": "",
-            "append": ""
+            "bidirectional": 0,
+            "multiple": 0,
+            "bidirectional_target": []
         },
         {
-            "key": "field_687ea4603f5b3",
+            "key": "field_689a4d22b6e62",
             "label": "State \/ Province",
-            "name": "state",
+            "name": "state_province",
             "aria-label": "",
-            "type": "text",
+            "type": "taxonomy",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -114,19 +119,24 @@
                 "id": ""
             },
             "show_in_graphql": 1,
-            "default_value": "",
-            "maxlength": "",
+            "taxonomy": "category",
+            "add_term": 1,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "id",
+            "field_type": "checkbox",
             "allow_in_bindings": 0,
-            "placeholder": "",
-            "prepend": "",
-            "append": ""
+            "bidirectional": 0,
+            "multiple": 0,
+            "allow_null": 0,
+            "bidirectional_target": []
         },
         {
-            "key": "field_687ea47f3f5b4",
+            "key": "field_689a4d0ab6e61",
             "label": "Country",
             "name": "country",
             "aria-label": "",
-            "type": "text",
+            "type": "taxonomy",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -136,12 +146,17 @@
                 "id": ""
             },
             "show_in_graphql": 1,
-            "default_value": "United States of America",
-            "maxlength": "",
+            "taxonomy": "country",
+            "add_term": 0,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "id",
+            "field_type": "checkbox",
             "allow_in_bindings": 0,
-            "placeholder": "",
-            "prepend": "",
-            "append": ""
+            "bidirectional": 0,
+            "multiple": 0,
+            "allow_null": 0,
+            "bidirectional_target": []
         },
         {
             "key": "field_687ea49f3f5b5",
@@ -204,5 +219,5 @@
     "graphql_field_name": "stations",
     "map_graphql_types_from_location_rules": 0,
     "graphql_types": "",
-    "modified": 1753198668
+    "modified": 1754943232
 }
