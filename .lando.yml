@@ -1,15 +1,15 @@
-name: the-world-wp
+name: dev-the-world
 recipe: pantheon
-excludes:
-  - vendor
-  - node_modules
-  - wp-content/plugins/tw-episode-importer/admin/ui/node_modules
+# excludes:
+#   - vendor
+#   - node_modules
+#   - wp-content/plugins/tw-episode-importer/admin/ui/node_modules
 env_file:
   - .env
 config:
   framework: wordpress
   id: fa3253e3-f798-4bae-a25f-e278d44a9aab
-  site: the-world-wp
+  site: the-world
   php: "7.4"
   via: apache:2.4
   database: mysql
@@ -52,7 +52,7 @@ services:
 tooling:
   wp:
     service: appserver
-    cmd: wp --path=/app --url=the-world-wp.lndo.site
+    cmd: wp --path=/app --url=dev-the-world.lndo.site
   # Lando will run sh scripts but does not recognize the lando command within.
   # local:
   #   service: appserver
@@ -72,4 +72,4 @@ events:
   post-db-import:
     - appserver:
         # Replace Wordpress domain in the database pantheon dev environment
-        - wp --path=/app --url=dev-the-world-wp.pantheonsite.io search-replace 'dev-the-world-wp.pantheonsite.io' 'the-world-wp.lndo.site'
+        - wp --path=/app --url=dev-the-world-wp.pantheonsite.io search-replace 'dev-the-world-wp.pantheonsite.io' 'dev-the-world.lndo.site'
