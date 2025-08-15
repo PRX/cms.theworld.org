@@ -58,7 +58,7 @@ function tw_stations_post_type() {
 		'show_ui'             => true,
 		'show_in_menu'        => true,
 		'menu_position'       => 10,
-		'menu_icon'           => 'dashicons-location',
+		'menu_icon'           => 'data:image/svg+xml;base64,' . base64_encode( '<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="black"><path d="M168-96q-29.7 0-50.85-21.17Q96-138.34 96-168.07v-432.41q0-22.52 13.5-41.02Q123-660 144-668l539-196 25 68-342 124h425.96Q822-672 843-650.84t21 50.88v432.24Q864-138 842.85-117T792-96H168Zm0-72h624v-264H168v264Zm143.77-48Q352-216 380-243.77q28-27.78 28-68Q408-352 380.23-380q-27.78-28-68-28Q272-408 244-380.23q-28 27.78-28 68Q216-272 243.77-244q27.78 28 68 28ZM168-504h480v-72h72v72h72v-96H168v96Zm0 336v-264 264Z"/></svg>' ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 		'show_in_admin_bar'   => true,
 		'show_in_nav_menus'   => true,
 		'can_export'          => true,
@@ -66,7 +66,7 @@ function tw_stations_post_type() {
 		'exclude_from_search' => true,
 		'capability_type'     => array( 'station', 'stations' ),
 		'capabilities'        => array(
-			'create_posts' => 'create_station',
+			'create_posts' => 'create_stations',
 		),
 		'map_meta_cap'        => true,
 		'show_in_rest'        => true,
