@@ -44,6 +44,7 @@ define(
 		'tw-scroll-gallery/tw-scroll-gallery.php',
 		'tw-sitemap-mask/tw-sitemap-mask.php',
 		'tw-segments/tw-segments.php',
+		'tw-stations/tw-stations.php',
 		'tw-story-format/tw-story-format.php',
 		'visual-term-description-editor/visual-term-description-editor.php',
 		'wordpress-importer/wordpress-importer.php',
