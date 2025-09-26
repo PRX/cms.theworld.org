@@ -5,7 +5,7 @@ Tags: sitemap, xml, news, robots, Google News
 Requires at least: 4.6
 Requires PHP: 5.6
 Tested up to: 6.8
-Stable tag: 5.5.6
+Stable tag: 5.5.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -141,10 +141,14 @@ Please read more on [FAQ's and Troubleshooting](https://premium.status301.com/kn
 
 == Upgrade Notice ==
 
-= 5.5.6 =
-Fix admin notice dismissal and possible excessively long URL on admin post search.
+= 5.5.7 =
+Fix WPML Compatibility missing valid callback.
 
 == Changelog ==
+
+= 5.5.7 =
+Date: 20250915
+* FIX: WPML Compatibility missing valid callback, thanks @linusbenknerkk
 
 = 5.5.6 =
 Date: 20250717
